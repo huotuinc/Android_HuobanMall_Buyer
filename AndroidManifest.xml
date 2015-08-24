@@ -42,10 +42,6 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="cy.com.partnermall.ui.MainActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name="cy.com.partnermall.ui.IndexActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />

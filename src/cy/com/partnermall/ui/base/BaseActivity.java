@@ -22,9 +22,7 @@ public abstract class BaseActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		AppManager.getInstance().addActivity(this);
-		if (!ImageLoader.getInstance().isInited()) {
-			ImageLoaderConfig.initImageLoader(this, Constants.BASE_IMAGE_CACHE);
-		}
+
 	}
 
 	@Override

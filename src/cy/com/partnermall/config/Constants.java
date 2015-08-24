@@ -10,27 +10,12 @@ public class Constants {
 	// 应用名称
 	public static String APP_NAME = "";
 
-	// 图片路径
-	public static final String IMAGE_URL = "http://192.168.6.100:8080/studioms/staticmedia/images/#";
-
-	// 视频路径
-	public static final String VIDEO_URL = "http://192.168.6.100:8080/studioms/staticmedia/video/#";
-
 	// 保存参数文件夹名字
-	public static final String SHARED_PREFERENCE_NAME = "tc_jingdong_prefs";
+	public static final String SHARED_PREFERENCE_NAME = "account_info";
 
 	// SDCard路径
 	public static final String SD_PATH = Environment
 			.getExternalStorageDirectory().getAbsolutePath();
-
-	// 图片存储路径
-	public static final String BASE_PATH = SD_PATH + "/tc/jingdong/";
-
-	// 缓存图片路径
-	public static final String BASE_IMAGE_CACHE = BASE_PATH + "cache/images/";
-
-	// 需要分享的图片
-	public static final String SHARE_FILE = BASE_PATH + "QrShareImage.png";
 
 	// 手机IMEI号码
 	public static String IMEI = "";
@@ -80,4 +65,9 @@ public class Constants {
 	/**
 	 ******************************************* 参数设置信息结束 ******************************************
 	 */
+
+	//标准时间
+	public final static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	//标准时间01
+	public static final String DATE_FORMAT = "yyyy-MM-dd";
 }

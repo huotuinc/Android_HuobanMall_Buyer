@@ -21,7 +21,7 @@ public class ImageLoaderConfig {
 	/**
 	 * 返回默认的参数配置
 	 * 
-	 * @param isDefaultShow
+	 * @param isShowDefault
 	 *            true：显示默认的加载图片 false：不显示默认的加载图片
 	 * @return
 	 */

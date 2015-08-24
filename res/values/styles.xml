@@ -20,11 +20,28 @@
 
     <style name="home_tab_bottom">
         <item name="android:gravity">center</item>
-        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingTop">10dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:button">@null</item>
         <item name="android:layout_weight">1.0</item>
+        <item name="android:textSize">@dimen/tabhost_text_size</item>
+        <item name="android:textColor">@color/tabhost_text_normal</item>
+    </style>
+    
+    <style name="catatoryButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/catagroy_text_size</item>
+        <item name="android:background">@drawable/radiobtn_selector</item>
+        <item name="android:textColor">@drawable/catagory_text_color</item>
+        <item name="android:button">@null</item>
     </style>
 
     <style name="home_color_shopping_button">

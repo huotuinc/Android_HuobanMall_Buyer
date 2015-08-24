@@ -7,6 +7,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
@@ -19,11 +20,13 @@ import cy.com.partnermall.BaseApplication;
 import cy.com.partnermall.inner.R;
 
 import cy.com.partnermall.AppManager;
+import cy.com.partnermall.utils.ToastUtils;
 
 public class HomeActivity extends TabActivity {
 
 	public static final String TAG = HomeActivity.class.getSimpleName ( );
 
+	private long exitTime = 0l;
 	private RadioGroup   mTabButtonGroup;
 	private TabHost      mTabHost;
 	//application引用
@@ -123,64 +126,36 @@ public class HomeActivity extends TabActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		switch (item.getItemId()) {
-		case R.id.menu_about:
-
-			break;
-
-		case R.id.menu_setting:
-
-			break;
-
-		case R.id.menu_history:
-
-			break;
-
-		case R.id.menu_feedback:
-
-			break;
-
-		case R.id.menu_exit:
-
-			showAlertDialog("退出程序", "确定退出伙伴商城？", "确定", new OnClickListener() {
-
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-					AppManager.getInstance().AppExit(getApplicationContext());
-					ImageLoader.getInstance().clearMemoryCache();
-				}
-			}, "取消", new OnClickListener() {
-
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-					dialog.dismiss();
-				}
-			});
-
-			break;
-
-		case R.id.menu_help:
-
-			break;
-
-		default:
-			break;
-		}
 		return true;
 	}
 
-	/** 含有标题、内容、两个按钮的对话框 **/
-	protected void showAlertDialog(String title, String message,
-			String positiveText,
-			DialogInterface.OnClickListener onPositiveClickListener,
-			String negativeText,
-			DialogInterface.OnClickListener onNegativeClickListener) {
-		new AlertDialog.Builder(this).setTitle(title).setMessage(message)
-				.setPositiveButton(positiveText, onPositiveClickListener)
-				.setNegativeButton(negativeText, onNegativeClickListener)
-				.show();
-	}
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event)
+	{
+		// 2秒以内按两次推出程序
+		if (event.getKeyCode () == KeyEvent.KEYCODE_BACK
+			&& event.getAction() == KeyEvent.ACTION_DOWN)
+		{
+			if ((System.currentTimeMillis() - exitTime) > 2000)
+			{
+				ToastUtils.showLongToast ( getApplicationContext ( ), "再按一次退出程序" );
+				exitTime = System.currentTimeMillis();
+			} else
+			{
+				try
+				{
 
+					HomeActivity.this.finish();
+					Runtime.getRuntime().exit(0);
+				} catch (Exception e)
+				{
+					Runtime.getRuntime().exit(-1);
+				}
+			}
+
+			return true;
+		}
+		// TODO Auto-generated method stub
+		return super.dispatchKeyEvent ( event );
+	}
 }

@@ -86,4 +86,11 @@
     <string name="cart_title">购物车</string>
     <string name="personal_title">会员中心</string>
 
+    <!--底部TAB文字标题-->
+    <string name="text_home">首页</string>
+    <string name="text_search">搜索</string>
+    <string name="text_catagory">栏目</string>
+    <string name="text_cart">购物车</string>
+    <string name="text_center">个人中心</string>
+
 </resources>
