@@ -52,8 +52,6 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 		refreshBtn.setOnClickListener ( this );
 		indexTitle = ( TextView ) this.findViewById (R.id.indexTitle);
 		indexTitle.setText ( resources.getString ( R.string.search_title ) );
-
-		setContentView ( R.layout.category_ui );
 	}
 
 	@Override
