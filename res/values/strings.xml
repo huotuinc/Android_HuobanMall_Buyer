@@ -44,7 +44,6 @@
 
 
     <!-- 个人中心 -->
-    <string name="personal_title">个人中心</string>
     <string name="personal_more">更多</string>
     <string name="personal_welcome">欢迎来到伙伴商城</string>
     <string name="personal_login">登录</string>
@@ -79,5 +78,12 @@
         <item>Accordion</item>
     </string-array>
     <!-- JazzyViewPager -->
+
+    <!--标题-->
+    <string name="home_title">首页</string>
+    <string name="search_title">搜索</string>
+    <string name="category_title">栏目</string>
+    <string name="cart_title">购物车</string>
+    <string name="personal_title">会员中心</string>
 
 </resources>

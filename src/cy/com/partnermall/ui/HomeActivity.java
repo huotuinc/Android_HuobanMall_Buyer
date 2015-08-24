@@ -14,6 +14,8 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TabHost;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import cy.com.partnermall.BaseApplication;
 import cy.com.partnermall.inner.R;
 
 import cy.com.partnermall.AppManager;
@@ -24,9 +26,9 @@ public class HomeActivity extends TabActivity {
 
 	private RadioGroup   mTabButtonGroup;
 	private TabHost      mTabHost;
+	//application引用
+	public BaseApplication application;
 	//侧滑菜单引用
-	private DrawerLayout layDrag;
-
 	/**
 	 * 底部Tab菜单
 	 */
@@ -41,6 +43,7 @@ public class HomeActivity extends TabActivity {
 	void onCreate ( Bundle savedInstanceState ) {
 		// TODO Auto-generated method stub
 		super.onCreate ( savedInstanceState );
+		application = ( BaseApplication ) HomeActivity.this.getApplication ();
 		AppManager.getInstance ( ).addActivity ( this );
 		setContentView ( R.layout.activity_home );
 		findViewById ( );
@@ -64,7 +67,7 @@ public class HomeActivity extends TabActivity {
 		Intent i_personal = new Intent(this, PersonalActivity.class);
 
 		//初始化侧滑菜单面板
-		layDrag = ( DrawerLayout ) this.findViewById (R.id.layDrag);
+		application.layDrag = ( DrawerLayout ) this.findViewById (R.id.layDrag);
 
 		mTabHost.addTab(mTabHost.newTabSpec(TAB_MAIN).setIndicator(TAB_MAIN)
 				.setContent(i_main));

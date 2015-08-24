@@ -3,6 +3,7 @@ package cy.com.partnermall.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.res.Resources;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageButton;
@@ -26,6 +28,8 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import cy.com.partnermall.BaseApplication;
 import cy.com.partnermall.inner.R;
 
 import cy.com.partnermall.adapter.IndexGalleryAdapter;
@@ -41,12 +45,23 @@ import cy.com.partnermall.widgets.jazzviewpager.JazzyViewPager.TransitionEffect;
 public class IndexActivity extends BaseActivity implements OnClickListener,
 		onSearchBarItemClickListener {
 
+	public BaseApplication application;
+	private ImageView scanImage;
+	private ImageView loginBtn;
+	private TextView title;
+	private
+	WebView viewPage;
+	private
+	Resources resources;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_index);
+		resources = IndexActivity.this.getResources ();
+		application = ( BaseApplication ) IndexActivity.this.getApplication ();
+		setContentView ( R.layout.activity_index );
+		initView ();
 	}
 
 	@Override
@@ -57,7 +72,13 @@ public class IndexActivity extends BaseActivity implements OnClickListener,
 
 	@Override
 	protected void initView() {
-
+		scanImage = ( ImageView ) this.findViewById (R.id.scanImage);
+		scanImage.setOnClickListener ( this );
+		loginBtn = ( ImageView ) this.findViewById (R.id.loginBtn);
+		loginBtn.setOnClickListener ( this );
+		title = ( TextView ) this.findViewById (R.id.title);
+		title.setText ( resources.getString ( R.string.home_title ) );
+		viewPage = ( WebView ) this.findViewById (R.id.viewPage);
 	}
 
 
@@ -65,6 +86,23 @@ public class IndexActivity extends BaseActivity implements OnClickListener,
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 
+		switch ( v.getId () )
+		{
+			case R.id.scanImage:
+			{
+				//扫描功能键
+
+			}
+			break;
+			case R.id.loginBtn:
+			{
+				//切换出侧滑界面
+				application.layDrag.openDrawer ( Gravity.RIGHT );
+			}
+			break;
+			default:
+				break;
+		}
 	}
 
 	@Override
