@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-    package="cy.com.partnermall.inner"
+    package="com.huotu.partnermall.inner"
     android:versionCode="1"
     android:versionName="1.0" >
    
@@ -23,11 +23,11 @@
         android:normalScreens="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
-    <application android:name="cy.com.partnermall.BaseApplication"
+    <application android:name="com.huotu.partnermall.BaseApplication"
 		android:allowBackup="true" android:icon="@drawable/ic_launcher_channel1"
 		android:label="@string/app_name_channel1" android:theme="@style/AppTheme" tools:replace="icon,label">
 		<activity
-            android:name="cy.com.partnermall.ui.SplashActivity"
+            android:name="com.huotu.partnermall.ui.SplashActivity"
             android:launchMode="singleTask"
             android:theme="@style/SplashTheme" >
             <intent-filter>
@@ -37,27 +37,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="cy.com.partnermall.ui.HomeActivity"
+            android:name="com.huotu.partnermall.ui.HomeActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="cy.com.partnermall.ui.IndexActivity"
+            android:name="com.huotu.partnermall.ui.IndexActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="cy.com.partnermall.ui.CategoryActivity"
+            android:name="com.huotu.partnermall.ui.CategoryActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="cy.com.partnermall.ui.CartActivity"
+            android:name="com.huotu.partnermall.ui.CartActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="cy.com.partnermall.ui.PersonalActivity"
+            android:name="com.huotu.partnermall.ui.PersonalActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="cy.com.partnermall.ui.SearchActivity"
+            android:name="com.huotu.partnermall.ui.SearchActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Present"
             android:windowSoftInputMode="adjustPan" />
