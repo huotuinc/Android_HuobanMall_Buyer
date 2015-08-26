@@ -16,6 +16,13 @@ android {
     compileSdkVersion 19
     buildToolsVersion "22.0.1"
 
+    defaultConfig{
+        applicationId "cy.com.partnermall.inner"
+        minSdkVersion 8
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+    }
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -25,6 +32,16 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
+        }
+
+        channel1{
+            manifest.srcFile '/custom/channel1/AndroidManifest.xml'
+        }
+        channel2{
+            manifest.srcFile '/custom/channel2/AndroidManifest.xml'
+        }
+        channel3{
+            manifest.srcFile '/custom/channel3/AndroidManifest.xml'
         }
 
         // Move the tests to tests/java, tests/res, etc...
@@ -39,4 +56,47 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+    //打包渠道
+    productFlavors {
+
+        channel1{
+            applicationId 'cy.com.partnermall.channel1'
+
+        }
+        channel2{
+            applicationId 'cy.com.partnermall.channel2'
+        }
+        channel3{
+            applicationId 'cy.com.partnermall.channel3'
+        }
+
+    }
+
+    //签名配置
+    signingConfigs{
+
+        //配置签名
+        huotu{
+            storeFile file("keystore/huotu_fm.keystore")
+            storePassword "huotuheyun"
+            keyAlias "huotu_fm.keystore"
+            keyPassword "huotuheyun"
+        }
+
+    }
+    buildTypes{
+
+        release{
+            minifyEnabled true
+            signingConfig signingConfigs.huotu
+            zipAlignEnabled true
+        }
+        debug{
+            minifyEnabled true
+            signingConfig signingConfigs.huotu
+            zipAlignEnabled true
+            debuggable true
+        }
+    }
+
 }

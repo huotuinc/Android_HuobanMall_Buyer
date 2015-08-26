@@ -46,7 +46,6 @@ public class IndexActivity extends BaseActivity implements OnClickListener,
 	private RadioButton mRadioButton9;
 	private RadioButton mRadioButton10;
 
-	private float                mCurrentCheckedRadioLeft;
 	private HorizontalScrollView mHorizontalScrollView;
 	private ViewPager            mViewPager;
 	private ArrayList< View >    mViews;
@@ -94,20 +93,29 @@ public class IndexActivity extends BaseActivity implements OnClickListener,
 		mHorizontalScrollView = (HorizontalScrollView)findViewById(R.id.horizontalMenu);
 		mViewPager = (ViewPager)findViewById(R.id.catagoryItemPager);
 
-		mRadioGroup.setOnCheckedChangeListener(this);
-		mViewPager.setOnPageChangeListener(new MyPagerOnPageChangeListener());
-
+		mRadioGroup.setOnCheckedChangeListener ( this );
+		mViewPager.setOnPageChangeListener ( new MyPagerOnPageChangeListener ( ) );
 		mViews = new ArrayList<View>();
-		mViews.add ( getLayoutInflater ( ).inflate ( R.layout.home_web_view, null ) );
-		mViews.add ( getLayoutInflater ( ).inflate ( R.layout.home_web_view, null ) );
-		mViews.add(getLayoutInflater().inflate(R.layout.home_web_view, null));
-		mViews.add(getLayoutInflater().inflate(R.layout.home_web_view, null));
-		mViews.add(getLayoutInflater().inflate(R.layout.home_web_view, null));
-		mViews.add(getLayoutInflater().inflate(R.layout.home_web_view, null));
-		mViews.add ( getLayoutInflater ( ).inflate ( R.layout.home_web_view, null));
-		mViews.add(getLayoutInflater().inflate(R.layout.home_web_view, null));
-		mViews.add(getLayoutInflater().inflate(R.layout.home_web_view, null));
-		mViews.add(getLayoutInflater().inflate(R.layout.home_web_view, null));
+		View vPage1 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
+		mViews.add ( vPage1 );
+		View vPage2 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
+		mViews.add ( vPage2 );
+		View vPage3 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
+		mViews.add( vPage3 );
+		View vPage4 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
+		mViews.add( vPage4 );
+		View vPage5 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
+		mViews.add( vPage5 );
+		View vPage6 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
+		mViews.add( vPage6 );
+		View vPage7 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
+		mViews.add ( vPage7);
+		View vPage8 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
+		mViews.add( vPage8 );
+		View vPage9 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
+		mViews.add( vPage9 );
+		View vPage10 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
+		mViews.add( vPage10 );
 
 		mViewPager.setAdapter ( new MyPagerAdapter ( ) );
 
@@ -163,6 +171,7 @@ public class IndexActivity extends BaseActivity implements OnClickListener,
 
 		if (checkedId == R.id.btn1) {
 			mViewPager.setCurrentItem(1);
+
 		}else if (checkedId == R.id.btn2) {
 			mViewPager.setCurrentItem(2);
 		}else if (checkedId == R.id.btn3) {
