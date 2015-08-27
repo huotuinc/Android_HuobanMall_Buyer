@@ -24,8 +24,8 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
     <application android:name="com.huotu.partnermall.BaseApplication"
-		android:allowBackup="true" android:icon="@drawable/ic_launcher_channel1"
-		android:label="@string/app_name_channel1" android:theme="@style/AppTheme" tools:replace="icon,label">
+		android:allowBackup="true" android:icon="@drawable/ic_launcher"
+		android:label="@string/app_name" android:theme="@style/AppTheme" tools:replace="icon,label">
 		<activity
             android:name="com.huotu.partnermall.ui.SplashActivity"
             android:launchMode="singleTask"

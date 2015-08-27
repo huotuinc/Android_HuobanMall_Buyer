@@ -36,12 +36,30 @@ android {
 
         channel1{
             manifest.srcFile '/custom/channel1/AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['/custom/channel1/res']
+            assets.srcDirs = ['assets']
         }
         channel2{
             manifest.srcFile '/custom/channel2/AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['/custom/channel2/res']
+            assets.srcDirs = ['assets']
         }
         channel3{
             manifest.srcFile '/custom/channel3/AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['/custom/channel3/res']
+            assets.srcDirs = ['assets']
         }
 
         // Move the tests to tests/java, tests/res, etc...
