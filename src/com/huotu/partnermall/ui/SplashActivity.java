@@ -10,7 +10,9 @@ import android.widget.ImageView;
 
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.utils.XMLParserUtils;
 
 
 public class SplashActivity extends BaseActivity {
@@ -47,7 +49,10 @@ public class SplashActivity extends BaseActivity {
 
                                            @Override
                                            public void onAnimationStart(Animation animation) {
-
+                                               //定位
+                                               //检测网络
+                                               //加载商家信息
+                                               MerchantBean merchant = XMLParserUtils.getInstance ().readMerchantInfo ( SplashActivity.this );
                                            }
 
                                            @Override

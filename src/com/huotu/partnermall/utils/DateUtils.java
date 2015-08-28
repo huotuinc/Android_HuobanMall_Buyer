@@ -31,7 +31,7 @@ public class DateUtils
         } catch(Exception e)
         {
             //发现异常时，返回当前时间
-            KJLoger.errorLog(e.getMessage());
+            KJLoger.e(e.getMessage());
             return format.format(new Date());
         }
     }
@@ -82,7 +82,7 @@ public class DateUtils
         } catch(Exception e)
         {
             //发现异常时，返回当前时间
-            KJLoger.errorLog(e.getMessage());
+            KJLoger.e(e.getMessage());
             return format.format(new Date());
         }
     }

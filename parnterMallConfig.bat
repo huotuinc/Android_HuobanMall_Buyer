@@ -1,32 +1,102 @@
 @echo off
-rem æ‰¹é‡æ›¿æ¢/æ‹·è´ä¼™ä¼´å•†åŸä¹°å®¶ç‰ˆèµ„æºæ–‡ä»¶
-rem èµ„æºæ–‡ä»¶åŒ…æ‹¬ï¼š
-rem 1ã€è‡ªå®šä¹‰çš„AndroidManifest.xmlæ–‡ä»¶
-rem 2ã€å•†æˆ·ä¿¡æ¯é…ç½®æ–‡ä»¶
-rem 3ã€color.xmlæ–‡ä»¶
-rem 4ã€style.xmlæ–‡ä»¶
-rem 5ã€APPå›¾æ ‡
-rem 6ã€å¼•å¯¼å›¾ç‰‡
-rem 7ã€gradle.buildæ–‡ä»¶
-rem 8ã€å¯åŠ¨å›¾ç‰‡
-rem 9ã€èœå•å›¾æ ‡
-rem 10ã€åŠ¨ç”»æ–‡ä»¶
-rem ç”±Aaronæ“åˆ€ç¼–å†™
+rem --ÎÄµµËµÃ÷----
+rem ÅúÁ¿Ìæ»»/¿½±´»ï°éÉÌ³ÇÂò¼Ò°æ×ÊÔ´ÎÄ¼ş
+rem ×ÊÔ´ÎÄ¼ş°üÀ¨:
+rem 2¡¢ÉÌ»§ĞÅÏ¢ÅäÖÃÎÄ¼ş
+rem 3¡¢color.xmlÎÄ¼ş
+rem 4¡¢style.xmlÎÄ¼ş
+rem 5¡¢APPÍ¼±ê
+rem 6¡¢Òıµ¼Í¼Æ¬
+rem 7¡¢key.keystoreÎÄ¼ş
+rem 8¡¢Æô¶¯Í¼Æ¬
+rem 9¡¢²Ëµ¥Í¼±ê
+rem 10¡¢¶¯»­ÎÄ¼ş
+rem ÓÉAaron²Ùµ¶±àĞ´
 rem 2015-08-27
-rem windowsä¸‹ä¸“ç”¨ã€‚liunxã€iosç”¨æˆ·æ•¬è¯·æœŸå¾….sh
-rem å…¨éƒ¨èµ„æºæ–‡ä»¶çº¦å®šåœ¨D:\resourcesç›®å½•
+rem windowsÏÂ×¨ÓÃ¡£liunx¡¢iosÓÃ»§¾´ÇëÆÚ´ı.sh
+rem È«²¿×ÊÔ´ÎÄ¼şÔ¼¶¨ÔÚD:\resourcesÄ¿Â¼
+rem ----ÎÄ¼ş¸ùÄ¿Â¼----
+rem ×ÊÔ´ÎÄ¼ş¸ùÄ¿Â¼
+set RESOURCES_DIR = "D://resources//"
+rem androidÏîÄ¿¸ùÄ¿Â¼
+set ANDROID_DIR = D:\program\code\Android_HuobanMall_Buyer
+rem -----RESÄ£°åÎÄ¼şÉèÖÃ----
+rem RESÄ£°åÎÄ¼ş¼ĞÄ¿Â¼
+set RES_TEMPLATE = "%ANDROID_DIR%\res"
+rem -----------·¢²¼ÇşµÀÉè¶¨-------
+rem ÇşµÀÃû
+set CHANNEL_NAME = yaoshengji
+rem ÇşµÀÂ·¾¶
+set CHANNEL_DIR = "%ANDROID_DIR%\custom\%CHANNEL_NAME%"
+rem ManifestÎÄ¼şÂ·¾¶
+set MANIFEST_DIR = "%ANDROID_DIR%"
+rem ManifestÎÄ¼şÃû³Æ
+set MANIFEST_NAME = AndroidManifest.xml
+rem -----ÉÌ»§ĞÅÏ¢ÅäÖÃÎÄ¼ş---
+rem ÉÌ»§ĞÅÏ¢ÅäÖÃÎÄ¼şÄ¿Â¼´ıÅäÖÃ
+set MERCHANT_DIR_ANDROID = "%ANDROID_DIR%\custom\%CHANNEL_NAME%\res\xml"
+rem ÉÌ»§ĞÅÏ¢ÅäÖÃÎÄ¼şÄ¿Â¼±¾µØ
+set MERCHANT_DIR_LOCAL= "%RESOURCES_DIR%\xml"
+rem ÉÌ»§ĞÅÏ¢ÎÄ¼şÃû³Æ
+set MERCHANT_FILE_NAME = merchant_info.xml
+rem ----ÑÕÉ«¡¢ÑùÊ½ÅäÖÃÎÄ¼ş---
+rem color.xml style.xmlÎÄ¼şµÄÄ¿Â¼
+set COLOR_STYLE_DIR_ANDROID = "%ANDROID_DIR%\custom\%CHANNEL_NAME%\res\values"
+rem color.xml style.xmlÎÄ¼şµÄÄ¿Â¼±¾µØ
+set COLOR_STYLE_DIR_LOCAL = "%RESOURCES_DIR%\values"
+rem colorÎÄ¼şÃû³Æ
+set COLOR_NAME = color.xml
+rem styleÎÄ¼şÃû
+set STYLE_NAME = style.xml
+rem -----keystoreÅäÖÃÎÄ¼ş-
+rem keystoreÎÄ¼şÄ¿Â¼
+set KEYSTORE_DIR_ANDROID = "%ANDROID_DIR%\keystore"
+rem keystoreÎÄ¼şÄ¿Â¼±¾µØ
+set KEYSTORE_DIR_LOCAL = "%RESOURCES_DIR%\keystore"
+rem keystoreÎÄ¼şÃû³Æ
+set KEYSTORE_NAME = key.keystore
+rem ----------¶¯»­ÎÄ¼şÅäÖÃ----
+rem ¶¯»­ÎÄ¼şÄ¿Â¼
+set ANIM_DIR_ANDROID = "%ANDROID_DIR%\custom\%CHANNEL_NAME%\res\anim"
+rem ¶¯»­ÎÄ¼şÄ¿Â¼±¾µØ
+set ANIM_DIR_LOCAL = "%RESOURCES_DIR%\anim"
+rem ----Í¼Æ¬ÎÄ¼şÅäÖÃ----
+rem mdpi·Ö±æÂÊÍ¼Æ¬
+rem Í¼Æ¬Ä¿Â¼-mdpi
+set IMAGE_MDPI_DIR_ANDROID = "%ANDROID_DIR%\custom\%CHANNEL_NAME%\res\drawable-mdpi"
+rem Í¼Æ¬Ä¿Â¼-mdpi±¾µØ
+set IMAGE_MDPI_DIR_LOCAL = "%RESOURCES_DIR%\drawable-mdpi"
+rem Í¼Æ¬Ä¿Â¼-hdpi
+set IMAGE_HDPI_DIR_ANDROID = "%ANDROID_DIR%\custom\%CHANNEL_NAME%\res\drawable-hdpi"
+rem Í¼Æ¬Ä¿Â¼-hdpi±¾µØ
+set IMAGE_HDPI_DIR_LOCAL = "%RESOURCES_DIR%\drawable-hdpi"
+rem Í¼Æ¬Ä¿Â¼-xhdpi
+set IMAGE_XHDPI_DIR_ANDROID = "%ANDROID_DIR%\custom\%CHANNEL_NAME%\res\drawable-xhdpi"
+rem Í¼Æ¬Ä¿Â¼-xhdpi±¾µØ
+set IMAGE_XHDPI_DIR_LOCAL = "%RESOURCES_DIR%\drawable-xhdpi"
+rem ----×Ô¶¨Òå²ÎÊı½áÊø------
+rem -----´ò°üÇşµÀÎÄ¼şÅäÖÃ----
+rem ÅĞ¶Ï´ò°üÇşµÀÊÇ·ñ´æÔÚ
+if exist "%CHANNEL_DIR%" goto copyres
+if not exist "%CHANNEL_DIR%" goto creatchannel
+:copyres
+echo "Ğ¡ÄÈÒÑ¾­¿ªÊ¼¿½±´×ÊÔ´Ä£°åÎÄ¼ş£¬ÇëÉÔºó..."
 
-rem èµ„æºæ–‡ä»¶æ ¹ç›®å½•
-set RESOURCES_DIR = "D:\resources"
-rem androidé¡¹ç›®æ ¹ç›®å½•
-set ANDROID_DIR = "D:\program\code\Android_HuobanMall_Buyer"
-rem è‡ªå®šä¹‰AndroidManifest.xmlæ–‡ä»¶çš„ç›®å½•
-set MANIFEST_DIR = "%ANDROID_DIR%\custom\channel\"
-rem å•†æˆ·ä¿¡æ¯é…ç½®æ–‡ä»¶ç›®å½•
-set MERCHANT_DIR = "%ANDROID_DIR%\res\xml"
-rem å•†æˆ·ä¿¡æ¯æ–‡ä»¶åç§°
-set MERCHANT_FILE_NAME = "merchant_info.xml"
-rem color.xml style.xmlæ–‡ä»¶çš„ç›®å½•
-set COLOR_STYLE_DIR = "%ANDROID_DIR%\res\values"
-rem å›¾ç‰‡ç›®å½•-mdpi
-set 
+
+pause
+:creatchannel
+echo "Ğ¡ÄÈÒÑ¾­¿ªÊ¼´´½¨Í¨µÀÎÄ¼ş£¬ÇëÉÔºó..."
+rem ´´½¨Í¨µÀÎÄ¼ş
+echo "%RESOURCES_DIR%"
+md "%CHANNEL_DIR%"
+
+rem ¿½±´ManifestÎÄ¼ş
+echo "Ğ¡ÄÈ¿ªÊ¼¿½±´%MANIFEST_NAME%ÎÄ¼ş"
+copy /y %MANIFEST_DIR%/%MANIFEST_NAME% %CHANNEL_DIR%/
+echo "Ğ¡ÄÈÒÑ¾­¿½±´Íê³ÉÁË%MANIFEST_NAME%ÎÄ¼ş"
+echo "Ğ¡ÄÈ¿ªÊ¼¿½±´res×ÊÔ´Ä£°åÎÄ¼ş¼Ğ"
+set name = %~n1
+if not exist  %CHANNEL_DIR%/%name%/ md %CHANNEL_DIR%/%name%/
+xcopy %1 %CHANNEL_DIR%/%name%/ /c/q/e
+echo "Ğ¡ÄÈÒÑ¾­Íê³ÉÁË¿½±´res×ÊÔ´Ä£°åÎÄ¼ş¼Ğ"
+pause

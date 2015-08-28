@@ -89,13 +89,13 @@ public class HttpUtil
         } catch (MalformedURLException e)
         {
             // TODO Auto-generated catch block
-            KJLoger.errorLog(e.getMessage());
+            KJLoger.e(e.getMessage());
             // 服务无响应
             jsonStr = "{\"resultCode\":50001,\"systemResultCode\":1}";
         } catch (IOException e)
         {
             // TODO Auto-generated catch block
-            KJLoger.errorLog(e.getMessage());
+            KJLoger.e(e.getMessage());
             // 服务无响应
             jsonStr = "{\"resultCode\":50001,\"systemResultCode\":1}";
         } finally
@@ -172,13 +172,13 @@ public class HttpUtil
         catch (MalformedURLException e)
         {
             // TODO Auto-generated catch block
-            KJLoger.errorLog(e.getMessage());
+            KJLoger.e(e.getMessage());
             // 服务无响应
             jsonStr = "{\"resultCode\":50001,\"resultDescription\":\"系统请求失败\",\"systemResultCode\":1}";
         } catch (IOException e)
         {
             // TODO Auto-generated catch block
-            KJLoger.errorLog(e.getMessage());
+            KJLoger.e(e.getMessage());
             // 服务无响应
             jsonStr = "{\"resultCode\":50001,\"resultDescription\":\"系统请求失败\",\"systemResultCode\":1}";
         } finally

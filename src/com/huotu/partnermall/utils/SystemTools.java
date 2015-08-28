@@ -32,7 +32,7 @@ public class SystemTools
         } catch (IOException e)
         {
             // TODO Auto-generated catch block
-            KJLoger.errorLog(e.getMessage());
+            KJLoger.e(e.getMessage());
         }
         finally
         {
@@ -42,7 +42,7 @@ public class SystemTools
             } catch (IOException e)
             {
                 // TODO Auto-generated catch block
-                KJLoger.errorLog(e.getMessage());
+                KJLoger.e(e.getMessage());
             }
         }
         return null;        

@@ -68,11 +68,11 @@ public final class KJLoger {
 
     public static final void exception(Exception e) {
         if (DEBUG_LOG) {
-            errorLog(e.getMessage());
+            e(e.getMessage());
         }
     }
     
-    public static final void errorLog(String msg)
+    public static final void e(String msg)
     {
         if(true && (null != msg))
         {

@@ -45,8 +45,17 @@ public class HomeActivity extends TabActivity {
         application = ( BaseApplication ) HomeActivity.this.getApplication ( );
         AppManager.getInstance ( ).addActivity ( this );
         setContentView ( R.layout.activity_home );
+        initMerchant();
         findViewById ( );
         initView ( );
+    }
+
+    /**
+     * 获取商户信息
+     */
+    private void initMerchant()
+    {
+
     }
 
     private

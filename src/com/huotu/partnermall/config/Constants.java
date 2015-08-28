@@ -70,4 +70,38 @@ public class Constants {
 	public final static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	//标准时间01
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
+
+	/**
+	 * ************************************商户信息xml节点***********************
+	 */
+	//商户信息
+	public static final String MERCHANT = "MERCHANT";
+	//商户ID
+	public static final String MERCHANT_ID = "id";
+	//商户支付宝KEY信息
+	public static final String ALIPAY_KEY = "alipaykey";
+	//商户微信支付KEY信息
+	public static final String WEIXIN_KEY = "weixinkey";
+	//主菜单
+	public static final String HOME_MENU = "HOME_MENU";
+	//主菜单名称
+	public static final String MENU_NAME = "menuname";
+	//主菜单图标
+	public static final String MENU_ICON = "menuicon";
+	//类别侧滑菜单
+	public static final String CATAGORY_MENU = "CATAGORY_MENU";
+	public static final String CATAGORY_TYPE = "catagoryname";
+
+	/**
+	 * *******************preference参数设置
+	 */
+	//商户信息
+	public static final String MERCHANT_INFO = "merchant_info";
+	//商户ID
+	public static final String MERCHANT_INFO_ID = "merchant_id";
+	//商户支付宝key信息
+	public static final String MERCHANT_INFO_ALIPAY_KEY = "merchant_alipay_key";
+	//商户微信支付KEY信息
+	public static final String MERCHANT_INFO_WEIXIN_KEY = "merchant_weixin_key";
+
 }

@@ -12,6 +12,13 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 }
 
+/**
+ * 导入so包
+ */
+task copyNativeLibs(type: Copy) {
+    from fileTree(dir: 'libs', include: 'armeabi/*.so, arm64-v8a/*.so, armeabi-v7a/*.so, mips/*.so, mips64/*.so, x86/*.so, x86_64/*.so') into 'build/lib'
+}
+
 android {
     compileSdkVersion 19
     buildToolsVersion "22.0.1"
@@ -79,7 +86,6 @@ android {
 
         channel1{
             applicationId 'com.huotu.partnermall.channel1'
-
         }
         channel2{
             applicationId 'com.huotu.partnermall.channel2'
@@ -95,7 +101,7 @@ android {
 
         //配置签名
         huotu{
-            storeFile file("keystore/huotu_fm.keystore")
+            storeFile file("keystore/key.keystore")
             storePassword "huotuheyun"
             keyAlias "huotu_fm.keystore"
             keyPassword "huotuheyun"

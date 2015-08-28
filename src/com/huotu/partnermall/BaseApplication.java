@@ -129,7 +129,7 @@ public class BaseApplication extends Application {
                     context.getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e)
         {
-            KJLoger.errorLog ( e.getMessage ( ) );
+            KJLoger.e ( e.getMessage ( ) );
         }
         return version;
     }
