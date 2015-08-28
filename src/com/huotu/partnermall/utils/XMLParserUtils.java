@@ -50,11 +50,11 @@ class XMLParserUtils {
 
         try {
             XmlResourceParser xmlResourceParser = context.getResources ().getXml ( R.xml.merchant_info );
+            merchant = new MerchantBean ();
+            catagorys = new ArrayList< CatagoryBean > (  );
+            menus = new ArrayList< MenuBean > (  );
             //如果没有到文件尾继续执行
             while (xmlResourceParser.getEventType () != XmlResourceParser.END_DOCUMENT) {
-                merchant = new MerchantBean ();
-                catagorys = new ArrayList< CatagoryBean > (  );
-                menus = new ArrayList< MenuBean > (  );
                 //如果是开始标签
                 if (xmlResourceParser.getEventType() == XmlResourceParser.START_TAG) {
 

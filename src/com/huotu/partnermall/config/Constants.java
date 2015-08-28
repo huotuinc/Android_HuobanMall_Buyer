@@ -103,5 +103,19 @@ public class Constants {
 	public static final String MERCHANT_INFO_ALIPAY_KEY = "merchant_alipay_key";
 	//商户微信支付KEY信息
 	public static final String MERCHANT_INFO_WEIXIN_KEY = "merchant_weixin_key";
+	//商户菜单
+	public static final String MERCHANT_INFO_MENUS = "main_menus";
+	//商户分类菜单
+	public static final String MERCHANT_INFO_CATAGORY = "catagory_menus";
+
+	/**
+	 * ************************定位信息设置
+	 */
+	public static final String LOCATION_INFO = "location_info";
+	public static final String ADDRESS = "address";
+	public static final String LATITUDE = "latitude";
+	public static final String LONGITUDE = "Longitude";
+	public static final String CITY = "city";
+
 
 }

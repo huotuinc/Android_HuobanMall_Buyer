@@ -3,11 +3,11 @@
     <!--商家信息-->
     <MERCHANT id="110" alipaykey="alipay_key001" weixinkey="weixin_key001"></MERCHANT>
     <!--底部菜单-->
-    <HOME_MENU menuname="首页" menuicon="@drawable/home_menu01.png"></HOME_MENU>
-    <HOME_MENU menuname="搜索" menuicon="@drawable/home_menu01.png"></HOME_MENU>
-    <HOME_MENU menuname="栏目" menuicon="@drawable/home_menu01.png"></HOME_MENU>
-    <HOME_MENU menuname="购物车" menuicon="@drawable/home_menu02.png"></HOME_MENU>
-    <HOME_MENU menuname="个人中心" menuicon="@drawable/home_menu02.png"></HOME_MENU>
+    <HOME_MENU menuname="首页" menuicon="@drawable/main_bottom_tab_home_normal"></HOME_MENU>
+    <HOME_MENU menuname="搜索" menuicon="@drawable/main_bottom_tab_search_normal"></HOME_MENU>
+    <HOME_MENU menuname="栏目" menuicon="@drawable/main_bottom_tab_category_normal"></HOME_MENU>
+    <HOME_MENU menuname="购物车" menuicon="@drawable/main_bottom_tab_cart_normal"></HOME_MENU>
+    <HOME_MENU menuname="个人中心" menuicon="@drawable/main_bottom_tab_personal_normal"></HOME_MENU>
     <!--类别菜单-->
     <CATAGORY_MENU catagoryname="全部"></CATAGORY_MENU>
     <CATAGORY_MENU catagoryname="女装"></CATAGORY_MENU>

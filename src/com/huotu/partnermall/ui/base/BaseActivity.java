@@ -2,6 +2,7 @@ package com.huotu.partnermall.ui.base;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -17,6 +18,8 @@ public abstract class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        //禁止横屏
+        BaseActivity.this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT );
         AppManager.getInstance().addActivity(this);
 
     }
@@ -111,6 +114,11 @@ public abstract class BaseActivity extends Activity {
             intent.putExtras(pBundle);
         }
         startActivity(intent);
+    }
+
+    public void closeSelf(Activity aty)
+    {
+        aty.finish();
     }
 
 }
