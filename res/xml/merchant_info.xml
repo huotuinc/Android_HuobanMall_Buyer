@@ -1,16 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--程序信息-->
+    <appinfo>
+        <app_version>3.0.0</app_version>
+        <app_name>ddd</app_name>
+        <app_build>1</app_build>
+    </appinfo>
     <!--商家信息-->
-    <MERCHANT id="110" alipaykey="alipay_key001" weixinkey="weixin_key001"></MERCHANT>
+    <merchant>
+        <merchant_id>110</merchant_id>
+    </merchant>
+    <!--微信支付信息-->
+    <weixinpay>
+        <weixin_merchant_id>111</weixin_merchant_id>
+        <merchant_weixin_id>120</merchant_weixin_id>
+        <weixin_key>130</weixin_key>
+    </weixinpay>
+    <!--支付宝支付信息-->
+    <alipay>
+        <alipay_merchant_id>133</alipay_merchant_id>
+        <merchant_alipay_id>120</merchant_alipay_id>
+        <alipay_key>130</alipay_key>
+    </alipay>
+    <!--UMENG统计信息-->
+    <umeng>
+        <umeng_appkey>123</umeng_appkey>
+        <umeng_channel>123</umeng_channel>
+        <umeng_message_secret>123</umeng_message_secret>
+    </umeng>
+    <!--网络请求接口前缀-->
+    <httpprefix>
+        <prefix>http://domain/xxx/</prefix>
+    </httpprefix>
+    <!--定位信息-->
+    <location>
+        <location_key>12345455</location_key>
+    </location>
+    <!--分享-->
+    <shareinfo>
+        <share_key>123</share_key>
+        <tencent_key>123</tencent_key>
+        <tencent_secret>123</tencent_secret>
+        <sina_key>123</sina_key>
+        <sina_secret>123</sina_secret>
+        <sina_redirect_uri>123</sina_redirect_uri>
+        <weixin_share_key>123</weixin_share_key>
+    </shareinfo>
+    <!--推送-->
+    <push_info>
+        <push_key>123</push_key>
+    </push_info>
     <!--底部菜单-->
-    <HOME_MENU menuname="首页" menuicon="@drawable/main_bottom_tab_home_normal"></HOME_MENU>
-    <HOME_MENU menuname="搜索" menuicon="@drawable/main_bottom_tab_search_normal"></HOME_MENU>
-    <HOME_MENU menuname="栏目" menuicon="@drawable/main_bottom_tab_category_normal"></HOME_MENU>
-    <HOME_MENU menuname="购物车" menuicon="@drawable/main_bottom_tab_cart_normal"></HOME_MENU>
-    <HOME_MENU menuname="个人中心" menuicon="@drawable/main_bottom_tab_personal_normal"></HOME_MENU>
-    <!--类别菜单-->
-    <CATAGORY_MENU catagoryname="全部"></CATAGORY_MENU>
-    <CATAGORY_MENU catagoryname="女装"></CATAGORY_MENU>
-    <CATAGORY_MENU catagoryname="母婴"></CATAGORY_MENU>
-    <CATAGORY_MENU catagoryname="数码"></CATAGORY_MENU>
+    <home_menu>
+        <menu_name>首页</menu_name>
+        <menu_tag>home</menu_tag>
+    </home_menu>
+    <home_menu>
+        <menu_name>发现</menu_name>
+        <menu_tag>discover</menu_tag>
+    </home_menu>
+    <home_menu>
+        <menu_name>分类</menu_name>
+        <menu_tag>catagory</menu_tag>
+    </home_menu>
+    <home_menu>
+        <menu_name>购物车</menu_name>
+        <menu_tag>cart</menu_tag>
+    </home_menu>
+    <home_menu>
+        <menu_name>我的</menu_name>
+        <menu_tag>my</menu_tag>
+    </home_menu>
+    <home_menu>
+        <menu_name>设置</menu_name>
+        <menu_tag>setting</menu_tag>
+    </home_menu>
 </resources>

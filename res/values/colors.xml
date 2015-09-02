@@ -2,8 +2,11 @@
 <resources>
 
     <color name="white">#ffffff</color>
+    <color name="activity_bg">#ffffffff</color>
     <!-- 白色 -->
     <color name="home_title">#ffffff</color>
+    <!--按钮背景-->
+    <color name="button_bg">#ffffff</color>
     <color name="ivory">#fffff0</color>
     <!--标题底色备选-->
     <color name="theme_color">#ffffffff</color>

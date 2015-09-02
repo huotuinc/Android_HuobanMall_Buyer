@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.0dip"
             android:layout_weight="1.0"
-            android:background="@drawable/android_layout_bg" />
+            android:background="@color/activity_bg" />
 
         <TabWidget
             android:id="@android:id/tabs"
@@ -30,43 +30,56 @@
             android:layout_gravity="bottom"
             android:background="@drawable/tabhost_bg"
             android:gravity="center_vertical"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <RadioButton
-                android:id="@+id/home_tab_main"
+                android:id="@+id/radioButton_01"
                 style="@style/home_tab_bottom"
                 android:background="@drawable/home_tab_background_selector"
                 android:checked="true"
                 android:drawableTop="@drawable/home_tab_main_selector"
-                android:text="@string/text_home"/>
+                android:visibility="gone"
+                android:text="radioButton1"/>
 
             <RadioButton
-                android:id="@+id/home_tab_search"
+                android:id="@+id/radioButton_02"
                 style="@style/home_tab_bottom"
                 android:background="@drawable/home_tab_background_selector"
                 android:drawableTop="@drawable/home_tab_search_selector"
-                android:text="@string/text_search"/>
+                android:visibility="gone"
+                android:text="radioButton2"/>
 
             <RadioButton
-                android:id="@+id/home_tab_category"
+                android:id="@+id/radioButton_03"
                 style="@style/home_tab_bottom"
                 android:background="@drawable/home_tab_background_selector"
                 android:drawableTop="@drawable/home_tab_category_selector"
-                android:text="@string/text_catagory"/>
+                android:visibility="gone"
+                android:text="radioButton3"/>
 
             <RadioButton
-                android:id="@+id/home_tab_cart"
+                android:id="@+id/radioButton_04"
                 style="@style/home_tab_bottom"
                 android:background="@drawable/home_tab_background_selector"
                 android:drawableTop="@drawable/home_tab_cart_selector"
-                android:text="@string/text_cart"/>
+                android:visibility="gone"
+                android:text="radioButton4"/>
 
             <RadioButton
-                android:id="@+id/home_tab_personal"
+                android:id="@+id/radioButton_05"
                 style="@style/home_tab_bottom"
                 android:background="@drawable/home_tab_background_selector"
                 android:drawableTop="@drawable/home_tab_personal_selector"
-                android:text="@string/text_center"/>
+                android:visibility="gone"
+                android:text="radioButton5"/>
+            <RadioButton
+                android:id="@+id/radioButton_06"
+                style="@style/home_tab_bottom"
+                android:background="@drawable/home_tab_background_selector"
+                android:drawableTop="@drawable/home_tab_setting_selector"
+                android:visibility="gone"
+                android:text="radioButton6"/>
         </RadioGroup>
     </LinearLayout>
 

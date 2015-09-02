@@ -15,11 +15,16 @@ import android.widget.ImageView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.service.LocationService;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.KJLoger;
+import com.huotu.partnermall.utils.PropertiesUtil;
 import com.huotu.partnermall.utils.XMLParserUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 
 public class SplashActivity extends BaseActivity {
@@ -141,6 +146,19 @@ public class SplashActivity extends BaseActivity {
                                                        KJLoger.e ( "载入商户信息失败。" );
                                                    }
                                                }
+                                               //加载颜色配置信息
+                                               try {
+                                                   InputStream is = SplashActivity.this.getAssets
+                                                               ().open ( "color.properties" );
+                                                   ColorBean color = PropertiesUtil.getInstance ().readProperties ( is );
+
+                                                   //记录颜色值
+                                                   KJLoger.i ( "记录颜色值." );
+                                               }
+                                               catch ( IOException e ) {
+                                                   KJLoger.e ( e.getMessage () );
+                                               }
+
                                            }
 
                                            @Override

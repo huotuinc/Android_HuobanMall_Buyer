@@ -16,7 +16,6 @@ import com.baidu.location.GeofenceClient;
 import com.baidu.location.LocationClient;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
-import com.huotu.partnermall.model.CatagoryBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.utils.KJConfig;
@@ -24,6 +23,8 @@ import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
 
 import java.util.List;
+
+import cn.jpush.android.api.JPushInterface;
 
 /**
  * 系统级别的变量、方法
@@ -64,6 +65,11 @@ public class BaseApplication extends Application {
         mGeofenceClient = new GeofenceClient(getApplicationContext());
         // 初始化Volley实例
         VolleyUtil.init ( this );
+        // 极光初始化
+        // JPushInterface.setDebugMode(true);// 日志，生产环境关闭
+        JPushInterface.init ( this );
+
+        solveAsyncTaskOnPostExecuteBug();
     }
 
     @Override
@@ -206,9 +212,8 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID, merchant.getMerchantId ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY,  merchant.getAlipayKey ( ));
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_WEIXIN_KEY, merchant.getWeixinKey ( ) );
-
-        List<MenuBean> menus = merchant.getMenus ();
-        List<CatagoryBean> catagorys = merchant.getCatagorys ();
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.HTTP_PREFIX_MERCHANT, merchant.getHttpPrefix ());
+        List<MenuBean> menus = merchant.getMenus ( );
         StringBuilder menuBuilder = new StringBuilder (  );
         StringBuilder catagoryBuilder = new StringBuilder (  );
         for(MenuBean menu : menus)
@@ -216,16 +221,23 @@ public class BaseApplication extends Application {
             menuBuilder.append ( menu.getMenuName () );
             menuBuilder.append ( "," );
         }
-        for( CatagoryBean catagory : catagorys)
-        {
-            catagoryBuilder.append ( catagory.getCatagoryName () );
-            catagoryBuilder.append ( "," );
-        }
 
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS,  menuBuilder.toString ().substring ( 0,  (menuBuilder.toString ().length ()-1)));
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_CATAGORY, catagoryBuilder.toString ().substring ( 0,  (catagoryBuilder.toString ().length ()-1)));
     }
 
+    /**
+     * 获取商户的底部菜单信息
+     * @return
+     */
+    public String readMenus()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS );
+    }
+
+    public String readCatagorys()
+    {
+     return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_CATAGORY );
+    }
     /**
      * 实现定位回调监听
      */

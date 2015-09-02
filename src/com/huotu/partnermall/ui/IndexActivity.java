@@ -1,31 +1,38 @@
 package com.huotu.partnermall.ui;
 
+import android.app.ActionBar;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.model.CatagoryBean;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.utils.KJLoger;
 
 import java.util.ArrayList;
+import java.util.List;
 
-
-import com.huotu.partnermall.widgets.HomeSearchBarPopupWindow.onSearchBarItemClickListener;
-
-public class IndexActivity extends BaseActivity implements OnClickListener,
-                                                           onSearchBarItemClickListener, RadioGroup.OnCheckedChangeListener {
+public class IndexActivity extends BaseActivity implements OnClickListener, RadioGroup.OnCheckedChangeListener, Handler.Callback {
 
     public  BaseApplication application;
     private ImageView       scanImage;
@@ -33,19 +40,8 @@ public class IndexActivity extends BaseActivity implements OnClickListener,
     private TextView        title;
     private
     Resources resources;
-
-    //商品类别切换功能
-    private RadioGroup  mRadioGroup;
-    private RadioButton mRadioButton1;
-    private RadioButton mRadioButton2;
-    private RadioButton mRadioButton3;
-    private RadioButton mRadioButton4;
-    private RadioButton mRadioButton5;
-    private RadioButton mRadioButton6;
-    private RadioButton mRadioButton7;
-    private RadioButton mRadioButton8;
-    private RadioButton mRadioButton9;
-    private RadioButton mRadioButton10;
+    private RadioGroup group;
+    private Handler mHandler = null;
 
     private HorizontalScrollView mHorizontalScrollView;
     private ViewPager            mViewPager;
@@ -60,6 +56,7 @@ public class IndexActivity extends BaseActivity implements OnClickListener,
         resources = IndexActivity.this.getResources ( );
         application = ( BaseApplication ) IndexActivity.this.getApplication ( );
         setContentView ( R.layout.activity_index );
+
         initView ( );
     }
 
@@ -79,48 +76,15 @@ public class IndexActivity extends BaseActivity implements OnClickListener,
         loginBtn.setOnClickListener ( this );
         title = ( TextView ) this.findViewById ( R.id.title );
         title.setText ( resources.getString ( R.string.home_title ) );
-
-        mRadioGroup = ( RadioGroup)findViewById ( R.id.radioGroup );
-        mRadioButton1 = (RadioButton)findViewById ( R.id.btn1 );
-        mRadioButton2 = (RadioButton)findViewById(R.id.btn2);
-        mRadioButton3 = (RadioButton)findViewById ( R.id.btn3 );
-        mRadioButton4 = (RadioButton)findViewById(R.id.btn4);
-        mRadioButton5 = (RadioButton)findViewById ( R.id.btn5 );
-        mRadioButton6 = (RadioButton)findViewById(R.id.btn6);
-        mRadioButton7 = (RadioButton)findViewById ( R.id.btn7 );
-        mRadioButton8 = (RadioButton)findViewById(R.id.btn8);
-        mRadioButton9 = (RadioButton)findViewById(R.id.btn9);
-        mRadioButton10 = (RadioButton)findViewById(R.id.btn10);
-        mHorizontalScrollView = (HorizontalScrollView)findViewById(R.id.horizontalMenu);
+        group = ( RadioGroup ) this.findViewById ( R.id.index_radioGroup );
+        mHandler = new Handler(this);
+        mHorizontalScrollView = (HorizontalScrollView)findViewById ( R.id.horizontalMenu );
         mViewPager = (ViewPager)findViewById(R.id.catagoryItemPager);
-
-        mRadioGroup.setOnCheckedChangeListener ( this );
+        mViews = new ArrayList< View > (  );
+        //动态获取产品类别
+        new ObtainDataAsyncTask(mHandler).execute ( "" );
+        group.setOnCheckedChangeListener ( this );
         mViewPager.setOnPageChangeListener ( new MyPagerOnPageChangeListener ( ) );
-        mViews = new ArrayList<View>();
-        View vPage1 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
-        mViews.add ( vPage1 );
-        View vPage2 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
-        mViews.add ( vPage2 );
-        View vPage3 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
-        mViews.add( vPage3 );
-        View vPage4 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
-        mViews.add( vPage4 );
-        View vPage5 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
-        mViews.add( vPage5 );
-        View vPage6 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
-        mViews.add( vPage6 );
-        View vPage7 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
-        mViews.add ( vPage7);
-        View vPage8 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
-        mViews.add( vPage8 );
-        View vPage9 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
-        mViews.add( vPage9 );
-        View vPage10 = getLayoutInflater ( ).inflate ( R.layout.home_web_view, null );
-        mViews.add( vPage10 );
-
-        mViewPager.setAdapter ( new MyPagerAdapter ( ) );
-
-        mRadioButton1.setChecked( true );
         mViewPager.setCurrentItem( 1 );
     }
 
@@ -148,55 +112,83 @@ public class IndexActivity extends BaseActivity implements OnClickListener,
         }
     }
 
-    @Override
-    public void onBarCodeButtonClick() {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
-    public void onCameraButtonClick() {
-        // TODO Auto-generated method stub
+    public
+    boolean handleMessage ( Message msg ) {
 
-    }
+        List<CatagoryBean> catagorys = null;
+        switch ( msg.what )
+        {
 
-    @Override
-    public void onColorButtonClick() {
-        // TODO Auto-generated method stub
+            case Constants.SUCCESS_CODE:
+            {
+                catagorys = ( List< CatagoryBean > ) msg.obj;
+                int size = catagorys.size ();
+                for(int i=0; i<size; i++)
+                {
+                    RadioButton radioButton = ( RadioButton ) LayoutInflater.from ( this ).inflate ( R.layout.catagory_radio, null );
+                    radioButton.setText ( catagorys.get ( i ).getCatagoryName ( ) );
+                    radioButton.setId ( i );
+                    if(0 == i)
+                    {
+                        radioButton.setChecked ( true );
+                    }
+                    group.addView ( radioButton);
 
+                    //设置切换界面
+                    mViews.add ( getLayoutInflater ( ).inflate ( R.layout.home_web_view, null ) );
+
+                }
+            }
+            break;
+            case Constants.ERROR_CODE:
+            {
+                catagorys = ( List< CatagoryBean > ) msg.obj;
+                int size = catagorys.size ();
+                for(int i=0; i<size; i++)
+                {
+                    RadioButton radioButton = ( RadioButton ) LayoutInflater.from ( this ).inflate ( R.layout.catagory_radio, null );
+                    radioButton.setText ( catagorys.get ( i ).getCatagoryName ( ) );
+                    radioButton.setId ( i );
+                    if(0 == i)
+                    {
+                        radioButton.setChecked ( true );
+                    }
+                    group.addView ( radioButton );
+                }
+            }
+            break;
+            case Constants.NULL_CODE:
+            {
+                catagorys = ( List< CatagoryBean > ) msg.obj;
+                int size = catagorys.size ();
+                for(int i=0; i<size; i++)
+                {
+                    RadioButton radioButton = ( RadioButton ) LayoutInflater.from ( this ).inflate ( R.layout.catagory_radio, null );
+                    radioButton.setText ( catagorys.get ( i ).getCatagoryName ( ) );
+                    group.addView ( radioButton );
+                }
+            }
+            break;
+        }
+        return false;
     }
 
     @Override
     public
     void onCheckedChanged ( RadioGroup group, int checkedId ) {
 
-        if (checkedId == R.id.btn1) {
-            mViewPager.setCurrentItem(1);
+        KJLoger.i ( "checkId" + checkedId);
+        int max = mViews.size ();
+        for(int i=0; i<max; i++)
+        {
+            if(i == checkedId)
+            {
+                mViewPager.setCurrentItem ( i+1 );
+            }
+        }
 
-        }else if (checkedId == R.id.btn2) {
-            mViewPager.setCurrentItem(2);
-        }else if (checkedId == R.id.btn3) {
-            mViewPager.setCurrentItem(3);
-        }else if (checkedId == R.id.btn4) {
-            mViewPager.setCurrentItem(4);
-        }else if (checkedId == R.id.btn5) {
-            mViewPager.setCurrentItem(5);
-        }
-        else if (checkedId == R.id.btn6) {
-            mViewPager.setCurrentItem(6);
-        }
-        else if (checkedId == R.id.btn7) {
-            mViewPager.setCurrentItem(7);
-        }
-        else if (checkedId == R.id.btn8) {
-            mViewPager.setCurrentItem(8);
-        }
-        else if (checkedId == R.id.btn9) {
-            mViewPager.setCurrentItem(9);
-        }
-        else if (checkedId == R.id.btn10) {
-            mViewPager.setCurrentItem(10);
-        }
     }
 
     private class MyPagerOnPageChangeListener implements ViewPager.OnPageChangeListener {
@@ -218,32 +210,7 @@ public class IndexActivity extends BaseActivity implements OnClickListener,
         @Override
         public void onPageSelected(int position) {
             // TODO Auto-generated method stub
-            //Log.i("zj", "position="+position);
 
-			/*if (position == 1) {
-				mRadioButton1.performClick ( );
-			}else if (position == 2) {
-				mRadioButton2.performClick();
-			}else if (position == 3) {
-				mRadioButton3.performClick();
-			}else if (position == 4) {
-				mRadioButton4.performClick();
-			}else if (position == 5) {
-				mRadioButton5.performClick();
-			}else if (position == 6) {
-				mRadioButton6.performClick();
-			}else if (position == 7) {
-				mRadioButton7.performClick ( );
-			}
-			else if (position == 8) {
-				mRadioButton8.performClick ( );
-			}
-			else if (position == 9) {
-				mRadioButton9.performClick ( );
-			}
-			else if (position == 10) {
-				mRadioButton10.performClick();
-			}*/
         }
 
     }
@@ -298,6 +265,76 @@ public class IndexActivity extends BaseActivity implements OnClickListener,
 
         }
 
+    }
+
+    class ObtainDataAsyncTask extends AsyncTask<String, Void, List<CatagoryBean>>
+    {
+        Handler mHandler = null;
+
+        public ObtainDataAsyncTask(Handler mHandler)
+        {
+            this.mHandler = mHandler;
+        }
+
+        @Override
+        protected
+        void onPreExecute ( ) {
+            super.onPreExecute ( );
+        }
+
+        @Override
+        protected
+        void onPostExecute ( List< CatagoryBean > catagorys ) {
+            super.onPostExecute ( catagorys );
+            if(null != catagorys && 0 != catagorys.size ())
+            {
+                Message msg = mHandler.obtainMessage ( Constants.SUCCESS_CODE );
+                msg.obj = catagorys;
+                mHandler.sendMessage ( msg );
+            }
+            else if(null == catagorys)
+            {
+                Message msg = mHandler.obtainMessage ( Constants.ERROR_CODE );
+                //赋默认值
+                msg.obj = catagorys;
+                mHandler.sendMessage ( msg );
+            }
+            else if(null != catagorys && 0 == catagorys.size ())
+            {
+                Message msg = mHandler.obtainMessage ( Constants.NULL_CODE );
+                //赋默认值
+                msg.obj = catagorys;
+                mHandler.sendMessage ( msg );
+            }
+        }
+
+        @Override
+        protected
+        List< CatagoryBean > doInBackground ( String... params ) {
+            if( Constants.IS_TEST)
+            {
+                List<CatagoryBean> catagorys = new ArrayList< CatagoryBean > (  );
+                CatagoryBean catagory1 = new CatagoryBean ();
+                catagory1.setCatagoryName ( "全部" );
+                CatagoryBean catagory2 = new CatagoryBean ();
+                catagory2.setCatagoryName ( "男装" );
+                CatagoryBean catagory3 = new CatagoryBean ();
+                catagory3.setCatagoryName ( "女装" );
+
+                catagorys.add ( catagory1 );
+                catagorys.add ( catagory2 );
+                catagorys.add ( catagory3 );
+
+                return catagorys;
+
+            }
+            else
+            {
+
+            }
+
+            return null;
+        }
     }
 }
 

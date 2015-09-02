@@ -47,7 +47,7 @@
     <style name="home_color_shopping_button">
         <item name="android:textColor">#ff000000</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/color_shopping_button_bg</item>
+        <item name="android:background">@color/button_bg</item>
         <item name="android:padding">0.0dip</item>
         <item name="android:layout_height">40.0dip</item>
     </style>

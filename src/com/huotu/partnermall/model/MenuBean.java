@@ -10,6 +10,18 @@ class MenuBean extends BaseBean {
     private String menuName;
     //菜单图标
     private String menuIcon;
+    //菜单标识
+    private String menuTag;
+
+    public
+    String getMenuTag ( ) {
+        return menuTag;
+    }
+
+    public
+    void setMenuTag ( String menuTag ) {
+        this.menuTag = menuTag;
+    }
 
     public
     String getMenuName ( ) {

@@ -1,12 +1,11 @@
 package com.huotu.partnermall.model;
 
 /**
- * 类别侧滑类
+ * 商品类别实体
  */
 public
 class CatagoryBean extends BaseBean {
 
-    //侧滑菜单名称
     private String catagoryName;
 
     public

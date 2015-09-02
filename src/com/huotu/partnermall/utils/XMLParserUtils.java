@@ -5,7 +5,6 @@ import android.content.res.XmlResourceParser;
 
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.model.CatagoryBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
 
@@ -43,61 +42,142 @@ class XMLParserUtils {
     {
         Map<String, MerchantBean> merchantMap = new HashMap< String, MerchantBean > (  );
         MerchantBean merchant = null;
-        List<CatagoryBean> catagorys = null;
-        CatagoryBean catagory = null;
         List<MenuBean> menus = null;
         MenuBean menu = null;
 
         try {
             XmlResourceParser xmlResourceParser = context.getResources ().getXml ( R.xml.merchant_info );
             merchant = new MerchantBean ();
-            catagorys = new ArrayList< CatagoryBean > (  );
             menus = new ArrayList< MenuBean > (  );
             //如果没有到文件尾继续执行
             while (xmlResourceParser.getEventType () != XmlResourceParser.END_DOCUMENT) {
+
                 //如果是开始标签
                 if (xmlResourceParser.getEventType() == XmlResourceParser.START_TAG) {
-
                     //获取标签名称
                     String name = xmlResourceParser.getName();
+
                     //判断标签名称是否等于ID
-                    if(name.equals( Constants.MERCHANT)){
-                        //记录商户ID
-                        String merchantId = xmlResourceParser.getAttributeValue ( null, Constants.MERCHANT_ID );
-                        merchant.setMerchantId ( merchantId );
-                        String alipayKey = xmlResourceParser.getAttributeValue ( null, Constants.ALIPAY_KEY );
-                        merchant.setAlipayKey ( alipayKey );
-                        String weixinKey = xmlResourceParser.getAttributeValue ( null, Constants.WEIXIN_KEY );
-                        merchant.setWeixinKey ( weixinKey );
+                    if(name.equals( Constants.APP_VERSION)){
+                        merchant.setAppVersion ( xmlResourceParser.nextText () );
+                    }
+                    else if(name.equals ( Constants.APP_NAME ))
+                    {
+                        merchant.setAppName ( xmlResourceParser.nextText () );
+                    }
+                    else if(name.equals ( Constants.APP_BUILD ))
+                    {
+                        merchant.setAppBuild ( xmlResourceParser.nextText () );
+                    }
+                    else if(name.equals ( Constants.MERCHANT_ID ))
+                    {
+                        merchant.setMerchantId ( xmlResourceParser.nextText () );
+                    }
+                    else if(name.equals ( Constants.WEIXIN_MERCHANT_ID ))
+                    {
+                        merchant.setWeixinMerchantId ( xmlResourceParser.nextText () );
+                    }
+                    else if(name.equals ( Constants.MERCHANT_WEIXIN_ID ))
+                    {
+                        merchant.setMerchantWeixinId ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.WEIXIN_KEY ))
+                    {
+                        merchant.setWeixinKey ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.ALIPAY_MERCHANT_ID ))
+                    {
+                        merchant.setAlipayMerchantId ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.MERCHANT_ALIPAY_ID ))
+                    {
+                        merchant.setMerchantAlipayId ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.LOCATION_KEY ))
+                    {
+                        merchant.setLocationKey ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.ALIPAY_KEY ))
+                    {
+                        merchant.setAlipayKey ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.U_MENG_KEY ))
+                    {
+                        merchant.setUmengAppkey ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.U_MENG_CHANNEL))
+                    {
+                        merchant.setUmengChannel ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.U_MENG_SECRET))
+                    {
+                        merchant.setUmengMessageSecret ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.PREFIX))
+                    {
+                        merchant.setHttpPrefix ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.SHARE_KEY))
+                    {
+                        merchant.setShareSDKKey ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.TENCENT_KEY))
+                    {
+                        merchant.setTencentKey ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.TENCENT_SECRET))
+                    {
+                        merchant.setTencentSecret ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.SINA_KEY))
+                    {
+                        merchant.setSinaKey ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.SINA_SECRET))
+                    {
+                        merchant.setSinaSecret ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.SINA_REDIRECT_URI))
+                    {
+                        merchant.setSinaRedirectUri ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.WEIXIN_SHARE_key))
+                    {
+                        merchant.setWeixinShareKey ( xmlResourceParser.nextText ( ) );
+                    }
+                    else if(name.equals ( Constants.PUSH_KEY))
+                    {
+                        merchant.setPushKey ( xmlResourceParser.nextText ( ) );
                     }
                     else if(name.equals ( Constants.HOME_MENU ))
                     {
                         menu = new MenuBean ();
-                        String menuName = xmlResourceParser.getAttributeValue ( null,  Constants.MENU_NAME);
-                        menu.setMenuName ( menuName );
-                        String menuIcon = xmlResourceParser.getAttributeValue ( null, Constants.MENU_ICON );
-                        menu.setMenuIcon ( menuIcon );
-                        menus.add ( menu );
                     }
-                    else if(name.equals ( Constants.CATAGORY_MENU ))
+                    if(null != menu)
                     {
-                        catagory = new CatagoryBean ();
-                        String catagoryName = xmlResourceParser.getAttributeValue ( null, Constants.CATAGORY_TYPE );
-                        catagory.setCatagoryName ( catagoryName );
-                        catagorys.add ( catagory );
+                        if(name.equals ( Constants.MENU_NAME ))
+                        {
+                            String menuName = xmlResourceParser.nextText ();
+                            menu.setMenuName ( menuName );
+                        }
+                        else if(name.equals ( Constants.MENU_TAG ))
+                        {
+                            String menuTag = xmlResourceParser.nextText ();
+                            menu.setMenuIcon ( menuTag );
+                        }
                     }
 
                 } else if (xmlResourceParser.getEventType() == XmlPullParser.END_TAG) {
-                    if(null != menu || null != catagory)
+                    String endName = xmlResourceParser.getName ();
+                    if(endName.equals ( Constants.HOME_MENU ))
                     {
+                        menus.add ( menu );
                         menu = null;
-                        catagory = null;
                     }
                 }
                 //下一个标签
-                xmlResourceParser.next();
+                xmlResourceParser.next ( );
             }
-            merchant.setCatagorys ( catagorys );
             merchant.setMenus ( menus );
             return merchant;
         } catch (XmlPullParserException e) {
