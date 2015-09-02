@@ -35,4 +35,6 @@
     <dimen name="horizontal_menu_height">40dp</dimen>
     <!--类别滚动菜单字体大小-->
     <dimen name="catagroy_text_size">12sp</dimen>
+    <dimen name="vertical_menu_height">200dp</dimen>
+    <dimen name="vertical_menu_width">250dp</dimen>
 </resources>

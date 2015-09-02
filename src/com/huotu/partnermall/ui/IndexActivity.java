@@ -82,7 +82,7 @@ public class IndexActivity extends BaseActivity implements OnClickListener, Radi
         mViewPager = (ViewPager)findViewById(R.id.catagoryItemPager);
         mViews = new ArrayList< View > (  );
         //动态获取产品类别
-        new ObtainDataAsyncTask(mHandler).execute ( "" );
+        new ObtainhorizontalCatagoryAsyncTask(mHandler).execute ( "" );
         group.setOnCheckedChangeListener ( this );
         mViewPager.setOnPageChangeListener ( new MyPagerOnPageChangeListener ( ) );
         mViewPager.setCurrentItem( 1 );
@@ -267,11 +267,11 @@ public class IndexActivity extends BaseActivity implements OnClickListener, Radi
 
     }
 
-    class ObtainDataAsyncTask extends AsyncTask<String, Void, List<CatagoryBean>>
+    class ObtainhorizontalCatagoryAsyncTask extends AsyncTask<String, Void, List<CatagoryBean>>
     {
         Handler mHandler = null;
 
-        public ObtainDataAsyncTask(Handler mHandler)
+        public ObtainhorizontalCatagoryAsyncTask(Handler mHandler)
         {
             this.mHandler = mHandler;
         }

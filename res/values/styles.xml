@@ -43,6 +43,20 @@
         <item name="android:textColor">@drawable/catagory_text_color</item>
         <item name="android:button">@null</item>
     </style>
+    <style name="catatoryButtonvertical">
+        <item name="android:layout_width">@dimen/vertical_menu_height</item>
+        <item name="android:layout_height">@dimen/vertical_menu_width</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/catagroy_text_size</item>
+        <item name="android:background">@drawable/vertical_radio_seletor</item>
+        <item name="android:textColor">@drawable/catagory_text_color</item>
+        <item name="android:button">@null</item>
+    </style>
 
     <style name="home_color_shopping_button">
         <item name="android:textColor">#ff000000</item>
