@@ -25,6 +25,7 @@ import com.huotu.partnermall.utils.PreferenceHelper;
 import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.sharesdk.framework.ShareSDK;
 
 /**
  * 系统级别的变量、方法
@@ -68,7 +69,8 @@ public class BaseApplication extends Application {
         // 极光初始化
         // JPushInterface.setDebugMode(true);// 日志，生产环境关闭
         JPushInterface.init ( this );
-
+        //初始化shareSDK参数
+        ShareSDK.initSDK ( getApplicationContext () );
         solveAsyncTaskOnPostExecuteBug();
     }
 

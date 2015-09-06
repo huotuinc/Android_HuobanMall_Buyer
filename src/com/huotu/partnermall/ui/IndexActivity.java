@@ -28,6 +28,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.CatagoryBean;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.KJLoger;
+import com.huotu.partnermall.widgets.OneKeyShareUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +99,13 @@ public class IndexActivity extends BaseActivity implements OnClickListener, Radi
             case R.id.scanImage:
             {
                 //扫描功能键
+                //模拟扫描类
+                /*String shareTitle = "分享01";
+                String shareText = "分享的一个测试";
+                String shareUrl = "http://www.baidu.com";
 
+                OneKeyShareUtils oks = new OneKeyShareUtils ( shareTitle, null, shareText, null, shareUrl, null, null, null, IndexActivity.this );
+                oks.shareShow (null, false);*/
             }
             break;
             case R.id.loginBtn:
