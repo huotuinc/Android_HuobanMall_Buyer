@@ -12,6 +12,21 @@ class MenuBean extends BaseBean {
     private String menuIcon;
     //菜单标识
     private String menuTag;
+    //菜单url
+    private String menuUrl;
+    //菜单组
+    private String menuGroup;
+
+
+    public
+    String getMenuGroup ( ) {
+        return menuGroup;
+    }
+
+    public
+    void setMenuGroup ( String menuGroup ) {
+        this.menuGroup = menuGroup;
+    }
 
     public
     String getMenuTag ( ) {
@@ -41,5 +56,15 @@ class MenuBean extends BaseBean {
     public
     void setMenuIcon ( String menuIcon ) {
         this.menuIcon = menuIcon;
+    }
+
+    public
+    String getMenuUrl ( ) {
+        return menuUrl;
+    }
+
+    public
+    void setMenuUrl ( String menuUrl ) {
+        this.menuUrl = menuUrl;
     }
 }

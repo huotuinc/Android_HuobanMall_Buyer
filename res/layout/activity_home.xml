@@ -11,9 +11,7 @@
         android:layout_height="match_parent"
         android:background="@color/theme_color"
         tools:context=".AllScoreActivity" >
-
         <include layout="@layout/home_main_content" />
-
         <include layout="@layout/home_main_menu" />
     </android.support.v4.widget.DrawerLayout>
 

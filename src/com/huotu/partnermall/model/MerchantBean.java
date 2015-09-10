@@ -222,11 +222,6 @@ class MerchantBean extends BaseBean {
         this.pushKey = pushKey;
     }
 
-    //关联的底部菜单
-    private
-    List< MenuBean > menus;
-
-
     public
     String getMerchantId ( ) {
         return merchantId;
@@ -265,16 +260,6 @@ class MerchantBean extends BaseBean {
     public
     void setWeixinKey ( String weixinKey ) {
         this.weixinKey = weixinKey;
-    }
-
-    public
-    List< MenuBean > getMenus ( ) {
-        return menus;
-    }
-
-    public
-    void setMenus ( List< MenuBean > menus ) {
-        this.menus = menus;
     }
 
 }

@@ -47,9 +47,6 @@ class SettingActivity extends BaseActivity implements View.OnClickListener {
     protected
     void findViewById ( ) {
 
-        searchImage = ( ImageView ) this.findViewById ( R.id.searchImage );
-        refreshBtn = ( ImageView ) this.findViewById ( R.id.refreshBtn );
-        indexTitle = ( TextView ) this.findViewById ( R.id.indexTitle );
     }
 
     @Override
@@ -64,16 +61,6 @@ class SettingActivity extends BaseActivity implements View.OnClickListener {
 
         switch ( v.getId () )
         {
-            case R.id.searchImage:
-            {
-
-            }
-            break;
-            case R.id.refreshBtn:
-            {
-
-            }
-            break;
             default:
                 break;
         }

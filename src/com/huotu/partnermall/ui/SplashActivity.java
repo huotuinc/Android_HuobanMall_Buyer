@@ -16,15 +16,18 @@ import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ColorBean;
+import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.service.LocationService;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PropertiesUtil;
 import com.huotu.partnermall.utils.XMLParserUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 
 public class SplashActivity extends BaseActivity {
@@ -146,6 +149,21 @@ public class SplashActivity extends BaseActivity {
                                                        KJLoger.e ( "载入商户信息失败。" );
                                                    }
                                                }
+                                               if(!application.checkMenuInfo ())
+                                               {
+                                                   //设置菜单
+                                                   List<MenuBean> menus = XMLParserUtils.getInstance ().readMenuInfo ( SplashActivity.this );
+                                                   //写入文件
+                                                   if(null != menus && !menus.isEmpty ())
+                                                   {
+                                                       application.writeMenus ( menus );
+                                                   }
+                                                   else
+                                                   {
+                                                       KJLoger.e ( "载入主菜单失败。" );
+                                                   }
+                                               }
+                                               //设置
                                                //加载颜色配置信息
                                                try {
                                                    InputStream is = SplashActivity.this.getAssets
@@ -168,10 +186,7 @@ public class SplashActivity extends BaseActivity {
 
                                            @Override
                                            public void onAnimationEnd(Animation animation) {
-                                               openActivity( HomeActivity.class);
-                                               overridePendingTransition(R.anim.push_left_in,
-                                                                         R.anim.push_left_out);
-                                               SplashActivity.this.finish();
+                                               ActivityUtils.getInstance ().skipActivity ( SplashActivity.this, HomeActivity.class );
                                            }
                                        });
         mSplashItem_iv.setAnimation ( translate );

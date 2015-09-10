@@ -152,23 +152,6 @@ public class CategoryActivity extends BaseActivity implements OnClickListener, R
     protected
     void initView ( ) {
         // TODO Auto-generated method stub
-        searchImage = ( ImageView ) this.findViewById ( R.id.searchImage );
-        searchImage.setOnClickListener ( this );
-        refreshBtn = ( ImageView ) this.findViewById (R.id.refreshBtn);
-        refreshBtn.setOnClickListener ( this );
-        indexTitle = ( TextView ) this.findViewById (R.id.indexTitle);
-        indexTitle.setText ( resources.getString ( R.string.category_title ) );
-
-        group = ( RadioGroup ) this.findViewById ( R.id.index_radioGroup );
-        mHandler = new Handler(this);
-        mScrollView = (ScrollView)findViewById ( R.id.verticalMenu );
-        mViewPager = (ViewPager)findViewById(R.id.catagoryItemPager);
-        mViews = new ArrayList< View > (  );
-        //动态获取产品类别
-        new ObtainVerticalCatagoryAsyncTask(mHandler).execute ( "" );
-        group.setOnCheckedChangeListener ( this );
-        mViewPager.setOnPageChangeListener ( new MyPagerOnPageChangeListener ( ) );
-        mViewPager.setCurrentItem( 1 );
     }
 
     @Override
@@ -177,17 +160,6 @@ public class CategoryActivity extends BaseActivity implements OnClickListener, R
 
         switch ( v.getId () )
         {
-            case R.id.searchImage:
-            {
-                //搜索事件
-
-            }
-            break;
-            case R.id.refreshBtn:
-            {
-                //刷新界面事件
-            }
-            break;
             default:
                 break;
         }
@@ -316,17 +288,16 @@ public class CategoryActivity extends BaseActivity implements OnClickListener, R
             if( Constants.IS_TEST)
             {
                 List<CatagoryBean> catagorys = new ArrayList< CatagoryBean > (  );
-                CatagoryBean catagory1 = new CatagoryBean ();
-                catagory1.setCatagoryName ( "全部" );
-                CatagoryBean catagory2 = new CatagoryBean ();
-                catagory2.setCatagoryName ( "男装" );
-                CatagoryBean catagory3 = new CatagoryBean ();
-                catagory3.setCatagoryName ( "女装" );
+                String[] catagoryArr = resources.getStringArray ( R.array.catagorys );
+                int size = catagoryArr.length;
 
-                catagorys.add ( catagory1 );
-                catagorys.add ( catagory2 );
-                catagorys.add ( catagory3 );
-
+                CatagoryBean catagory;
+                for(int i=0; i<size; i++)
+                {
+                    catagory = new CatagoryBean ();
+                    catagory.setCatagoryName ( catagoryArr[i] );
+                    catagorys.add ( catagory );
+                }
                 return catagorys;
 
             }

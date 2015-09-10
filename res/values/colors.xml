@@ -5,6 +5,8 @@
     <color name="activity_bg">#ffffffff</color>
     <!-- 白色 -->
     <color name="home_title">#ffffff</color>
+    <!-- title字体颜色 -->
+    <color name="title_text_color">#ffffff</color>
     <!--按钮背景-->
     <color name="button_bg">#ffffff</color>
     <color name="ivory">#fffff0</color>
@@ -14,6 +16,8 @@
     <color name="title_bottom_color">#666666</color>
     <!--首页标题底色-->
     <color name="home_title_color">#de0d9c</color>
+    <!--标题栏背景-->
+    <color name="home_title_bg">#FFFF3D00</color>
     <!--索引页文字颜色-->
     <color name="index_title_txt_color">#000000</color>
     <!--详细页标题颜色-->
@@ -324,4 +328,8 @@
 
     <!--橘黄-->
     <color name="catagroy_color">#ea8010</color>
+    <!--侧滑菜单背景-->
+    <color name="sideslip_menu_bg">#F6F6F6</color>
+    <!--侧滑菜单字体颜色-->
+    <color name="sideslip_menu_text_color">#777777</color>
 </resources>

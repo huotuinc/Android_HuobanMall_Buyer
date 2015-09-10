@@ -28,6 +28,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.CatagoryBean;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.KJLoger;
+import com.huotu.partnermall.widgets.KJWebView;
 import com.huotu.partnermall.widgets.OneKeyShareUtils;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class IndexActivity extends BaseActivity implements OnClickListener, Radi
     private HorizontalScrollView mHorizontalScrollView;
     private ViewPager            mViewPager;
     private ArrayList< View >    mViews;
-    private WebView              loadPage;
+    private KJWebView            loadPage;
 
     @Override
     protected
@@ -78,10 +79,10 @@ public class IndexActivity extends BaseActivity implements OnClickListener, Radi
         title = ( TextView ) this.findViewById ( R.id.title );
         title.setText ( resources.getString ( R.string.home_title ) );
         group = ( RadioGroup ) this.findViewById ( R.id.index_radioGroup );
-        mHandler = new Handler(this);
-        mHorizontalScrollView = (HorizontalScrollView)findViewById ( R.id.horizontalMenu );
-        mViewPager = (ViewPager)findViewById(R.id.catagoryItemPager);
-        mViews = new ArrayList< View > (  );
+        mHandler = new Handler ( this );
+        mHorizontalScrollView = ( HorizontalScrollView ) findViewById ( R.id.horizontalMenu );
+        mViewPager = ( ViewPager ) findViewById ( R.id.catagoryItemPager );
+        mViews = new ArrayList< View > ( );
         //动态获取产品类别
         new ObtainhorizontalCatagoryAsyncTask(mHandler).execute ( "" );
         group.setOnCheckedChangeListener ( this );
@@ -111,7 +112,7 @@ public class IndexActivity extends BaseActivity implements OnClickListener, Radi
             case R.id.loginBtn:
             {
                 //切换出侧滑界面
-                application.layDrag.openDrawer ( Gravity.RIGHT );
+                application.layDrag.openDrawer ( Gravity.LEFT );
             }
             break;
             default:
@@ -192,7 +193,8 @@ public class IndexActivity extends BaseActivity implements OnClickListener, Radi
         {
             if(i == checkedId)
             {
-                mViewPager.setCurrentItem ( i+1 );
+                mViewPager.setCurrentItem ( i + 1 );
+                View page = mViews.get ( i );
             }
         }
 
@@ -321,19 +323,17 @@ public class IndexActivity extends BaseActivity implements OnClickListener, Radi
             if( Constants.IS_TEST)
             {
                 List<CatagoryBean> catagorys = new ArrayList< CatagoryBean > (  );
-                CatagoryBean catagory1 = new CatagoryBean ();
-                catagory1.setCatagoryName ( "全部" );
-                CatagoryBean catagory2 = new CatagoryBean ();
-                catagory2.setCatagoryName ( "男装" );
-                CatagoryBean catagory3 = new CatagoryBean ();
-                catagory3.setCatagoryName ( "女装" );
+                String[] catagoryArr = resources.getStringArray ( R.array.catagorys );
+                int size = catagoryArr.length;
 
-                catagorys.add ( catagory1 );
-                catagorys.add ( catagory2 );
-                catagorys.add ( catagory3 );
-
+                CatagoryBean catagory;
+                for(int i=0; i<size; i++)
+                {
+                    catagory = new CatagoryBean ();
+                    catagory.setCatagoryName ( catagoryArr[i] );
+                    catagorys.add ( catagory );
+                }
                 return catagorys;
-
             }
             else
             {

@@ -13,8 +13,8 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/catagoryViewLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/catagory_title">
         <include layout="@layout/vertical_menu" />
 

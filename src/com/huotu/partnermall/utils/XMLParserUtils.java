@@ -42,13 +42,10 @@ class XMLParserUtils {
     {
         Map<String, MerchantBean> merchantMap = new HashMap< String, MerchantBean > (  );
         MerchantBean merchant = null;
-        List<MenuBean> menus = null;
-        MenuBean menu = null;
 
         try {
             XmlResourceParser xmlResourceParser = context.getResources ().getXml ( R.xml.merchant_info );
             merchant = new MerchantBean ();
-            menus = new ArrayList< MenuBean > (  );
             //如果没有到文件尾继续执行
             while (xmlResourceParser.getEventType () != XmlResourceParser.END_DOCUMENT) {
 
@@ -149,7 +146,45 @@ class XMLParserUtils {
                     {
                         merchant.setPushKey ( xmlResourceParser.nextText ( ) );
                     }
-                    else if(name.equals ( Constants.HOME_MENU ))
+                } else if (xmlResourceParser.getEventType() == XmlPullParser.END_TAG) {
+                }
+                //下一个标签
+                xmlResourceParser.next ( );
+            }
+            return merchant;
+        } catch (XmlPullParserException e) {
+            KJLoger.exception ( e );
+            return null;
+        } catch (IOException e) {
+            KJLoger.exception ( e );
+            return null;
+        }
+
+    }
+
+
+    /***
+     * 读取菜单信息
+     * @param context
+     * @return
+     */
+    public List<MenuBean> readMenuInfo(Context context)
+    {
+        List<MenuBean> menus = null;
+        MenuBean menu = null;
+
+        try {
+            XmlResourceParser xmlResourceParser = context.getResources ().getXml ( R.xml.main_menu );
+            menus = new ArrayList< MenuBean > (  );
+            //如果没有到文件尾继续执行
+            while (xmlResourceParser.getEventType () != XmlResourceParser.END_DOCUMENT) {
+
+                //如果是开始标签
+                if (xmlResourceParser.getEventType() == XmlResourceParser.START_TAG) {
+                    //获取标签名称
+                    String name = xmlResourceParser.getName();
+
+                     if(name.equals ( Constants.HOME_MENU ))
                     {
                         menu = new MenuBean ();
                     }
@@ -163,7 +198,22 @@ class XMLParserUtils {
                         else if(name.equals ( Constants.MENU_TAG ))
                         {
                             String menuTag = xmlResourceParser.nextText ();
-                            menu.setMenuIcon ( menuTag );
+                            menu.setMenuTag (  menuTag );
+                        }
+                        else if(name.equals ( Constants.MENU_ICON ))
+                        {
+                            String menuIcon = xmlResourceParser.nextText ();
+                            menu.setMenuIcon ( menuIcon );
+                        }
+                        else if(name.equals ( Constants.MENU_URL ))
+                        {
+                            String menuUrl = xmlResourceParser.nextText ();
+                            menu.setMenuUrl ( menuUrl );
+                        }
+                        else if(name.equals ( Constants.MENU_GROUP ))
+                        {
+                            String menuGroup = xmlResourceParser.nextText ();
+                            menu.setMenuGroup ( menuGroup );
                         }
                     }
 
@@ -178,8 +228,7 @@ class XMLParserUtils {
                 //下一个标签
                 xmlResourceParser.next ( );
             }
-            merchant.setMenus ( menus );
-            return merchant;
+            return menus;
         } catch (XmlPullParserException e) {
             KJLoger.exception ( e );
             return null;

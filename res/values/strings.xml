@@ -80,6 +80,33 @@
         <item>Accordion</item>
     </string-array>
     <!-- JazzyViewPager -->
+    <!--测试类别-->
+    <string-array name="catagorys">
+        <item>推荐分类</item>
+        <item>潮流女装</item>
+        <item>品牌男装</item>
+        <item>内衣配饰</item>
+        <item>家用电器</item>
+        <item>电脑办公</item>
+        <item>手机数码</item>
+        <item>母婴频道</item>
+        <item>图书   </item>
+        <item>家具建材</item>
+        <item>居家生活</item>
+        <item>食品生鲜</item>
+        <item>个户化妆</item>
+        <item>户外运动</item>
+        <item>珠宝饰品</item>
+        <item>家居家纺</item>
+        <item>鞋靴箱包</item>
+        <item>玩具乐器</item>
+        <item>酒水饮料</item>
+        <item>整车车品</item>
+        <item>音像制品</item>
+        <item>营养保健</item>
+        <item>钟表   </item>
+        <item>计生情趣</item>
+    </string-array>
 
     <!--标题-->
     <string name="home_title">首页</string>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--侧滑菜单-->
+<home_menus>
+    <home_menu>
+        <menu_name>个人中心</menu_name>
+        <menu_tag>personal</menu_tag>
+        <menu_icon>menu_personal</menu_icon>
+        <menu_url>partnermall520://personalCenter</menu_url>
+        <menu_group>2</menu_group>
+    </home_menu>
+    <home_menu>
+        <menu_name>我的订单</menu_name>
+        <menu_tag>order</menu_tag>
+        <menu_icon>menu_order</menu_icon>
+        <menu_url>partnermall520://order</menu_url>
+        <menu_group>1</menu_group>
+    </home_menu>
+    <home_menu>
+        <menu_name>消息中心</menu_name>
+        <menu_tag>messageCenter</menu_tag>
+        <menu_icon>menu_msgcenter</menu_icon>
+        <menu_url>partnermall520://messageCenter</menu_url>
+        <menu_group>2</menu_group>
+    </home_menu>
+    <home_menu>
+        <menu_name>购物车</menu_name>
+        <menu_tag>chart</menu_tag>
+        <menu_icon>menu_cart</menu_icon>
+        <menu_url>partnermall520://chart</menu_url>
+        <menu_group>2</menu_group>
+    </home_menu>
+    <home_menu>
+        <menu_name>浏览历史</menu_name>
+        <menu_tag>history</menu_tag>
+        <menu_icon>menu_history</menu_icon>
+        <menu_url>partnermall520://history</menu_url>
+        <menu_group>2</menu_group>
+    </home_menu>
+    <home_menu>
+        <menu_name>收货地址</menu_name>
+        <menu_tag>address</menu_tag>
+        <menu_icon>menu_address</menu_icon>
+        <menu_url>partnermall520://address</menu_url>
+        <menu_group>2</menu_group>
+    </home_menu>
+    <home_menu>
+        <menu_name>意见反馈</menu_name>
+        <menu_tag>feedback</menu_tag>
+        <menu_icon>menu_feedback</menu_icon>
+        <menu_url>partnermall520://feedback</menu_url>
+        <menu_group>3</menu_group>
+    </home_menu>
+</home_menus>

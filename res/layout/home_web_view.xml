@@ -2,10 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
-    <WebView
+    <com.huotu.partnermall.widgets.KJWebView
         android:id="@+id/homeViewPage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true" />
-
 </RelativeLayout>

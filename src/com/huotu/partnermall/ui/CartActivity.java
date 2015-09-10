@@ -45,14 +45,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener {
     protected
     void initView ( ) {
         // TODO Auto-generated method stub
-        searchImage = ( ImageView ) this.findViewById (R.id.searchImage);
-        searchImage.setOnClickListener ( this );
-        refreshBtn = ( ImageView ) this.findViewById (R.id.refreshBtn);
-        refreshBtn.setOnClickListener ( this );
-        indexTitle = ( TextView ) this.findViewById (R.id.indexTitle);
-        indexTitle.setText ( resources.getString ( R.string.cart_title ) );
 
-        viewPage = ( WebView ) this.findViewById (R.id.viewPage);
     }
 
     @Override
@@ -61,17 +54,6 @@ public class CartActivity extends BaseActivity implements View.OnClickListener {
 
         switch ( v.getId () )
         {
-            case R.id.searchImage:
-            {
-                //搜索事件
-
-            }
-            break;
-            case R.id.refreshBtn:
-            {
-                //刷新界面事件
-            }
-            break;
             default:
                 break;
         }

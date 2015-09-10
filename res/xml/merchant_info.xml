@@ -50,29 +50,4 @@
     <push_info>
         <push_key>123</push_key>
     </push_info>
-    <!--底部菜单-->
-    <home_menu>
-        <menu_name>首页</menu_name>
-        <menu_tag>home</menu_tag>
-    </home_menu>
-    <home_menu>
-        <menu_name>发现</menu_name>
-        <menu_tag>discover</menu_tag>
-    </home_menu>
-    <home_menu>
-        <menu_name>分类</menu_name>
-        <menu_tag>catagory</menu_tag>
-    </home_menu>
-    <home_menu>
-        <menu_name>购物车</menu_name>
-        <menu_tag>cart</menu_tag>
-    </home_menu>
-    <home_menu>
-        <menu_name>我的</menu_name>
-        <menu_tag>my</menu_tag>
-    </home_menu>
-    <home_menu>
-        <menu_name>设置</menu_name>
-        <menu_tag>setting</menu_tag>
-    </home_menu>
 </resources>

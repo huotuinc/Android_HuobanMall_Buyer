@@ -27,37 +27,37 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
-        super.onDestroy();
+        super.onDestroy ( );
     }
 
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
-        super.onPause();
+        super.onPause ( );
     }
 
     @Override
     protected void onRestart() {
         // TODO Auto-generated method stub
-        super.onRestart();
+        super.onRestart ( );
     }
 
     @Override
     protected void onResume() {
         // TODO Auto-generated method stub
-        super.onResume();
+        super.onResume ( );
     }
 
     @Override
     protected void onStart() {
         // TODO Auto-generated method stub
-        super.onStart();
+        super.onStart ( );
     }
 
     @Override
     protected void onStop() {
         // TODO Auto-generated method stub
-        super.onStop();
+        super.onStop ( );
     }
 
     /**
@@ -90,7 +90,7 @@ public abstract class BaseActivity extends Activity {
         if (pBundle != null) {
             intent.putExtras(pBundle);
         }
-        startActivity(intent);
+        startActivity ( intent );
     }
 
     /**

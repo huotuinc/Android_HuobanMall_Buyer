@@ -14,6 +14,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.GeofenceClient;
 import com.baidu.location.LocationClient;
+import com.google.gson.Gson;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.model.MenuBean;
@@ -206,6 +207,24 @@ public class BaseApplication extends Application {
     }
 
     /**
+     * 判断是否配置菜单信息
+     * @return
+     */
+    public boolean checkMenuInfo()
+    {
+        //菜单信息
+        String menuStr = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS );
+        if(null != menuStr && !"".equals ( menuStr.trim () ))
+        {
+            return  true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
      * 写入商户信息到文件
      * @param merchant
      */
@@ -214,17 +233,23 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID, merchant.getMerchantId ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY,  merchant.getAlipayKey ( ));
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_WEIXIN_KEY, merchant.getWeixinKey ( ) );
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.HTTP_PREFIX_MERCHANT, merchant.getHttpPrefix ());
-        List<MenuBean> menus = merchant.getMenus ( );
-        StringBuilder menuBuilder = new StringBuilder (  );
-        StringBuilder catagoryBuilder = new StringBuilder (  );
-        for(MenuBean menu : menus)
-        {
-            menuBuilder.append ( menu.getMenuName () );
-            menuBuilder.append ( "," );
-        }
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.HTTP_PREFIX_MERCHANT, merchant.getHttpPrefix ( ));
+    }
 
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS,  menuBuilder.toString ().substring ( 0,  (menuBuilder.toString ().length ()-1)));
+    public void writeMenus(List<MenuBean> menus)
+    {
+        Gson gson = new Gson ();
+        String menuStr = gson.toJson ( menus );
+
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS,  menuStr);
+    }
+
+    public void writeMemberInfo(String userName, String userId, String userToken)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID, userId );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_NAME, userName );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID, userId );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN, userToken );
     }
 
     /**
@@ -236,10 +261,6 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS );
     }
 
-    public String readCatagorys()
-    {
-     return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_CATAGORY );
-    }
     /**
      * 实现定位回调监听
      */
