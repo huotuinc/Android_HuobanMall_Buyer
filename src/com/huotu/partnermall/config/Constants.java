@@ -84,7 +84,7 @@ public class Constants {
 	//商户信息
 	public static final String MERCHANT    = "MERCHANT";
 	//商户ID
-	public static final String MERCHANT_ID = "merchant_id";
+	public static final String MERCHANT_ID = "app_merchant_id";
 
 	//微信支付信息
 	public static final String WEIXIN_PAY         = "weixinpay";
@@ -139,15 +139,15 @@ public class Constants {
 
 
 	//主菜单
-	public static final String HOME_MENU = "home_menu";
+	public static final String HOME_MENU  = "home_menu";
 	//主菜单名称
-	public static final String MENU_NAME = "menu_name";
+	public static final String MENU_NAME  = "menu_name";
 	//主菜单标识
-	public static final String MENU_TAG  = "menu_tag";
+	public static final String MENU_TAG   = "menu_tag";
 	//主菜单图标
-	public static final String MENU_ICON = "menu_icon";
+	public static final String MENU_ICON  = "menu_icon";
 	//主菜单url
-	public static final String MENU_URL = "menu_url";
+	public static final String MENU_URL   = "menu_url";
 	//主菜单分组
 	public static final String MENU_GROUP = "menu_group";
 
@@ -247,6 +247,36 @@ public class Constants {
 	 * 修改密码
 	 */
 	public static final String MODIFY_PSW = "modifyPsw";
+
+	/**
+	 * 侧滑菜单加载页面
+	 */
+	public static final int LOAD_PAGE_MESSAGE_TAG = 4381;
+
+	/**
+	 * tile栏刷新页面
+	 */
+	public static final int FRESHEN_PAGE_MESSAGE_TAG = 4380;
+
+	/**
+	 * 首页Url
+	 */
+	public static final String HOME_PAGE_URL = "http://www.baidu.com";
+
+	/**
+	 * 基本信息
+	 */
+	public static final String BASE_INFO   = "base_ifo";
+	/**
+	 * 当前加载的页面
+	 */
+	public static final String CURRENT_URL = "current_url";
+
+	//页面的类型
+	/**
+	 * 设置界面
+	 */
+	public static final String PAGE_TYPE_SETTING = "setting";
 
 
 }

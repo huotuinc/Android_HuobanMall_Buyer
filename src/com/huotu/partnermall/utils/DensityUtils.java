@@ -101,7 +101,7 @@ public final class DensityUtils {
      *@参数：@param aty
      *@参数：@return
      *@返回：float
-     *@exception 
+     *@exception
      *@since
      */
     public static float getScreenDensity(Context aty){

@@ -19,6 +19,7 @@ import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
+import com.huotu.partnermall.model.PageType;
 import com.huotu.partnermall.utils.KJConfig;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
@@ -61,18 +62,18 @@ public class BaseApplication extends Application {
     public
     void onCreate ( ) {
         super.onCreate ( );
-        mLocationClient = new LocationClient(this.getApplicationContext());
-        mMyLocationListener = new MyLocationListener();
-        mLocationClient.registerLocationListener(mMyLocationListener);
-        mGeofenceClient = new GeofenceClient(getApplicationContext());
+        mLocationClient = new LocationClient ( this.getApplicationContext ( ) );
+        mMyLocationListener = new MyLocationListener ( );
+        mLocationClient.registerLocationListener ( mMyLocationListener );
+        mGeofenceClient = new GeofenceClient ( getApplicationContext ( ) );
         // 初始化Volley实例
         VolleyUtil.init ( this );
         // 极光初始化
         // JPushInterface.setDebugMode(true);// 日志，生产环境关闭
         JPushInterface.init ( this );
         //初始化shareSDK参数
-        ShareSDK.initSDK ( getApplicationContext () );
-        solveAsyncTaskOnPostExecuteBug();
+        ShareSDK.initSDK ( getApplicationContext ( ) );
+        solveAsyncTaskOnPostExecuteBug ( );
     }
 
     @Override
@@ -111,11 +112,16 @@ public class BaseApplication extends Application {
     /**
      * 获取手机IMEI码
      */
-    public static String getPhoneIMEI(Context cxt)
+    public static
+    String getPhoneIMEI ( Context cxt ) {
+        TelephonyManager tm = ( TelephonyManager ) cxt
+                .getSystemService ( Context.TELEPHONY_SERVICE );
+        return tm.getDeviceId ( );
+    }
+
+    public String readCurrentUrl()
     {
-        TelephonyManager tm = (TelephonyManager) cxt
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        return tm.getDeviceId();
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.BASE_INFO, Constants.CURRENT_URL );
     }
 
     /**

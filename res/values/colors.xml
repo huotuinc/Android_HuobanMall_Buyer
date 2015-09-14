@@ -18,6 +18,8 @@
     <color name="home_title_color">#de0d9c</color>
     <!--标题栏背景-->
     <color name="home_title_bg">#FFFF3D00</color>
+    <!--popWindow标题颜色-->
+    <color name="popwindow_title_bg">#ffc40e08</color>
     <!--索引页文字颜色-->
     <color name="index_title_txt_color">#000000</color>
     <!--详细页标题颜色-->
@@ -332,4 +334,7 @@
     <color name="sideslip_menu_bg">#F6F6F6</color>
     <!--侧滑菜单字体颜色-->
     <color name="sideslip_menu_text_color">#777777</color>
+    <color name="gray_pop">#ffdedede</color>
+
+    <color name="gray4">#ff758086</color>
 </resources>

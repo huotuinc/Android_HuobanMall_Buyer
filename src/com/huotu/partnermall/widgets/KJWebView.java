@@ -13,7 +13,11 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.utils.KJLoger;
+import com.huotu.partnermall.utils.PreferenceHelper;
 
 /**
  * 自定义webview控件
@@ -29,8 +33,6 @@ class KJWebView extends RelativeLayout {
     private WebView mWebView = null;  //
     private RelativeLayout progressBar_circle = null;  //包含圆形进度条的布局
     private int barHeight = 8;  //水平进度条的高
-
-
 
     public KJWebView(Context context) {
         super(context);
@@ -54,6 +56,7 @@ class KJWebView extends RelativeLayout {
     }
 
     private void init(){
+
         mWebView = new WebView(context);
         this.addView(mWebView, LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 
@@ -118,6 +121,8 @@ class KJWebView extends RelativeLayout {
 
     public void loadUrl(String url){
         mWebView.loadUrl ( url );
+        PreferenceHelper.writeString ( context, Constants.BASE_INFO, Constants.CURRENT_URL, url );
+        KJLoger.i ( url );
     }
 
     public void goBack()

@@ -1,6 +1,5 @@
 package com.huotu.partnermall.ui;
 
-import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -22,13 +21,8 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
-import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.gson.Gson;
@@ -38,13 +32,13 @@ import com.huotu.partnermall.AppManager;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.model.BaseBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
+import com.huotu.partnermall.widgets.MsgPopWindow;
 import com.mob.tools.utils.UIHandler;
 
 import java.util.Collections;
@@ -92,6 +86,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     //application引用
     public BaseApplication application;
 
+    //handler对象
+    public Handler mHandler;
+
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
@@ -99,11 +96,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate ( savedInstanceState );
         application = ( BaseApplication ) HomeActivity.this.getApplication ( );
         resources = HomeActivity.this.getResources ( );
+        mHandler = new Handler ( this );
         AppManager.getInstance ( ).addActivity ( this );
         setContentView ( R.layout.activity_home );
         findViewById ( );
         initView ( );
     }
+
+
 
     @Override
     protected
@@ -169,7 +169,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         viewPage.setBuiltInZoomControls ( true );
         viewPage.setJavaScriptEnabled ( true );
         viewPage.setCacheMode ( WebSettings.LOAD_NO_CACHE );
-        viewPage.loadUrl("http://www.baidu.com" );
+        viewPage.loadUrl ( Constants.HOME_PAGE_URL );
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
                     //重写此方法，浏览器内部跳转
@@ -187,7 +187,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // TODO Auto-generated method stub
-        getMenuInflater().inflate(R.menu.activity_menu, menu);
+        getMenuInflater().inflate ( R.menu.activity_menu, menu );
         return true;
     }
 
@@ -266,9 +266,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                             @Override
                             public
                             void onClick ( View v ) {
-                                //
-                                ToastUtils.showShortToast ( HomeActivity.this, menu.getMenuName (
-                                                                                                ) );
+                                //加载具体的页面
+                                Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, menu.getMenuUrl () );
+                                mHandler.sendMessage ( msg );
+
+                                //隐藏侧滑菜单
+                                application.layDrag.closeDrawer ( Gravity.LEFT );
+
                             }
                         }
                                               );
@@ -350,17 +354,36 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             break;
             case R.id.titleRightImage:
             {
+                //当前的url
+                String url = application.readCurrentUrl ();
                 //刷新页面
+                Message msg = mHandler.obtainMessage ( Constants.FRESHEN_PAGE_MESSAGE_TAG, url);
+                mHandler.sendMessage ( msg );
             }
             break;
             case R.id.sideslip_setting:
             {
-                //设置
+                //设置界面
+                //设置界面的url
+                //String settingUrl = application.createUrl(Constants.PAGE_TYPE_SETTING);
+                String settingUrl = "http://www.baidu.com";
+                Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, settingUrl);
+                mHandler.sendMessage ( msg );
+                //隐藏侧滑菜单
+                application.layDrag.closeDrawer ( Gravity.LEFT );
             }
             break;
             case R.id.sideslip_home:
             {
                 //home
+                String homeUrl = "http://www.baidu.com";
+                Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, homeUrl);
+                mHandler.sendMessage ( msg );
+                //模拟弹出框
+                /*MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
+                popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );*/
+                //隐藏侧滑菜单
+                application.layDrag.closeDrawer ( Gravity.LEFT );
             }
             break;
             case R.id.sideslip_login:
@@ -390,7 +413,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         }
         plat.setPlatformActionListener(this);
         plat.SSOSetting(true);
-        plat.showUser(null);
+        plat.showUser ( null );
     }
 
     private void login(String plat, String userId, HashMap<String, Object> userInfo) {
@@ -403,6 +426,26 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public
     boolean handleMessage ( Message msg ) {
+
+        switch ( msg.what )
+        {
+            case Constants.LOAD_PAGE_MESSAGE_TAG:
+            {
+                //加载菜单页面
+                String url = msg.obj.toString ();
+                viewPage.loadUrl ( url );
+            }
+            break;
+            case Constants.FRESHEN_PAGE_MESSAGE_TAG:
+            {
+                //刷新界面
+                String url = msg.obj.toString ();
+                viewPage.loadUrl ( url );
+            }
+            break;
+            default:
+                break;
+        }
         return false;
     }
 
@@ -469,6 +512,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         }else if(url.contains(Constants.WEB_TAG_FINISH)){
             if(viewPage.canGoBack())
                 viewPage.goBack();
+        }else
+        {
+            viewPage.loadUrl ( url );
         }
         return false;
     }
