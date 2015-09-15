@@ -4,7 +4,8 @@ import android.os.Environment;
 
 public class Constants {
 	/**
-	 ******************************************* 参数设置信息开始 ******************************************
+	 ******************************************* 参数设置信息开始
+	 * ******************************************
 	 */
 
 	// 保存参数文件夹名字
@@ -60,7 +61,8 @@ public class Constants {
 	public static final int NONE_LOGIN = 0X10000;
 
 	/**
-	 ******************************************* 参数设置信息结束 ******************************************
+	 ******************************************* 参数设置信息结束
+	 * ******************************************
 	 */
 
 	//标准时间
@@ -278,5 +280,21 @@ public class Constants {
 	 */
 	public static final String PAGE_TYPE_SETTING = "setting";
 
+	/**
+	 * 微信支付appID
+	 */
+	public static final String WXPAY_ID = "";
+	public static final String PAY_URL  = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
 
+	// 商户PID
+	public static final String PARTNER = "";
+	// 商户收款账号
+	public static final String SELLER = "";
+	// 商户私钥，pkcs8格式
+	public static final String RSA_PRIVATE = "";
+	// 支付宝公钥
+	public static final String RSA_PUBLIC = "";
+	public static final int SDK_PAY_FLAG = 1;
+
+	public static final int SDK_CHECK_FLAG = 2;
 }

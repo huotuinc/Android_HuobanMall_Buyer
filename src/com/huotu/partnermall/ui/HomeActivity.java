@@ -376,12 +376,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.sideslip_home:
             {
                 //home
-                String homeUrl = "http://www.baidu.com";
+                /*String homeUrl = "http://www.baidu.com";
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, homeUrl);
-                mHandler.sendMessage ( msg );
+                mHandler.sendMessage ( msg );*/
                 //模拟弹出框
-                /*MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
-                popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );*/
+                MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
+                popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }

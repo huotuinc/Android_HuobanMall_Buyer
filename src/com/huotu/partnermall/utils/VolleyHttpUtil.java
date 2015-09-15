@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.huotu.partnermall.image.VolleyUtil;
 
@@ -15,32 +16,24 @@ class VolleyHttpUtil {
 
     private String url;
     private Activity context;
+    private JsonObjectRequest request;
     private
-    Response.Listener listener;
-    private Response.ErrorListener errorListener;
-    private
-    int methodType;
+    RetryPolicy mRetryPolicy;
 
-    public VolleyHttpUtil(String url, Activity context, Response.Listener listener, Response.ErrorListener errorListener, int methodType)
+    public VolleyHttpUtil(String url, Activity context, JsonObjectRequest request, RetryPolicy mRetryPolicy)
     {
         this.url = url;
         this.context = context;
-        this.listener = listener;
-        this.errorListener = errorListener;
-        this.methodType = methodType;
+        this.request = request;
+        this.mRetryPolicy = mRetryPolicy;
     }
 
     public void doHttp()
     {
-        if(Request.Method.GET == methodType)
+        if(null != mRetryPolicy)
         {
-            VolleyUtil.getRequestQueue ().add ( new JsonObjectRequest (Request.Method.GET, url, null, listener, errorListener){
-                                                });
+            request.setRetryPolicy ( mRetryPolicy );
         }
-        else if(Request.Method.POST == methodType)
-        {
-            VolleyUtil.getRequestQueue ().add ( new JsonObjectRequest (Request.Method.POST, url, null, listener, errorListener){
-                                                });
-        }
+        VolleyUtil.getRequestQueue ().add ( request );
     }
 }

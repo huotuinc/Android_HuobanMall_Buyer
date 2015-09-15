@@ -59,9 +59,9 @@
     <SinaWeibo
         Id="1"
         SortId="1"
-        AppKey="1994677353"
-        AppSecret="0783d8dd1f0eb5a45687cde79aa10108"
-        RedirectUrl="https://api.weibo.com/oauth2/default.html"
+        AppKey="1850373953"
+        AppSecret="c3e809d6c9b25577b8030bb5d3d5c863"
+        RedirectUrl="http://partnermall.buyer.callback.html"
         ShareByAppClient="false"
         Enable="true" />
 
@@ -77,8 +77,8 @@
     <QZone
         Id="3"
         SortId="3"
-        AppId="100371282"
-        AppKey="aed9b0303e3ed1e27bae87c33761161d"
+        AppId="1104785503"
+        AppKey="0j1coHhmuLie67Vl"
         ShareByAppClient="false"
         Enable="true" />
     

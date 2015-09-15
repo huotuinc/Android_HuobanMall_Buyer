@@ -1,8 +1,15 @@
 package com.huotu.partnermall.wxapi;
 
 import android.content.Intent;
+import android.os.Bundle;
 
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.modelbase.BaseResp;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import cn.sharesdk.wechat.utils.WXAppExtendObject;
 import cn.sharesdk.wechat.utils.WXMediaMessage;
@@ -18,7 +25,10 @@ import cn.sharesdk.wechat.utils.WechatHandlerActivity;
  * 微信客户端回调activity示例
  */
 public
-class WXEntryActivity extends WechatHandlerActivity {
+class WXEntryActivity extends WechatHandlerActivity implements IWXAPIEventHandler {
+
+    // IWXAPI 是第三方app和微信通信的openapi接口
+    private IWXAPI api;
 
     /**
      * 处理微信发出的向第三方应用请求app message
@@ -27,9 +37,11 @@ class WXEntryActivity extends WechatHandlerActivity {
      * 此后点击图标，下面的代码会被执行。Demo仅仅只是打开自己而已，但你可
      * 做点其他的事情，包括根本不打开任何页面
      */
-    public void onGetMessageFromWXReq(WXMediaMessage msg) {
-        Intent iLaunchMyself = getPackageManager().getLaunchIntentForPackage(getPackageName());
-        startActivity(iLaunchMyself);
+    public
+    void onGetMessageFromWXReq ( WXMediaMessage msg ) {
+        Intent iLaunchMyself = getPackageManager ( ).getLaunchIntentForPackage ( getPackageName (
+                                                                                                ) );
+        startActivity ( iLaunchMyself );
     }
 
     /**
@@ -42,11 +54,34 @@ class WXEntryActivity extends WechatHandlerActivity {
      * <p>
      * 本Demo只是将信息展示出来，但你可做点其他的事情，而不仅仅只是Toast
      */
-    public void onShowMessageFromWXReq(WXMediaMessage msg) {
-        if (msg != null && msg.mediaObject != null
-            && (msg.mediaObject instanceof WXAppExtendObject )) {
-            WXAppExtendObject obj = (WXAppExtendObject) msg.mediaObject;
+    public
+    void onShowMessageFromWXReq ( WXMediaMessage msg ) {
+        if ( msg != null && msg.mediaObject != null
+             && ( msg.mediaObject instanceof WXAppExtendObject ) ) {
+            WXAppExtendObject obj = ( WXAppExtendObject ) msg.mediaObject;
             ToastUtils.showShortToast ( this, obj.extInfo );
         }
+    }
+
+    @Override
+    public
+    void onReq ( BaseReq baseReq ) {
+
+    }
+
+    @Override
+    public
+    void onResp ( BaseResp baseResp ) {
+
+    }
+
+    @Override
+    protected
+    void onCreate ( Bundle savedInstanceState ) {
+        super.onCreate ( savedInstanceState );
+        // 通过WXAPIFactory工厂，获取IWXAPI的实例
+        api = WXAPIFactory.createWXAPI ( this, Constants.WXPAY_ID, false );
+        //注册微信信息
+        api.registerApp ( Constants.WXPAY_ID );
     }
 }

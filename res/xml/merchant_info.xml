@@ -14,7 +14,7 @@
     <weixinpay>
         <weixin_merchant_id>111</weixin_merchant_id>
         <merchant_weixin_id>120</merchant_weixin_id>
-        <weixin_key>130</weixin_key>
+        <weixin_key>wx4e4588202e338a39</weixin_key>
     </weixinpay>
     <!--支付宝支付信息-->
     <alipay>

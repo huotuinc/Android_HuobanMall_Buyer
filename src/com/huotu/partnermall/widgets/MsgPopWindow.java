@@ -80,7 +80,8 @@ class MsgPopWindow extends PopupWindow {
         //设置SelectPicPopupWindow弹出窗体的高
         this.setHeight ( LinearLayout.LayoutParams.WRAP_CONTENT );
         //设置SelectPicPopupWindow弹出窗体可点击
-        this.setFocusable ( true );
+        this.setFocusable ( false );
+
         //mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
 
         popView.setOnTouchListener ( new View.OnTouchListener ( ) {
