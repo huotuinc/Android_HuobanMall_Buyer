@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -90,6 +91,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     //handler对象
     public Handler mHandler;
 
+    //windows类
+    WindowManager wManager;
+
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
@@ -98,6 +102,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         application = ( BaseApplication ) HomeActivity.this.getApplication ( );
         resources = HomeActivity.this.getResources ( );
         mHandler = new Handler ( this );
+
+        wManager = this.getWindowManager ();
         AppManager.getInstance ( ).addActivity ( this );
         setContentView ( R.layout.activity_home );
         findViewById ( );
@@ -222,7 +228,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             for(int i=0; i<size; i++)
             {
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( ViewGroup
-                                                                                          .LayoutParams.MATCH_PARENT, 70);
+                                                                                          .LayoutParams.MATCH_PARENT, (wManager.getDefaultDisplay ().getHeight ()/15));
                 //取出分组
                 String menuGroup = menuList.get ( i ).getMenuGroup ();
                 RelativeLayout menuLayout = ( RelativeLayout ) LayoutInflater.from ( this ).inflate ( R.layout.main_menu, null );
