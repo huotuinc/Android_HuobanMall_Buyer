@@ -25,7 +25,7 @@ import cn.sharesdk.wechat.utils.WechatHandlerActivity;
  * 微信客户端回调activity示例
  */
 public
-class WXEntryActivity extends WechatHandlerActivity implements IWXAPIEventHandler {
+class WXEntryActivity extends WechatHandlerActivity {
 
     // IWXAPI 是第三方app和微信通信的openapi接口
     private IWXAPI api;
@@ -61,27 +61,5 @@ class WXEntryActivity extends WechatHandlerActivity implements IWXAPIEventHandle
             WXAppExtendObject obj = ( WXAppExtendObject ) msg.mediaObject;
             ToastUtils.showShortToast ( this, obj.extInfo );
         }
-    }
-
-    @Override
-    public
-    void onReq ( BaseReq baseReq ) {
-
-    }
-
-    @Override
-    public
-    void onResp ( BaseResp baseResp ) {
-
-    }
-
-    @Override
-    protected
-    void onCreate ( Bundle savedInstanceState ) {
-        super.onCreate ( savedInstanceState );
-        // 通过WXAPIFactory工厂，获取IWXAPI的实例
-        api = WXAPIFactory.createWXAPI ( this, Constants.WXPAY_ID, false );
-        //注册微信信息
-        api.registerApp ( Constants.WXPAY_ID );
     }
 }

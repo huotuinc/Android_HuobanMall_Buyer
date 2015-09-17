@@ -18,3 +18,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontwarn cn.share.**
+-keep class cn.share.** { *;}
+-dontwarn com.alipay.**
+-keep class com.alipay.** { *;}
+-dontwarn com.sina.**
+-keep class com.sina.** { *;}
+-dontwarn com.taobao.**
+-keep class com.taobao.** { *;}

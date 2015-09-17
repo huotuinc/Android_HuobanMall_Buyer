@@ -39,6 +39,7 @@ import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
 import com.huotu.partnermall.widgets.MsgPopWindow;
+import com.huotu.partnermall.widgets.OneKeyShareUtils;
 import com.mob.tools.utils.UIHandler;
 
 import java.util.Collections;
@@ -355,7 +356,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.titleRightImage:
             {
                 //当前的url
-                String url = application.readCurrentUrl ();
+                String url = application.readCurrentUrl ( );
                 //刷新页面
                 Message msg = mHandler.obtainMessage ( Constants.FRESHEN_PAGE_MESSAGE_TAG, url);
                 mHandler.sendMessage ( msg );
@@ -375,13 +376,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             break;
             case R.id.sideslip_home:
             {
+
+                //模拟分享
+                String shareTitle = "分享01";
+                String shareText = "分享的一个测试";
+                String shareUrl = "http://www.baidu.com";
+
+                OneKeyShareUtils oks = new OneKeyShareUtils ( shareTitle, null, shareText, null, shareUrl, null, null, null, HomeActivity.this );
+                oks.shareShow (null, false);
                 //home
                 /*String homeUrl = "http://www.baidu.com";
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, homeUrl);
                 mHandler.sendMessage ( msg );*/
                 //模拟弹出框
-                MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
-                popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );
+               /* MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
+                popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );*/
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }
@@ -389,7 +398,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.sideslip_login:
             {
                 //微信登录
-                authorize(new Wechat ( this ));
+                /*ToastUtils.showShortToast ( HomeActivity.this, application );*/
+
+                authorize ( new Wechat ( this ) );
             }
             break;
             default:
@@ -441,6 +452,42 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 //刷新界面
                 String url = msg.obj.toString ();
                 viewPage.loadUrl ( url );
+            }
+            break;
+            case Constants.MSG_AUTH_COMPLETE:
+            {
+                //提示授权成功
+                ToastUtils.showShortToast ( HomeActivity.this, "微信授权成功" );
+            }
+            break;
+            case Constants.MSG_AUTH_ERROR:
+            {
+                //提示授权成功
+                ToastUtils.showShortToast ( HomeActivity.this, "微信授权失败" );
+            }
+            break;
+            case Constants.MSG_AUTH_CANCEL:
+            {
+                //提示授权成功
+                ToastUtils.showShortToast ( HomeActivity.this, "微信授权被取消" );
+            }
+            break;
+            case Constants.MSG_USERID_FOUND:
+            {
+                //提示授权成功
+                ToastUtils.showShortToast ( HomeActivity.this, "正在获取微信信息" );
+            }
+            break;
+            case Constants.MSG_LOGIN:
+            {
+                //提示授权成功
+                ToastUtils.showShortToast ( HomeActivity.this, "登录成功" );
+            }
+            break;
+            case Constants.MSG_USERID_NO_FOUND:
+            {
+                //提示授权成功
+                ToastUtils.showShortToast ( HomeActivity.this, "无法获取微信信息" );
             }
             break;
             default:

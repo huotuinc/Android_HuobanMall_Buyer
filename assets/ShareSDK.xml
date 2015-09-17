@@ -68,8 +68,8 @@
     <TencentWeibo
         Id="5"
         SortId="5"
-        AppKey="801307650"
-        AppSecret="ae36f4ee3946e1cbb98d6965b0b2ff5c"
+        AppKey="1104785503"
+        AppSecret="0j1coHhmuLie67Vl"
         RedirectUri="http://sharesdk.cn"
         Enable="false" />
 
@@ -121,8 +121,8 @@
 	<QQ
         Id="7"
         SortId="7"
-        AppId="100371282"
-        AppKey="aed9b0303e3ed1e27bae87c33761161d"
+        AppId="1104785503"
+        AppKey="0j1coHhmuLie67Vl"
         ShareByAppClient="true"
         Enable="false" />
     

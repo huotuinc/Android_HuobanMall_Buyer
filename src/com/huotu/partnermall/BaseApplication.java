@@ -23,6 +23,8 @@ import com.huotu.partnermall.model.PageType;
 import com.huotu.partnermall.utils.KJConfig;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.util.List;
 
@@ -52,6 +54,9 @@ public class BaseApplication extends Application {
     public GeofenceClient mGeofenceClient;
     public MyLocationListener mMyLocationListener;
 
+    public static
+    IWXAPI api;
+
     @Override
     public
     void onConfigurationChanged ( Configuration newConfig ) {
@@ -66,6 +71,9 @@ public class BaseApplication extends Application {
         mMyLocationListener = new MyLocationListener ( );
         mLocationClient.registerLocationListener ( mMyLocationListener );
         mGeofenceClient = new GeofenceClient ( getApplicationContext ( ) );
+        //微信授权
+        api = WXAPIFactory.createWXAPI ( this, Constants.WXPAY_ID, true );
+        api.registerApp ( Constants.WXPAY_ID );
         // 初始化Volley实例
         VolleyUtil.init ( this );
         // 极光初始化
@@ -318,5 +326,8 @@ public class BaseApplication extends Application {
         }
 
     }
+
+    //获取微信登录的name
+
 
 }

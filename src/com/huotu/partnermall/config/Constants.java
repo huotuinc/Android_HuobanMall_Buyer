@@ -283,7 +283,7 @@ public class Constants {
 	/**
 	 * 微信支付appID
 	 */
-	public static final String WXPAY_ID = "";
+	public static final String WXPAY_ID = "wx4e4588202e338a39";
 	public static final String PAY_URL  = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
 
 	// 商户PID
@@ -297,4 +297,7 @@ public class Constants {
 	public static final int SDK_PAY_FLAG = 1;
 
 	public static final int SDK_CHECK_FLAG = 2;
+
+	// API密钥，在商户平台设置(微信支付商户)
+	private String wxpayApikey = "0db0d4908a6ae6a09b0a7727878f0ca6";
 }

@@ -7,9 +7,9 @@
     android:versionName="1.0">
 
     <permission
-        android:name="cy.com.morefan.permission.JPUSH_MESSAGE"
+        android:name="com.huotu.partnermall.inner.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="cy.com.morefan.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="com.huotu.partnermall.inner.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -219,7 +219,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
-                <data android:scheme="tencent100371282"></data>
+                <data android:scheme="tencent1104785503"></data>
                 <action android:name="android.intent.action.VIEW"></action>
                 <category android:name="android.intent.category.BROWSABLE"></category>
                 <category android:name="android.intent.category.DEFAULT"></category>
@@ -231,11 +231,11 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait">
-            <intent-filter>
+           <!-- <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:scheme="wx4e4588202e338a39"/>
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <!--ShareSDK分享-->
         <!--支付宝钱包支付-->

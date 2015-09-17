@@ -3,7 +3,7 @@ package com.huotu.partnermall.model;
 import java.io.Serializable;
 
 /**
- * Created by Administrator on 2015/9/11.
+ * 用户设置选择数据
  */
 public
 class UserSelectData implements Serializable {

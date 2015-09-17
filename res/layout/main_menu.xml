@@ -7,7 +7,8 @@ android:layout_height="@dimen/menu_layout_height"
 android:clickable="true"
 android:gravity="center_vertical"
 android:onClick="onClick"
-android:orientation="horizontal">
+android:orientation="horizontal"
+android:padding="20dp">
 
 <ImageView
     android:id="@+id/menuIcon"
