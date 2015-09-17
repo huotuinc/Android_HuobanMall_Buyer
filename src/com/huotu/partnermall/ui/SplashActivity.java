@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
+
 
 public class SplashActivity extends BaseActivity {
 
@@ -190,6 +192,20 @@ public class SplashActivity extends BaseActivity {
                                            }
                                        });
         mSplashItem_iv.setAnimation ( translate );
+    }
+
+    @Override
+    protected
+    void onResume ( ) {
+        super.onResume ( );
+        JPushInterface.onResume ( SplashActivity.this );
+    }
+
+    @Override
+    protected
+    void onPause ( ) {
+        super.onPause ( );
+        JPushInterface.onPause ( SplashActivity.this );
     }
 
     @Override

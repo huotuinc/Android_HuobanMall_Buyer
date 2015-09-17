@@ -209,7 +209,7 @@
 
         <!-- Required  . Enable it you can get statistics data with channel -->
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
-        <meta-data android:name="JPUSH_APPKEY" android:value="a36e00d3397bf5e69049ed41" />
+        <meta-data android:name="JPUSH_APPKEY" android:value="5e22cb7984ccaf138f7458b0" />
         <!--  </>值来自开发者平台取得的AppKey-->
         <!-- 激光推送 -->
         <!--ShareSDK分享-->

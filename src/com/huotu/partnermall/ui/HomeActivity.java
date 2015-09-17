@@ -35,11 +35,11 @@ import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.ui.login.WXLoginCallback;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
-import com.huotu.partnermall.widgets.MsgPopWindow;
 import com.huotu.partnermall.widgets.OneKeyShareUtils;
 import com.mob.tools.utils.UIHandler;
 
@@ -49,10 +49,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.wechat.friends.Wechat;
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener, Handler.Callback, PlatformActionListener {
+public class HomeActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
 
     //获取资源文件对象
     private
@@ -110,11 +109,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         initView ( );
     }
 
-
-
     @Override
-    protected
-    void findViewById ( ) {
+     protected
+     void findViewById ( ) {
         //标题栏对象
         homeTitle = ( RelativeLayout ) this.findViewById ( R.id.homeTitle );
         //构建标题左侧图标，点击事件
@@ -313,7 +310,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             MenuBean menu01 = ( MenuBean ) lhs;
             MenuBean menu02 = ( MenuBean ) rhs;
             //比较分组序号
-            return menu01.getMenuGroup ().compareTo ( menu02.getMenuGroup () );
+            return menu01.getMenuGroup ( ).compareTo ( menu02.getMenuGroup () );
         }
     }
 
@@ -324,8 +321,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         if (event.getKeyCode () == KeyEvent.KEYCODE_BACK
             && event.getAction() == KeyEvent.ACTION_DOWN)
         {
-            if ((System.currentTimeMillis() - exitTime) > 2000)
-            {
+            if ((System.currentTimeMillis() - exitTime) > 2000 ) {
                 ToastUtils.showLongToast ( getApplicationContext ( ), "再按一次退出程序" );
                 exitTime = System.currentTimeMillis();
             } else
@@ -380,8 +376,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }
             break;
-            case R.id.sideslip_home:
-            {
+            case R.id.sideslip_home: {
 
                 //模拟分享
                 String shareTitle = "分享01";
@@ -389,7 +384,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 String shareUrl = "http://www.baidu.com";
 
                 OneKeyShareUtils oks = new OneKeyShareUtils ( shareTitle, null, shareText, null, shareUrl, null, null, null, HomeActivity.this );
-                oks.shareShow (null, false);
+                oks.shareShow (null, true);
                 //home
                 /*String homeUrl = "http://www.baidu.com";
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, homeUrl);
@@ -428,7 +423,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 return;
             }
         }
-        plat.setPlatformActionListener(this);
+        plat.setPlatformActionListener(new WXLoginCallback ( mHandler ));
         plat.SSOSetting(true);
         plat.showUser ( null );
     }
@@ -500,37 +495,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 break;
         }
         return false;
-    }
-
-    @Override
-    public
-    void onComplete ( Platform platform, int action, HashMap< String, Object > hashMap ) {
-
-        if (action == Platform.ACTION_USER_INFOR) {
-            UIHandler.sendEmptyMessage(Constants.MSG_AUTH_COMPLETE, this);
-            login(platform.getName(), platform.getDb().getUserId(), hashMap);
-        }
-        //记录用户信息
-        String userName = platform.getDb ().getUserName ();
-        String userId = platform.getDb ().getUserId ( );
-        String token = platform.getDb ().getToken ();
-        application.writeMemberInfo ( userName, userId, token );
-    }
-
-    @Override
-    public
-    void onError ( Platform platform, int action, Throwable throwable ) {
-        if (action == Platform.ACTION_USER_INFOR) {
-            UIHandler.sendEmptyMessage ( Constants.MSG_AUTH_ERROR, this);
-        }
-    }
-
-    @Override
-    public
-    void onCancel ( Platform platform, int action ) {
-        if (action == Platform.ACTION_USER_INFOR) {
-            UIHandler.sendEmptyMessage(Constants.MSG_AUTH_CANCEL, this);
-        }
     }
 
     /**
