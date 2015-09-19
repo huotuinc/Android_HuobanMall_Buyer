@@ -26,29 +26,40 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.huotu.partnermall.AppManager;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.listener.AliPayListener;
+import com.huotu.partnermall.listener.WXPayListener;
+import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.WXLoginCallback;
+import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
 import com.huotu.partnermall.widgets.OneKeyShareUtils;
+import com.huotu.partnermall.widgets.PayPopWindow;
 import com.mob.tools.utils.UIHandler;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.PlatformDb;
+import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
@@ -79,9 +90,19 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private ImageView      loginHome;
     //主菜单容器
     private LinearLayout   mainMenuLayout;
+    //未登陆界面
+    private RelativeLayout noAuthLayout;
     //侧滑登录按钮
     private
     Button loginButton;
+    //已授权界面
+    private RelativeLayout getAuthLayout;
+    //用户头像
+    private
+    NetworkImageView userLogo;
+    //用户名称
+    private TextView userName;
+
 
     private long exitTime = 0l;
     //application引用
@@ -125,12 +146,45 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         loginSetting.setOnClickListener ( this );
         loginHome = ( ImageView ) this.findViewById ( R.id.sideslip_home );
         loginHome.setOnClickListener ( this );
-        loginButton = ( Button ) this.findViewById ( R.id.sideslip_login );
-        loginButton.setOnClickListener ( this );
+
         //标题栏文字
         titleText = ( TextView ) this.findViewById ( R.id.titleText );
         viewPage = ( KJWebView ) this.findViewById ( R.id.viewPage );
         mainMenuLayout = ( LinearLayout ) this.findViewById ( R.id.mainMenuLayout );
+
+        //登录界面区分未得到微信授权、已得到微信授权
+        //未得到授权界面
+        noAuthLayout = ( RelativeLayout ) this.findViewById ( R.id.noAuth );
+        loginButton = ( Button ) this.findViewById ( R.id.sideslip_login );
+
+        //已得到授权界面
+        getAuthLayout = ( RelativeLayout ) this.findViewById ( R.id.getAuth );
+        userLogo = ( NetworkImageView ) this.findViewById ( R.id.accountIcon );
+        userName = ( TextView ) this.findViewById ( R.id.accountName );
+    }
+
+    @Override
+    protected
+    void onResume ( ) {
+        super.onResume ( );
+        if(application.isLogin())
+        {
+            noAuthLayout.setVisibility ( View.GONE );
+            getAuthLayout.setVisibility ( View.VISIBLE );
+            //渲染logo
+            BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application.getUserLogo (), R.drawable.ic_login_username, R.drawable.ic_login_username );
+            //渲染用户名
+            userName.setText ( application.getUserName () );
+            userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
+        }
+        else
+        {
+            noAuthLayout.setVisibility ( View.VISIBLE );
+            getAuthLayout.setVisibility ( View.GONE );
+            loginButton.setTextColor ( resources.getColor ( R.color.theme_color ) );
+            loginButton.setOnClickListener ( this );
+        }
+
     }
 
     @Override
@@ -158,7 +212,31 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                                    );
         //设置Home图标
         SystemTools.loadBackground ( loginHome, resources.getDrawable ( R.drawable
+
                                                                                 .sideslip_login_home ) );
+        //设置登录界面背景
+        noAuthLayout.setBackgroundColor ( resources.getColor ( R.color.home_title_bg ) );
+        getAuthLayout.setBackgroundColor ( resources.getColor ( R.color.home_title_bg ) );
+
+
+        //设置登录界面
+        if(application.isLogin())
+        {
+            noAuthLayout.setVisibility ( View.GONE );
+            getAuthLayout.setVisibility ( View.VISIBLE );
+            //渲染logo
+            BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application.getUserLogo (), R.drawable.ic_login_username, R.drawable.ic_login_username );
+            //渲染用户名
+            userName.setText ( application.getUserName () );
+            userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
+        }
+        else
+        {
+            noAuthLayout.setVisibility ( View.VISIBLE );
+            getAuthLayout.setVisibility ( View.GONE );
+            loginButton.setTextColor ( resources.getColor ( R.color.theme_color ) );
+            loginButton.setOnClickListener ( this );
+        }
 
         //动态加载侧滑菜单
         loadMenus ( );
@@ -182,7 +260,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                             WebView view, String
                             url
                                                      ) {
-                        return shouldOverrideUrlBySFriend(view, url);
+                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage );
+                        return filter.shouldOverrideUrlBySFriend ( view, url );
                     }
                 }
                                    );
@@ -392,6 +471,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 //模拟弹出框
                /* MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
                 popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );*/
+                //模拟弹出支付界面
+                /*PayPopWindow payPopWindow = new PayPopWindow ( HomeActivity.this, new WXPayListener ( HomeActivity.this ), new AliPayListener ( HomeActivity.this ) );
+                payPopWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.BOTTOM, 0, 0 );*/
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }
@@ -400,8 +482,20 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             {
                 //微信登录
                 /*ToastUtils.showShortToast ( HomeActivity.this, application );*/
+                //Platform wechat = ShareSDK.getPlatform ( HomeActivity.this, Wechat.NAME );
+                authorize ( new Wechat ( HomeActivity.this ) );
 
-                authorize ( new Wechat ( this ) );
+                //模拟登录
+                /*Message msg = new Message();
+                msg.what = Constants.MSG_LOGIN;
+                AccountModel account = new AccountModel ();
+                account.setAccountId ( "123456" );
+                account.setAccountName ( "小开开" );
+                account.setAccountIcon ( "http://analytics.sharesdk.cn/docs/wp-content/uploads/2014/09/%E5%BE%AE%E4%BF%A1sns_icon_22.png" );
+                account.setAccountToken ( "123456" );
+
+                msg.obj = account;
+                mHandler.sendMessage ( msg, this );*/
             }
             break;
             default:
@@ -410,29 +504,62 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void authorize(Platform plat) {
-        if(plat.isValid()) {
+        if(plat.isValid ()) {
             String userId = plat.getDb().getUserId();
             if (! TextUtils.isEmpty ( userId )) {
-                UIHandler.sendEmptyMessage ( Constants.MSG_USERID_FOUND, this );
-                login(plat.getName(), userId, null);
+                mHandler.sendEmptyMessage ( Constants.MSG_USERID_FOUND );
+                login(plat);
                 return;
             }
             else
             {
-                UIHandler.sendEmptyMessage ( Constants.MSG_USERID_NO_FOUND, this );
+                mHandler.sendEmptyMessage ( Constants.MSG_USERID_NO_FOUND );
                 return;
             }
         }
-        plat.setPlatformActionListener(new WXLoginCallback ( mHandler ));
-        plat.SSOSetting(true);
+        plat.setPlatformActionListener ( new PlatformActionListener ( ) {
+                                             @Override
+                                             public
+                                             void onComplete ( Platform platform, int action, HashMap< String, Object > hashMap ) {
+
+                                                 if ( action == Platform.ACTION_USER_INFOR ) {
+                                                     mHandler.sendEmptyMessage ( Constants.MSG_AUTH_COMPLETE );
+                                                 }
+                                             }
+
+                                             @Override
+                                             public
+                                             void onError ( Platform platform, int action, Throwable throwable ) {
+                                                 if (action == Platform.ACTION_USER_INFOR) {
+                                                     mHandler.sendEmptyMessage ( Constants.MSG_AUTH_ERROR );
+                                                 }
+                                             }
+
+                                             @Override
+                                             public
+                                             void onCancel ( Platform platform, int action ) {
+                                                 if (action == Platform.ACTION_USER_INFOR) {
+                                                     mHandler.sendEmptyMessage(Constants.MSG_AUTH_CANCEL );
+                                                 }
+                                             }
+                                         } );
+        plat.SSOSetting(false);
         plat.showUser ( null );
     }
 
-    private void login(String plat, String userId, HashMap<String, Object> userInfo) {
+    private void login(Platform plat) {
         Message msg = new Message();
         msg.what = Constants.MSG_LOGIN;
-        msg.obj = plat;
-        UIHandler.sendMessage ( msg, this );
+
+        PlatformDb accountDb = plat.getDb ();
+        AccountModel account = new AccountModel ();
+        account.setAccountId ( accountDb.getUserId () );
+        account.setAccountName ( accountDb.getUserName ( ) );
+        account.setAccountIcon ( accountDb.getUserIcon ( ) );
+        account.setAccountToken ( accountDb.getToken () );
+
+        msg.obj = account;
+        mHandler.sendMessage ( msg );
     }
 
     @Override
@@ -463,75 +590,48 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             break;
             case Constants.MSG_AUTH_ERROR:
             {
-                //提示授权成功
+                //提示授权失败
                 ToastUtils.showShortToast ( HomeActivity.this, "微信授权失败" );
             }
             break;
             case Constants.MSG_AUTH_CANCEL:
             {
-                //提示授权成功
+                //提示取消授权
                 ToastUtils.showShortToast ( HomeActivity.this, "微信授权被取消" );
             }
             break;
             case Constants.MSG_USERID_FOUND:
             {
                 //提示授权成功
-                ToastUtils.showShortToast ( HomeActivity.this, "正在获取微信信息" );
+                ToastUtils.showShortToast ( HomeActivity.this, "已经获取用户信息" );
             }
             break;
             case Constants.MSG_LOGIN:
             {
                 //提示授权成功
                 ToastUtils.showShortToast ( HomeActivity.this, "登录成功" );
+                //登录后更新界面
+                AccountModel account = ( AccountModel ) msg.obj;
+                application.writeMemberInfo ( account.getAccountName (), account.getAccountId (), account.getAccountIcon (), account.getAccountToken () );
+                noAuthLayout.setVisibility ( View.GONE );
+                getAuthLayout.setVisibility ( View.VISIBLE );
+                BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application
+                                                             .getUserLogo ( ), R.drawable
+                                                             .ic_login_username, R.drawable
+                                                             .ic_login_username );
+                //渲染用户名
+                userName.setText ( application.getUserName ( ) );
+                userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
             }
             break;
             case Constants.MSG_USERID_NO_FOUND:
             {
                 //提示授权成功
-                ToastUtils.showShortToast ( HomeActivity.this, "无法获取微信信息" );
+                ToastUtils.showShortToast ( HomeActivity.this, "获取用户信息失败" );
             }
             break;
             default:
                 break;
-        }
-        return false;
-    }
-
-    /**
-     * webview拦截url作相应的处理
-     * @param view
-     * @param url
-     * @return
-     */
-    protected boolean shouldOverrideUrlBySFriend(WebView view, String url) {
-        if(url.contains(Constants.WEB_TAG_NEWFRAME)){
-            Intent intentWeb = new Intent(HomeActivity.this, WebViewActivity.class);
-            intentWeb.putExtra(Constants.INTENT_URL, url);
-            startActivity(intentWeb);
-            return true;
-        }else if(url.contains(Constants.WEB_TAG_USERINFO)){
-            //修改用户信息
-            //判断修改信息的类型
-            String type = url.substring(url.indexOf("=", 1)+1, url.indexOf("&", 1));
-            if(Constants.MODIFY_PSW.equals ( type ))
-            {
-                //弹出修改密码框
-
-            }
-            return true;
-        }else if(url.contains(Constants.WEB_TAG_LOGOUT)){
-            //处理登出操作
-
-            return true;
-        }else if(url.contains(Constants.WEB_TAG_INFO)){
-            //处理信息保护
-            return true;
-        }else if(url.contains(Constants.WEB_TAG_FINISH)){
-            if(viewPage.canGoBack())
-                viewPage.goBack();
-        }else
-        {
-            viewPage.loadUrl ( url );
         }
         return false;
     }

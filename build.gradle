@@ -39,5 +39,14 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+
+        signingConfigs {
+            debug {
+                storeFile file("keystore/huotu_fm.keystore")
+                storePassword "huotuheyun"
+                keyAlias "huotu_fm.keystore"
+                keyPassword "huotuheyun"
+            }
+        }
     }
 }

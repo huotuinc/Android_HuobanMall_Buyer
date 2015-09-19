@@ -26,6 +26,8 @@ import com.huotu.partnermall.utils.PreferenceHelper;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
+import org.apache.commons.codec.binary.StringUtils;
+
 import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
@@ -54,9 +56,6 @@ public class BaseApplication extends Application {
     public GeofenceClient mGeofenceClient;
     public MyLocationListener mMyLocationListener;
 
-    public static
-    IWXAPI api;
-
     @Override
     public
     void onConfigurationChanged ( Configuration newConfig ) {
@@ -71,9 +70,7 @@ public class BaseApplication extends Application {
         mMyLocationListener = new MyLocationListener ( );
         mLocationClient.registerLocationListener ( mMyLocationListener );
         mGeofenceClient = new GeofenceClient ( getApplicationContext ( ) );
-        //微信授权
-        api = WXAPIFactory.createWXAPI ( this, Constants.WXPAY_ID, true );
-        api.registerApp ( Constants.WXPAY_ID );
+
         // 初始化Volley实例
         VolleyUtil.init ( this );
         // 极光初始化
@@ -258,11 +255,11 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS,  menuStr);
     }
 
-    public void writeMemberInfo(String userName, String userId, String userToken)
+    public void writeMemberInfo(String userName, String userId, String userIcon, String userToken)
     {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID, userId );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_NAME, userName );
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID, userId );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ICON, userIcon );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN, userToken );
     }
 
@@ -327,7 +324,35 @@ public class BaseApplication extends Application {
 
     }
 
-    //获取微信登录的name
+    //判断是否登录
+    public boolean isLogin()
+    {
+        String token = PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN );
+        if(null != token && !"".equals ( token ))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
+    //登出
+    public void logout()
+    {
+        PreferenceHelper.clean ( getApplicationContext (), Constants.MEMBER_INFO );
+    }
+
+    //获取用户图片
+    public String getUserLogo()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ICON );
+    }
+    //获取用户名称
+    public String getUserName()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_NAME );
+    }
 
 }

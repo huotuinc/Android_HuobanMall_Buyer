@@ -164,8 +164,10 @@ public class Constants {
 	public static final String MEMBER_NAME              = "member_name";
 	//会员ID
 	public static final String MEMBER_ID                = "member_id";
-	//会员ID
+	//会员token
 	public static final String MEMBER_TOKEN             = "member_token";
+	//会员icon
+	public static final String MEMBER_ICON             = "member_icon";
 	//商户ID
 	public static final String MERCHANT_INFO_ID         = "merchant_id";
 	//商户支付宝key信息
@@ -220,7 +222,7 @@ public class Constants {
 	//支付
 	public static final String WEB_TAG_PAYMENT      = "partnermall520://payment";
 	//用户信息修改
-	public static final String WEB_TAG_USERINFO     = "http://partnermall520://userinfo?";
+	public static final String WEB_TAG_USERINFO     = "partnermall520://userinfo?";
 
 	//是否测试环境
 	public static final boolean IS_TEST = true;
@@ -283,7 +285,8 @@ public class Constants {
 	/**
 	 * 微信支付appID
 	 */
-	public static final String WXPAY_ID = "wx4e4588202e338a39";
+	public static final String WXPAY_ID = "wx2f2604e380cf6be1";
+	public static final String WXPAY_SECRT = "ae3a7d851f24bfc97047954fa3975cec";
 	public static final String PAY_URL  = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
 
 	// 商户PID
@@ -299,5 +302,8 @@ public class Constants {
 	public static final int SDK_CHECK_FLAG = 2;
 
 	// API密钥，在商户平台设置(微信支付商户)
-	private String wxpayApikey = "0db0d4908a6ae6a09b0a7727878f0ca6";
+	public static final String wxpayApikey = "0db0d4908a6ae6a09b0a7727878f0ca6";
+
+	//微信支付
+	public static final String WX_URL= "https://api.mch.weixin.qq.com/pay/unifiedorder";
 }

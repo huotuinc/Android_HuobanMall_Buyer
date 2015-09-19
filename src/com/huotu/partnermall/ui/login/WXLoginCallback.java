@@ -3,6 +3,7 @@ package com.huotu.partnermall.ui.login;
 import android.os.Handler;
 
 import com.huotu.partnermall.config.Constants;
+import com.mob.tools.utils.UIHandler;
 
 import java.util.HashMap;
 
@@ -16,18 +17,19 @@ public
 class WXLoginCallback implements PlatformActionListener {
 
     private
-    Handler handler;
-    public WXLoginCallback(Handler handler)
-    {
-        this.handler = handler;
+    Handler.Callback callback;
+
+    public
+    WXLoginCallback ( Handler.Callback callback ) {
+        this.callback = callback;
     }
 
     @Override
     public
     void onComplete ( Platform platform, int action, HashMap< String, Object > hashMap ) {
 
-        if (action == Platform.ACTION_USER_INFOR) {
-            handler.sendEmptyMessage( Constants.MSG_AUTH_COMPLETE );
+        if ( action == Platform.ACTION_USER_INFOR ) {
+            UIHandler.sendEmptyMessage ( Constants.MSG_AUTH_COMPLETE, callback );
         }
     }
 
@@ -35,7 +37,7 @@ class WXLoginCallback implements PlatformActionListener {
     public
     void onError ( Platform platform, int action, Throwable throwable ) {
         if (action == Platform.ACTION_USER_INFOR) {
-            handler.sendEmptyMessage ( Constants.MSG_AUTH_ERROR);
+            UIHandler.sendEmptyMessage ( Constants.MSG_AUTH_ERROR, callback );
         }
     }
 
@@ -43,7 +45,7 @@ class WXLoginCallback implements PlatformActionListener {
     public
     void onCancel ( Platform platform, int action ) {
         if (action == Platform.ACTION_USER_INFOR) {
-            handler.sendEmptyMessage(Constants.MSG_AUTH_CANCEL);
+            UIHandler.sendEmptyMessage(Constants.MSG_AUTH_CANCEL, callback );
         }
     }
 }

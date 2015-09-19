@@ -529,11 +529,12 @@ public class OnekeyShare implements PlatformActionListener, Callback {
 						if (resId > 0) {
 							showNotification(context.getString(resId));
 						}
+						ToastUtils.showShortToast ( context, "分享成功" );
 					}
 					break;
 					case 2: {
 						// 失败
-						String expName = msg.obj.getClass().getSimpleName();
+						/*String expName = msg.obj.getClass().getSimpleName();
 						if ("WechatClientNotExistException".equals(expName)
 								|| "WechatTimelineNotSupportedException".equals(expName)
 								|| "WechatFavoriteNotSupportedException".equals(expName)) {
@@ -577,7 +578,9 @@ public class OnekeyShare implements PlatformActionListener, Callback {
 							if (resId > 0) {
 								showNotification(context.getString(resId));
 							}
-						}
+						}*/
+
+						ToastUtils.showShortToast ( context, "分享失败" );
 					}
 					break;
 					case 3: {
@@ -586,6 +589,7 @@ public class OnekeyShare implements PlatformActionListener, Callback {
 						if (resId > 0) {
 							showNotification(context.getString(resId));
 						}
+						ToastUtils.showShortToast ( context, "取消分享" );
 					}
 					break;
 				}

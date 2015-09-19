@@ -56,4 +56,9 @@
     <dimen name="menu_layout_height">50dp</dimen>
     <!--菜单间距-->
     <dimen name="menu_layout_margin">10dp</dimen>
+
+    <!--微信用户头像高度-->
+    <dimen name="account_icon_width">50dp</dimen>
+    <!--微信用户头像宽度度-->
+    <dimen name="account_icon_height">50dp</dimen>
 </resources>

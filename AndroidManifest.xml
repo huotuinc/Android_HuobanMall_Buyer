@@ -100,39 +100,14 @@
             android:name="com.huotu.partnermall.ui.HomeActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.huotu.partnermall.ui.IndexActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.huotu.partnermall.ui.CategoryActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.huotu.partnermall.ui.CartActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.huotu.partnermall.ui.PersonalActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.huotu.partnermall.ui.SearchActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.Present"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.huotu.partnermall.ui.SettingActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.Present"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="keyboardHidden|orientation"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity android:name="com.huotu.partnermall.ui.WebViewActivity"
+                  android:theme="@style/AppTheme"
+                  android:screenOrientation="portrait"></activity>
+
         <service android:name="com.huotu.partnermall.service.LocationService"></service>
         <!-- 极光配置 -->
         <!-- Required SDK核心功能-->
@@ -218,12 +193,12 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize">
-            <intent-filter>
+            <!--<intent-filter>
                 <data android:scheme="tencent1104785503"></data>
                 <action android:name="android.intent.action.VIEW"></action>
                 <category android:name="android.intent.category.BROWSABLE"></category>
                 <category android:name="android.intent.category.DEFAULT"></category>
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <!--微信分享回调-->
         <activity android:name="com.huotu.partnermall.wxapi.WXEntryActivity"
@@ -231,11 +206,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait">
-           <!-- <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="wx4e4588202e338a39"/>
-            </intent-filter>-->
         </activity>
         <!--ShareSDK分享-->
         <!--支付宝钱包支付-->
@@ -247,5 +217,16 @@
             android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
 
+        <!--微信支付回调-->
+        <activity
+            android:name="com.huotu.partnermall.wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"/>
+        <receiver
+            android:name="com.huotu.partnermall.receiver.AppRegister">
+            <intent-filter>
+                <action android:name="com.tencent.mm.plugin.openapi.Intent.ACTION_REFRESH_WXAPP" />
+            </intent-filter>
+        </receiver>
 	</application>
 </manifest>

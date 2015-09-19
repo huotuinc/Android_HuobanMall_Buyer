@@ -45,6 +45,7 @@
         <sina_secret>123</sina_secret>
         <sina_redirect_uri>123</sina_redirect_uri>
         <weixin_share_key>123</weixin_share_key>
+        <weixin_share_secret>123</weixin_share_secret>
     </shareinfo>
     <!--推送-->
     <push_info>
