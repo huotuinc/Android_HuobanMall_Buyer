@@ -193,15 +193,15 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize">
-            <!--<intent-filter>
+            <intent-filter>
                 <data android:scheme="tencent1104785503"></data>
                 <action android:name="android.intent.action.VIEW"></action>
                 <category android:name="android.intent.category.BROWSABLE"></category>
                 <category android:name="android.intent.category.DEFAULT"></category>
-            </intent-filter>-->
+            </intent-filter>
         </activity>
         <!--微信分享回调-->
-        <activity android:name="com.huotu.partnermall.wxapi.WXEntryActivity"
+        <activity android:name="com.huotu.partnermall.inner.wxapi.WXEntryActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
