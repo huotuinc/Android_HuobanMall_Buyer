@@ -523,7 +523,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                                              void onComplete ( Platform platform, int action, HashMap< String, Object > hashMap ) {
 
                                                  if ( action == Platform.ACTION_USER_INFOR ) {
-                                                     mHandler.sendEmptyMessage ( Constants.MSG_AUTH_COMPLETE );
+                                                     Message msg = new Message();
+                                                     msg.what = Constants.MSG_AUTH_COMPLETE;
+                                                     msg.obj = platform;
+                                                     mHandler.sendMessage ( msg );
                                                  }
                                              }
 
@@ -585,7 +588,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case Constants.MSG_AUTH_COMPLETE:
             {
                 //提示授权成功
-                ToastUtils.showShortToast ( HomeActivity.this, "微信授权成功" );
+                Platform plat = ( Platform ) msg.obj;
+                ToastUtils.showShortToast ( HomeActivity.this, "微信授权成功，登陆中" );
+                authorize ( plat );
             }
             break;
             case Constants.MSG_AUTH_ERROR:
