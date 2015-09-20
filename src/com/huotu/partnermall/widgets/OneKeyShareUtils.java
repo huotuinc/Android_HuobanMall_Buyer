@@ -5,41 +5,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.model.ShareMsgModel;
 import com.huotu.partnermall.onekeyshare.OnekeyShare;
 
 public
 class OneKeyShareUtils {
 
-    //title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-    private String shareTitle;
-    //titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-    private String shareTitleUrl;
-    //text是分享文本，所有平台都需要这个字段
-    private String shareText;
-    //imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-    private String shareImagePath;
-    //url仅在微信（包括好友和朋友圈）中使用
-    private String shareUrl;
-    //comment是我对这条分享的评论，仅在人人网和QQ空间使用
-    private String shareComment;
-    //site是分享此内容的网站名称，仅在QQ空间使用
-    private String shareSite;
-    //siteUrl是分享此内容的网站地址，仅在QQ空间使用
-    private String shareSiteUrl;
+    private
+    ShareMsgModel msgModel;
 
     private
     Context context;
 
-    public OneKeyShareUtils(String shareTitle, String shareTitleUrl, String shareText, String shareImagePath, String shareUrl, String shareComment, String shareSite, String shareSiteUrl, Context context)
+    public OneKeyShareUtils(ShareMsgModel msgModel, Context context)
     {
-        this.shareTitle = shareTitle;
-        this.shareTitleUrl = shareTitleUrl;
-        this.shareText = shareText;
-        this.shareImagePath = shareImagePath;
-        this.shareUrl = shareUrl;
-        this.shareComment = shareComment;
-        this.shareSite = shareSite;
-        this.shareSiteUrl = shareSiteUrl;
+        this.msgModel = msgModel;
         this.context = context;
     }
 
@@ -53,53 +33,37 @@ class OneKeyShareUtils {
         oks.setSilent ( silent );
         oks.setDialogMode ();
 
-        /*Bitmap sinalogo = BitmapFactory.decodeResource ( context.getResources (), R.drawable.share_sina );
-        String sinalabel = context.getResources ().getString ( R.string.share_sina );*/
-        //分享sina
-
-
-        //自定义sina ICON
-        //oks.setCustomerLogo ( sinalogo, null, sinalabel, null );
-        //自定义weixin ICON
-        /*Bitmap weixinlogo = BitmapFactory.decodeResource ( context.getResources (), R.drawable.share_moments );
-        String weixinlabel = context.getResources ().getString ( R.string.share_weChat );
-        oks.setCustomerLogo (weixinlogo, null, weixinlabel, null );*/
-        //自定义QQ空间 ICON
-        /*Bitmap qzonelogo = BitmapFactory.decodeResource ( context.getResources (), R.drawable.share_qzone );
-        String qzonelabel = context.getResources ().getString ( R.string.share_qzone );
-        oks.setCustomerLogo (qzonelogo, null, qzonelabel, null );*/
-
-        if(null != shareTitle)
+        if(null != msgModel && null != msgModel.getShareTitle ())
         {
-            oks.setTitle ( shareTitle );
+            oks.setTitle ( msgModel.getShareTitle () );
         }
-        if(null != shareTitleUrl)
+        if(null != msgModel && null != msgModel.getShareTitleUrl ())
         {
-            oks.setTitleUrl ( shareTitleUrl );
+            oks.setTitleUrl ( msgModel.getShareTitleUrl () );
         }
-        if(null != shareText)
+        if(null != msgModel && null != msgModel.getShareText ())
         {
-            oks.setText ( shareText );
+            oks.setText ( msgModel.getShareText () );
         }
-        if(null != shareImagePath)
+        if(null != msgModel && null != msgModel.getShareImagePath ())
         {
-            oks.setImagePath ( shareImagePath );
+            oks.setImagePath ( msgModel.getShareImagePath () );
         }
-        if(null != shareUrl)
+        if(null != msgModel && null != msgModel.getShareSiteUrl ())
         {
-            oks.setUrl ( shareUrl );
+            oks.setUrl ( msgModel.getShareSiteUrl () );
         }
-        if(null != shareComment)
+        if(null != msgModel && null != msgModel.getShareComment ())
         {
-            oks.setComment ( shareComment );
+            oks.setComment ( msgModel.getShareComment () );
         }
-        if(null != shareSite)
+        if(null != msgModel && null != msgModel.getShareSite ())
         {
-            oks.setSite ( shareSite );
+            oks.setSite ( msgModel.getShareSite () );
         }
-        if(null != shareSiteUrl)
+        if(null != msgModel && null != msgModel.getShareSiteUrl ())
         {
-            oks.setSiteUrl ( shareSiteUrl );
+            oks.setSiteUrl ( msgModel.getShareSiteUrl () );
         }
 
         //设置自定义的外部回调

@@ -1,10 +1,15 @@
 package com.huotu.partnermall.ui.base;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.huotu.partnermall.AppManager;
 
@@ -17,11 +22,31 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+        super.onCreate ( savedInstanceState );
         //禁止横屏
         BaseActivity.this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT );
-        AppManager.getInstance().addActivity(this);
 
+    }
+
+    public void setImmerseLayout(View view)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            int statusBarHeight = this.getStatusBarHeight ( this.getBaseContext ( ) );
+            view.setPadding(0, statusBarHeight, 0, 0);
+        }
+    }
+
+    public int getStatusBarHeight(Context context)
+    {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen",
+                                                              "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     @Override

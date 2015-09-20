@@ -1,8 +1,8 @@
 package com.huotu.partnermall.ui;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -35,13 +35,11 @@ import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.listener.AliPayListener;
-import com.huotu.partnermall.listener.WXPayListener;
 import com.huotu.partnermall.listener.poponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.MenuBean;
+import com.huotu.partnermall.model.ShareMsgModel;
 import com.huotu.partnermall.ui.base.BaseActivity;
-import com.huotu.partnermall.ui.login.WXLoginCallback;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
@@ -49,8 +47,6 @@ import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
 import com.huotu.partnermall.widgets.MsgPopWindow;
 import com.huotu.partnermall.widgets.OneKeyShareUtils;
-import com.huotu.partnermall.widgets.PayPopWindow;
-import com.mob.tools.utils.UIHandler;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,7 +57,6 @@ import java.util.Map;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.PlatformDb;
-import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
@@ -128,6 +123,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         wManager = this.getWindowManager ();
         AppManager.getInstance ( ).addActivity ( this );
         setContentView ( R.layout.activity_home );
+        //设置沉浸模式
+        setImmerseLayout ( findViewById ( R.id.titleLayout ) );
         findViewById ( );
         initView ( );
     }
@@ -136,7 +133,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
      protected
      void findViewById ( ) {
         //标题栏对象
-        homeTitle = ( RelativeLayout ) this.findViewById ( R.id.homeTitle );
+        homeTitle = ( RelativeLayout ) this.findViewById ( R.id.titleLayout );
         //构建标题左侧图标，点击事件
         titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
         titleLeftImage.setOnClickListener ( this );
@@ -171,6 +168,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         super.onResume ( );
         if(application.isLogin())
         {
+
             noAuthLayout.setVisibility ( View.GONE );
             getAuthLayout.setVisibility ( View.VISIBLE );
             //渲染logo
@@ -192,6 +190,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected
     void initView ( ) {
+        //获取系统标题栏高度
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        {
+            int statusBarHeight = getStatusBarHeight ( HomeActivity.this );
+            loginLayout.setPadding ( 0, statusBarHeight, 0, 0 );
+        }
+
         //初始化侧滑菜单面板
         application.layDrag = ( DrawerLayout ) this.findViewById ( R.id.layDrag );
         //设置title背景
@@ -270,7 +275,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public
+    boolean onCreateOptionsMenu(Menu menu) {
         // TODO Auto-generated method stub
         getMenuInflater().inflate ( R.menu.activity_menu, menu );
         return true;
@@ -463,12 +469,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.sideslip_home: {
 
                 //模拟分享
-                /*String shareTitle = "分享01";
-                String shareText = "分享的一个测试";
-                String shareUrl = "http://www.baidu.com";
+                ShareMsgModel msgModel = new ShareMsgModel ();
+                msgModel.setShareText ( "分享的一个测试" );
+                msgModel.setShareTitleUrl ( "http://www.baidu.com" );
+                msgModel.setShareTitle ( "分享01" );
+                msgModel.setShareUrl ( "http://www.baidu.com" );
 
-                OneKeyShareUtils oks = new OneKeyShareUtils ( shareTitle, null, shareText, null, shareUrl, null, null, null, HomeActivity.this );
-                oks.shareShow (null, true);*/
+                OneKeyShareUtils oks = new OneKeyShareUtils ( msgModel, HomeActivity.this );
+                oks.shareShow (null, true);
                 //home
                 /*String homeUrl = "http://www.baidu.com";
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, homeUrl);
@@ -477,9 +485,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                /* MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
                 popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );*/
                 //模拟弹出支付界面
-                PayPopWindow payPopWindow = new PayPopWindow ( HomeActivity.this, null, null );
+                /*PayPopWindow payPopWindow = new PayPopWindow ( HomeActivity.this, null, null );
                 payPopWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.BOTTOM, 0, 0 );
-                payPopWindow.setOnDismissListener ( new poponDismissListener ( HomeActivity.this ) );
+                payPopWindow.setOnDismissListener ( new poponDismissListener ( HomeActivity.this ) );*/
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }

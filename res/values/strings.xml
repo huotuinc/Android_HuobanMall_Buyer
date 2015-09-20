@@ -103,7 +103,6 @@
     <string name="qzone">QQ空间</string>
     <string name="wechat">微信好友</string>
     <string name="wechatmoments">微信朋友圈</string>
-    <string name="wechatfavorite">微信收藏</string>
     <!--微信支付-->
     <string name="pay_result_callback_msg" formatted="false">微信支付结果：%s</string>
     <string name="app_tip">支付提示</string>
