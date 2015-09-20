@@ -37,6 +37,7 @@ import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.AliPayListener;
 import com.huotu.partnermall.listener.WXPayListener;
+import com.huotu.partnermall.listener.poponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.ui.base.BaseActivity;
@@ -46,6 +47,7 @@ import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
+import com.huotu.partnermall.widgets.MsgPopWindow;
 import com.huotu.partnermall.widgets.OneKeyShareUtils;
 import com.huotu.partnermall.widgets.PayPopWindow;
 import com.mob.tools.utils.UIHandler;
@@ -448,9 +450,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 //设置界面
                 //设置界面的url
                 //String settingUrl = application.createUrl(Constants.PAGE_TYPE_SETTING);
-                String settingUrl = "http://www.baidu.com";
+                /*String settingUrl = "http://www.baidu.com";
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, settingUrl);
-                mHandler.sendMessage ( msg );
+                mHandler.sendMessage ( msg );*/
+                MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
+                popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );
+                popWindow.setOnDismissListener ( new poponDismissListener (HomeActivity.this) );
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }
@@ -458,12 +463,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.sideslip_home: {
 
                 //模拟分享
-                String shareTitle = "分享01";
+                /*String shareTitle = "分享01";
                 String shareText = "分享的一个测试";
                 String shareUrl = "http://www.baidu.com";
 
                 OneKeyShareUtils oks = new OneKeyShareUtils ( shareTitle, null, shareText, null, shareUrl, null, null, null, HomeActivity.this );
-                oks.shareShow (null, true);
+                oks.shareShow (null, true);*/
                 //home
                 /*String homeUrl = "http://www.baidu.com";
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, homeUrl);
@@ -472,8 +477,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                /* MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
                 popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );*/
                 //模拟弹出支付界面
-                /*PayPopWindow payPopWindow = new PayPopWindow ( HomeActivity.this, new WXPayListener ( HomeActivity.this ), new AliPayListener ( HomeActivity.this ) );
-                payPopWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.BOTTOM, 0, 0 );*/
+                PayPopWindow payPopWindow = new PayPopWindow ( HomeActivity.this, null, null );
+                payPopWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.BOTTOM, 0, 0 );
+                payPopWindow.setOnDismissListener ( new poponDismissListener ( HomeActivity.this ) );
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }
@@ -485,17 +491,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 //Platform wechat = ShareSDK.getPlatform ( HomeActivity.this, Wechat.NAME );
                 authorize ( new Wechat ( HomeActivity.this ) );
 
-                //模拟登录
-                /*Message msg = new Message();
-                msg.what = Constants.MSG_LOGIN;
-                AccountModel account = new AccountModel ();
-                account.setAccountId ( "123456" );
-                account.setAccountName ( "小开开" );
-                account.setAccountIcon ( "http://analytics.sharesdk.cn/docs/wp-content/uploads/2014/09/%E5%BE%AE%E4%BF%A1sns_icon_22.png" );
-                account.setAccountToken ( "123456" );
-
-                msg.obj = account;
-                mHandler.sendMessage ( msg, this );*/
             }
             break;
             default:

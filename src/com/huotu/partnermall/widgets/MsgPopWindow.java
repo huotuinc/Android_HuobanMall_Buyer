@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,6 +13,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.utils.WindowUtils;
 
 /**
  * 自定义弹出框
@@ -31,12 +33,14 @@ class MsgPopWindow extends PopupWindow {
     private
     Button btnSure;
     private Button btnCancel;
+    private Activity context;
 
     private View popView;
 
     public MsgPopWindow(Activity context,View.OnClickListener itemsOnClick, String title, String msg)
     {
         super ( context );
+        this.context = context;
         LayoutInflater inflater = ( LayoutInflater ) context.getSystemService ( Context.LAYOUT_INFLATER_SERVICE );
         popView = inflater.inflate ( R.layout.popwindow_ui, null );
 
@@ -79,8 +83,11 @@ class MsgPopWindow extends PopupWindow {
         this.setWidth ( LinearLayout.LayoutParams.WRAP_CONTENT );
         //设置SelectPicPopupWindow弹出窗体的高
         this.setHeight ( LinearLayout.LayoutParams.WRAP_CONTENT );
+
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable ( false );
+
+        WindowUtils.backgroundAlpha ( context, 0.4f );
 
         //mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
 

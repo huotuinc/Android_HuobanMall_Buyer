@@ -303,6 +303,8 @@ public class Constants {
 
 	// API密钥，在商户平台设置(微信支付商户)
 	public static final String wxpayApikey = "0db0d4908a6ae6a09b0a7727878f0ca6";
+	//微信parterKey
+	public static final String wxpayParterkey = "1251040401";
 
 	//微信支付
 	public static final String WX_URL= "https://api.mch.weixin.qq.com/pay/unifiedorder";

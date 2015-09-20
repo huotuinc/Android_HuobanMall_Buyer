@@ -56,6 +56,7 @@ public class BaseApplication extends Application {
     public GeofenceClient mGeofenceClient;
     public MyLocationListener mMyLocationListener;
 
+    public IWXAPI wApi;
     @Override
     public
     void onConfigurationChanged ( Configuration newConfig ) {
@@ -79,6 +80,10 @@ public class BaseApplication extends Application {
         //初始化shareSDK参数
         ShareSDK.initSDK ( getApplicationContext ( ) );
         solveAsyncTaskOnPostExecuteBug ( );
+
+        //配置微信支付环境
+        wApi = WXAPIFactory.createWXAPI ( getApplicationContext (), Constants.WXPAY_ID, true );
+
     }
 
     @Override

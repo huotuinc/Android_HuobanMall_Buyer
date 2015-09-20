@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.utils.WindowUtils;
 
 /**
  * 支付弹出框
@@ -24,10 +25,12 @@ class PayPopWindow extends PopupWindow {
     private
     Button cancelBtn;
     private View payView;
+    private Activity aty;
 
     public
     PayPopWindow ( Activity aty, View.OnClickListener wxPayListener, View.OnClickListener alipayListener) {
         super ( );
+        this.aty = aty;
         LayoutInflater inflater = ( LayoutInflater ) aty.getSystemService ( Context.LAYOUT_INFLATER_SERVICE );
 
         payView = inflater.inflate ( R.layout.pop_pay_ui, null );
@@ -53,6 +56,7 @@ class PayPopWindow extends PopupWindow {
         this.setHeight ( LinearLayout.LayoutParams.WRAP_CONTENT );
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable ( false );
+        WindowUtils.backgroundAlpha ( aty, 0.4f );
 
         //mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
 
