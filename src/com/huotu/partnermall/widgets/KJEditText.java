@@ -116,7 +116,7 @@ class KJEditText extends AutoCompleteTextView implements Handler.Callback {
         int stye = ta.getInt(R.styleable.KJEditText_edit_style, 0);
         ta.recycle();
         //int backgroud = ;//stye == 1 ? : ;
-        setBackgroundResource(getBackground(1));
+        setBackgroundResource(getBackground(stye));
 
 
         int padding =  (int) dip2px(context, 5);

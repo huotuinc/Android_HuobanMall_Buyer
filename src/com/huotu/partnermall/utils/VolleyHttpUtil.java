@@ -17,23 +17,17 @@ class VolleyHttpUtil {
     private String url;
     private Activity context;
     private JsonObjectRequest request;
-    private
-    RetryPolicy mRetryPolicy;
 
-    public VolleyHttpUtil(String url, Activity context, JsonObjectRequest request, RetryPolicy mRetryPolicy)
+    public VolleyHttpUtil(String url, Activity context, JsonObjectRequest request)
     {
         this.url = url;
         this.context = context;
         this.request = request;
-        this.mRetryPolicy = mRetryPolicy;
     }
 
     public void doHttp()
     {
-        if(null != mRetryPolicy)
-        {
-            request.setRetryPolicy ( mRetryPolicy );
-        }
+        request.setRetryPolicy ( new MallRetryPolicy (  ) );
         VolleyUtil.getRequestQueue ().add ( request );
     }
 }

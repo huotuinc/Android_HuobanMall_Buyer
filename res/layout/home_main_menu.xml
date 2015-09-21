@@ -45,7 +45,7 @@
                 android:layout_height="@dimen/sideslip_login_button_height"
                 android:background="@drawable/login_button"
                 android:textColor="@color/theme_color"
-                android:text="微信授权登录"/>
+                android:text="@string/auth_weixin"/>
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/getAuth"

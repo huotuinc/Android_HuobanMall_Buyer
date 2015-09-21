@@ -114,4 +114,6 @@
     <string name="get_prepayid_succ">获取prepayid成功</string>
     <string name="get_prepayid_fail" formatted="false">获取prepayid失败，原因%s</string>
     <string name="pay_result_tip">这个界面用于显示第三方app通过微信支付的结果</string>
+    
+    <string name="auth_weixin">微信账号登录</string>
 </resources>

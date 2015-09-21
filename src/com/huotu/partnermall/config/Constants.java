@@ -308,4 +308,21 @@ public class Constants {
 
 	//微信支付
 	public static final String WX_URL= "https://api.mch.weixin.qq.com/pay/unifiedorder";
+
+
+	/**
+	 * 操作平台码
+	 */
+	public static final String OPERATION_CODE = "FM2015AD";
+
+	public static final String APPKEY = "b73ca64567fb49ee963477263283a1bf";
+
+	// 平台安全码
+	public static final String APP_SECRET = "1165a8d240b29af3f418b8d10599d0da";
+
+	/**
+	 * capCode
+	 */
+	public static final String CAP_CODE = "default";
+
 }

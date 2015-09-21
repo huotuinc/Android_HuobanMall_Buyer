@@ -288,20 +288,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public
-    boolean onCreateOptionsMenu(Menu menu) {
-        // TODO Auto-generated method stub
-        getMenuInflater().inflate ( R.menu.activity_menu, menu );
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO Auto-generated method stub
-        return true;
-    }
-
-    @Override
-    public
     void onPhotoSelectBack ( PhotoSelectView.SelectType type ) {
         if (null == type)
             return;
