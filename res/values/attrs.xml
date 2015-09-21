@@ -53,4 +53,12 @@
         <attr name="android:background" />
     </declare-styleable>
 
+    <declare-styleable name="KJEditText">
+        <attr name="edit_style">
+            <enum name="orange" value="0" />
+            <enum name="blue" value="1" />
+            <enum name="transparent" value="2" />
+        </attr>
+    </declare-styleable>
+
 </resources>

@@ -64,19 +64,19 @@
             android:orientation="horizontal"
             android:padding="10dp" >
 
-            <cy.com.morefan.view.WheelView
+            <com.huotu.partnermall.widgets.TimeView
                 android:id="@+id/wheelYear"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:padding="10dp" />
 
-            <cy.com.morefan.view.WheelView
+            <com.huotu.partnermall.widgets.TimeView
                 android:id="@+id/wheelMonth"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:padding="10dp" />
 
-            <cy.com.morefan.view.WheelView
+            <com.huotu.partnermall.widgets.TimeView
                 android:id="@+id/wheelDay"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"

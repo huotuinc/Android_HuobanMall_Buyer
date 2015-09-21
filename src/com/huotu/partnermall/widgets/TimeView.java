@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ItemsRange;
@@ -25,10 +24,8 @@ public
 class TimeView extends View {
 
     /** Top and bottom shadows colors */
-    private static final int[] SHADOWS_COLORS = new int[] {
-            0xFF111111 ,
-            0x00AAAAAA , 0x00AAAAAA
-    };
+    private static final int[] SHADOWS_COLORS = new int[] { 0xFF111111,
+                                                            0x00AAAAAA, 0x00AAAAAA };
 
     /** Top and bottom items offset (to hide that) */
     private static final int ITEM_OFFSET_PERCENT = 10;
@@ -57,8 +54,8 @@ class TimeView extends View {
 
     // Scrolling
     private WheelScroller scroller;
-    private boolean       isScrollingPerformed;
-    private int           scrollingOffset;
+    private boolean isScrollingPerformed;
+    private int scrollingOffset;
 
     // Cyclic
     boolean isCyclic = false;
@@ -73,30 +70,25 @@ class TimeView extends View {
     private WheelViewAdapter viewAdapter;
 
     // Recycle
-    private WheelRecycle recycle = new WheelRecycle ( this );
+    private WheelRecycle recycle = new WheelRecycle(this);
 
     // Listeners
-    private List< OnWheelChangedListener > changingListeners  = new LinkedList<
-                OnWheelChangedListener > ( );
-    private List< OnWheelScrollListener >  scrollingListeners = new LinkedList<
-            OnWheelScrollListener > ( );
-    private List< OnWheelClickedListener > clickingListeners  = new LinkedList<
-            OnWheelClickedListener > ( );
+    private List<OnWheelChangedListener> changingListeners = new LinkedList<OnWheelChangedListener>();
+    private List<OnWheelScrollListener> scrollingListeners = new LinkedList<OnWheelScrollListener>();
+    private List<OnWheelClickedListener> clickingListeners = new LinkedList<OnWheelClickedListener>();
 
     /**
      * Constructor
      */
-    public
-    TimeView ( Context context, AttributeSet attrs, int defStyle ) {
-        super ( context, attrs, defStyle );
-        initData ( context );
+    public TimeView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initData(context);
     }
 
     /**
      * Constructor
      */
-    public
-    TimeView ( Context context, AttributeSet attrs ) {
+    public TimeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initData(context);
     }
@@ -191,17 +183,15 @@ class TimeView extends View {
     }
 
     // Adapter listener
-    private DataSetObserver dataObserver = new DataSetObserver ( ) {
+    private DataSetObserver dataObserver = new DataSetObserver() {
         @Override
-        public
-        void onChanged ( ) {
-            invalidateWheel ( false );
+        public void onChanged() {
+            invalidateWheel(false);
         }
 
         @Override
-        public
-        void onInvalidated ( ) {
-            invalidateWheel ( true );
+        public void onInvalidated() {
+            invalidateWheel(true);
         }
     };
 
@@ -211,35 +201,32 @@ class TimeView extends View {
      *
      * @param viewAdapter the view adapter
      */
-    public
-    void setViewAdapter ( WheelViewAdapter viewAdapter ) {
-        if ( this.viewAdapter != null ) {
-            this.viewAdapter.unregisterDataSetObserver ( dataObserver );
+    public void setViewAdapter(WheelViewAdapter viewAdapter) {
+        if (this.viewAdapter != null) {
+            this.viewAdapter.unregisterDataSetObserver(dataObserver);
         }
         this.viewAdapter = viewAdapter;
-        if ( this.viewAdapter != null ) {
-            this.viewAdapter.registerDataSetObserver ( dataObserver );
+        if (this.viewAdapter != null) {
+            this.viewAdapter.registerDataSetObserver(dataObserver);
         }
 
-        invalidateWheel ( true );
+        invalidateWheel(true);
     }
 
     /**
      * Adds wheel changing listener
      * @param listener the listener
      */
-    public
-    void addChangingListener ( OnWheelChangedListener listener ) {
-        changingListeners.add ( listener );
+    public void addChangingListener(OnWheelChangedListener listener) {
+        changingListeners.add(listener);
     }
 
     /**
      * Removes wheel changing listener
      * @param listener the listener
      */
-    public
-    void removeChangingListener ( OnWheelChangedListener listener ) {
-        changingListeners.remove ( listener );
+    public void removeChangingListener(OnWheelChangedListener listener) {
+        changingListeners.remove(listener);
     }
 
     /**
@@ -247,10 +234,9 @@ class TimeView extends View {
      * @param oldValue the old wheel value
      * @param newValue the new wheel value
      */
-    protected
-    void notifyChangingListeners ( int oldValue, int newValue ) {
-        for ( OnWheelChangedListener listener : changingListeners ) {
-            listener.onChanged ( this, oldValue, newValue );
+    protected void notifyChangingListeners(int oldValue, int newValue) {
+        for (OnWheelChangedListener listener : changingListeners) {
+            listener.onChanged(this, oldValue, newValue);
         }
     }
 
@@ -258,37 +244,33 @@ class TimeView extends View {
      * Adds wheel scrolling listener
      * @param listener the listener
      */
-    public
-    void addScrollingListener ( OnWheelScrollListener listener ) {
-        scrollingListeners.add ( listener );
+    public void addScrollingListener(OnWheelScrollListener listener) {
+        scrollingListeners.add(listener);
     }
 
     /**
      * Removes wheel scrolling listener
      * @param listener the listener
      */
-    public
-    void removeScrollingListener ( OnWheelScrollListener listener ) {
-        scrollingListeners.remove ( listener );
+    public void removeScrollingListener(OnWheelScrollListener listener) {
+        scrollingListeners.remove(listener);
     }
 
     /**
      * Notifies listeners about starting scrolling
      */
-    protected
-    void notifyScrollingListenersAboutStart ( ) {
-        for ( OnWheelScrollListener listener : scrollingListeners ) {
-            listener.onScrollingStarted ( this );
+    protected void notifyScrollingListenersAboutStart() {
+        for (OnWheelScrollListener listener : scrollingListeners) {
+            listener.onScrollingStarted(this);
         }
     }
 
     /**
      * Notifies listeners about ending scrolling
      */
-    protected
-    void notifyScrollingListenersAboutEnd ( ) {
-        for ( OnWheelScrollListener listener : scrollingListeners ) {
-            listener.onScrollingFinished ( this );
+    protected void notifyScrollingListenersAboutEnd() {
+        for (OnWheelScrollListener listener : scrollingListeners) {
+            listener.onScrollingFinished(this);
         }
     }
 
@@ -296,27 +278,24 @@ class TimeView extends View {
      * Adds wheel clicking listener
      * @param listener the listener
      */
-    public
-    void addClickingListener ( OnWheelClickedListener listener ) {
-        clickingListeners.add ( listener );
+    public void addClickingListener(OnWheelClickedListener listener) {
+        clickingListeners.add(listener);
     }
 
     /**
      * Removes wheel clicking listener
      * @param listener the listener
      */
-    public
-    void removeClickingListener ( OnWheelClickedListener listener ) {
-        clickingListeners.remove ( listener );
+    public void removeClickingListener(OnWheelClickedListener listener) {
+        clickingListeners.remove(listener);
     }
 
     /**
      * Notifies listeners about clicking
      */
-    protected
-    void notifyClickListenersAboutClick ( int item ) {
-        for ( OnWheelClickedListener listener : clickingListeners ) {
-            listener.onItemClicked ( this, item );
+    protected void notifyClickListenersAboutClick(int item) {
+        for (OnWheelClickedListener listener : clickingListeners) {
+            listener.onItemClicked(this, item);
         }
     }
 
@@ -325,8 +304,7 @@ class TimeView extends View {
      *
      * @return the current value
      */
-    public
-    int getCurrentItem ( ) {
+    public int getCurrentItem() {
         return currentItem;
     }
 
@@ -336,45 +314,41 @@ class TimeView extends View {
      * @param index the item index
      * @param animated the animation flag
      */
-    public
-    void setCurrentItem ( int index, boolean animated ) {
-        if ( viewAdapter == null || viewAdapter.getItemsCount ( ) == 0 ) {
+    public void setCurrentItem(int index, boolean animated) {
+        if (viewAdapter == null || viewAdapter.getItemsCount() == 0) {
             return; // throw?
         }
 
-        int itemCount = viewAdapter.getItemsCount ( );
-        if ( index < 0 || index >= itemCount ) {
-            if ( isCyclic ) {
-                while ( index < 0 ) {
+        int itemCount = viewAdapter.getItemsCount();
+        if (index < 0 || index >= itemCount) {
+            if (isCyclic) {
+                while (index < 0) {
                     index += itemCount;
                 }
                 index %= itemCount;
-            }
-            else {
+            } else{
                 return; // throw?
             }
         }
-        if ( index != currentItem ) {
-            if ( animated ) {
+        if (index != currentItem) {
+            if (animated) {
                 int itemsToScroll = index - currentItem;
-                if ( isCyclic ) {
-                    int scroll = itemCount + Math.min ( index, currentItem ) - Math.max ( index,
-                                                                                          currentItem );
-                    if ( scroll < Math.abs ( itemsToScroll ) ) {
-                        itemsToScroll = itemsToScroll < 0 ? scroll : - scroll;
+                if (isCyclic) {
+                    int scroll = itemCount + Math.min(index, currentItem) - Math.max(index, currentItem);
+                    if (scroll < Math.abs(itemsToScroll)) {
+                        itemsToScroll = itemsToScroll < 0 ? scroll : -scroll;
                     }
                 }
-                scroll ( itemsToScroll, 0 );
-            }
-            else {
+                scroll(itemsToScroll, 0);
+            } else {
                 scrollingOffset = 0;
 
                 int old = currentItem;
                 currentItem = index;
 
-                notifyChangingListeners ( old, currentItem );
+                notifyChangingListeners(old, currentItem);
 
-                invalidate ( );
+                invalidate();
             }
         }
     }
@@ -384,9 +358,8 @@ class TimeView extends View {
      *
      * @param index the item index
      */
-    public
-    void setCurrentItem ( int index ) {
-        setCurrentItem ( index, false );
+    public void setCurrentItem(int index) {
+        setCurrentItem(index, false);
     }
 
     /**
@@ -419,7 +392,7 @@ class TimeView extends View {
             scrollingOffset = 0;
         } else if (itemsLayout != null) {
             // cache all items
-            recycle.recycleItems(itemsLayout, firstItem, new ItemsRange ());
+            recycle.recycleItems(itemsLayout, firstItem, new ItemsRange());
         }
 
         invalidate();
@@ -441,7 +414,7 @@ class TimeView extends View {
             bottomShadow = new GradientDrawable( GradientDrawable.Orientation.BOTTOM_TOP, SHADOWS_COLORS);
         }
 
-        setBackgroundResource( R.drawable.wheel_bg);
+        setBackgroundResource(R.drawable.wheel_bg);
     }
 
     /**
@@ -488,7 +461,7 @@ class TimeView extends View {
         initResourcesIfNecessary();
 
         // TODO: make it static
-        itemsLayout.setLayoutParams(new LinearLayout.LayoutParams ( TableLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        itemsLayout.setLayoutParams(new LinearLayout.LayoutParams ( LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         itemsLayout.measure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.UNSPECIFIED),
                             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
         int width = itemsLayout.getMeasuredWidth();
@@ -701,7 +674,6 @@ class TimeView extends View {
 
     /**
      * Scroll the wheel
-     * @param itemsToScroll items to scroll
      * @param time scrolling duration
      */
     public void scroll(int itemsToScroll, int time) {

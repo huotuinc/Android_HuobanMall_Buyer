@@ -62,13 +62,13 @@
             android:layout_height="wrap_content"
             android:background="@drawable/solid_line" />
 
-        <cy.lib.edittext.CyEditText
+        <com.huotu.partnermall.widgets.KJEditText
             android:id="@+id/edtName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:hint="请输入姓名"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dp"/>
 
         <ListView
             android:id="@+id/listView"

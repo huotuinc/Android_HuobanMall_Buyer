@@ -43,7 +43,6 @@ class UrlFilterUtils {
             if(Constants.MODIFY_PSW.equals ( type ))
             {
                 //弹出修改密码框
-
             }
             return true;
         }else if(url.contains(Constants.WEB_TAG_LOGOUT)){

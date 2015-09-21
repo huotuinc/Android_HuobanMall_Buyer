@@ -3,16 +3,27 @@ package com.huotu.partnermall.widgets;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.adapter.ArrayWheelAdapter;
+import com.huotu.partnermall.adapter.DateNumericAdapter;
+import com.huotu.partnermall.adapter.NumericWheelAdapter;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.utils.DensityUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * 弹出去选择时间控件
@@ -170,6 +181,130 @@ class PopTimeView {
                     }
                 });
 
+    }
+
+    /**
+     * Updates day wheel. Sets max days according to selected month and year
+     */
+    void updateDays(TimeView year, TimeView month, TimeView day)
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, minYear + year.getCurrentItem());//
+        calendar.set(Calendar.MONTH, month.getCurrentItem());
+
+        int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        System.out.println(">>>>>>>>maxDays:" + maxDays);
+        day.setViewAdapter(
+                ( WheelViewAdapter ) new DateNumericAdapter(mContext, 1, maxDays,
+                                                          curDay - 1)
+                          );
+
+        // int curDay2 = Math.min(maxDays, curDay);
+        // day.setCurrentItem(curDay - 1, true);
+
+        // mYear = minYear+year.getCurrentItem();
+        // mMonth = month.getCurrentItem()+1;
+        // mDay = curDay;
+        // calendar.set(Calendar.DAY_OF_MONTH, mDay);
+        // getWeek(calendar.get(Calendar.DAY_OF_WEEK));
+
+    }
+
+    public void show(String date)
+    {
+        dialog.show();
+        // pop.showAtLocation(mainView, 0, 0, 0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 10);
+        if ( TextUtils.isEmpty ( date ))
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd",
+                                                        Locale.CHINA);
+            date = sdf.format(calendar.getTime());
+        }
+
+        minYear = calendar.get(Calendar.YEAR) - 50;
+        String[] dates = date.split("-");
+        int year = Integer.valueOf(dates[0]);
+        int month = Integer.valueOf(dates[1]);
+        curDay = Integer.valueOf(dates[2]);
+
+        final String months[] = new String[]
+                { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
+                  "12" };
+        final DateNumericAdapter yearAdapter = new DateNumericAdapter(mContext,
+                                                                      minYear, minYear + 50, year - minYear);
+        final DateArrayAdapter monthAdapter = new DateArrayAdapter(mContext,
+                                                                   months, month - 1);
+
+        OnWheelChangedListener dateListener = new OnWheelChangedListener()
+        {
+            public void onChanged(TimeView wheel, int oldValue, int newValue)
+            {
+                updateDays(wheelYear, wheelMonth, wheelDay);
+                result = String.format("%s-%s-%02d",
+                                       minYear + wheelYear.getCurrentItem(),
+                                       months[wheelMonth.getCurrentItem()],
+                                       wheelDay.getCurrentItem() + 1);
+                //
+            }
+        };
+
+        // year
+        wheelYear.setViewAdapter( yearAdapter );
+        wheelYear.setCurrentItem(year - minYear);
+        wheelYear.addChangingListener(dateListener);
+        // month
+
+        wheelMonth.setViewAdapter( monthAdapter );
+        wheelMonth.setCurrentItem(month - 1);
+        wheelMonth.addChangingListener(dateListener);
+        // day
+
+        updateDays(wheelYear, wheelMonth, wheelDay);
+        wheelDay.setCurrentItem(curDay - 1);
+        wheelDay.addChangingListener(dateListener);
+
+    }
+
+    /**
+     * Adapter for string based wheel. Highlights the current value.
+     */
+    private class DateArrayAdapter extends ArrayWheelAdapter<String>
+    {
+        // Index of current item
+        int currentItem;
+
+        // Index of item to be highlighted
+        int currentValue;
+
+        /**
+         * Constructor
+         */
+        public DateArrayAdapter(Context context, String[] items, int current)
+        {
+            super(context, items);
+            this.currentValue = current;
+            setTextSize(22);
+        }
+
+        @Override
+        protected void configureTextView(TextView view)
+        {
+            super.configureTextView(view);
+            if (currentItem == currentValue)
+            {
+                view.setTextColor(0xFF0000F0);
+            }
+            view.setTypeface( Typeface.SANS_SERIF);
+        }
+
+        @Override
+        public View getItem(int index, View cachedView, ViewGroup parent)
+        {
+            currentItem = index;
+            return super.getItem(index, cachedView, parent);
+        }
     }
 
 }

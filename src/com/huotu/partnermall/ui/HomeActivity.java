@@ -7,10 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,39 +25,38 @@ import android.widget.TextView;
 
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.huotu.partnermall.AppManager;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.listener.poponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
-import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.ShareMsgModel;
+import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.utils.UIUtils;
+import com.huotu.partnermall.widgets.CropperView;
 import com.huotu.partnermall.widgets.KJWebView;
-import com.huotu.partnermall.widgets.MsgPopWindow;
 import com.huotu.partnermall.widgets.OneKeyShareUtils;
+import com.huotu.partnermall.widgets.PhotoSelectView;
+import com.huotu.partnermall.widgets.PopTimeView;
+import com.huotu.partnermall.widgets.UserInfoView;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Calendar;
 
 import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.framework.PlatformDb;
 import cn.sharesdk.wechat.friends.Wechat;
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
+public class HomeActivity extends BaseActivity implements View.OnClickListener,
+                                                          Handler.Callback,
+                                                          PhotoSelectView.OnPhotoSelectBackListener,
+                                                          UserInfoView.OnUserInfoBackListener,
+                                                          PopTimeView.OnDateBackListener {
 
     //获取资源文件对象
     private
@@ -110,6 +107,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     //windows类
     WindowManager wManager;
+    private
+    PhotoSelectView photo;
+
+    private UserInfoView userInfoView;
+    private CropperView  cropperView;
+
+    private String[] YEAR;
+    private PopTimeView
+                     popTimeView;
+
+    private
+    AutnLogin login;
 
     @Override
     protected
@@ -120,18 +129,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         resources = HomeActivity.this.getResources ( );
         mHandler = new Handler ( this );
 
-        wManager = this.getWindowManager ();
+        wManager = this.getWindowManager ( );
         AppManager.getInstance ( ).addActivity ( this );
         setContentView ( R.layout.activity_home );
         //设置沉浸模式
         setImmerseLayout ( findViewById ( R.id.titleLayout ) );
         findViewById ( );
         initView ( );
+
+        //初始化修改信息组件
+        userInfoView = new UserInfoView ( this, application );
+        userInfoView.setOnUserInfoBackListener ( this );
     }
 
     @Override
-     protected
-     void findViewById ( ) {
+    protected
+    void findViewById ( ) {
         //标题栏对象
         homeTitle = ( RelativeLayout ) this.findViewById ( R.id.titleLayout );
         //构建标题左侧图标，点击事件
@@ -166,8 +179,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     protected
     void onResume ( ) {
         super.onResume ( );
-        if(application.isLogin())
-        {
+        if ( application.isLogin ( ) ) {
 
             noAuthLayout.setVisibility ( View.GONE );
             getAuthLayout.setVisibility ( View.VISIBLE );
@@ -246,8 +258,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         }
 
         //动态加载侧滑菜单
-        loadMenus ( );
-
+        UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler);
+        ui.loadMenus ();
         //加载页面
         titleText.setText ( "买家版" );
 
@@ -288,117 +300,38 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         return true;
     }
 
-    /**
-     * 动态加载菜单栏
-     */
-    private void loadMenus()
-    {
+    @Override
+    public
+    void onPhotoSelectBack ( PhotoSelectView.SelectType type ) {
+        if (null == type)
+            return;
+        getPhotoByType ( type );
+    }
 
-        String menuStr = application.readMenus ();
-        //json格式转成list
-        Gson gson = new Gson ();
-        List<MenuBean> menuList = gson.fromJson ( menuStr, new TypeToken<List<MenuBean>> (){}.getType () );
-        //按分组排序
-        menuSort(menuList);
-        //
-        if(null == menuList || menuList.isEmpty ())
-        {
+    private void getPhotoByType(PhotoSelectView.SelectType type) {
+        switch (type) {
+            case Camera:
+                //getPhotoByCamera();
+                break;
+            case File:
+                //getPhotoByFile();
+                break;
 
-            KJLoger.e ( "未加载商家定义的菜单" );
+            default:
+                break;
         }
-        else
-        {
-            int size = menuList.size ();
-            for(int i=0; i<size; i++)
-            {
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( ViewGroup
-                                                                                          .LayoutParams.MATCH_PARENT, (wManager.getDefaultDisplay ().getHeight ()/15));
-                //取出分组
-                String menuGroup = menuList.get ( i ).getMenuGroup ();
-                RelativeLayout menuLayout = ( RelativeLayout ) LayoutInflater.from ( this ).inflate ( R.layout.main_menu, null );
-                menuLayout.setBackgroundColor ( resources.getColor ( R.color.theme_color ) );
-                if(i<(size-1))
-                {
-                    if(0 == i)
-                    {
-                        lp.setMargins ( 0, 20, 0, 0 );
-                    }
-                    String menuGroupNext = menuList.get ( i+1 ).getMenuGroup ();
-                    if(!menuGroupNext.equals ( menuGroup ))
-                    {
-                        menuLayout.setBackgroundDrawable ( resources.getDrawable ( R.drawable.main_menu_no_bottom ) );
-                        lp.setMargins ( 0, 0, 0, 20 );
-                    }
-                    else
-                    {
-                        menuLayout.setBackgroundDrawable ( resources.getDrawable ( R.drawable.main_menu_bottom ) );
-                    }
-                }
-                else
-                {
-                    //最后一个
-                    menuLayout.setBackgroundDrawable ( resources.getDrawable ( R.drawable.main_menu_no_bottom ) );
-                    lp.setMargins ( 0, 0, 0, 20 );
-                }
+    }
 
-                final MenuBean menu = menuList.get ( i );
-                //设置ID
-                menuLayout.setId ( i );
-                //设置图标
-                ImageView menuIcon = ( ImageView ) menuLayout.findViewById ( R.id.menuIcon );
-                int iconId = resources.getIdentifier ( menu.getMenuIcon (), "drawable", "com.huotu.partnermall.inner" );
-                Drawable menuIconDraw = resources.getDrawable ( iconId );
-                SystemTools.loadBackground ( menuIcon,  menuIconDraw);
-                //设置文本
-                TextView menuText = ( TextView ) menuLayout.findViewById ( R.id.menuText );
-                menuText.setText ( menu.getMenuName ( ) );
-                menuLayout.setOnClickListener (
-                        new View.OnClickListener ( ) {
-                            @Override
-                            public
-                            void onClick ( View v ) {
-                                //加载具体的页面
-                                Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, menu.getMenuUrl () );
-                                mHandler.sendMessage ( msg );
-
-                                //隐藏侧滑菜单
-                                application.layDrag.closeDrawer ( Gravity.LEFT );
-
-                            }
-                        }
-                                              );
-
-                menuLayout.setLayoutParams ( lp );
-
-                mainMenuLayout.addView ( menuLayout );
-            }
-        }
+    @Override
+    public
+    void onUserInfoBack ( UserInfoView.Type type, UserSelectData data ) {
 
     }
 
-    /**
-     * 按分组排序
-     * @param menus
-     * @return
-     */
-    private void menuSort(List<MenuBean> menus)
-    {
+    @Override
+    public
+    void onDateBack ( String date ) {
 
-        ComparatorMenu comparatorMenu = new ComparatorMenu ();
-        Collections.sort ( menus, comparatorMenu );
-    }
-
-    public class ComparatorMenu implements Comparator {
-
-        @Override
-        public
-        int compare ( Object lhs, Object rhs ) {
-
-            MenuBean menu01 = ( MenuBean ) lhs;
-            MenuBean menu02 = ( MenuBean ) rhs;
-            //比较分组序号
-            return menu01.getMenuGroup ( ).compareTo ( menu02.getMenuGroup () );
-        }
     }
 
     @Override
@@ -459,9 +392,27 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 /*String settingUrl = "http://www.baidu.com";
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, settingUrl);
                 mHandler.sendMessage ( msg );*/
-                MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
+                /*MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
                 popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );
-                popWindow.setOnDismissListener ( new poponDismissListener (HomeActivity.this) );
+                popWindow.setOnDismissListener ( new poponDismissListener (HomeActivity.this) );*/
+                //测试弹出选择图片
+                /*if(null == photo)
+                {
+                    photo = new PhotoSelectView ( this,this );
+                }
+                photo.show ();*/
+                //测试修改用户名
+                userInfoView.show( UserInfoView.Type.Name, null, "方小开");
+                //测试弹出时间控件
+                /*if (YEAR == null)
+                    initYears();
+                if (popTimeView == null) {
+                    popTimeView = new PopTimeView (this, application);
+                    popTimeView.setOnDateBackListener(this);
+                }*/
+
+                // mainZoomOut(layAll);
+                //popTimeView.show("1987-09-21");
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }
@@ -497,75 +448,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 //微信登录
                 /*ToastUtils.showShortToast ( HomeActivity.this, application );*/
                 //Platform wechat = ShareSDK.getPlatform ( HomeActivity.this, Wechat.NAME );
-                authorize ( new Wechat ( HomeActivity.this ) );
+                login = new AutnLogin ( HomeActivity.this, mHandler );
+                login.authorize ( new Wechat ( HomeActivity.this ) );
 
             }
             break;
             default:
                 break;
         }
-    }
-
-    private void authorize(Platform plat) {
-        if(plat.isValid ()) {
-            String userId = plat.getDb().getUserId();
-            if (! TextUtils.isEmpty ( userId )) {
-                mHandler.sendEmptyMessage ( Constants.MSG_USERID_FOUND );
-                login(plat);
-                return;
-            }
-            else
-            {
-                mHandler.sendEmptyMessage ( Constants.MSG_USERID_NO_FOUND );
-                return;
-            }
-        }
-        plat.setPlatformActionListener ( new PlatformActionListener ( ) {
-                                             @Override
-                                             public
-                                             void onComplete ( Platform platform, int action, HashMap< String, Object > hashMap ) {
-
-                                                 if ( action == Platform.ACTION_USER_INFOR ) {
-                                                     Message msg = new Message();
-                                                     msg.what = Constants.MSG_AUTH_COMPLETE;
-                                                     msg.obj = platform;
-                                                     mHandler.sendMessage ( msg );
-                                                 }
-                                             }
-
-                                             @Override
-                                             public
-                                             void onError ( Platform platform, int action, Throwable throwable ) {
-                                                 if (action == Platform.ACTION_USER_INFOR) {
-                                                     mHandler.sendEmptyMessage ( Constants.MSG_AUTH_ERROR );
-                                                 }
-                                             }
-
-                                             @Override
-                                             public
-                                             void onCancel ( Platform platform, int action ) {
-                                                 if (action == Platform.ACTION_USER_INFOR) {
-                                                     mHandler.sendEmptyMessage(Constants.MSG_AUTH_CANCEL );
-                                                 }
-                                             }
-                                         } );
-        plat.SSOSetting(false);
-        plat.showUser ( null );
-    }
-
-    private void login(Platform plat) {
-        Message msg = new Message();
-        msg.what = Constants.MSG_LOGIN;
-
-        PlatformDb accountDb = plat.getDb ();
-        AccountModel account = new AccountModel ();
-        account.setAccountId ( accountDb.getUserId () );
-        account.setAccountName ( accountDb.getUserName ( ) );
-        account.setAccountIcon ( accountDb.getUserIcon ( ) );
-        account.setAccountToken ( accountDb.getToken () );
-
-        msg.obj = account;
-        mHandler.sendMessage ( msg );
     }
 
     @Override
@@ -593,7 +483,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 //提示授权成功
                 Platform plat = ( Platform ) msg.obj;
                 ToastUtils.showShortToast ( HomeActivity.this, "微信授权成功，登陆中" );
-                authorize ( plat );
+                login.authorize ( plat );
             }
             break;
             case Constants.MSG_AUTH_ERROR:
@@ -642,6 +532,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 break;
         }
         return false;
+    }
+
+    private void initYears() {
+        YEAR = new String[60];
+        Calendar calendar = Calendar.getInstance();
+        int curYear = calendar.get(Calendar.YEAR) - 10;
+        for (int i = 0; i < 60; i++) {
+            YEAR[i] = curYear - i + "";
+
+        }
     }
 }
 
