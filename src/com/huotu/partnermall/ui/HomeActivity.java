@@ -1,6 +1,7 @@
 package com.huotu.partnermall.ui;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -31,11 +34,14 @@ import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.listener.poponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
+import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.ShareMsgModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
+import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
@@ -45,11 +51,14 @@ import com.huotu.partnermall.widgets.KJWebView;
 import com.huotu.partnermall.widgets.OneKeyShareUtils;
 import com.huotu.partnermall.widgets.PhotoSelectView;
 import com.huotu.partnermall.widgets.PopTimeView;
+import com.huotu.partnermall.widgets.SharePopupWindow;
 import com.huotu.partnermall.widgets.UserInfoView;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.wechat.friends.Wechat;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener,
@@ -113,9 +122,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     private UserInfoView userInfoView;
     private CropperView  cropperView;
 
-    private String[] YEAR;
+    private String[]         YEAR;
     private PopTimeView
-                     popTimeView;
+                             popTimeView;
+    private SharePopupWindow share;
 
     private
     AutnLogin login;
@@ -128,7 +138,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         application = ( BaseApplication ) HomeActivity.this.getApplication ( );
         resources = HomeActivity.this.getResources ( );
         mHandler = new Handler ( this );
-
+        share = new SharePopupWindow(HomeActivity.this, HomeActivity.this);
         wManager = this.getWindowManager ( );
         AppManager.getInstance ( ).addActivity ( this );
         setContentView ( R.layout.activity_home );
@@ -203,7 +213,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     protected
     void initView ( ) {
         //获取系统标题栏高度
-        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        if( application.isKITKAT () )
         {
             int statusBarHeight = getStatusBarHeight ( HomeActivity.this );
             loginLayout.setPadding ( 0, statusBarHeight, 0, 0 );
@@ -259,7 +269,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         //动态加载侧滑菜单
         UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler);
-        ui.loadMenus ();
+        ui.loadMenus ( );
         //加载页面
         titleText.setText ( "买家版" );
 
@@ -270,9 +280,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setBuiltInZoomControls ( true );
         viewPage.setJavaScriptEnabled ( true );
         viewPage.setCacheMode ( WebSettings.LOAD_NO_CACHE );
+        viewPage.setSaveFormData ( true );
+        viewPage.setAllowFileAccess ( true );
+        viewPage.setLoadWithOverviewMode ( false );
+        viewPage.setSavePassword ( true );
+        viewPage.setLoadsImagesAutomatically ( true );
         viewPage.loadUrl ( Constants.HOME_PAGE_URL );
+
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
+
                     //重写此方法，浏览器内部跳转
                     public
                     boolean shouldOverrideUrlLoading (
@@ -281,6 +298,25 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                                      ) {
                         UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage );
                         return filter.shouldOverrideUrlBySFriend ( view, url );
+                    }
+
+                    @Override
+                    public
+                    void onPageStarted ( WebView view, String url, Bitmap favicon ) {
+                        super.onPageStarted ( view, url, favicon );
+
+                    }
+
+                    @Override
+                    public
+                    void onPageFinished ( WebView view, String url ) {
+                        super.onPageFinished ( view, url );
+                    }
+
+                    @Override
+                    public
+                    void onReceivedError ( WebView view, int errorCode, String description, String failingUrl ) {
+                        super.onReceivedError ( view, errorCode, description, failingUrl );
                     }
                 }
                                    );
@@ -406,14 +442,44 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             case R.id.sideslip_home: {
 
                 //模拟分享
-                ShareMsgModel msgModel = new ShareMsgModel ();
-                msgModel.setShareText ( "分享的一个测试" );
-                msgModel.setShareTitleUrl ( "http://www.baidu.com" );
-                msgModel.setShareTitle ( "分享01" );
-                msgModel.setShareUrl ( "http://www.baidu.com" );
+                String text = "这是我的分享测试数据！~我只是来酱油的！~请不要在意 好不好？？？？？";
+                String imageurl = "http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg";
+                String title = "江苏华漫";
+                String url = "www.baidu.com";
+                ShareModel msgModel = new ShareModel ();
+                msgModel.setImageUrl ( imageurl);
+                msgModel.setText ( text );
+                msgModel.setTitle ( title );
+                msgModel.setUrl ( url );
+                share.initShareParams ( msgModel );
+                share.showShareWindow ( );
+                share.showAtLocation (
+                        findViewById ( R.id.sideslip_home ),
+                        Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0
+                                     );
+                share.setPlatformActionListener (
+                        new PlatformActionListener ( ) {
+                            @Override
+                            public
+                            void onComplete (
+                                    Platform platform, int i, HashMap< String, Object > hashMap
+                                            ) {
+                            }
 
-                OneKeyShareUtils oks = new OneKeyShareUtils ( msgModel, HomeActivity.this );
-                oks.shareShow (null, true);
+                            @Override
+                            public
+                            void onError ( Platform platform, int i, Throwable throwable ) {
+
+                            }
+
+                            @Override
+                            public
+                            void onCancel ( Platform platform, int i ) {
+
+                            }
+                        }
+                                                );
+                share.setOnDismissListener ( new poponDismissListener ( HomeActivity.this ) );
                 //home
                 /*String homeUrl = "http://www.baidu.com";
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, homeUrl);
@@ -450,6 +516,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         switch ( msg.what )
         {
+            //加载页面
             case Constants.LOAD_PAGE_MESSAGE_TAG:
             {
                 //加载菜单页面
@@ -464,6 +531,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 viewPage.loadUrl ( url );
             }
             break;
+            //授权登录
             case Constants.MSG_AUTH_COMPLETE:
             {
                 //提示授权成功
@@ -512,6 +580,47 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //提示授权成功
                 ToastUtils.showShortToast ( HomeActivity.this, "获取用户信息失败" );
+            }
+            break;
+            //分享
+            case Constants.SHARE_SUCCESS:
+            {
+                //分享成功
+                Platform platform = ( Platform ) msg.obj;
+                int action = msg.arg1;
+                if("WechatMoments".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( HomeActivity.this, "微信朋友圈分享成功" );
+                }
+                else if("Wechat".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( HomeActivity.this, "微信分享成功" );
+                }
+                else if("QZone".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( HomeActivity.this, "QQ空间分享成功" );
+                }
+                else if("SinaWeibo".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( HomeActivity.this, "sina微博分享成功" );
+                }
+
+            }
+            break;
+            case Constants.SHARE_ERROR:
+            {
+                //分享失败
+                Platform platform = ( Platform ) msg.obj;
+                int action = msg.arg1;
+                ToastUtils.showShortToast ( HomeActivity.this, platform.getName () + "分享失败" );
+            }
+            break;
+            case Constants.SHARE_CANCEL:
+            {
+                //分享取消
+                Platform platform = ( Platform ) msg.obj;
+                int action = msg.arg1;
+                ToastUtils.showShortToast ( HomeActivity.this, platform.getName () + "分享取消" );
             }
             break;
             default:

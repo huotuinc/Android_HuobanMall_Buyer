@@ -62,7 +62,7 @@
         AppKey="1850373953"
         AppSecret="c3e809d6c9b25577b8030bb5d3d5c863"
         RedirectUrl="http://partnermall.buyer.callback.html"
-        ShareByAppClient="false"
+        ShareByAppClient="true"
         Enable="true" />
 
     <TencentWeibo
@@ -72,14 +72,14 @@
         AppSecret="0j1coHhmuLie67Vl"
         RedirectUri="http://sharesdk.cn"
         Enable="false" />
-
+k
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <QZone
         Id="4"
         SortId="4 "
         AppId="1104785503"
         AppKey="0j1coHhmuLie67Vl"
-        ShareByAppClient="false"
+        ShareByAppClient="true"
         Enable="true" />
     
     <!-- 
@@ -100,14 +100,14 @@
         AppId="wx2f2604e380cf6be1"
         AppSecret="ae3a7d851f24bfc97047954fa3975cec"
         BypassApproval="false"
-        Enable="true" />
+        Enable="false" />
     
     <WechatMoments
         Id="3"
         SortId="3"
         AppId="wx2f2604e380cf6be1"
         AppSecret="ae3a7d851f24bfc97047954fa3975cec"
-        BypassApproval="false"
+        BypassApproval="true"
         Enable="true" />
         
 	<WechatFavorite

@@ -52,16 +52,12 @@ class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEve
             }
             break;
         }
-
-
         return false;
     }
 
     @Override
     public
     void onReq ( BaseReq baseReq ) {
-
-
     }
 
     @Override

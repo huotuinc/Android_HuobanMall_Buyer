@@ -3,9 +3,12 @@ package com.huotu.partnermall.widgets;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -16,6 +19,7 @@ import android.widget.RelativeLayout;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
 
@@ -74,14 +78,40 @@ class KJWebView extends RelativeLayout {
                         else {
                             if ( ! isAdd ) {
                                 progressBar_circle = ( RelativeLayout ) LayoutInflater.from (
-                                        context ).inflate ( R.layout.progress_circle, null );
-                                KJWebView.this.addView ( progressBar_circle, LayoutParams
-                                                                 .FILL_PARENT, LayoutParams
-                                                                 .FILL_PARENT );
+                                        context
+                                                                                            )
+                                                                                      .inflate (
+                                                                                              R.layout.progress_circle, null
+                                                                                               );
+                                KJWebView.this.addView (
+                                        progressBar_circle, LayoutParams
+                                                .FILL_PARENT, LayoutParams
+                                                .FILL_PARENT
+                                                       );
                                 isAdd = true;
                             }
                             progressBar_circle.setVisibility ( View.VISIBLE );
                         }
+                    }
+
+                    @Override
+                    public
+                    boolean onJsAlert ( WebView view, String url, String message, JsResult result
+                                      ) {
+                        return super.onJsAlert ( view, url, message, result );
+                    }
+
+                    @Override
+                    public
+                    boolean onJsConfirm ( WebView view, String url, String message, JsResult result ) {
+                        return super.onJsConfirm ( view, url, message, result );
+                    }
+
+                    @Override
+                    public
+                    boolean onJsPrompt ( WebView view, String url, String message, String
+                            defaultValue, JsPromptResult result ) {
+                        return super.onJsPrompt ( view, url, message, defaultValue, result );
                     }
                 }
                                     );
@@ -109,6 +139,50 @@ class KJWebView extends RelativeLayout {
 
     public void setJavaScriptEnabled(boolean value){
         mWebView.getSettings().setJavaScriptEnabled ( value );
+    }
+    public void setAllowFileAccess(boolean flag)
+    {
+        mWebView.getSettings ().setAllowFileAccess ( flag );
+    }
+    public void setLoadsImagesAutomatically(boolean flag)
+    {
+        mWebView.getSettings ().setLoadsImagesAutomatically ( flag );
+    }
+    public void setLoadWithOverviewMode(boolean flag)
+    {
+        mWebView.getSettings ().setLoadWithOverviewMode ( flag );
+    }
+    public void setSaveFormData(boolean flag)
+    {
+        mWebView.getSettings ().setSaveFormData ( flag );
+    }
+    public void setSavePassword(boolean flag)
+    {
+        mWebView.getSettings ().setSavePassword ( flag );
+    }
+    public void setPluginState(WebSettings.PluginState pluginState)
+    {
+        if( Build.VERSION.SDK_INT > 8)
+        {
+            mWebView.getSettings ().setPluginState ( pluginState );
+        }
+
+    }
+    public void setSupportMultipleWindows(boolean flag)
+    {
+        mWebView.getSettings ().setSupportMultipleWindows ( flag );
+    }
+    public void setAppCacheEnabled(boolean flag)
+    {
+        mWebView.getSettings ().setAppCacheEnabled ( flag );
+    }
+    public void setDatabaseEnabled(boolean flag)
+    {
+        mWebView.getSettings ().setDatabaseEnabled ( flag );
+    }
+    public void setDomStorageEnabled(boolean flag)
+    {
+        mWebView.getSettings ().setDomStorageEnabled ( flag );
     }
 
     public void setCacheMode(int value){

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.v4.widget.DrawerLayout;
 import android.telephony.TelephonyManager;
 
@@ -358,6 +359,12 @@ public class BaseApplication extends Application {
     public String getUserName()
     {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_NAME );
+    }
+
+    //判断是否为4.4版本。可设置沉浸模式
+    public boolean isKITKAT()
+    {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
 }

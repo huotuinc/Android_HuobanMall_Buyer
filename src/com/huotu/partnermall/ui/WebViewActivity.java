@@ -2,6 +2,7 @@ package com.huotu.partnermall.ui;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -79,5 +80,17 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener {
     public
     void onClick ( View v ) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+            && event.getAction() == KeyEvent.ACTION_DOWN) {
+            // finish自身
+            WebViewActivity.this.finish();
+            return true;
+        }
+        // TODO Auto-generated method stub
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -10,7 +10,7 @@ import com.huotu.partnermall.BaseApplication;
 import cn.jpush.android.api.JPushInterface;
 
 /**
- * Created by Administrator on 2015/8/28.
+ * 激光推送处理广播类
  */
 public
 class JPushReceiver extends BroadcastReceiver
@@ -33,6 +33,9 @@ class JPushReceiver extends BroadcastReceiver
             regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             imei = application.getPhoneIMEI(context);
 
+            //将imei注册为别名
+
+
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                                                                          .getAction()))
         {
@@ -45,11 +48,18 @@ class JPushReceiver extends BroadcastReceiver
         {
             // 接收到了自定义的通知
             // 通知ID
+            String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
+            String extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
+
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent
                                                                             .getAction()))
         {
             // 接受点击通知事件
+            String title = bundle
+                    .getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
+            String extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
+
 
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent
                                                                           .getAction()))
@@ -59,6 +69,7 @@ class JPushReceiver extends BroadcastReceiver
             // 接受富文本框
             int notifactionId = bundle
                     .getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
+
 
         } else if (JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent
                                                                           .getAction()))

@@ -1,6 +1,14 @@
 package com.huotu.partnermall.adapter;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.huotu.partnermall.inner.R;
 
 import java.util.HashMap;
 
@@ -15,30 +23,50 @@ import cn.sharesdk.framework.authorize.AuthorizeAdapter;
  *后执行关注的方法。
  */
 public
-class ShareAdapter extends AuthorizeAdapter implements View.OnClickListener, PlatformActionListener {
+class ShareAdapter extends BaseAdapter {
 
 
-    @Override
+    private static String[] shareNames = new String[] { "新浪微博" , "微信朋友圈" , "QQ空间" };
+    private        int[]    shareIcons = new int[] {
+            R.drawable.logo_sinaweibo , R.drawable.logo_wechatmoments , R.drawable.logo_qzone
+    };
+
+    private LayoutInflater inflater;
+
     public
-    void onClick ( View v ) {
-
+    ShareAdapter ( Context context ) {
+        inflater = LayoutInflater.from ( context );
     }
 
     @Override
     public
-    void onComplete ( Platform platform, int i, HashMap< String, Object > hashMap ) {
-
+    int getCount ( ) {
+        return shareNames.length;
     }
 
     @Override
     public
-    void onError ( Platform platform, int i, Throwable throwable ) {
-
+    Object getItem ( int position ) {
+        return null;
     }
 
     @Override
     public
-    void onCancel ( Platform platform, int i ) {
+    long getItemId ( int position ) {
+        return 0;
+    }
 
+    @Override
+    public
+    View getView ( int position, View convertView, ViewGroup parent ) {
+        if ( convertView == null ) {
+            convertView = inflater.inflate(R.layout.share_item, null);
+        }
+        ImageView shareIcon = (ImageView) convertView.findViewById(R.id.share_icon);
+        TextView shareTitle = (TextView ) convertView.findViewById(R.id.share_title);
+        shareIcon.setImageResource(shareIcons[position]);
+        shareTitle.setText(shareNames[position]);
+
+        return convertView;
     }
 }

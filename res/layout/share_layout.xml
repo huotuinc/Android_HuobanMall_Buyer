@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/pop_layout"
+              android:layout_width="fill_parent"
+              android:layout_height="200dp"
+              android:orientation="vertical"
+              android:background="@color/lightyellow">
+
+    <TextView
+        android:id="@+id/share_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dip"
+        android:text="分享到"
+        android:textSize="16sp"
+        android:textColor="@color/dimgrey"
+        />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#B7B7B7" />
+
+    <GridView
+        android:id="@+id/share_gridview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:numColumns="3"
+        android:padding="10dip"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="20dip" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="取消"
+        android:textSize="16sp"
+        android:textColor="@color/dimgrey"
+        android:background="@drawable/btn_common"/>
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/cancelBtn"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/lightyellow"/>
+
+</LinearLayout>

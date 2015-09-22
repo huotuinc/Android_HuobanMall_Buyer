@@ -12,17 +12,19 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.huotu.partnermall.AppManager;
+import com.huotu.partnermall.BaseApplication;
 
 public abstract class BaseActivity extends Activity {
 
-    public static final String TAG = BaseActivity.class.getSimpleName();
-
+    public
+    BaseApplication application;
     protected Handler mHandler = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate ( savedInstanceState );
+        application = ( BaseApplication ) this.getApplication ();
         //禁止横屏
         BaseActivity.this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT );
 
@@ -30,7 +32,7 @@ public abstract class BaseActivity extends Activity {
 
     public void setImmerseLayout(View view)
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (application.isKITKAT ()) {
             Window window = getWindow();
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             int statusBarHeight = this.getStatusBarHeight ( this.getBaseContext ( ) );
