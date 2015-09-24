@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.model.AccountModel;
@@ -24,24 +25,25 @@ class AutnLogin {
     Context context;
     private
     Handler mHandler;
+    private View view;
 
-    public AutnLogin(Context context, Handler mHandler)
-    {
+    public
+    AutnLogin ( Context context, Handler mHandler, View view ) {
         this.context = context;
         this.mHandler = mHandler;
+        this.view = view;
     }
 
-    public void authorize(Platform plat)
-    {
-        if(plat.isValid ()) {
-            String userId = plat.getDb().getUserId();
-            if (! TextUtils.isEmpty ( userId )) {
+    public
+    void authorize ( Platform plat ) {
+        if ( plat.isValid ( ) ) {
+            String userId = plat.getDb ( ).getUserId ( );
+            if ( ! TextUtils.isEmpty ( userId ) ) {
                 mHandler.sendEmptyMessage ( Constants.MSG_USERID_FOUND );
-                login(plat);
+                login ( plat );
                 return;
             }
-            else
-            {
+            else {
                 mHandler.sendEmptyMessage ( Constants.MSG_USERID_NO_FOUND );
                 return;
             }
@@ -51,6 +53,7 @@ class AutnLogin {
                                              public
                                              void onComplete ( Platform platform, int action, HashMap< String, Object > hashMap ) {
 
+                                                 view.setClickable ( true );
                                                  if ( action == Platform.ACTION_USER_INFOR ) {
                                                      Message msg = new Message();
                                                      msg.what = Constants.MSG_AUTH_COMPLETE;
@@ -62,6 +65,7 @@ class AutnLogin {
                                              @Override
                                              public
                                              void onError ( Platform platform, int action, Throwable throwable ) {
+                                                 view.setClickable ( true );
                                                  if (action == Platform.ACTION_USER_INFOR) {
                                                      mHandler.sendEmptyMessage ( Constants.MSG_AUTH_ERROR );
                                                  }
@@ -70,6 +74,7 @@ class AutnLogin {
                                              @Override
                                              public
                                              void onCancel ( Platform platform, int action ) {
+                                                 view.setClickable ( true );
                                                  if (action == Platform.ACTION_USER_INFOR) {
                                                      mHandler.sendEmptyMessage(Constants.MSG_AUTH_CANCEL );
                                                  }

@@ -47,6 +47,19 @@ class MerchantBean extends BaseBean {
     private String sinaRedirectUri;
     //微信分享key
     private String weixinShareKey;
+    //微信加密
+    private String weixinShareSecret;
+
+    public
+    String getWeixinShareSecret ( ) {
+        return weixinShareSecret;
+    }
+
+    public
+    void setWeixinShareSecret ( String weixinShareSecret ) {
+        this.weixinShareSecret = weixinShareSecret;
+    }
+
     //pushkey
     private String pushKey;
     //location_key

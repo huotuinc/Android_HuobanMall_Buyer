@@ -18,6 +18,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
+import com.huotu.partnermall.model.SysModel;
 import com.huotu.partnermall.service.LocationService;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
@@ -78,6 +79,7 @@ public class SplashActivity extends BaseActivity {
                                                isConnection = application.checkNet ( SplashActivity.this );
                                                if(!isConnection)
                                                {
+                                                   application.isConn = false;
                                                    //无网络日志
                                                    KJLoger.i ( "设置无网络" );
                                                    //给出界面上的提示
@@ -131,54 +133,68 @@ public class SplashActivity extends BaseActivity {
                                                                                 }
                                                                             }).show ( );
                                                }
-                                               //定位
-                                               locationI = new Intent ( SplashActivity.this,
-                                                                        LocationService.class );
-                                               SplashActivity.this.startService ( locationI );
-                                               //加载商家信息
-                                               //判断
-                                               if(!application.checkMerchantInfo ()) {
-                                                   //设置商户信息
-                                                   MerchantBean merchant = XMLParserUtils.getInstance ( ).readMerchantInfo ( SplashActivity.this );
-                                                   KJLoger.i ( "商户信息获取成功。" );
-                                                   //写入文件
-                                                   if(null != merchant)
-                                                   {
-                                                       application.writeMerchantInfo ( merchant );
-                                                   }
-                                                   else
-                                                   {
-                                                       KJLoger.e ( "载入商户信息失败。" );
-                                                   }
-                                               }
-                                               if(!application.checkMenuInfo ())
+                                               else
                                                {
-                                                   //设置菜单
-                                                   List<MenuBean> menus = XMLParserUtils.getInstance ().readMenuInfo ( SplashActivity.this );
-                                                   //写入文件
-                                                   if(null != menus && !menus.isEmpty ())
-                                                   {
-                                                       application.writeMenus ( menus );
+                                                   application.isConn = true;
+                                                   //定位
+                                                   locationI = new Intent ( SplashActivity.this,
+                                                                            LocationService.class );
+                                                   SplashActivity.this.startService ( locationI );
+                                                   //加载商家信息
+                                                   //判断
+                                                   if(!application.checkMerchantInfo ()) {
+                                                       //设置商户信息
+                                                       MerchantBean merchant = XMLParserUtils.getInstance ( ).readMerchantInfo ( SplashActivity.this );
+                                                       KJLoger.i ( "商户信息获取成功。" );
+                                                       //写入文件
+                                                       if(null != merchant)
+                                                       {
+                                                           application.writeMerchantInfo ( merchant );
+                                                       }
+                                                       else
+                                                       {
+                                                           KJLoger.e ( "载入商户信息失败。" );
+                                                       }
                                                    }
-                                                   else
+                                                   if(!application.checkMenuInfo ())
                                                    {
-                                                       KJLoger.e ( "载入主菜单失败。" );
+                                                       //设置菜单
+                                                       List<MenuBean> menus = XMLParserUtils.getInstance ().readMenuInfo ( SplashActivity.this );
+                                                       //写入文件
+                                                       if(null != menus && !menus.isEmpty ())
+                                                       {
+                                                           application.writeMenus ( menus );
+                                                       }
+                                                       else
+                                                       {
+                                                           KJLoger.e ( "载入主菜单失败。" );
+                                                       }
+                                                   }
+                                                   //设置
+                                                   //加载颜色配置信息
+                                                   if(!application.checkColorInfo ()) {
+                                                       try {
+                                                           InputStream is = SplashActivity.this.getAssets
+
+                                                                   ( ).open ( "color.properties" );
+                                                           ColorBean color = PropertiesUtil
+                                                                   .getInstance ( )
+                                                                   .readProperties ( is );
+                                                           application.writeColorInfo ( color );
+                                                           //记录颜色值
+                                                           KJLoger.i ( "记录颜色值." );
+                                                       }
+                                                       catch ( IOException e ) {
+                                                           KJLoger.e ( e.getMessage ( ) );
+                                                       }
+                                                   }
+                                                   //配置SYS信息
+                                                   if(!application.checkSysInfo ())
+                                                   {
+                                                       SysModel sysModel = XMLParserUtils.getInstance ( ).readSys ( SplashActivity.this );
+                                                       application.writeSysInfo(sysModel);
                                                    }
                                                }
-                                               //设置
-                                               //加载颜色配置信息
-                                               try {
-                                                   InputStream is = SplashActivity.this.getAssets
-                                                               ().open ( "color.properties" );
-                                                   ColorBean color = PropertiesUtil.getInstance ().readProperties ( is );
-
-                                                   //记录颜色值
-                                                   KJLoger.i ( "记录颜色值." );
-                                               }
-                                               catch ( IOException e ) {
-                                                   KJLoger.e ( e.getMessage () );
-                                               }
-
                                            }
 
                                            @Override
@@ -188,7 +204,10 @@ public class SplashActivity extends BaseActivity {
 
                                            @Override
                                            public void onAnimationEnd(Animation animation) {
-                                               ActivityUtils.getInstance ().skipActivity ( SplashActivity.this, HomeActivity.class );
+                                               if(application.isConn)
+                                               {
+                                                   ActivityUtils.getInstance ().skipActivity ( SplashActivity.this, HomeActivity.class );
+                                               }
                                            }
                                        });
         mSplashItem_iv.setAnimation ( translate );

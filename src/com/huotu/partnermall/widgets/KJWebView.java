@@ -113,6 +113,8 @@ class KJWebView extends RelativeLayout {
                             defaultValue, JsPromptResult result ) {
                         return super.onJsPrompt ( view, url, message, defaultValue, result );
                     }
+
+
                 }
                                     );
     }

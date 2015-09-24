@@ -3,20 +3,14 @@ package com.huotu.partnermall.ui;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -37,18 +31,16 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.poponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.ShareModel;
-import com.huotu.partnermall.model.ShareMsgModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
-import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
+import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.widgets.CropperView;
 import com.huotu.partnermall.widgets.KJWebView;
-import com.huotu.partnermall.widgets.OneKeyShareUtils;
 import com.huotu.partnermall.widgets.PhotoSelectView;
 import com.huotu.partnermall.widgets.PopTimeView;
 import com.huotu.partnermall.widgets.SharePopupWindow;
@@ -224,10 +216,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //设置title背景
         homeTitle.setBackgroundColor ( resources.getColor ( R.color.home_title_bg ) );
         //设置左侧图标
-        Drawable leftDraw = resources.getDrawable ( R.drawable.sideslip_image );
+        Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
         SystemTools.loadBackground ( titleLeftImage, leftDraw );
         //设置右侧图标
-        Drawable rightDraw = resources.getDrawable ( R.drawable.refresh_right );
+        Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
         SystemTools.loadBackground ( titleRightImage, rightDraw );
 
         //设置侧滑界面
@@ -236,13 +228,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         SystemTools.loadBackground (
                 loginSetting, resources.getDrawable (
                         R.drawable
-                                .sideslip_login_setting
+                                .sideslip_login_lefttop_setting
                                                     )
                                    );
         //设置Home图标
         SystemTools.loadBackground ( loginHome, resources.getDrawable ( R.drawable
 
-                                                                                .sideslip_login_home ) );
+                                                                                .sideslip_login_lefttop__home ) );
         //设置登录界面背景
         noAuthLayout.setBackgroundColor ( resources.getColor ( R.color.home_title_bg ) );
         getAuthLayout.setBackgroundColor ( resources.getColor ( R.color.home_title_bg ) );
@@ -271,11 +263,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler);
         ui.loadMenus ( );
         //加载页面
-        titleText.setText ( "买家版" );
+        //页面集成，title无需展示
+        //titleText.setText ( "买家版" );
 
         viewPage.setBarHeight ( 8 );
         viewPage.setClickable ( true );
         viewPage.setUseWideViewPort ( true );
+        //是否需要避免页面放大缩小操作
         viewPage.setSupportZoom ( true );
         viewPage.setBuiltInZoomControls ( true );
         viewPage.setJavaScriptEnabled ( true );
@@ -285,7 +279,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setLoadWithOverviewMode ( false );
         viewPage.setSavePassword ( true );
         viewPage.setLoadsImagesAutomatically ( true );
-        viewPage.loadUrl ( Constants.HOME_PAGE_URL );
+        //首页默认为商户站点 + index
+        viewPage.loadUrl ( application.obtainMerchantUrl () + "index" );
 
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
@@ -318,6 +313,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     void onReceivedError ( WebView view, int errorCode, String description, String failingUrl ) {
                         super.onReceivedError ( view, errorCode, description, failingUrl );
                     }
+
+
                 }
                                    );
     }
@@ -363,19 +360,24 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         if (event.getKeyCode () == KeyEvent.KEYCODE_BACK
             && event.getAction() == KeyEvent.ACTION_DOWN)
         {
-            if ((System.currentTimeMillis() - exitTime) > 2000 ) {
-                ToastUtils.showLongToast ( getApplicationContext ( ), "再按一次退出程序" );
-                exitTime = System.currentTimeMillis();
-            } else
+            if(viewPage.canGoBack ())
             {
-                try
-                {
+                viewPage.goBack ();
+            }
+            else {
+                if ( ( System.currentTimeMillis ( ) - exitTime ) > 2000 ) {
+                    ToastUtils.showLongToast ( getApplicationContext ( ), "再按一次退出程序" );
+                    exitTime = System.currentTimeMillis ( );
+                }
+                else {
+                    try {
 
-                    HomeActivity.this.finish();
-                    Runtime.getRuntime().exit(0);
-                } catch (Exception e)
-                {
-                    Runtime.getRuntime().exit(-1);
+                        HomeActivity.this.finish ( );
+                        Runtime.getRuntime ( ).exit ( 0 );
+                    }
+                    catch ( Exception e ) {
+                        Runtime.getRuntime ( ).exit ( - 1 );
+                    }
                 }
             }
 
@@ -500,9 +502,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //微信登录
                 /*ToastUtils.showShortToast ( HomeActivity.this, application );*/
                 //Platform wechat = ShareSDK.getPlatform ( HomeActivity.this, Wechat.NAME );
-                login = new AutnLogin ( HomeActivity.this, mHandler );
+                login = new AutnLogin ( HomeActivity.this, mHandler, loginButton );
                 login.authorize ( new Wechat ( HomeActivity.this ) );
-
+                loginButton.setClickable ( false );
             }
             break;
             default:

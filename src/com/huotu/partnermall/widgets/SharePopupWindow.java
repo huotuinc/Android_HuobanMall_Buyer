@@ -21,6 +21,7 @@ import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.moments.WechatMoments;
 
 /**
@@ -150,8 +151,9 @@ class SharePopupWindow extends PopupWindow {
             Platform.ShareParams sp = new Platform.ShareParams ();
             sp.setShareType(Platform.SHARE_TEXT);
             sp.setShareType(Platform.SHARE_WEBPAGE);
-
-            sp.setTitle(shareModel.getText());
+            sp.setShareType ( Platform.SHARE_IMAGE );
+            sp.setShareType ( Platform.SHARE_MUSIC );
+            sp.setTitle ( shareModel.getText ( ) );
             sp.setText(shareModel.getText());
             sp.setUrl(shareModel.getUrl());
             sp.setImageUrl(shareModel.getImageUrl());
@@ -169,13 +171,13 @@ class SharePopupWindow extends PopupWindow {
         String platform = "";
         switch (position) {
             case 0:
-                platform = "SinaWeibo";
+                platform = SinaWeibo.NAME;
                 break;
             case 1:
-                platform = "WechatMoments";
+                platform = WechatMoments.NAME;
                 break;
             case 2:
-                platform = "QZone";
+                platform = QZone.NAME;
                 break;
             default:
                 break;
@@ -187,7 +189,7 @@ class SharePopupWindow extends PopupWindow {
      * 分享到QQ空间
      */
     private void qzone() {
-        QQ.ShareParams sp = new QQ.ShareParams ();
+        Platform.ShareParams sp = new Platform.ShareParams ();
         sp.setTitle(shareParams.getTitle());
         sp.setTitleUrl(shareParams.getUrl()); // 标题的超链接
         sp.setText(shareParams.getText());
@@ -196,7 +198,7 @@ class SharePopupWindow extends PopupWindow {
         sp.setSite(shareParams.getTitle ( ) );
         sp.setSiteUrl(shareParams.getUrl ( ) );
 
-        Platform qzone = ShareSDK.getPlatform(context, "QZone");
+        Platform qzone = ShareSDK.getPlatform(context, QZone.NAME);
 
         qzone.setPlatformActionListener(platformActionListener); // 设置分享事件回调 //
         // 执行图文分享
@@ -208,14 +210,14 @@ class SharePopupWindow extends PopupWindow {
      */
     private void wechatMoments()
     {
-        WechatMoments.ShareParams sp = new WechatMoments.ShareParams (  );
+        Platform.ShareParams sp = new Platform.ShareParams (  );
         sp.setTitle ( shareParams.getTitle ( ) );
         sp.setTitleUrl ( shareParams.getUrl ( ) ); // 标题的超链接
         sp.setText ( shareParams.getText ( ) );
         sp.setImageUrl ( shareParams.getImageUrl ( ) );
         sp.setSite ( shareParams.getTitle ( ) );
         sp.setSiteUrl ( shareParams.getUrl ( ) );
-        Platform moments = ShareSDK.getPlatform ( context,  "WechatMoments");
+        Platform moments = ShareSDK.getPlatform ( context, WechatMoments.NAME);
         moments.setPlatformActionListener ( platformActionListener );
         //执行分享
         moments.share ( sp );
@@ -227,14 +229,14 @@ class SharePopupWindow extends PopupWindow {
      */
     private void sinaWeibo()
     {
-        SinaWeibo.ShareParams sp = new SinaWeibo.ShareParams (  );
+        Platform.ShareParams sp = new Platform.ShareParams (  );
         sp.setTitle ( shareParams.getTitle ( ) );
         sp.setTitleUrl ( shareParams.getUrl ( ) ); // 标题的超链接
         sp.setText ( shareParams.getText ( ) );
         sp.setImageUrl ( shareParams.getImageUrl ( ) );
         sp.setSite ( shareParams.getTitle ( ) );
         sp.setSiteUrl ( shareParams.getUrl ( ) );
-        Platform sinaWeibo = ShareSDK.getPlatform ( context, "SinaWeibo" );
+        Platform sinaWeibo = ShareSDK.getPlatform ( context, SinaWeibo.NAME );
 
         sinaWeibo.setPlatformActionListener ( platformActionListener );
         //执行分享

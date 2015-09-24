@@ -30,7 +30,7 @@
     </umeng>
     <!--网络请求接口前缀-->
     <httpprefix>
-        <prefix>http://domain/xxx/</prefix>
+        <prefix>http://www.partnermall.com/</prefix>
     </httpprefix>
     <!--定位信息-->
     <location>

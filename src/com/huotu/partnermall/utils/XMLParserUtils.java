@@ -2,16 +2,19 @@ package com.huotu.partnermall.utils;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.util.Xml;
 
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
+import com.huotu.partnermall.model.SysModel;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -142,6 +145,10 @@ class XMLParserUtils {
                     {
                         merchant.setWeixinShareKey ( xmlResourceParser.nextText ( ) );
                     }
+                    else if(name.equals ( Constants.WEIXIN_SHARE_SECRET))
+                    {
+                        merchant.setWeixinShareSecret ( xmlResourceParser.nextText ( ) );
+                    }
                     else if(name.equals ( Constants.PUSH_KEY))
                     {
                         merchant.setPushKey ( xmlResourceParser.nextText ( ) );
@@ -237,6 +244,72 @@ class XMLParserUtils {
             return null;
         }
 
+    }
+
+    /**
+     * 获取app系统配置信息
+     * @param context
+     * @return
+     */
+    public
+    SysModel readSys(Context context)
+    {
+        SysModel sysModel = new SysModel ();
+        InputStream sysStream = null;
+
+        try {
+            sysStream = context.getAssets ( ).open ( "sys.xml" );
+            XmlPullParser parser = Xml.newPullParser ( );
+            parser.setInput(sysStream, "utf-8");
+            int eventType = parser.getEventType ();
+            while ( eventType != XmlPullParser.END_DOCUMENT )
+            {
+                switch ( eventType )
+                {
+                    case XmlPullParser.START_TAG:
+                    {
+                        //获取标签名
+                        String tagName = parser.getName ();
+                        if(tagName.equals ( "sys_package" ))
+                        {
+                            sysModel.setPackageStr ( parser.nextText () );
+                        }
+                    }
+                    break;
+                    case XmlPullParser.END_TAG:
+                    {
+
+                    }
+                    break;
+
+                }
+
+                eventType = parser.next ();
+            }
+
+            return sysModel;
+        }
+        catch ( XmlPullParserException e )
+        {
+            KJLoger.e ( e.getMessage () );
+            return null;
+        }
+        catch ( IOException e ) {
+            KJLoger.e ( e.getMessage ( ) );
+            return null;
+        }
+        finally {
+
+            if(null != sysStream)
+            {
+                try {
+                    sysStream.close ();
+                }
+                catch ( IOException e ) {
+                    KJLoger.e ( e.getMessage () );
+                }
+            }
+        }
     }
 
 }

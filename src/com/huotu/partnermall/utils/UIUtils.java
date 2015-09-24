@@ -113,7 +113,7 @@ class UIUtils {
                 menuLayout.setId ( i );
                 //设置图标
                 ImageView menuIcon = ( ImageView ) menuLayout.findViewById ( R.id.menuIcon );
-                int iconId = resources.getIdentifier ( menu.getMenuIcon (), "drawable", "com.huotu.partnermall.inner" );
+                int iconId = resources.getIdentifier ( menu.getMenuIcon (), "drawable", application.readSysInfo () );
                 Drawable menuIconDraw = resources.getDrawable ( iconId );
                 SystemTools.loadBackground ( menuIcon,  menuIconDraw);
                 //设置文本
@@ -125,7 +125,7 @@ class UIUtils {
                             public
                             void onClick ( View v ) {
                                 //加载具体的页面
-                                Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, menu.getMenuUrl () );
+                                Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, application.obtainMerchantUrl () + menu.getMenuUrl () );
                                 mHandler.sendMessage ( msg );
 
                                 //隐藏侧滑菜单

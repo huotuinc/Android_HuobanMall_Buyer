@@ -138,6 +138,8 @@ public class Constants {
 
 	//定位key
 	public static final String LOCATION_KEY = "location_key";
+	//微信分享加密
+	public static final String WEIXIN_SHARE_SECRET = "weixin_share_secret";
 
 
 	//主菜单
@@ -178,8 +180,6 @@ public class Constants {
 	public static final String MERCHANT_INFO_MENUS      = "main_menus";
 	//商户分类菜单
 	public static final String MERCHANT_INFO_CATAGORY   = "catagory_menus";
-	//商家url请求渠道
-	public static final String HTTP_PREFIX_MERCHANT     = "merchant_channel";
 
 	/**
 	 * ************************定位信息设置
@@ -325,6 +325,17 @@ public class Constants {
 	 */
 	public static final String CAP_CODE = "default";
 
+	/**
+	 * app系统配置
+	 */
+	public static final String SYS_INFO = "sysInfo";
+	public static final String SYS_PACKAGE = "sysPackage";
 
-
+	/**
+	 * app颜色配置
+	 */
+	public static final String COLOR_INFO = "colorInfo";
+	public static final String COLOR_MAIN = "mainColor";
+	public static final String COLOR_SECOND = "secondColor";
+	
 }

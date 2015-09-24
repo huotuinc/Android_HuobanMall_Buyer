@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.v4.widget.DrawerLayout;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -18,9 +19,11 @@ import com.baidu.location.LocationClient;
 import com.google.gson.Gson;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
+import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.model.PageType;
+import com.huotu.partnermall.model.SysModel;
 import com.huotu.partnermall.utils.KJConfig;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
@@ -51,6 +54,8 @@ public class BaseApplication extends Application {
     public double         latitude;
     //经度
     public double         Longitude;
+    //是否有网络连接
+    public boolean isConn = false;
     //城市
     public String city;
     public LocationClient mLocationClient;
@@ -250,7 +255,7 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID, merchant.getMerchantId ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY,  merchant.getAlipayKey ( ));
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_WEIXIN_KEY, merchant.getWeixinKey ( ) );
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.HTTP_PREFIX_MERCHANT, merchant.getHttpPrefix ( ));
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.PREFIX, merchant.getHttpPrefix ( ));
     }
 
     public void writeMenus(List<MenuBean> menus)
@@ -365,6 +370,70 @@ public class BaseApplication extends Application {
     public boolean isKITKAT()
     {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    }
+
+    //获取商家的访问渠道
+    public String obtainMerchantUrl()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.PREFIX );
+    }
+
+    /**
+     * 检测是否已经配置了颜色信息
+     * @return
+     */
+    public boolean checkColorInfo()
+    {
+        String mainColor = PreferenceHelper.readString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_MAIN );
+        if( TextUtils.isEmpty ( mainColor ))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public boolean checkSysInfo()
+    {
+        String packageStr = PreferenceHelper.readString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE );
+        if(TextUtils.isEmpty ( packageStr ))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    /**
+     * 写入颜色信息
+     * @param colorBean
+     */
+    public void writeColorInfo(ColorBean colorBean)
+    {
+        if(null != colorBean)
+        {
+            String mainColor = colorBean.getColorMap ().get ( "MAIN_COLOR_1" );
+            String secondColor = colorBean.getColorMap ().get ( "SECONDART_COLOR_1" );
+            PreferenceHelper.writeString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_MAIN, mainColor );
+            PreferenceHelper.writeString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_SECOND, secondColor );
+        }
+    }
+
+    public void writeSysInfo(SysModel sysModel)
+    {
+        if(null != sysModel)
+        {
+            PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE, sysModel.getPackageStr () );
+        }
+    }
+
+    public String readSysInfo()
+    {
+        return PreferenceHelper.readString (  getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE );
     }
 
 }

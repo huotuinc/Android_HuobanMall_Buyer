@@ -22,7 +22,7 @@
 
 
     <!-- 填充 -->
-    <solid android:color="#c8e8fe" /> <!-- 填充的颜色 -->
+    <solid android:color="#7099ff" /> <!-- 填充的颜色 -->
 
 
     <!-- 描边 -->

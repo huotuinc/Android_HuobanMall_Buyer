@@ -4,50 +4,50 @@
     <home_menu>
         <menu_name>个人中心</menu_name>
         <menu_tag>personal</menu_tag>
-        <menu_icon>menu_personal</menu_icon>
-        <menu_url>http://www.sina.com.cn/</menu_url>
+        <menu_icon>sideslip_menu_icon_02</menu_icon>
+        <menu_url>personal</menu_url>
         <menu_group>2</menu_group>
     </home_menu>
     <home_menu>
         <menu_name>我的订单</menu_name>
         <menu_tag>order</menu_tag>
-        <menu_icon>menu_order</menu_icon>
-        <menu_url>http://news.sina.com.cn/</menu_url>
+        <menu_icon>sideslip_menu_icon_01</menu_icon>
+        <menu_url>order</menu_url>
         <menu_group>1</menu_group>
     </home_menu>
     <home_menu>
         <menu_name>消息中心</menu_name>
         <menu_tag>messageCenter</menu_tag>
-        <menu_icon>menu_msgcenter</menu_icon>
-        <menu_url>http://weather.sina.com.cn/</menu_url>
+        <menu_icon>sideslip_menu_icon_03</menu_icon>
+        <menu_url>message</menu_url>
         <menu_group>2</menu_group>
     </home_menu>
     <home_menu>
         <menu_name>购物车</menu_name>
         <menu_tag>chart</menu_tag>
-        <menu_icon>menu_cart</menu_icon>
-        <menu_url>http://health.sina.com.cn/</menu_url>
+        <menu_icon>sideslip_menu_icon_04</menu_icon>
+        <menu_url>cart</menu_url>
         <menu_group>2</menu_group>
     </home_menu>
     <home_menu>
         <menu_name>浏览历史</menu_name>
         <menu_tag>history</menu_tag>
-        <menu_icon>menu_history</menu_icon>
-        <menu_url>http://games.sina.com.cn/</menu_url>
+        <menu_icon>sideslip_menu_icon_05</menu_icon>
+        <menu_url>history</menu_url>
         <menu_group>2</menu_group>
     </home_menu>
     <home_menu>
         <menu_name>收货地址</menu_name>
         <menu_tag>address</menu_tag>
-        <menu_icon>menu_address</menu_icon>
-        <menu_url>http://fashion.sina.com.cn/</menu_url>
+        <menu_icon>sideslip_menu_icon_06</menu_icon>
+        <menu_url>address</menu_url>
         <menu_group>2</menu_group>
     </home_menu>
     <home_menu>
         <menu_name>意见反馈</menu_name>
         <menu_tag>feedback</menu_tag>
-        <menu_icon>menu_feedback</menu_icon>
-        <menu_url>http://app.sina.com.cn/</menu_url>
+        <menu_icon>sideslip_menu_icon_07</menu_icon>
+        <menu_url>feedback</menu_url>
         <menu_group>3</menu_group>
     </home_menu>
 </home_menus>
