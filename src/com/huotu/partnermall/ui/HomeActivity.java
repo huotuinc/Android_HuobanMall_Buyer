@@ -466,18 +466,28 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             void onComplete (
                                     Platform platform, int i, HashMap< String, Object > hashMap
                                             ) {
+                                Message msg = Message.obtain ();
+                                msg.what = Constants.SHARE_SUCCESS;
+                                msg.obj = platform;
+                                mHandler.sendMessage ( msg );
                             }
 
                             @Override
                             public
                             void onError ( Platform platform, int i, Throwable throwable ) {
-
+                                Message msg = Message.obtain ();
+                                msg.what = Constants.SHARE_ERROR;
+                                msg.obj = platform;
+                                mHandler.sendMessage ( msg );
                             }
 
                             @Override
                             public
                             void onCancel ( Platform platform, int i ) {
-
+                                Message msg = Message.obtain ();
+                                msg.what = Constants.SHARE_CANCEL;
+                                msg.obj = platform;
+                                mHandler.sendMessage ( msg );
                             }
                         }
                                                 );

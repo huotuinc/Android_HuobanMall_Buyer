@@ -119,7 +119,7 @@ class SharePopupWindow extends PopupWindow {
      */
     private void share(int position) {
 
-        if (position == 0) {
+        /*if (position == 0) {
             //sina分享
             sinaWeibo ( );
         } else if (position == 1) {
@@ -128,7 +128,7 @@ class SharePopupWindow extends PopupWindow {
         } else if(position==2){
             //qq控件分享
             qzone();
-        }else{
+        }else{*/
             Platform plat = null;
             plat = ShareSDK.getPlatform ( context, getPlatform ( position ) );
             if (platformActionListener != null) {
@@ -136,7 +136,7 @@ class SharePopupWindow extends PopupWindow {
             }
 
             plat.share(shareParams);
-        }
+        /*}*/
     }
 
 
