@@ -10,11 +10,12 @@ import com.huotu.partnermall.utils.WindowUtils;
  * popwin 关闭后取消遮罩层监听器
  */
 public
-class poponDismissListener implements PopupWindow.OnDismissListener {
+class PoponDismissListener implements PopupWindow.OnDismissListener {
 
     private
     Activity aty;
-    public poponDismissListener(Activity aty)
+    public
+    PoponDismissListener ( Activity aty )
     {
         this.aty = aty;
     }

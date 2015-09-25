@@ -28,7 +28,7 @@ import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.listener.poponDismissListener;
+import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.UserSelectData;
@@ -418,7 +418,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 mHandler.sendMessage ( msg );*/
                 /*MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
                 popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );
-                popWindow.setOnDismissListener ( new poponDismissListener (HomeActivity.this) );*/
+                popWindow.setOnDismissListener ( new PoponDismissListener (HomeActivity.this) );*/
                 //测试弹出选择图片
                 /*if(null == photo)
                 {
@@ -481,7 +481,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             }
                         }
                                                 );
-                share.setOnDismissListener ( new poponDismissListener ( HomeActivity.this ) );
+                share.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );
                 //home
                 /*String homeUrl = "http://www.baidu.com";
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, homeUrl);
@@ -492,7 +492,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //模拟弹出支付界面
                 /*PayPopWindow payPopWindow = new PayPopWindow ( HomeActivity.this, null, null );
                 payPopWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.BOTTOM, 0, 0 );
-                payPopWindow.setOnDismissListener ( new poponDismissListener ( HomeActivity.this ) );*/
+                payPopWindow.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );*/
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }
