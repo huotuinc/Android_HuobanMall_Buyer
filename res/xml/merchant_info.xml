@@ -14,7 +14,7 @@
     <weixinpay>
         <weixin_merchant_id>111</weixin_merchant_id>
         <merchant_weixin_id>120</merchant_weixin_id>
-        <weixin_key>wx4e4588202e338a39</weixin_key>
+        <weixin_key>wx2f2604e380cf6be1</weixin_key>
     </weixinpay>
     <!--支付宝支付信息-->
     <alipay>
@@ -38,17 +38,17 @@
     </location>
     <!--分享-->
     <shareinfo>
-        <share_key>123</share_key>
+        <share_key>a45f0c4321a4</share_key>
         <tencent_key>123</tencent_key>
         <tencent_secret>123</tencent_secret>
         <sina_key>123</sina_key>
         <sina_secret>123</sina_secret>
         <sina_redirect_uri>123</sina_redirect_uri>
-        <weixin_share_key>123</weixin_share_key>
-        <weixin_share_secret>123</weixin_share_secret>
+        <weixin_share_key>wx2f2604e380cf6be1</weixin_share_key>
+        <weixin_share_secret>ae3a7d851f24bfc97047954fa3975cec</weixin_share_secret>
     </shareinfo>
     <!--推送-->
     <push_info>
-        <push_key>123</push_key>
+        <push_key>5e22cb7984ccaf138f7458b0</push_key>
     </push_info>
 </resources>
