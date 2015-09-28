@@ -2,6 +2,7 @@ package com.huotu.partnermall.ui;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,7 +36,6 @@ import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
@@ -214,7 +214,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //初始化侧滑菜单面板
         application.layDrag = ( DrawerLayout ) this.findViewById ( R.id.layDrag );
         //设置title背景
-        homeTitle.setBackgroundColor ( resources.getColor ( R.color.home_title_bg ) );
+        homeTitle.setBackgroundColor ( SystemTools.obtainColor ( application.obtainMainColor ( ) ) );
         //设置左侧图标
         Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
         SystemTools.loadBackground ( titleLeftImage, leftDraw );
@@ -223,7 +223,19 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         SystemTools.loadBackground ( titleRightImage, rightDraw );
 
         //设置侧滑界面
-        loginLayout.setBackgroundColor ( resources.getColor ( R.color.home_title_bg ) );
+        loginLayout.setBackgroundColor (
+                SystemTools.obtainColor (
+                        application.obtainMainColor (
+                                                    )
+                                        )
+                                       );
+        //设置登录按钮背景
+        Drawable loginDrawable = resources.getDrawable ( R.drawable.login_button_draw );
+        loginDrawable.setColorFilter ( new LightingColorFilter ( SystemTools.obtainColor ( application.obtainMainColor ( )
+                                                                                         ), SystemTools.obtainColor ( application.obtainMainColor ( )
+                                                                                                                    ) ));
+        SystemTools.loadBackground ( loginButton, loginDrawable );
+
         //设置设置图标
         SystemTools.loadBackground (
                 loginSetting, resources.getDrawable (
@@ -236,8 +248,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
                                                                                 .sideslip_login_lefttop__home ) );
         //设置登录界面背景
-        noAuthLayout.setBackgroundColor ( resources.getColor ( R.color.home_title_bg ) );
-        getAuthLayout.setBackgroundColor ( resources.getColor ( R.color.home_title_bg ) );
+        noAuthLayout.setBackgroundColor ( SystemTools.obtainColor (
+                                                  application.obtainMainColor (
+                                                                              )
+                                                                  ) );
+        getAuthLayout.setBackgroundColor ( SystemTools.obtainColor (
+                                                   application.obtainMainColor (
+                                                                               )
+                                                                   ) );
 
 
         //设置登录界面

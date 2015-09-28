@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.TextView;
@@ -124,5 +125,13 @@ public class SystemTools
             view.setBackgroundDrawable(drawable);
         }
     }
+
+    //获取系统颜色
+    public static int obtainColor(String colorStr)
+    {
+        String[] colors = colorStr.split ( "," );
+        return Color.argb ( Integer.parseInt ( colors[0] ), Integer.parseInt ( colors[1] ), Integer.parseInt ( colors[2] ), Integer.parseInt ( colors[3] ) );
+    }
+
     
 }

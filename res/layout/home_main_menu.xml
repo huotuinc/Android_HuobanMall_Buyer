@@ -43,9 +43,9 @@
                 android:id="@+id/sideslip_login"
                 android:layout_width="@dimen/sideslip_login_button_width"
                 android:layout_height="@dimen/sideslip_login_button_height"
-                android:background="@drawable/login_button"
                 android:textColor="@color/theme_color"
-                android:text="@string/auth_weixin"/>
+                android:text="@string/auth_weixin"
+                android:textSize="16sp"/>
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/getAuth"

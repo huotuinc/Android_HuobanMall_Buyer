@@ -423,6 +423,16 @@ public class BaseApplication extends Application {
         }
     }
 
+    public String obtainMainColor()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_MAIN );
+    }
+
+    public String obtainSecondColor()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_SECOND );
+    }
+
     public void writeSysInfo(SysModel sysModel)
     {
         if(null != sysModel)
