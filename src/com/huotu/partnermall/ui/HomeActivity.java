@@ -3,6 +3,7 @@ package com.huotu.partnermall.ui;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.LightingColorFilter;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,8 +40,10 @@ import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
+import com.huotu.partnermall.widgets.CircleImageDrawable;
 import com.huotu.partnermall.widgets.CropperView;
 import com.huotu.partnermall.widgets.KJWebView;
+import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 import com.huotu.partnermall.widgets.PhotoSelectView;
 import com.huotu.partnermall.widgets.PopTimeView;
 import com.huotu.partnermall.widgets.SharePopupWindow;
@@ -94,7 +97,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     private RelativeLayout getAuthLayout;
     //用户头像
     private
-    NetworkImageView userLogo;
+    NetworkImageViewCircle userLogo;
     //用户名称
     private TextView userName;
 
@@ -130,7 +133,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         application = ( BaseApplication ) HomeActivity.this.getApplication ( );
         resources = HomeActivity.this.getResources ( );
         mHandler = new Handler ( this );
-        share = new SharePopupWindow(HomeActivity.this, HomeActivity.this);
+        share = new SharePopupWindow ( HomeActivity.this, HomeActivity.this );
         wManager = this.getWindowManager ( );
         AppManager.getInstance ( ).addActivity ( this );
         setContentView ( R.layout.activity_home );
@@ -173,7 +176,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         //已得到授权界面
         getAuthLayout = ( RelativeLayout ) this.findViewById ( R.id.getAuth );
-        userLogo = ( NetworkImageView ) this.findViewById ( R.id.accountIcon );
+        userLogo = ( NetworkImageViewCircle ) this.findViewById ( R.id.accountIcon );
         userName = ( TextView ) this.findViewById ( R.id.accountName );
     }
 
@@ -264,9 +267,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             noAuthLayout.setVisibility ( View.GONE );
             getAuthLayout.setVisibility ( View.VISIBLE );
             //渲染logo
-            BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application.getUserLogo (), R.drawable.ic_login_username, R.drawable.ic_login_username );
+            BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application
+                                                         .getUserLogo ( ), R.drawable
+                                                         .ic_login_username, R.drawable.ic_login_username );
             //渲染用户名
-            userName.setText ( application.getUserName () );
+            userName.setText ( application.getUserName ( ) );
             userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
         }
         else

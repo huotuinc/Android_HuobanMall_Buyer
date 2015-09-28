@@ -53,26 +53,20 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="gone">
-            <com.android.volley.toolbox.NetworkImageView
+            <com.huotu.partnermall.widgets.NetworkImageViewCircle
                 android:id="@+id/accountIcon"
                 android:layout_width="@dimen/account_icon_width"
                 android:layout_height="@dimen/account_icon_height"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="10dp">
-            </com.android.volley.toolbox.NetworkImageView>
-            <ImageView
-                android:layout_width="@dimen/account_icon_width"
-                android:layout_height="@dimen/account_icon_height"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/menu_user_logo_bg" />
+            </com.huotu.partnermall.widgets.NetworkImageViewCircle>
             <TextView
                 android:id="@+id/accountName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/accountIcon"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:textSize="@dimen/normal_label"
                 android:textStyle="bold"/>

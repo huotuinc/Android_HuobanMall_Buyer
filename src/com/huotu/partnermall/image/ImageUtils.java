@@ -8,7 +8,7 @@ public class ImageUtils {
      * 根据宽度等比例缩放图片
      * 
      * @param defaultBitmap
-     * @param width
+     * @param targetWidth
      * @return
      */
 	public static Bitmap resizeImageByWidth(Bitmap defaultBitmap,

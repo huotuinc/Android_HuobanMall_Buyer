@@ -4,8 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 
 
 /**
@@ -50,7 +50,7 @@ public class BitmapLoader
      * @exception
      * @since
      */
-    public void displayUrl(Context context, NetworkImageView imageView,
+    public void displayUrl(Context context, NetworkImageViewCircle imageView,
             String imageUrl)
     {
         displayUrl(context, imageView, imageUrl , R.drawable.ic_launcher,R.drawable.ic_launcher);
@@ -69,7 +69,7 @@ public class BitmapLoader
      * @exception
      * @since
      */
-    public void displayUrl(Context context, NetworkImageView imageView,
+    public void displayUrl(Context context, NetworkImageViewCircle imageView,
             String imageUrl, int initImg, int errorImg)
     {        
         
