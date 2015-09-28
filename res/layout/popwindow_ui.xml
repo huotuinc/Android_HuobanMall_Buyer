@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/popLayout"
-                android:layout_width="200dp"
-                android:layout_height="200dp">
+                android:layout_width="@dimen/popwin_width"
+                android:layout_height="@dimen/popwin_height">
     <RelativeLayout
         android:id="@+id/popTitle"
         android:layout_width="fill_parent"
@@ -37,7 +37,7 @@
     <RelativeLayout
         android:id="@+id/popCon"
         android:layout_width="fill_parent"
-        android:layout_height="150dp"
+        android:layout_height="@dimen/popwin_con_height"
         android:layout_below="@+id/popTitle"
         android:background="@color/dialog_content_bg">
         <TextView
@@ -54,7 +54,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp">
             <Button
-                android:layout_width="80dp"
+                android:layout_width="@dimen/popwin_button_width"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnSure"
                 android:padding="10dp"
@@ -62,7 +62,7 @@
                 android:textColor="@color/theme_color"
                 android:background="@drawable/button_common"/>
             <Button
-                android:layout_width="80dp"
+                android:layout_width="@dimen/popwin_button_width"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnCancel"
                 android:layout_toRightOf="@+id/btnSure"

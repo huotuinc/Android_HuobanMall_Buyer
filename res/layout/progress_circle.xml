@@ -7,8 +7,8 @@
     tools:context=".MainActivity" >
 
     <ProgressBar 
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/progress_width"
+        android:layout_height="@dimen/progress_height"
         android:indeterminateDrawable="@drawable/progress_bar_circle"  />
 
 </RelativeLayout>

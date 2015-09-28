@@ -8,7 +8,7 @@ android:clickable="true"
 android:gravity="center_vertical"
 android:onClick="onClick"
 android:orientation="horizontal"
-android:padding="20dp">
+android:padding="@dimen/menu_item_padding">
 
 <ImageView
     android:id="@+id/menuIcon"

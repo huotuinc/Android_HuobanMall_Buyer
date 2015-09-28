@@ -12,7 +12,7 @@
         android:layout_height="fill_parent"
         android:gravity="center"
         android:textColor="#ff000000"
-        android:textSize="20dp"
+        android:textSize="@dimen/normal_label"
         android:text=""/>
 
 </LinearLayout>
