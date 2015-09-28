@@ -338,4 +338,7 @@
 
     <color name="gray4">#ff758086</color>
     <color name="navpage">#FFE1E8EB</color>
+    <!--弹出框标题-->
+    <color name="dialog_title_bg">#4682B4</color>
+    <color name="dialog_content_bg">#5F9EA0</color>
 </resources>

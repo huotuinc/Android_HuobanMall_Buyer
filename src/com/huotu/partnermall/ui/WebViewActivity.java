@@ -52,6 +52,8 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener {
         application = ( BaseApplication ) this.getApplication ();
         resources = this.getResources ();
         this.setContentView ( R.layout.new_load_page );
+
+        setImmerseLayout ( findViewById ( R.id.homeTitle ) );
     }
 
     @Override

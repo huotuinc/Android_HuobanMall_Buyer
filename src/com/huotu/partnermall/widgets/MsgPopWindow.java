@@ -34,13 +34,15 @@ class MsgPopWindow extends PopupWindow {
     Button btnSure;
     private Button btnCancel;
     private Activity context;
+    private boolean isClose;
 
     private View popView;
 
-    public MsgPopWindow(Activity context,View.OnClickListener itemsOnClick, String title, String msg)
+    public MsgPopWindow(Activity context,View.OnClickListener okOnClick, View.OnClickListener cancelOnClick, String title, String msg, boolean isClose)
     {
         super ( context );
         this.context = context;
+        this.isClose = isClose;
         LayoutInflater inflater = ( LayoutInflater ) context.getSystemService ( Context.LAYOUT_INFLATER_SERVICE );
         popView = inflater.inflate ( R.layout.popwindow_ui, null );
 
@@ -49,6 +51,14 @@ class MsgPopWindow extends PopupWindow {
         titleTxt.setText ( title );
 
         titleClose = ( ImageView ) popView.findViewById ( R.id.popTileClose );
+        if(!isClose)
+        {
+            titleClose.setVisibility ( View.GONE );
+        }
+        else
+        {
+            titleClose.setVisibility ( View.VISIBLE );
+        }
 
         tipsMsg = ( TextView ) popView.findViewById ( R.id.popConMsg );
         tipsMsg.setText ( msg );
@@ -63,19 +73,35 @@ class MsgPopWindow extends PopupWindow {
 
                                             }
                                         } );
+        if(null == cancelOnClick)
+        {
+            btnCancel.setOnClickListener ( new View.OnClickListener ( ) {
+                                               @Override
+                                               public
+                                               void onClick ( View v ) {
+                                                   dismiss ();
+                                               }
+                                           } );
+        }
+        else
+        {
+            btnCancel.setOnClickListener ( cancelOnClick );
+        }
 
-        btnCancel.setOnClickListener (
-                new View.OnClickListener ( ) {
-                    @Override
-                    public
-                    void onClick ( View v ) {
-
-                        dismiss ( );
-                    }
-                }
-                                     );
-
-        btnSure.setOnClickListener ( itemsOnClick );
+        if(null == okOnClick)
+        {
+            btnSure.setOnClickListener ( new View.OnClickListener ( ) {
+                                             @Override
+                                             public
+                                             void onClick ( View v ) {
+                                                 dismiss ();
+                                             }
+                                         } );
+        }
+        else
+        {
+            btnSure.setOnClickListener ( okOnClick );
+        }
 
         //设置SelectPicPopupWindow的View
         this.setContentView ( popView );
@@ -99,7 +125,7 @@ class MsgPopWindow extends PopupWindow {
                                              int y=(int) event.getY();
                                              if(event.getAction()==MotionEvent.ACTION_UP){
                                                  if(y<height){
-                                                     dismiss();
+                                                     //dismiss();
                                                  }
                                              }
                                              return true;
