@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import com.android.volley.toolbox.NetworkImageView;
 
 /**
- * 圆形
+ * 圆形imageView控件
  */
 public
 class NetworkImageViewCircle extends NetworkImageView {
@@ -25,4 +25,6 @@ class NetworkImageViewCircle extends NetworkImageView {
     NetworkImageViewCircle ( Context context, AttributeSet attrs, int defStyle ) {
         super ( context, attrs, defStyle );
     }
+
+
 }

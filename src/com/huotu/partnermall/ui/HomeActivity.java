@@ -2,6 +2,7 @@ package com.huotu.partnermall.ui;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -27,6 +28,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.huotu.partnermall.AppManager;
 
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
@@ -97,7 +99,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     private RelativeLayout getAuthLayout;
     //用户头像
     private
-    NetworkImageViewCircle userLogo;
+    ImageView userLogo;
     //用户名称
     private TextView userName;
 
@@ -176,7 +178,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         //已得到授权界面
         getAuthLayout = ( RelativeLayout ) this.findViewById ( R.id.getAuth );
-        userLogo = ( NetworkImageViewCircle ) this.findViewById ( R.id.accountIcon );
+        userLogo = ( ImageView ) this.findViewById ( R.id.accountIcon );
         userName = ( TextView ) this.findViewById ( R.id.accountName );
     }
 
@@ -189,7 +191,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             noAuthLayout.setVisibility ( View.GONE );
             getAuthLayout.setVisibility ( View.VISIBLE );
             //渲染logo
-            BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application.getUserLogo (), R.drawable.ic_login_username, R.drawable.ic_login_username );
+            //BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application.getUserLogo (), R.drawable.ic_login_username, R.drawable.ic_login_username );
+            new LoadLogoImageAyscTask (resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username).execute (  );
             //渲染用户名
             userName.setText ( application.getUserName () );
             userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
@@ -267,9 +270,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             noAuthLayout.setVisibility ( View.GONE );
             getAuthLayout.setVisibility ( View.VISIBLE );
             //渲染logo
-            BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application
-                                                         .getUserLogo ( ), R.drawable
-                                                         .ic_login_username, R.drawable.ic_login_username );
+            new LoadLogoImageAyscTask (resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username).execute (  );
+            /*Bitmap bitmap = BitmapFactory.decodeResource ( resources, R.drawable.ic_launcher );
+            userLogo.setImageDrawable ( new CircleImageDrawable ( bitmap ) );*/
             //渲染用户名
             userName.setText ( application.getUserName ( ) );
             userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
@@ -599,13 +602,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 ToastUtils.showShortToast ( HomeActivity.this, "登录成功" );
                 //登录后更新界面
                 AccountModel account = ( AccountModel ) msg.obj;
-                application.writeMemberInfo ( account.getAccountName (), account.getAccountId (), account.getAccountIcon (), account.getAccountToken () );
+                application.writeMemberInfo ( account.getAccountName ( ), account.getAccountId (
+                                                                                               ),
+                                              account.getAccountIcon ( ), account.getAccountToken ( ) );
                 noAuthLayout.setVisibility ( View.GONE );
                 getAuthLayout.setVisibility ( View.VISIBLE );
-                BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application
+                /*BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application
                                                              .getUserLogo ( ), R.drawable
                                                              .ic_login_username, R.drawable
-                                                             .ic_login_username );
+                                                             .ic_login_username );*/
+                new LoadLogoImageAyscTask (resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username).execute (  );
                 //渲染用户名
                 userName.setText ( application.getUserName ( ) );
                 userName.setTextColor ( resources.getColor ( R.color.theme_color ) );

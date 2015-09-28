@@ -33,10 +33,9 @@ class CircleImageDrawable extends Drawable {
     }
 
     @Override
-    public
-    void draw ( Canvas canvas ) {
-
-        canvas.drawCircle ( mWidth / 2, mWidth / 2, mWidth / 2, mPaint );
+    public void draw(Canvas canvas)
+    {
+        canvas.drawCircle(mWidth / 2, mWidth / 2, mWidth / 2, mPaint);
     }
 
     @Override

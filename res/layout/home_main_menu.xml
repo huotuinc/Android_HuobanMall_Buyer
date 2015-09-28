@@ -53,14 +53,15 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="gone">
-            <com.huotu.partnermall.widgets.NetworkImageViewCircle
+            <ImageView
                 android:id="@+id/accountIcon"
                 android:layout_width="@dimen/account_icon_width"
                 android:layout_height="@dimen/account_icon_height"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="10dp">
-            </com.huotu.partnermall.widgets.NetworkImageViewCircle>
+            </ImageView>
+
             <TextView
                 android:id="@+id/accountName"
                 android:layout_width="wrap_content"
