@@ -85,8 +85,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     //单独加载菜单
     private KJWebView menuView;
 
+
     //底部菜单
-    private LinearLayout bottomMenuLayout;
+    private RelativeLayout bottomMenuLayout;
 
     //侧滑登录
     private RelativeLayout loginLayout;
@@ -188,7 +189,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         userName = ( TextView ) this.findViewById ( R.id.accountName );
 
         //初始化底部菜单
-        bottomMenuLayout = ( LinearLayout ) this.findViewById ( R.id.bottomMenuLayout );
+        bottomMenuLayout = ( RelativeLayout ) this.findViewById ( R.id.menuL );
 
         menuView = ( KJWebView ) this.findViewById ( R.id.menuPage );
     }
@@ -323,7 +324,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     {
         menuView.setBarHeight ( 0 );
         menuView.setJavaScriptEnabled ( true );
-        menuView.setCacheMode ( WebSettings.LOAD_DEFAULT );
+        menuView.setCacheMode ( WebSettings.LOAD_NO_CACHE );
 
         //首页默认为商户站点 + index
         menuView.loadUrl ( Constants.LOCAL_MENU, null, null);
@@ -336,8 +337,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage, titleText, mHandler );
-                        return filter.shouldOverrideUrlBySFriend ( view, url );
+                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, titleText, mHandler );
+                        return filter.shouldOverrideUrlBySFriend ( viewPage, url );
 
                     }
 
@@ -369,7 +370,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setSupportZoom ( true );
         viewPage.setBuiltInZoomControls ( true );
         viewPage.setJavaScriptEnabled ( true );
-        viewPage.setCacheMode ( WebSettings.LOAD_DEFAULT );
+        viewPage.setCacheMode ( WebSettings.LOAD_NO_CACHE );
         viewPage.setSaveFormData ( true );
         viewPage.setAllowFileAccess ( true );
         viewPage.setLoadWithOverviewMode ( false );
@@ -388,8 +389,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage, titleText, mHandler );
-                        return filter.shouldOverrideUrlBySFriend ( view, url );
+                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, titleText, mHandler );
+                        return filter.shouldOverrideUrlBySFriend ( viewPage, url );
                     }
 
                     @Override
@@ -406,6 +407,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //页面加载完成后,读取菜单项
                         JSModel model = new JSModel ( application );
                         viewPage.addJavascriptInterface ( model, "obtainMenuStatus" );
+
                     }
 
                     @Override
@@ -413,6 +415,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     void onReceivedError ( WebView view, int errorCode, String description,
                                            String failingUrl ) {
                         super.onReceivedError ( view, errorCode, description, failingUrl );
+                        //错误页面处理
+                        //隐藏菜单栏
+                        bottomMenuLayout.setVisibility ( View.GONE );
+                        viewPage.loadUrl("file:///android_asset/maintenance.html", titleText, mHandler);
+
                     }
 
 

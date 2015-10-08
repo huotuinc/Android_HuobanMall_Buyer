@@ -18,14 +18,12 @@ class UrlFilterUtils {
 
     private
     Context context;
-    private KJWebView viewPage;
     TextView titleView;
     private Handler mHandler;
 
-    public UrlFilterUtils(Context context, KJWebView viewPage, TextView titleView, Handler mHandler)
+    public UrlFilterUtils(Context context, TextView titleView, Handler mHandler)
     {
         this.context = context;
-        this.viewPage = viewPage;
         this.titleView = titleView;
         this.mHandler = mHandler;
     }
@@ -36,12 +34,12 @@ class UrlFilterUtils {
      * @param url
      * @return
      */
-    public boolean shouldOverrideUrlBySFriend(WebView view, String url) {
+    public boolean shouldOverrideUrlBySFriend(KJWebView view, String url) {
         if(url.contains( Constants.WEB_TAG_NEWFRAME)){
             Intent intentWeb = new Intent(context, WebViewActivity.class);
             intentWeb.putExtra ( Constants.INTENT_URL, url );
             context.startActivity ( intentWeb );
-            return true;
+            return false;
         }else if(url.contains(Constants.WEB_TAG_USERINFO)){
             //修改用户信息
             //判断修改信息的类型
@@ -50,20 +48,22 @@ class UrlFilterUtils {
             {
                 //弹出修改密码框
             }
-            return true;
+            return false;
         }else if(url.contains(Constants.WEB_TAG_LOGOUT)){
             //处理登出操作
 
-            return true;
+            return false;
         }else if(url.contains(Constants.WEB_TAG_INFO)){
             //处理信息保护
-            return true;
+            return false;
         }else if(url.contains(Constants.WEB_TAG_FINISH)){
-            if(viewPage.canGoBack())
-                viewPage.goBack();
+            if(view.canGoBack())
+                view.goBack();
+
         }else
         {
-            viewPage.loadUrl ( url, titleView, mHandler );
+            view.loadUrl ( url, titleView, mHandler );
+            return false;
         }
         return false;
     }
