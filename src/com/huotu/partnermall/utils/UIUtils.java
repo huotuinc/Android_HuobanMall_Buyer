@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.model.MainMenuModel;
 import com.huotu.partnermall.model.MenuBean;
 
 import java.util.Collections;
@@ -166,6 +167,12 @@ class UIUtils {
             //比较分组序号
             return menu01.getMenuGroup ( ).compareTo ( menu02.getMenuGroup () );
         }
+    }
+
+
+    public void loadMainMenu(List<MainMenuModel> menuList, LinearLayout bottomMenuLayout)
+    {
+
     }
 
 

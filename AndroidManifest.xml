@@ -87,7 +87,6 @@
 
 		<activity
             android:name="com.huotu.partnermall.ui.SplashActivity"
-            android:launchMode="singleTask"
             android:theme="@style/SplashTheme"
             android:screenOrientation="portrait">
             <intent-filter>

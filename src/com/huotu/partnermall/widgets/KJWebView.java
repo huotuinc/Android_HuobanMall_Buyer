@@ -37,6 +37,7 @@ class KJWebView extends RelativeLayout {
     private WebView mWebView = null;  //
     private RelativeLayout progressBar_circle = null;  //包含圆形进度条的布局
     private int barHeight = 8;  //水平进度条的高
+    private boolean isLoadProgress = true;//是否加载进度条
 
     public KJWebView(Context context) {
         super(context);
@@ -72,7 +73,7 @@ class KJWebView extends RelativeLayout {
                     void onProgressChanged ( WebView view, int newProgress ) {
                         // TODO Auto-generated method stub
                         super.onProgressChanged ( view, newProgress );
-                        if ( newProgress == 100 ) {
+                        /*if ( newProgress == 100 ) {
                             progressBar_circle.setVisibility ( View.GONE );
                         }
                         else {
@@ -91,26 +92,30 @@ class KJWebView extends RelativeLayout {
                                 isAdd = true;
                             }
                             progressBar_circle.setVisibility ( View.VISIBLE );
-                        }
+                        }*/
                     }
 
                     @Override
                     public
-                    boolean onJsAlert ( WebView view, String url, String message, JsResult result
+                    boolean onJsAlert (
+                            WebView view, String url, String message, JsResult result
                                       ) {
                         return super.onJsAlert ( view, url, message, result );
                     }
 
                     @Override
                     public
-                    boolean onJsConfirm ( WebView view, String url, String message, JsResult result ) {
+                    boolean onJsConfirm ( WebView view, String url, String message, JsResult
+                            result ) {
                         return super.onJsConfirm ( view, url, message, result );
                     }
 
                     @Override
                     public
-                    boolean onJsPrompt ( WebView view, String url, String message, String
-                            defaultValue, JsPromptResult result ) {
+                    boolean onJsPrompt (
+                            WebView view, String url, String message, String
+                            defaultValue, JsPromptResult result
+                                       ) {
                         return super.onJsPrompt ( view, url, message, defaultValue, result );
                     }
 
@@ -203,12 +208,17 @@ class KJWebView extends RelativeLayout {
 
     public void goBack()
     {
-        mWebView.goBack ();
+        mWebView.goBack ( );
     }
 
     public boolean canGoBack()
     {
         return  mWebView.canGoBack ();
+    }
+
+    public void setScrollBarStyle(int style)
+    {
+        mWebView.setScrollBarStyle ( style );
     }
 
 }

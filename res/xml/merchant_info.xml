@@ -8,7 +8,7 @@
     </appinfo>
     <!--商家信息-->
     <merchant>
-        <app_merchant_id>110</app_merchant_id>
+        <app_merchant_id>3447</app_merchant_id>
     </merchant>
     <!--微信支付信息-->
     <weixinpay>
@@ -30,7 +30,7 @@
     </umeng>
     <!--网络请求接口前缀-->
     <httpprefix>
-        <prefix>http://www.partnermall.com/</prefix>
+        <prefix>http://cosytest.51flashmall.com/</prefix>
     </httpprefix>
     <!--定位信息-->
     <location>

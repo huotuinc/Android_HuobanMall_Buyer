@@ -291,22 +291,25 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //加载页面
         //页面集成，title无需展示
         //titleText.setText ( "买家版" );
-
+        viewPage.setScrollBarStyle ( View.SCROLLBARS_OUTSIDE_OVERLAY );
+        viewPage.setVerticalScrollBarEnabled ( false );
         viewPage.setBarHeight ( 8 );
         viewPage.setClickable ( true );
         viewPage.setUseWideViewPort ( true );
         //是否需要避免页面放大缩小操作
+
         viewPage.setSupportZoom ( true );
         viewPage.setBuiltInZoomControls ( true );
         viewPage.setJavaScriptEnabled ( true );
-        viewPage.setCacheMode ( WebSettings.LOAD_NO_CACHE );
+        viewPage.setCacheMode ( WebSettings.LOAD_DEFAULT );
         viewPage.setSaveFormData ( true );
         viewPage.setAllowFileAccess ( true );
         viewPage.setLoadWithOverviewMode ( false );
         viewPage.setSavePassword ( true );
         viewPage.setLoadsImagesAutomatically ( true );
         //首页默认为商户站点 + index
-        viewPage.loadUrl ( application.obtainMerchantUrl () + "index" );
+        viewPage.loadUrl ( application.obtainMerchantUrl ());
+        //viewPage.loadUrl ( "http://cosytest.51flashmall.com/3447/index.aspx" );
 
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
@@ -336,7 +339,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
                     @Override
                     public
-                    void onReceivedError ( WebView view, int errorCode, String description, String failingUrl ) {
+                    void onReceivedError ( WebView view, int errorCode, String description,
+                                           String failingUrl ) {
                         super.onReceivedError ( view, errorCode, description, failingUrl );
                     }
 
