@@ -58,7 +58,7 @@ class UrlFilterUtils {
             return false;
         }else if(url.contains(Constants.WEB_TAG_FINISH)){
             if(view.canGoBack())
-                view.goBack();
+                view.goBack(null, null);
 
         }else
         {

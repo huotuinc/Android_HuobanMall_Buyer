@@ -339,7 +339,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                                      ) {
                         UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, titleText, mHandler );
                         return filter.shouldOverrideUrlBySFriend ( viewPage, url );
-
                     }
 
                     @Override
@@ -377,8 +376,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setSavePassword ( true );
         viewPage.setLoadsImagesAutomatically ( true );
         //首页默认为商户站点 + index
-        viewPage.loadUrl ( application.obtainMerchantUrl (), titleText, null);
+        viewPage.loadUrl ( application.obtainMerchantUrl ( ), titleText, null );
         //viewPage.loadUrl ( "http://cosytest.51flashmall.com/3447/index.aspx" );
+        JSModel model = new JSModel ( application );
+        viewPage.addJavascriptInterface ( model, "obtainMenuStatus" );
 
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
@@ -405,8 +406,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     void onPageFinished ( WebView view, String url ) {
                         super.onPageFinished ( view, url );
                         //页面加载完成后,读取菜单项
-                        JSModel model = new JSModel ( application );
-                        viewPage.addJavascriptInterface ( model, "obtainMenuStatus" );
 
                     }
 
@@ -417,10 +416,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         super.onReceivedError ( view, errorCode, description, failingUrl );
                         //错误页面处理
                         //隐藏菜单栏
-                        bottomMenuLayout.setVisibility ( View.GONE );
+                        bottomMenuLayout.setVisibility ( View.GONE  );
                         viewPage.loadUrl("file:///android_asset/maintenance.html", titleText, mHandler);
 
                     }
+
 
 
                 }
@@ -509,7 +509,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     application.layDrag.openDrawer ( Gravity.LEFT );
                 } else
                 {
-                    viewPage.goBack ();
+                    viewPage .goBack ( titleText, mHandler );
                 }
 
             }

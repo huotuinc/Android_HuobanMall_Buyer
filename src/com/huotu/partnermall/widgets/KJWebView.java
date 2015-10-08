@@ -251,9 +251,28 @@ class KJWebView extends RelativeLayout {
         KJLoger.i ( url );
     }
 
-    public void goBack()
+    public void goBack(final TextView titleView, Handler mHandler)
     {
         mWebView.goBack ( );
+        if(null != titleView && !"".equals ( titleView ))
+        {
+            mWebView.setWebChromeClient (
+                    new WebChromeClient ( ) {
+                        @Override
+                        public
+                        void onReceivedTitle ( WebView view, String title ) {
+                            super.onReceivedTitle ( view, title );
+                            titleView.setText ( title );
+                        }
+                    }
+                                        );
+        }
+
+        if(null != mHandler)
+        {
+            mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+        }
+
     }
 
     public boolean canGoBack()
