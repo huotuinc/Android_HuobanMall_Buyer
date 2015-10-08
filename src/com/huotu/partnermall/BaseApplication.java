@@ -62,6 +62,14 @@ public class BaseApplication extends Application {
     public GeofenceClient mGeofenceClient;
     public MyLocationListener mMyLocationListener;
 
+    /**
+     * 是否是左划或者返回
+     * true 左划
+     * false 返回
+     */
+
+    public boolean isLeftImg = true;
+
     public IWXAPI wApi;
     @Override
     public

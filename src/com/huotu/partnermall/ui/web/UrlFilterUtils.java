@@ -2,6 +2,7 @@ package com.huotu.partnermall.ui.web;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -19,12 +20,14 @@ class UrlFilterUtils {
     Context context;
     private KJWebView viewPage;
     TextView titleView;
+    private Handler mHandler;
 
-    public UrlFilterUtils(Context context, KJWebView viewPage, TextView titleView)
+    public UrlFilterUtils(Context context, KJWebView viewPage, TextView titleView, Handler mHandler)
     {
         this.context = context;
         this.viewPage = viewPage;
         this.titleView = titleView;
+        this.mHandler = mHandler;
     }
 
     /**
@@ -60,7 +63,7 @@ class UrlFilterUtils {
                 viewPage.goBack();
         }else
         {
-            viewPage.loadUrl ( url, titleView );
+            viewPage.loadUrl ( url, titleView, mHandler );
         }
         return false;
     }

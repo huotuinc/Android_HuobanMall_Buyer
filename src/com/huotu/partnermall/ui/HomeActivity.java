@@ -325,7 +325,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         menuView.setCacheMode ( WebSettings.LOAD_DEFAULT );
 
         //首页默认为商户站点 + index
-        menuView.loadUrl ( Constants.LOCAL_MENU, null);
+        menuView.loadUrl ( Constants.LOCAL_MENU, null, null);
         menuView.setWebViewClient (
                 new WebViewClient ( ) {
 
@@ -335,7 +335,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage, titleText );
+                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage, titleText, mHandler );
                         return filter.shouldOverrideUrlBySFriend ( view, url );
 
                     }
@@ -375,7 +375,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setSavePassword ( true );
         viewPage.setLoadsImagesAutomatically ( true );
         //首页默认为商户站点 + index
-        viewPage.loadUrl ( application.obtainMerchantUrl (), titleText);
+        viewPage.loadUrl ( application.obtainMerchantUrl (), titleText, null);
         //viewPage.loadUrl ( "http://cosytest.51flashmall.com/3447/index.aspx" );
 
         viewPage.setWebViewClient (
@@ -387,7 +387,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage, titleText );
+                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage, titleText, mHandler );
                         return filter.shouldOverrideUrlBySFriend ( view, url );
                     }
 
@@ -492,8 +492,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         {
             case R.id.titleLeftImage:
             {
-                //切换出侧滑界面
-                application.layDrag.openDrawer ( Gravity.LEFT );
+                if(application.isLeftImg)
+                {
+                    //切换出侧滑界面
+                    application.layDrag.openDrawer ( Gravity.LEFT );
+                } else
+                {
+                    viewPage.goBack ();
+                }
+
             }
             break;
             case R.id.titleRightImage:
@@ -630,14 +637,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //加载菜单页面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url, titleText );
+                viewPage.loadUrl ( url, titleText, mHandler );
             }
             break;
             case Constants.FRESHEN_PAGE_MESSAGE_TAG:
             {
                 //刷新界面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url, titleText );
+                viewPage.loadUrl ( url, titleText, mHandler );
             }
             break;
             //授权登录
@@ -733,6 +740,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 Platform platform = ( Platform ) msg.obj;
                 int action = msg.arg1;
                 ToastUtils.showShortToast ( HomeActivity.this, platform.getName () + "分享取消" );
+            }
+            break;
+            case Constants.LEFT_IMG_SIDE:
+            {
+                //设置左侧图标
+                Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
+                SystemTools.loadBackground ( titleLeftImage, leftDraw );
+                application.isLeftImg = true;
+            }
+            break;
+            case Constants.LEFT_IMG_BACK:
+            {
+                //设置左侧图标
+                Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_back );
+                SystemTools.loadBackground ( titleLeftImage, leftDraw );
+                application.isLeftImg = false;
             }
             break;
             default:

@@ -60,6 +60,10 @@ public class Constants {
 	// 未登陆
 	public static final int NONE_LOGIN = 0X10000;
 
+	//左侧划状态
+	public static final int LEFT_IMG_SIDE = 0X33310;
+	// 返回状态
+	public static final int LEFT_IMG_BACK = 0X33311;
 	/**
 	 ******************************************* 参数设置信息结束
 	 * ******************************************

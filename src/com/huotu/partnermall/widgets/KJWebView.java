@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -217,7 +218,7 @@ class KJWebView extends RelativeLayout {
         mWebView.setWebViewClient ( value );
     }
 
-    public void loadUrl(String url, final TextView titleView){
+    public void loadUrl(String url, final TextView titleView, Handler mHandler){
         mWebView.loadUrl ( url );
         if(null != titleView && !"".equals ( titleView ))
         {
@@ -231,6 +232,18 @@ class KJWebView extends RelativeLayout {
                         }
                     }
                                         );
+        }
+        if(null != mHandler)
+        {
+            if(canGoBack())
+            {
+                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+            }
+            else
+            {
+                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+            }
+
         }
 
         PreferenceHelper.writeString ( context, Constants.BASE_INFO, Constants.CURRENT_URL, url );
