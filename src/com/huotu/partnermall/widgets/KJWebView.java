@@ -15,6 +15,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
@@ -57,7 +58,7 @@ class KJWebView extends RelativeLayout {
         super(context, attrs, defStyle);
         // TODO Auto-generated constructor stub
         this.context = context;
-        init();
+        init ( );
     }
 
     private void init(){
@@ -82,7 +83,8 @@ class KJWebView extends RelativeLayout {
                                         context
                                                                                             )
                                                                                       .inflate (
-                                                                                              R.layout.progress_circle, null
+                                                                                              R
+                                                                                              .layout.progress_circle, null
                                                                                                );
                                 KJWebView.this.addView (
                                         progressBar_circle, LayoutParams
@@ -105,8 +107,10 @@ class KJWebView extends RelativeLayout {
 
                     @Override
                     public
-                    boolean onJsConfirm ( WebView view, String url, String message, JsResult
-                            result ) {
+                    boolean onJsConfirm (
+                            WebView view, String url, String message, JsResult
+                            result
+                                        ) {
                         return super.onJsConfirm ( view, url, message, result );
                     }
 
@@ -124,12 +128,25 @@ class KJWebView extends RelativeLayout {
                                     );
     }
 
+    public void setPageTitle(final TextView titleView)
+    {
+        mWebView.setWebChromeClient ( new WebChromeClient ()
+                                      {
+                                          @Override
+                                          public
+                                          void onReceivedTitle ( WebView view, String title ) {
+                                              super.onReceivedTitle ( view, title );
+                                              titleView.setText ( title );
+                                          }
+                                      });
+    }
+
     public void setBarHeight(int height){
         barHeight = height;
     }
 
     public void setClickable(boolean value){
-        mWebView.setClickable(value);
+        mWebView.setClickable ( value );
     }
 
     public void setUseWideViewPort(boolean value){
@@ -200,8 +217,22 @@ class KJWebView extends RelativeLayout {
         mWebView.setWebViewClient ( value );
     }
 
-    public void loadUrl(String url){
+    public void loadUrl(String url, final TextView titleView){
         mWebView.loadUrl ( url );
+        if(null != titleView && !"".equals ( titleView ))
+        {
+            mWebView.setWebChromeClient (
+                    new WebChromeClient ( ) {
+                        @Override
+                        public
+                        void onReceivedTitle ( WebView view, String title ) {
+                            super.onReceivedTitle ( view, title );
+                            titleView.setText ( title );
+                        }
+                    }
+                                        );
+        }
+
         PreferenceHelper.writeString ( context, Constants.BASE_INFO, Constants.CURRENT_URL, url );
         KJLoger.i ( url );
     }

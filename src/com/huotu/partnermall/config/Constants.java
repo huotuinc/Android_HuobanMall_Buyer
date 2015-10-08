@@ -337,5 +337,7 @@ public class Constants {
 	public static final String COLOR_INFO = "colorInfo";
 	public static final String COLOR_MAIN = "mainColor";
 	public static final String COLOR_SECOND = "secondColor";
+
+	public static final String LOCAL_MENU = "http://cosytest.51flashmall.com/bottom.aspx?customerid=3447";
 	
 }

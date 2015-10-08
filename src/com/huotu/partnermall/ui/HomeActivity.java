@@ -320,18 +320,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     private
     void loadMainMenu ( )
     {
-        menuView.setBarHeight ( 8 );
-        menuView.setClickable ( true );
-        menuView.setUseWideViewPort ( true );
-        //是否需要避免页面放大缩小操作
-
-        menuView.setSupportZoom ( true );
-        menuView.setBuiltInZoomControls ( true );
+        menuView.setBarHeight ( 0 );
         menuView.setJavaScriptEnabled ( true );
         menuView.setCacheMode ( WebSettings.LOAD_DEFAULT );
 
         //首页默认为商户站点 + index
-        menuView.loadUrl ( "http://cosytest.51flashmall.com/bottom.aspx?customerid=3447");
+        menuView.loadUrl ( Constants.LOCAL_MENU, null);
         menuView.setWebViewClient (
                 new WebViewClient ( ) {
 
@@ -341,15 +335,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage );
+                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage, titleText );
                         return filter.shouldOverrideUrlBySFriend ( view, url );
+
                     }
 
                     @Override
                     public
                     void onPageStarted ( WebView view, String url, Bitmap favicon ) {
-                        super.onPageStarted ( view, url, favicon );
 
+                        super.onPageStarted ( view, url, favicon );
                     }
 
                     @Override
@@ -357,17 +352,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     void onPageFinished ( WebView view, String url ) {
                         super.onPageFinished ( view, url );
                     }
-
-                    @Override
-                    public
-                    void onReceivedError (
-                            WebView view, int errorCode, String description,
-                            String failingUrl
-                                         ) {
-                        super.onReceivedError ( view, errorCode, description, failingUrl );
-                    }
-
-
                 }
                                   );
     }
@@ -391,7 +375,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setSavePassword ( true );
         viewPage.setLoadsImagesAutomatically ( true );
         //首页默认为商户站点 + index
-        viewPage.loadUrl ( application.obtainMerchantUrl ());
+        viewPage.loadUrl ( application.obtainMerchantUrl (), titleText);
         //viewPage.loadUrl ( "http://cosytest.51flashmall.com/3447/index.aspx" );
 
         viewPage.setWebViewClient (
@@ -403,7 +387,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage );
+                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage, titleText );
                         return filter.shouldOverrideUrlBySFriend ( view, url );
                     }
 
@@ -475,7 +459,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         {
             if(viewPage.canGoBack ())
             {
-                viewPage.goBack ();
+                //viewPage.goBack ();
             }
             else {
                 if ( ( System.currentTimeMillis ( ) - exitTime ) > 2000 ) {
@@ -646,14 +630,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //加载菜单页面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url );
+                viewPage.loadUrl ( url, titleText );
             }
             break;
             case Constants.FRESHEN_PAGE_MESSAGE_TAG:
             {
                 //刷新界面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url );
+                viewPage.loadUrl ( url, titleText );
             }
             break;
             //授权登录
