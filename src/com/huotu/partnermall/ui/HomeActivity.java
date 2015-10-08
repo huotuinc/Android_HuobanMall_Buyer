@@ -81,6 +81,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     //web视图
     private
     KJWebView viewPage;
+    //单独加载菜单
+    private KJWebView menuView;
+
+    //底部菜单
+    private LinearLayout bottomMenuLayout;
 
     //侧滑登录
     private RelativeLayout loginLayout;
@@ -180,6 +185,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         getAuthLayout = ( RelativeLayout ) this.findViewById ( R.id.getAuth );
         userLogo = ( ImageView ) this.findViewById ( R.id.accountIcon );
         userName = ( TextView ) this.findViewById ( R.id.accountName );
+
+        //初始化底部菜单
+        bottomMenuLayout = ( LinearLayout ) this.findViewById ( R.id.bottomMenuLayout );
+
+        menuView = ( KJWebView ) this.findViewById ( R.id.menuPage );
     }
 
     @Override
@@ -192,13 +202,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             getAuthLayout.setVisibility ( View.VISIBLE );
             //渲染logo
             //BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application.getUserLogo (), R.drawable.ic_login_username, R.drawable.ic_login_username );
-            new LoadLogoImageAyscTask (resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username).execute (  );
+            new LoadLogoImageAyscTask ( resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username ).execute ( );
             //渲染用户名
-            userName.setText ( application.getUserName () );
+            userName.setText ( application.getUserName ( ) );
             userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
         }
-        else
-        {
+        else {
             noAuthLayout.setVisibility ( View.VISIBLE );
             getAuthLayout.setVisibility ( View.GONE );
             loginButton.setTextColor ( resources.getColor ( R.color.theme_color ) );
@@ -211,8 +220,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     protected
     void initView ( ) {
         //获取系统标题栏高度
-        if( application.isKITKAT () )
-        {
+        if ( application.isKITKAT ( ) ) {
             int statusBarHeight = getStatusBarHeight ( HomeActivity.this );
             loginLayout.setPadding ( 0, statusBarHeight, 0, 0 );
         }
@@ -237,9 +245,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                        );
         //设置登录按钮背景
         Drawable loginDrawable = resources.getDrawable ( R.drawable.login_button_draw );
-        loginDrawable.setColorFilter ( new LightingColorFilter ( SystemTools.obtainColor ( application.obtainMainColor ( )
-                                                                                         ), SystemTools.obtainColor ( application.obtainMainColor ( )
-                                                                                                                    ) ));
+        loginDrawable.setColorFilter (
+                new LightingColorFilter (
+                        SystemTools.obtainColor (
+                                application.obtainMainColor ( )
+                                                ), SystemTools.obtainColor (
+                        application.obtainMainColor ( )
+                                                                           )
+                )
+                                     );
         SystemTools.loadBackground ( loginButton, loginDrawable );
 
         //设置设置图标
@@ -250,35 +264,40 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                                     )
                                    );
         //设置Home图标
-        SystemTools.loadBackground ( loginHome, resources.getDrawable ( R.drawable
+        SystemTools.loadBackground (
+                loginHome, resources.getDrawable (
+                        R.drawable
 
-                                                                                .sideslip_login_lefttop__home ) );
+                                .sideslip_login_lefttop__home
+                                                 )
+                                   );
         //设置登录界面背景
-        noAuthLayout.setBackgroundColor ( SystemTools.obtainColor (
-                                                  application.obtainMainColor (
-                                                                              )
-                                                                  ) );
-        getAuthLayout.setBackgroundColor ( SystemTools.obtainColor (
-                                                   application.obtainMainColor (
-                                                                               )
-                                                                   ) );
-
+        noAuthLayout.setBackgroundColor (
+                SystemTools.obtainColor (
+                        application.obtainMainColor (
+                                                    )
+                                        )
+                                        );
+        getAuthLayout.setBackgroundColor (
+                SystemTools.obtainColor (
+                        application.obtainMainColor (
+                                                    )
+                                        )
+                                         );
 
         //设置登录界面
-        if(application.isLogin())
-        {
+        if ( application.isLogin ( ) ) {
             noAuthLayout.setVisibility ( View.GONE );
             getAuthLayout.setVisibility ( View.VISIBLE );
             //渲染logo
-            new LoadLogoImageAyscTask (resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username).execute (  );
+            new LoadLogoImageAyscTask ( resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username ).execute ( );
             /*Bitmap bitmap = BitmapFactory.decodeResource ( resources, R.drawable.ic_launcher );
             userLogo.setImageDrawable ( new CircleImageDrawable ( bitmap ) );*/
             //渲染用户名
             userName.setText ( application.getUserName ( ) );
             userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
         }
-        else
-        {
+        else {
             noAuthLayout.setVisibility ( View.VISIBLE );
             getAuthLayout.setVisibility ( View.GONE );
             loginButton.setTextColor ( resources.getColor ( R.color.theme_color ) );
@@ -286,11 +305,75 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         }
 
         //动态加载侧滑菜单
-        UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler);
+        UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler );
         ui.loadMenus ( );
+        //加载底部菜单
+        //ui.loadMainMenu ( null, bottomMenuLayout );
         //加载页面
         //页面集成，title无需展示
         //titleText.setText ( "买家版" );
+
+        loadPage ( );
+        loadMainMenu ( );
+    }
+
+    private
+    void loadMainMenu ( )
+    {
+        menuView.setBarHeight ( 8 );
+        menuView.setClickable ( true );
+        menuView.setUseWideViewPort ( true );
+        //是否需要避免页面放大缩小操作
+
+        menuView.setSupportZoom ( true );
+        menuView.setBuiltInZoomControls ( true );
+        menuView.setJavaScriptEnabled ( true );
+        menuView.setCacheMode ( WebSettings.LOAD_DEFAULT );
+
+        //首页默认为商户站点 + index
+        menuView.loadUrl ( "http://cosytest.51flashmall.com/bottom.aspx?customerid=3447");
+        menuView.setWebViewClient (
+                new WebViewClient ( ) {
+
+                    //重写此方法，浏览器内部跳转
+                    public
+                    boolean shouldOverrideUrlLoading (
+                            WebView view, String
+                            url
+                                                     ) {
+                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, viewPage );
+                        return filter.shouldOverrideUrlBySFriend ( view, url );
+                    }
+
+                    @Override
+                    public
+                    void onPageStarted ( WebView view, String url, Bitmap favicon ) {
+                        super.onPageStarted ( view, url, favicon );
+
+                    }
+
+                    @Override
+                    public
+                    void onPageFinished ( WebView view, String url ) {
+                        super.onPageFinished ( view, url );
+                    }
+
+                    @Override
+                    public
+                    void onReceivedError (
+                            WebView view, int errorCode, String description,
+                            String failingUrl
+                                         ) {
+                        super.onReceivedError ( view, errorCode, description, failingUrl );
+                    }
+
+
+                }
+                                  );
+    }
+
+    private void loadPage()
+    {
         viewPage.setScrollBarStyle ( View.SCROLLBARS_OUTSIDE_OVERLAY );
         viewPage.setVerticalScrollBarEnabled ( false );
         viewPage.setBarHeight ( 8 );
@@ -346,7 +429,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
 
                 }
-                                   );
+                                  );
     }
 
     @Override

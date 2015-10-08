@@ -55,6 +55,11 @@ class AutnLogin {
 
                                                  view.setClickable ( true );
                                                  if ( action == Platform.ACTION_USER_INFOR ) {
+
+                                                     //unionid
+                                                     String unionId = platform.getDb ().get ( "unionid" );
+                                                     //openId
+                                                     String openId = platform.getDb ().get ( "openid" );
                                                      Message msg = new Message();
                                                      msg.what = Constants.MSG_AUTH_COMPLETE;
                                                      msg.obj = platform;
@@ -88,7 +93,7 @@ class AutnLogin {
         Message msg = new Message();
         msg.what = Constants.MSG_LOGIN;
 
-        PlatformDb   accountDb = plat.getDb ();
+        PlatformDb accountDb = plat.getDb ();
         AccountModel account = new AccountModel ();
         account.setAccountId ( accountDb.getUserId () );
         account.setAccountName ( accountDb.getUserName ( ) );

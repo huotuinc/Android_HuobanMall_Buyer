@@ -10,11 +10,25 @@
             <include layout="@layout/title_index"></include>
         </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/webViewLayout"
+        android:id="@+id/layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/titleLayout">
-        <include layout="@layout/page_load_view"></include>
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/webViewLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/menuL">
+            <include layout="@layout/page_load_view"></include>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/menuL"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/main_title_height"
+            android:gravity="bottom"
+            android:layout_alignParentBottom="true">
+            <include layout="@layout/load_menu_view"></include>
+        </RelativeLayout>
+        </RelativeLayout>
 
 </RelativeLayout>

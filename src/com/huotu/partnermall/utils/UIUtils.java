@@ -172,6 +172,10 @@ class UIUtils {
 
     public void loadMainMenu(List<MainMenuModel> menuList, LinearLayout bottomMenuLayout)
     {
+        if(null == menuList || menuList.isEmpty ())
+        {
+            KJLoger.i ( "商户底部菜单初始化失败。" );
+        }
 
     }
 
