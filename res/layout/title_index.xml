@@ -21,7 +21,10 @@
             android:layout_alignBottom="@+id/titleLeftImage"
             android:layout_centerHorizontal="true"
             android:textColor="@color/title_text_color"
-            android:textSize="@dimen/main_title_text_size" />
+            android:textSize="@dimen/main_title_text_size"
+            android:maxEms="10"
+            android:singleLine="true"
+            android:ellipsize="end"/>
 
         <ImageView
             android:id="@+id/titleRightImage"

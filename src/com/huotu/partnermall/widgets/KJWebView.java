@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.model.JSModel;
 import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
@@ -263,6 +264,11 @@ class KJWebView extends RelativeLayout {
     public void setScrollBarStyle(int style)
     {
         mWebView.setScrollBarStyle ( style );
+    }
+
+    public void addJavascriptInterface(JSModel jsModel, String jsFunc)
+    {
+        mWebView.addJavascriptInterface ( jsModel, jsFunc );
     }
 
 }

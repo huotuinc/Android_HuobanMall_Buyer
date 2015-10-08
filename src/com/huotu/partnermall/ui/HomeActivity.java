@@ -34,6 +34,7 @@ import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
+import com.huotu.partnermall.model.JSModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
@@ -402,6 +403,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onPageFinished ( WebView view, String url ) {
                         super.onPageFinished ( view, url );
+                        //页面加载完成后,读取菜单项
+                        JSModel model = new JSModel ( application );
+                        viewPage.addJavascriptInterface ( model, "obtainMenuStatus" );
                     }
 
                     @Override
