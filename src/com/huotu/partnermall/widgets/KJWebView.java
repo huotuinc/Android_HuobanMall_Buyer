@@ -22,6 +22,7 @@ import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.JSModel;
+import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
@@ -219,7 +220,7 @@ class KJWebView extends RelativeLayout {
         mWebView.setWebViewClient ( value );
     }
 
-    public void loadUrl(String url, final TextView titleView, Handler mHandler){
+    public void loadUrl( final String url, final TextView titleView, Handler mHandler, final BaseApplication application){
         mWebView.loadUrl ( url );
         if(null != titleView && !"".equals ( titleView ))
         {
@@ -230,6 +231,11 @@ class KJWebView extends RelativeLayout {
                         void onReceivedTitle ( WebView view, String title ) {
                             super.onReceivedTitle ( view, title );
                             titleView.setText ( title );
+                            //加入标题队列
+                            PageInfoModel pageInfo = new PageInfoModel ();
+                            pageInfo.setPageTitle ( title );
+                            pageInfo.setPageUrl ( url );
+                            application.titleStack.push ( pageInfo );
                         }
                     }
                                         );
@@ -247,25 +253,27 @@ class KJWebView extends RelativeLayout {
 
         }
 
-        PreferenceHelper.writeString ( context, Constants.BASE_INFO, Constants.CURRENT_URL, url );
+        //PreferenceHelper.writeString ( context, Constants.BASE_INFO, Constants.CURRENT_URL, url );
         KJLoger.i ( url );
     }
 
-    public void goBack(final TextView titleView, Handler mHandler)
+    public void goBack(final TextView titleView, Handler mHandler, BaseApplication application)
     {
         mWebView.goBack ( );
         if(null != titleView && !"".equals ( titleView ))
         {
-            mWebView.setWebChromeClient (
-                    new WebChromeClient ( ) {
-                        @Override
-                        public
-                        void onReceivedTitle ( WebView view, String title ) {
-                            super.onReceivedTitle ( view, title );
-                            titleView.setText ( title );
-                        }
-                    }
-                                        );
+            //先移除栈顶标题
+            if(!application.titleStack.isEmpty () && 1 == application.titleStack.size ())
+            {
+                PageInfoModel pageInfo = application.titleStack.peek ( );
+                titleView.setText ( pageInfo.getPageTitle () );
+            }
+            else if(!application.titleStack.isEmpty () && 1 < application.titleStack.size ())
+            {
+                application.titleStack.pop ();
+                PageInfoModel pageInfo = application.titleStack.peek ( );
+                titleView.setText ( pageInfo.getPageTitle () );
+            }
         }
 
         if(null != mHandler)

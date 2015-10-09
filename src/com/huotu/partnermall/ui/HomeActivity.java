@@ -35,6 +35,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.JSModel;
+import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
@@ -327,7 +328,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         menuView.setCacheMode ( WebSettings.LOAD_NO_CACHE );
 
         //首页默认为商户站点 + index
-        menuView.loadUrl ( Constants.LOCAL_MENU, null, null);
+        menuView.loadUrl ( Constants.LOCAL_MENU, null, null, null);
         menuView.setWebViewClient (
                 new WebViewClient ( ) {
 
@@ -337,7 +338,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        viewPage.loadUrl ( url, titleText, mHandler );
+                        viewPage.loadUrl ( url, titleText, mHandler, application );
                         return true;
                     }
 
@@ -377,7 +378,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setSavePassword ( true );
         viewPage.setLoadsImagesAutomatically ( true );
         //首页默认为商户站点 + index
-        viewPage.loadUrl ( application.obtainMerchantUrl ( ), titleText, null );
+        viewPage.loadUrl ( application.obtainMerchantUrl ( ), titleText, null, application );
         //viewPage.loadUrl ( "http://cosytest.51flashmall.com/3447/index.aspx" );
         JSModel model = new JSModel ( application );
         viewPage.addJavascriptInterface ( model, "obtainMenuStatus" );
@@ -391,7 +392,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, titleText, mHandler );
+                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, titleText, mHandler, application );
                         return filter.shouldOverrideUrlBySFriend ( viewPage, url );
                     }
 
@@ -418,7 +419,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //错误页面处理
                         //隐藏菜单栏
                         bottomMenuLayout.setVisibility ( View.GONE  );
-                        viewPage.loadUrl("file:///android_asset/maintenance.html", titleText, mHandler);
+                        viewPage.loadUrl("file:///android_asset/maintenance.html", titleText, mHandler, application);
 
                     }
 
@@ -510,15 +511,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     application.layDrag.openDrawer ( Gravity.LEFT );
                 } else
                 {
-                    viewPage .goBack ( titleText, mHandler );
+                    viewPage .goBack ( titleText, mHandler, application );
                 }
 
             }
             break;
             case R.id.titleRightImage:
             {
+                PageInfoModel pageInfo = application.titleStack.peek ();
                 //当前的url
-                String url = application.readCurrentUrl ( );
+                String url = pageInfo.getPageUrl ( );
                 //刷新页面
                 Message msg = mHandler.obtainMessage ( Constants.FRESHEN_PAGE_MESSAGE_TAG, url);
                 mHandler.sendMessage ( msg );
@@ -649,14 +651,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //加载菜单页面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url, titleText, mHandler );
+                viewPage.loadUrl ( url, titleText, mHandler, application );
             }
             break;
             case Constants.FRESHEN_PAGE_MESSAGE_TAG:
             {
                 //刷新界面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url, titleText, mHandler );
+                viewPage.loadUrl ( url, titleText, mHandler, application );
             }
             break;
             //授权登录

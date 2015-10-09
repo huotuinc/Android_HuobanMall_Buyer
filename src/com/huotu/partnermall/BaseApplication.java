@@ -22,8 +22,10 @@ import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
+import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.model.PageType;
 import com.huotu.partnermall.model.SysModel;
+import com.huotu.partnermall.utils.CrashHandler;
 import com.huotu.partnermall.utils.KJConfig;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
@@ -33,6 +35,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import org.apache.commons.codec.binary.StringUtils;
 
 import java.util.List;
+import java.util.Stack;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.sharesdk.framework.ShareSDK;
@@ -47,22 +50,25 @@ public class BaseApplication extends Application {
     //定位句柄
     public Intent locationI = new Intent ( );
     //定位类型
-    public int localType;
+    public int    localType;
     //地址
-    public String         address;
+    public String address;
     //纬度
-    public double         latitude;
+    public double latitude;
     //经度
-    public double         Longitude;
+    public double Longitude;
     //是否有网络连接
     public boolean isConn = false;
     //城市
-    public String city;
-    public LocationClient mLocationClient;
-    public GeofenceClient mGeofenceClient;
+    public String             city;
+    public LocationClient     mLocationClient;
+    public GeofenceClient     mGeofenceClient;
     public MyLocationListener mMyLocationListener;
     //底部菜单是否隐藏 true显示， false隐藏
     public boolean isMenuHide = false;
+    //维护标题信息栈
+    public
+    Stack< PageInfoModel > titleStack;
 
     /**
      * 是否是左划或者返回
@@ -73,6 +79,7 @@ public class BaseApplication extends Application {
     public boolean isLeftImg = true;
 
     public IWXAPI wApi;
+
     @Override
     public
     void onConfigurationChanged ( Configuration newConfig ) {
@@ -98,7 +105,12 @@ public class BaseApplication extends Application {
         solveAsyncTaskOnPostExecuteBug ( );
 
         //配置微信支付环境
-        wApi = WXAPIFactory.createWXAPI ( getApplicationContext (), Constants.WXPAY_ID, true );
+        wApi = WXAPIFactory.createWXAPI ( getApplicationContext ( ), Constants.WXPAY_ID, true );
+        titleStack = new Stack< PageInfoModel > ( );
+
+        //加载异常处理模块
+        CrashHandler crashHandler = CrashHandler.getInstance ( );
+        crashHandler.init ( getApplicationContext ( ), titleStack );
 
     }
 
@@ -145,10 +157,10 @@ public class BaseApplication extends Application {
         return tm.getDeviceId ( );
     }
 
-    public String readCurrentUrl()
+    /*public String readCurrentUrl()
     {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.BASE_INFO, Constants.CURRENT_URL );
-    }
+    }*/
 
     /**
      * 判断网络是否连接

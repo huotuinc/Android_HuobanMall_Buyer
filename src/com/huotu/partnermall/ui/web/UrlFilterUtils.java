@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.ui.WebViewActivity;
 import com.huotu.partnermall.widgets.KJWebView;
@@ -20,12 +21,15 @@ class UrlFilterUtils {
     Context context;
     TextView titleView;
     private Handler mHandler;
+    private
+    BaseApplication application;
 
-    public UrlFilterUtils(Context context, TextView titleView, Handler mHandler)
+    public UrlFilterUtils(Context context, TextView titleView, Handler mHandler, BaseApplication application)
     {
         this.context = context;
         this.titleView = titleView;
         this.mHandler = mHandler;
+        this.application = application;
     }
 
     /**
@@ -58,11 +62,11 @@ class UrlFilterUtils {
             return false;
         }else if(url.contains(Constants.WEB_TAG_FINISH)){
             if(view.canGoBack())
-                view.goBack(null, null);
+                view.goBack(null, null, null);
 
         }else
         {
-            view.loadUrl ( url, titleView, mHandler );
+            view.loadUrl ( url, titleView, mHandler, application );
             return false;
         }
         return false;
