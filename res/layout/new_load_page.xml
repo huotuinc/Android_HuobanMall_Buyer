@@ -5,7 +5,7 @@
     <RelativeLayout
         android:id="@+id/newtitleLayout"
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/main_title_height"
+        android:layout_height="wrap_content"
         android:orientation="horizontal" >
             <include layout="@layout/title_index"></include>
         </RelativeLayout>

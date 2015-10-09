@@ -227,6 +227,8 @@ public class Constants {
 	public static final String WEB_TAG_PAYMENT      = "partnermall520://payment";
 	//用户信息修改
 	public static final String WEB_TAG_USERINFO     = "partnermall520://userinfo?";
+	//联系客服
+	public static final String WEB_CONTACT = "mqqwpa://im/chat";
 
 	//是否测试环境
 	public static final boolean IS_TEST = true;

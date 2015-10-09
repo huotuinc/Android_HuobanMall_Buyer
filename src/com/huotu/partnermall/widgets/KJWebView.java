@@ -231,11 +231,14 @@ class KJWebView extends RelativeLayout {
                         void onReceivedTitle ( WebView view, String title ) {
                             super.onReceivedTitle ( view, title );
                             titleView.setText ( title );
-                            //加入标题队列
-                            PageInfoModel pageInfo = new PageInfoModel ();
-                            pageInfo.setPageTitle ( title );
-                            pageInfo.setPageUrl ( url );
-                            application.titleStack.push ( pageInfo );
+                            if ( null != application )
+                            {
+                                //加入标题队列
+                                PageInfoModel pageInfo = new PageInfoModel ( );
+                                pageInfo.setPageTitle ( title );
+                                pageInfo.setPageUrl ( url );
+                                application.titleStack.push ( pageInfo );
+                            }
                         }
                     }
                                         );
@@ -253,7 +256,7 @@ class KJWebView extends RelativeLayout {
 
         }
 
-        //PreferenceHelper.writeString ( context, Constants.BASE_INFO, Constants.CURRENT_URL, url );
+        PreferenceHelper.writeString ( context, Constants.BASE_INFO, Constants.CURRENT_URL, url );
         KJLoger.i ( url );
     }
 

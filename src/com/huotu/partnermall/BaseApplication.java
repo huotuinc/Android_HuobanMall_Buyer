@@ -157,10 +157,10 @@ public class BaseApplication extends Application {
         return tm.getDeviceId ( );
     }
 
-    /*public String readCurrentUrl()
+    public String readCurrentUrl()
     {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.BASE_INFO, Constants.CURRENT_URL );
-    }*/
+    }
 
     /**
      * 判断网络是否连接

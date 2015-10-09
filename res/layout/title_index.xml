@@ -26,6 +26,7 @@
             android:singleLine="true"
             android:ellipsize="end"/>
 
+
         <ImageView
             android:id="@+id/titleRightImage"
             android:layout_width="@dimen/title_back_width"
@@ -34,7 +35,6 @@
             android:layout_marginRight="10dp"
             android:layout_alignBottom="@+id/titleText"
             android:onClick="onClickButton"/>
-
     </RelativeLayout>
 
 </merge>

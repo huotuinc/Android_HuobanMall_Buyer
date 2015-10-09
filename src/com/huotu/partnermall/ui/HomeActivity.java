@@ -338,7 +338,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        viewPage.loadUrl ( url, titleText, mHandler, application );
+                        viewPage.loadUrl ( url, titleText, null, null );
                         return true;
                     }
 
@@ -378,10 +378,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setSavePassword ( true );
         viewPage.setLoadsImagesAutomatically ( true );
         //首页默认为商户站点 + index
-        viewPage.loadUrl ( application.obtainMerchantUrl ( ), titleText, null, application );
-        //viewPage.loadUrl ( "http://cosytest.51flashmall.com/3447/index.aspx" );
-        JSModel model = new JSModel ( application );
-        viewPage.addJavascriptInterface ( model, "obtainMenuStatus" );
+        viewPage.loadUrl ( application.obtainMerchantUrl ( ), titleText, null, null );
+        //JSModel model = new JSModel ( application );
+        //viewPage.addJavascriptInterface ( model, "obtainMenuStatus" );
 
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
@@ -392,7 +391,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, titleText, mHandler, application );
+                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, HomeActivity.this, titleText, mHandler, application );
                         return filter.shouldOverrideUrlBySFriend ( viewPage, url );
                     }
 
@@ -418,8 +417,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         super.onReceivedError ( view, errorCode, description, failingUrl );
                         //错误页面处理
                         //隐藏菜单栏
-                        bottomMenuLayout.setVisibility ( View.GONE  );
-                        viewPage.loadUrl("file:///android_asset/maintenance.html", titleText, mHandler, application);
+                        //bottomMenuLayout.setVisibility ( View.GONE  );
+                        viewPage.loadUrl("file:///android_asset/maintenance.html", titleText, null, null);
 
                     }
 
@@ -518,9 +517,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             break;
             case R.id.titleRightImage:
             {
-                PageInfoModel pageInfo = application.titleStack.peek ();
                 //当前的url
-                String url = pageInfo.getPageUrl ( );
+                String url = application.readCurrentUrl ();
                 //刷新页面
                 Message msg = mHandler.obtainMessage ( Constants.FRESHEN_PAGE_MESSAGE_TAG, url);
                 mHandler.sendMessage ( msg );
@@ -651,14 +649,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //加载菜单页面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url, titleText, mHandler, application );
+                viewPage.loadUrl ( url, titleText, null, null );
             }
             break;
             case Constants.FRESHEN_PAGE_MESSAGE_TAG:
             {
                 //刷新界面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url, titleText, mHandler, application );
+                viewPage.loadUrl ( url, titleText, null, null );
             }
             break;
             //授权登录
