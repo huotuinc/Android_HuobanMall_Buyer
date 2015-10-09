@@ -337,8 +337,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, titleText, mHandler );
-                        return filter.shouldOverrideUrlBySFriend ( viewPage, url );
+                        viewPage.loadUrl ( url, titleText, mHandler );
+                        return true;
                     }
 
                     @Override
@@ -357,7 +357,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                   );
     }
 
-    private void loadPage()
+    private
+    void loadPage()
     {
         viewPage.setScrollBarStyle ( View.SCROLLBARS_OUTSIDE_OVERLAY );
         viewPage.setVerticalScrollBarEnabled ( false );
