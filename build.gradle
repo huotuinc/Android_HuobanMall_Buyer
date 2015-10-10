@@ -6,12 +6,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:1.3.0'
     }
 }
-apply plugin: 'android'
-
-dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.huotu.android.library:libcropper:1.0'
-}
+apply plugin: 'com.android.application'
 
 allprojects {
     repositories {
@@ -23,18 +18,27 @@ allprojects {
 }
 
 android {
+
+    signingConfigs {
+        huotu {
+            storeFile file("keystore/huotu_fm.keystore")
+            storePassword "huotuheyun"
+            keyAlias "huotu_fm.keystore"
+            keyPassword "huotuheyun"
+        }
+    }
+
     compileSdkVersion 19
     buildToolsVersion "22.0.1"
 
-    defaultConfig{
+    /*defaultConfig{
         applicationId "com.huotu.partnermall.inner"
         minSdkVersion 8
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
-    }
-
-
+        signingConfig signingConfigs.huotu
+    }*/
 
     sourceSets {
         main {
@@ -47,6 +51,16 @@ android {
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
         }
+
+        /*channel{
+            manifest.srcFile '/custom/channel/AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['/custom/channel/res']
+            assets.srcDirs = ['assets']
+        }*/
 
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
@@ -62,33 +76,29 @@ android {
 
     }
 
-    signingConfigs {
-        debug {
-            storeFile file("keystore/huotu_fm.keystore")
-            storePassword "huotuheyun"
-            keyAlias "huotu_fm.keystore"
-            keyPassword "huotuheyun"
-        }
-    }
-
     //打包渠道
     productFlavors {
-
+     /*   channel{
+            applicationId 'com.huotu.partnermall.yaoshengji'
+        }*/
     }
 
-    /*buildTypes{
+    buildTypes{
 
         release{
             minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.huotu
             zipAlignEnabled true
         }
         debug{
-            minifyEnabled true
             signingConfig signingConfigs.huotu
-            zipAlignEnabled true
-            debuggable true
         }
-    }*/
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.huotu.android.library:libcropper:1.0'
 }
 
