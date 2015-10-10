@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_title_height"
+        android:id="@+id/homeTitle">
+
+        <ImageView
+            android:id="@+id/titleLeftImage"
+            android:layout_width="@dimen/title_back_width"
+            android:layout_height="@dimen/title_back_height"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:onClick="onClickButton" />
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/titleLeftImage"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/title_text_color"
+            android:textSize="@dimen/main_title_text_size"
+            android:maxEms="10"
+            android:singleLine="true"
+            android:ellipsize="end"/>
+
+
+        <ImageView
+            android:id="@+id/titleRightImage"
+            android:layout_width="@dimen/title_back_width"
+            android:layout_height="@dimen/title_back_height"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_alignBottom="@+id/titleText"
+            android:onClick="onClickButton"/>
+    </RelativeLayout>
+
+</merge>

@@ -31,14 +31,14 @@ android {
     compileSdkVersion 19
     buildToolsVersion "22.0.1"
 
-    /*defaultConfig{
+    defaultConfig{
         applicationId "com.huotu.partnermall.inner"
         minSdkVersion 8
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
         signingConfig signingConfigs.huotu
-    }*/
+    }
 
     sourceSets {
         main {
@@ -52,7 +52,7 @@ android {
             jniLibs.srcDirs = ['libs']
         }
 
-        /*channel{
+        yaoshengji{
             manifest.srcFile '/custom/channel/AndroidManifest.xml'
             java.srcDirs = ['src']
             resources.srcDirs = ['src']
@@ -60,7 +60,7 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['/custom/channel/res']
             assets.srcDirs = ['assets']
-        }*/
+        }
 
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
@@ -78,9 +78,9 @@ android {
 
     //打包渠道
     productFlavors {
-     /*   channel{
+        yaoshengji{
             applicationId 'com.huotu.partnermall.yaoshengji'
-        }*/
+        }
     }
 
     buildTypes{
