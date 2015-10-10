@@ -250,6 +250,11 @@ public class BaseApplication extends Application {
         }
     }
 
+    public String createUrl(String suffix)
+    {
+        return obtainMerchantUrl() + suffix;
+    }
+
     /**
      * 判断是否配置菜单信息
      * @return

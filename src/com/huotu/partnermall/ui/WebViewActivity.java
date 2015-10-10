@@ -186,6 +186,8 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                 }
                 else
                 {
+                    //清空消息
+                    application.titleStack.clear ();
                     //关闭界面
                     WebViewActivity.this.finish ();
                 }

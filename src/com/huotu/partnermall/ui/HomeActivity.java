@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -34,7 +35,6 @@ import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
-import com.huotu.partnermall.model.JSModel;
 import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.UserSelectData;
@@ -379,8 +379,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setLoadsImagesAutomatically ( true );
         //首页默认为商户站点 + index
         viewPage.loadUrl ( application.obtainMerchantUrl ( ), titleText, null, null );
-        //JSModel model = new JSModel ( application );
-        //viewPage.addJavascriptInterface ( model, "obtainMenuStatus" );
 
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
@@ -405,9 +403,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     @Override
                     public
                     void onPageFinished ( WebView view, String url ) {
-                        super.onPageFinished ( view, url );
                         //页面加载完成后,读取菜单项
 
+                        super.onPageFinished ( view, url );
+                        /*JSModel model = new JSModel ();
+                        view.addJavascriptInterface ( model, "obtainMenuStatus" );*/
                     }
 
                     @Override
@@ -528,10 +528,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //设置界面
                 //设置界面的url
-                //String settingUrl = application.createUrl(Constants.PAGE_TYPE_SETTING);
-                /*String settingUrl = "http://www.baidu.com";
+                String settingUrl = application.createUrl(Constants.PAGE_TYPE_SETTING);
+                //String settingUrl = "http://www.baidu.com";
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, settingUrl);
-                mHandler.sendMessage ( msg );*/
+                mHandler.sendMessage ( msg );
                 /*MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
                 popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );
                 popWindow.setOnDismissListener ( new PoponDismissListener (HomeActivity.this) );*/
@@ -542,7 +542,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 }
                 photo.show ();*/
                 //测试修改用户名
-                userInfoView.show( UserInfoView.Type.Name, null, "方小开");
+                //userInfoView.show( UserInfoView.Type.Name, null, "方小开");
                 //测试弹出时间控件
                 /*if (YEAR == null)
                     initYears();
@@ -560,7 +560,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             case R.id.sideslip_home: {
 
                 //模拟分享
-                String text = "这是我的分享测试数据！~我只是来酱油的！~请不要在意 好不好？？？？？";
+               /* String text = "这是我的分享测试数据！~我只是来酱油的！~请不要在意 好不好？？？？？";
                 String imageurl = "http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg";
                 String title = "江苏华漫";
                 String url = "www.baidu.com";
@@ -607,11 +607,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             }
                         }
                                                 );
-                share.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );
+                share.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );*/
                 //home
-                /*String homeUrl = "http://www.baidu.com";
+                String homeUrl = application.obtainMerchantUrl ();
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, homeUrl);
-                mHandler.sendMessage ( msg );*/
+                mHandler.sendMessage ( msg );
                 //模拟弹出框
                /* MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
                 popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );*/
@@ -783,6 +783,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         for (int i = 0; i < 60; i++) {
             YEAR[i] = curYear - i + "";
 
+        }
+    }
+
+    public class JSModel
+    {
+        @JavascriptInterface
+        public void obtainMenuStatus(String status)
+        {
+            application.isMenuHide = Boolean.parseBoolean ( status );
         }
     }
 }

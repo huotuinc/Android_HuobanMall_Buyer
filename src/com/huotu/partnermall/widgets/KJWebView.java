@@ -21,11 +21,15 @@ import android.widget.TextView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.model.JSModel;
 import com.huotu.partnermall.model.PageInfoModel;
+import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * 自定义webview控件
@@ -131,6 +135,57 @@ class KJWebView extends RelativeLayout {
                                     );
     }
 
+    public String StringstringByEvaluatingJavaScriptFromString(String script)
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            try{
+                Field mp = WebView.class.getDeclaredField("mProvider");
+                mp.setAccessible(true);
+                Object webViewObject = mp.get(this);
+                Field wc = webViewObject.getClass().getDeclaredField("mWebViewCore");
+                wc.setAccessible(true);
+                Object webViewCore = wc.get(webViewObject);
+                Field bf = webViewCore.getClass().getDeclaredField("mBrowserFrame");
+                bf.setAccessible(true);
+                Object browserFrame = bf.get(webViewCore);
+                Method stringByEvaluatingJavaScriptFromString = browserFrame.getClass().getDeclaredMethod ( "stringByEvaluatingJavaScriptFromString", String.class );
+                stringByEvaluatingJavaScriptFromString.setAccessible(true);
+                Object obj_value = stringByEvaluatingJavaScriptFromString.invoke(browserFrame, script);
+                return String.valueOf(obj_value);
+
+            }catch(Exception e) {
+
+                KJLoger.e ( e.getMessage () );
+            }
+            return null;
+
+        }else{
+
+            try{
+
+                Field[]fields= WebView.class.getDeclaredFields();
+                //由webview取到webviewcore
+                Field field_webviewcore = WebView.class.getDeclaredField("mWebViewCore");
+                field_webviewcore.setAccessible(true);
+                Object obj_webviewcore = field_webviewcore.get(this);
+                //由webviewcore取到BrowserFrame
+                Field field_BrowserFrame = obj_webviewcore.getClass().getDeclaredField("mBrowserFrame");
+                field_BrowserFrame.setAccessible(true);
+                Object obj_frame = field_BrowserFrame.get(obj_webviewcore);
+                //获取BrowserFrame对象的stringByEvaluatingJavaScriptFromString方法
+                Method method_stringByEvaluatingJavaScriptFromString = obj_frame.getClass().getMethod ( "stringByEvaluatingJavaScriptFromString", String.class );
+                //执行stringByEvaluatingJavaScriptFromString方法
+                Object obj_value = method_stringByEvaluatingJavaScriptFromString.invoke( obj_frame, script);
+                //返回执行结果
+                return String.valueOf(obj_value);
+            }catch(Exception e) {
+
+                KJLoger.e ( e.getMessage () );
+            }
+            return null;
+        }
+    }
+
     public void setPageTitle(final TextView titleView)
     {
         mWebView.setWebChromeClient ( new WebChromeClient ()
@@ -231,13 +286,17 @@ class KJWebView extends RelativeLayout {
                         void onReceivedTitle ( WebView view, String title ) {
                             super.onReceivedTitle ( view, title );
                             titleView.setText ( title );
-                            if ( null != application )
-                            {
+                            if ( null != application ) {
                                 //加入标题队列
                                 PageInfoModel pageInfo = new PageInfoModel ( );
                                 pageInfo.setPageTitle ( title );
                                 pageInfo.setPageUrl ( url );
                                 application.titleStack.push ( pageInfo );
+                            }
+                            else {
+                                PreferenceHelper.writeString ( context, Constants.BASE_INFO,
+                                                               Constants.CURRENT_URL, url );
+                                KJLoger.i ( url );
                             }
                         }
                     }
@@ -256,8 +315,6 @@ class KJWebView extends RelativeLayout {
 
         }
 
-        PreferenceHelper.writeString ( context, Constants.BASE_INFO, Constants.CURRENT_URL, url );
-        KJLoger.i ( url );
     }
 
     public void goBack(final TextView titleView, Handler mHandler, BaseApplication application)
@@ -296,7 +353,7 @@ class KJWebView extends RelativeLayout {
         mWebView.setScrollBarStyle ( style );
     }
 
-    public void addJavascriptInterface(JSModel jsModel, String jsFunc)
+    public void addJavascriptInterface(HomeActivity.JSModel jsModel, String jsFunc)
     {
         mWebView.addJavascriptInterface ( jsModel, jsFunc );
     }
