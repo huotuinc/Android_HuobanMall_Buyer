@@ -12,21 +12,10 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/sideslip_login_height">
 
-
         <ImageView
             android:layout_width="@dimen/title_back_width"
             android:layout_height="@dimen/title_back_width"
             android:id="@+id/sideslip_setting"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="@dimen/sideslip_login_icon_margin"
-            android:layout_marginStart="@dimen/sideslip_login_icon_margin"
-            android:layout_marginTop="@dimen/sideslip_login_icon_margin"/>
-        <ImageView
-            android:layout_width="@dimen/title_back_width"
-            android:layout_height="@dimen/title_back_width"
-            android:id="@+id/sideslip_home"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
@@ -37,43 +26,94 @@
             android:id="@+id/noAuth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="@dimen/sideslip_login_icon_margin"
+            android:layout_marginStart="@dimen/sideslip_login_icon_margin"
+            android:layout_marginTop="@dimen/sideslip_login_icon_margin"
             android:visibility="visible">
-            <Button
-                android:id="@+id/sideslip_login"
-                android:layout_width="@dimen/sideslip_login_button_width"
-                android:layout_height="@dimen/sideslip_login_button_height"
+            <ImageView
+                android:id="@+id/accountLogo"
+                android:layout_width="@dimen/account_icon_width"
+                android:layout_height="@dimen/account_icon_height"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/accountLogo"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignTop="@+id/accountLogo"
+                android:text="登录"
+                android:textStyle="bold"
                 android:textColor="@color/theme_color"
-                android:text="@string/auth_weixin"
-                android:textSize="16sp"/>
+                android:textSize="@dimen/medium_text_size"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/accountLogo"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignBottom="@+id/accountLogo"
+                android:text="使用微信授权登录"
+                android:textStyle="normal"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/notice_text_size"/>
+
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/getAuth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="@dimen/sideslip_login_icon_margin"
+            android:layout_marginStart="@dimen/sideslip_login_icon_margin"
+            android:layout_marginTop="@dimen/sideslip_login_icon_margin"
             android:visibility="gone">
             <ImageView
                 android:id="@+id/accountIcon"
                 android:layout_width="@dimen/account_icon_width"
                 android:layout_height="@dimen/account_icon_height"
-                android:layout_centerHorizontal="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="10dp">
+                android:layout_alignParentLeft="true">
             </ImageView>
 
             <TextView
                 android:id="@+id/accountName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/accountIcon"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:textSize="@dimen/normal_label"
-                android:textStyle="bold"/>
+                android:layout_toRightOf="@+id/accountIcon"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignTop="@+id/accountIcon"
+                android:textStyle="bold"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/medium_text_size"/>
+            <TextView
+                android:id="@+id/accountType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/accountIcon"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignBottom="@+id/accountIcon"
+                android:textStyle="normal"
+                android:padding="2dp"
+                android:text="普通会员"
+                android:background="@drawable/member_shape"
+                android:textSize="@dimen/notice_text_size"/>
         </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/sideslip_margin"
+            android:background="@color/sideslip_menu_bg"
+            android:layout_alignParentBottom="true">
 
-
+        </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/menuLayout"

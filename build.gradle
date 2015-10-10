@@ -13,9 +13,28 @@ dependencies {
     compile 'com.huotu.android.library:libcropper:1.0'
 }
 
+allprojects {
+    repositories {
+        maven{
+            url="http://repo.51flashmall.com:8081/nexus/content/groups/public/"
+        }
+        jcenter()
+    }
+}
+
 android {
     compileSdkVersion 19
     buildToolsVersion "22.0.1"
+
+    defaultConfig{
+        applicationId "com.huotu.partnermall.inner"
+        minSdkVersion 8
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+    }
+
+
 
     sourceSets {
         main {
@@ -41,22 +60,35 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
 
-        signingConfigs {
-            debug {
-                storeFile file("keystore/huotu_fm.keystore")
-                storePassword "huotuheyun"
-                keyAlias "huotu_fm.keystore"
-                keyPassword "huotuheyun"
-            }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("keystore/huotu_fm.keystore")
+            storePassword "huotuheyun"
+            keyAlias "huotu_fm.keystore"
+            keyPassword "huotuheyun"
         }
     }
-}
-allprojects {
-    repositories {
-        maven{
-            url="http://repo.51flashmall.com:8081/nexus/content/groups/public/"
-        }
-        jcenter()
+
+    //打包渠道
+    productFlavors {
+
     }
+
+    /*buildTypes{
+
+        release{
+            minifyEnabled true
+            signingConfig signingConfigs.huotu
+            zipAlignEnabled true
+        }
+        debug{
+            minifyEnabled true
+            signingConfig signingConfigs.huotu
+            zipAlignEnabled true
+            debuggable true
+        }
+    }*/
 }
 

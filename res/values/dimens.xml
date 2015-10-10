@@ -11,6 +11,8 @@
 
     <!-- 首页Gallery高度 -->
     <dimen name="index_gallery_height">120dp</dimen>
+    <!--侧滑界面间距-->
+    <dimen name="sideslip_margin">15dp</dimen>
     <!-- 首页Gallery高度 -->
 
     <!-- 主界面title高度/功能界面标题高度/界面上边距 -->
@@ -38,7 +40,7 @@
     <dimen name="vertical_menu_height">200dp</dimen>
     <dimen name="vertical_menu_width">250dp</dimen>
     <!--侧滑界面登录模块高度-->
-    <dimen name="sideslip_login_height">180dp</dimen>
+    <dimen name="sideslip_login_height">140dp</dimen>
     <!--侧滑界面登录模块图标边缘间距-->
     <dimen name="sideslip_login_icon_margin">20dp</dimen>
     <!--登录界面登录按钮大小-->

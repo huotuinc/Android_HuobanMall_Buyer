@@ -58,6 +58,7 @@ import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener,
@@ -94,15 +95,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     private RelativeLayout loginLayout;
     //侧滑设置按钮
     private ImageView      loginSetting;
-    //侧滑主页按钮
-    private ImageView      loginHome;
+
     //主菜单容器
     private LinearLayout   mainMenuLayout;
     //未登陆界面
     private RelativeLayout noAuthLayout;
     //侧滑登录按钮
-    private
-    Button loginButton;
+    /*private
+    Button loginButton;*/
     //已授权界面
     private RelativeLayout getAuthLayout;
     //用户头像
@@ -110,6 +110,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     ImageView userLogo;
     //用户名称
     private TextView userName;
+    //用户类型
+    private TextView userType;
 
 
     private long exitTime = 0l;
@@ -134,6 +136,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
     private
     AutnLogin login;
+    //未登录时的头像
+    private ImageView accountLogo;
 
     @Override
     protected
@@ -171,8 +175,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         loginLayout = ( RelativeLayout ) this.findViewById ( R.id.loginLayout );
         loginSetting = ( ImageView ) this.findViewById ( R.id.sideslip_setting );
         loginSetting.setOnClickListener ( this );
-        loginHome = ( ImageView ) this.findViewById ( R.id.sideslip_home );
-        loginHome.setOnClickListener ( this );
 
         //标题栏文字
         titleText = ( TextView ) this.findViewById ( R.id.titleText );
@@ -182,12 +184,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //登录界面区分未得到微信授权、已得到微信授权
         //未得到授权界面
         noAuthLayout = ( RelativeLayout ) this.findViewById ( R.id.noAuth );
-        loginButton = ( Button ) this.findViewById ( R.id.sideslip_login );
+        //loginButton = ( Button ) this.findViewById ( R.id.sideslip_login );
+        accountLogo = ( ImageView ) this.findViewById ( R.id.accountLogo );
 
         //已得到授权界面
         getAuthLayout = ( RelativeLayout ) this.findViewById ( R.id.getAuth );
         userLogo = ( ImageView ) this.findViewById ( R.id.accountIcon );
         userName = ( TextView ) this.findViewById ( R.id.accountName );
+        userType = ( TextView ) this.findViewById ( R.id.accountType );
 
         //初始化底部菜单
         bottomMenuLayout = ( RelativeLayout ) this.findViewById ( R.id.menuL );
@@ -209,12 +213,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             //渲染用户名
             userName.setText ( application.getUserName ( ) );
             userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
+            userType.setTextColor ( SystemTools.obtainColor (
+                                                                 application.obtainMainColor (
+                                                                                             )
+                                                                                 )  );
         }
         else {
             noAuthLayout.setVisibility ( View.VISIBLE );
             getAuthLayout.setVisibility ( View.GONE );
-            loginButton.setTextColor ( resources.getColor ( R.color.theme_color ) );
-            loginButton.setOnClickListener ( this );
+            /*loginButton.setTextColor ( resources.getColor ( R.color.theme_color ) );
+            loginButton.setOnClickListener ( this );*/
+            noAuthLayout.setOnClickListener ( this );
         }
 
     }
@@ -247,7 +256,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                         )
                                        );
         //设置登录按钮背景
-        Drawable loginDrawable = resources.getDrawable ( R.drawable.login_button_draw );
+        /*Drawable loginDrawable = resources.getDrawable ( R.drawable.login_button_draw );
         loginDrawable.setColorFilter (
                 new LightingColorFilter (
                         SystemTools.obtainColor (
@@ -257,7 +266,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                                                            )
                 )
                                      );
-        SystemTools.loadBackground ( loginButton, loginDrawable );
+        SystemTools.loadBackground ( loginButton, loginDrawable );*/
+
+        //设置未登陆按钮
+        Bitmap bitmap = BitmapFactory.decodeResource ( resources, R.drawable.sideslip_login_lefttop_logo );
+        accountLogo.setImageDrawable ( new CircleImageDrawable ( bitmap ) );
 
         //设置设置图标
         SystemTools.loadBackground (
@@ -265,14 +278,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         R.drawable
                                 .sideslip_login_lefttop_setting
                                                     )
-                                   );
-        //设置Home图标
-        SystemTools.loadBackground (
-                loginHome, resources.getDrawable (
-                        R.drawable
-
-                                .sideslip_login_lefttop__home
-                                                 )
                                    );
         //设置登录界面背景
         noAuthLayout.setBackgroundColor (
@@ -299,12 +304,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             //渲染用户名
             userName.setText ( application.getUserName ( ) );
             userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
+            userType.setTextColor ( SystemTools.obtainColor (
+                                                                 application.obtainMainColor (
+                                                                                             )
+                                                                                 ) );
         }
         else {
             noAuthLayout.setVisibility ( View.VISIBLE );
             getAuthLayout.setVisibility ( View.GONE );
-            loginButton.setTextColor ( resources.getColor ( R.color.theme_color ) );
-            loginButton.setOnClickListener ( this );
+            /*loginButton.setTextColor ( resources.getColor ( R.color.theme_color ) );
+            loginButton.setOnClickListener ( this );*/
+            noAuthLayout.setOnClickListener ( this );
         }
 
         //动态加载侧滑菜单
@@ -557,10 +567,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }
             break;
-            case R.id.sideslip_home: {
+            /*case R.id.sideslip_home: {
 
                 //模拟分享
-               /* String text = "这是我的分享测试数据！~我只是来酱油的！~请不要在意 好不好？？？？？";
+               *//* String text = "这是我的分享测试数据！~我只是来酱油的！~请不要在意 好不好？？？？？";
                 String imageurl = "http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg";
                 String title = "江苏华漫";
                 String url = "www.baidu.com";
@@ -607,30 +617,30 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             }
                         }
                                                 );
-                share.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );*/
+                share.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );*//*
                 //home
                 String homeUrl = application.obtainMerchantUrl ();
                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, homeUrl);
                 mHandler.sendMessage ( msg );
                 //模拟弹出框
-               /* MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
-                popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );*/
+               *//* MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
+                popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );*//*
                 //模拟弹出支付界面
-                /*PayPopWindow payPopWindow = new PayPopWindow ( HomeActivity.this, null, null );
+                *//*PayPopWindow payPopWindow = new PayPopWindow ( HomeActivity.this, null, null );
                 payPopWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.BOTTOM, 0, 0 );
-                payPopWindow.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );*/
+                payPopWindow.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );*//*
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }
-            break;
-            case R.id.sideslip_login:
+            break;*/
+            case R.id.noAuth:
             {
                 //微信登录
                 /*ToastUtils.showShortToast ( HomeActivity.this, application );*/
-                //Platform wechat = ShareSDK.getPlatform ( HomeActivity.this, Wechat.NAME );
-                login = new AutnLogin ( HomeActivity.this, mHandler, loginButton );
+                Platform wechat = ShareSDK.getPlatform ( HomeActivity.this, Wechat.NAME );
+                login = new AutnLogin ( HomeActivity.this, mHandler, noAuthLayout );
                 login.authorize ( new Wechat ( HomeActivity.this ) );
-                loginButton.setClickable ( false );
+                noAuthLayout.setClickable ( false );
             }
             break;
             default:
@@ -705,6 +715,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //渲染用户名
                 userName.setText ( application.getUserName ( ) );
                 userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
+                userType.setTextColor (  SystemTools.obtainColor (
+                                                                     application.obtainMainColor (
+                                                                                                 )
+                                                                                     ) );
             }
             break;
             case Constants.MSG_USERID_NO_FOUND:
