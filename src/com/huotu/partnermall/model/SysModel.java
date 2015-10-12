@@ -7,6 +7,17 @@ public
 class SysModel extends BaseBean {
 
     private String packageStr;
+    private String sysMenu;
+
+    public
+    String getSysMenu ( ) {
+        return sysMenu;
+    }
+
+    public
+    void setSysMenu ( String sysMenu ) {
+        this.sysMenu = sysMenu;
+    }
 
     public
     String getPackageStr ( ) {

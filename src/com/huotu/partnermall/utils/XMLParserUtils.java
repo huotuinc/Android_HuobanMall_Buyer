@@ -252,63 +252,42 @@ class XMLParserUtils {
      * @return
      */
     public
-    SysModel readSys(Context context)
-    {
-        SysModel sysModel = new SysModel ();
-        InputStream sysStream = null;
+    SysModel readSys(Context context) {
+        SysModel sysModel = null;
 
-        try {
-            sysStream = context.getAssets ( ).open ( "sys.xml" );
-            XmlPullParser parser = Xml.newPullParser ( );
-            parser.setInput(sysStream, "utf-8");
-            int eventType = parser.getEventType ();
-            while ( eventType != XmlPullParser.END_DOCUMENT )
-            {
-                switch ( eventType )
-                {
-                    case XmlPullParser.START_TAG:
-                    {
-                        //获取标签名
-                        String tagName = parser.getName ();
-                        if(tagName.equals ( "sys_package" ))
-                        {
-                            sysModel.setPackageStr ( parser.nextText () );
-                        }
+        try
+        {
+            XmlResourceParser xmlResourceParser = context.getResources ().getXml ( R.xml.sys_info );
+            sysModel = new SysModel ();
+            //如果没有到文件尾继续执行
+            while (xmlResourceParser.getEventType () != XmlResourceParser.END_DOCUMENT) {
+                //如果是开始标签
+                if (xmlResourceParser.getEventType() == XmlResourceParser.START_TAG) {
+                    //获取标签名称
+                    String name = xmlResourceParser.getName();
+                    //判断标签名称是否等于ID
+                    if(name.equals( Constants.SYS_PACKAGE_INI)){
+                        sysModel.setPackageStr ( xmlResourceParser.nextText ( ) );
                     }
-                    break;
-                    case XmlPullParser.END_TAG:
+                    else if(name.equals ( Constants.SYS_MENU ))
                     {
-
+                        sysModel.setSysMenu ( xmlResourceParser.nextText () );
                     }
-                    break;
-
                 }
-
-                eventType = parser.next ();
+                else if (xmlResourceParser.getEventType() == XmlPullParser.END_TAG) {
+                }
+                //下一个标签
+                xmlResourceParser.next ( );
             }
 
             return sysModel;
         }
-        catch ( XmlPullParserException e )
-        {
-            KJLoger.e ( e.getMessage () );
+        catch (XmlPullParserException e) {
+            KJLoger.exception ( e );
             return null;
-        }
-        catch ( IOException e ) {
-            KJLoger.e ( e.getMessage ( ) );
+        } catch (IOException e) {
+            KJLoger.exception ( e );
             return null;
-        }
-        finally {
-
-            if(null != sysStream)
-            {
-                try {
-                    sysStream.close ();
-                }
-                catch ( IOException e ) {
-                    KJLoger.e ( e.getMessage () );
-                }
-            }
         }
     }
 

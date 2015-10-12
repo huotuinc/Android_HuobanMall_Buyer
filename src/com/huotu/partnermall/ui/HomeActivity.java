@@ -338,7 +338,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         menuView.setCacheMode ( WebSettings.LOAD_NO_CACHE );
 
         //首页默认为商户站点 + index
-        menuView.loadUrl ( Constants.LOCAL_MENU, null, null, null);
+        menuView.loadUrl ( application.readSysMenu (), null, null, null);
         menuView.setWebViewClient (
                 new WebViewClient ( ) {
 

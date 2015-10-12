@@ -200,7 +200,7 @@ public class BaseApplication extends Application {
         // wifi的状态：ConnectivityManager.TYPE_WIFI
         // 3G的状态：ConnectivityManager.TYPE_MOBILE
         NetworkInfo.State state = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-                                    .getState();
+                                    .getState ( );
         return NetworkInfo.State.CONNECTED == state;
     }
 
@@ -237,7 +237,9 @@ public class BaseApplication extends Application {
         //商户菜单
         String merchantMenus = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS );
         //商户类别菜单
-        String merChantCatagory = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_CATAGORY );
+        String merChantCatagory = PreferenceHelper.readString ( getApplicationContext ( ),
+                                                                Constants.MERCHANT_INFO,
+                                                                Constants.MERCHANT_INFO_CATAGORY );
 
         if((null == merchantId) && (null == merchantAlipayKey) && (null == merchantWeixinKey) && (null == merchantMenus) && (null == merChantCatagory))
         {
@@ -283,6 +285,7 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY,  merchant.getAlipayKey ( ));
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_WEIXIN_KEY, merchant.getWeixinKey ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.PREFIX, merchant.getHttpPrefix ( ));
+
     }
 
     public void writeMenus(List<MenuBean> menus)
@@ -465,6 +468,7 @@ public class BaseApplication extends Application {
         if(null != sysModel)
         {
             PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE, sysModel.getPackageStr () );
+            PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_MENU, sysModel.getSysMenu () );
         }
     }
 
@@ -472,5 +476,12 @@ public class BaseApplication extends Application {
     {
         return PreferenceHelper.readString (  getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE );
     }
+
+    public String readSysMenu()
+    {
+        return PreferenceHelper.readString (  getApplicationContext (), Constants.SYS_INFO, Constants.SYS_MENU );
+    }
+
+
 
 }

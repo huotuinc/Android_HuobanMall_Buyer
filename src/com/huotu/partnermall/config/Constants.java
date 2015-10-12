@@ -86,6 +86,11 @@ public class Constants {
 	//app_build
 	public static final String APP_BUILD   = "app_build";
 
+	//系统指定包名
+	public static final String SYS_PACKAGE_INI   = "sys_package";
+	//系统菜单
+	public static final String SYS_MENU   = "sys_menu";
+
 
 	//商户信息
 	public static final String MERCHANT    = "MERCHANT";
