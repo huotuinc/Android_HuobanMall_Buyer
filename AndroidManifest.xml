@@ -96,6 +96,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.huotu.partnermall.ui.guide.GuideActivity"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.huotu.partnermall.ui.login.LoginActivity"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name="com.huotu.partnermall.ui.HomeActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme"

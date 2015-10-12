@@ -341,6 +341,7 @@ public class Constants {
 	 */
 	public static final String SYS_INFO = "sysInfo";
 	public static final String SYS_PACKAGE = "sysPackage";
+	public static final String FIRST_OPEN = "firstOpen";
 
 	/**
 	 * app颜色配置
@@ -349,6 +350,5 @@ public class Constants {
 	public static final String COLOR_MAIN = "mainColor";
 	public static final String COLOR_SECOND = "secondColor";
 
-	public static final String LOCAL_MENU = "http://cosytest.51flashmall.com/bottom.aspx?customerid=3447";
-	
+
 }

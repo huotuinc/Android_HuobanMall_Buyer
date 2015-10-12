@@ -24,6 +24,8 @@ import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.model.SysModel;
 import com.huotu.partnermall.service.LocationService;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.ui.guide.GuideActivity;
+import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PropertiesUtil;
@@ -164,7 +166,28 @@ public class SplashActivity extends BaseActivity {
                                            public void onAnimationEnd(Animation animation) {
                                                if(application.isConn)
                                                {
-                                                   ActivityUtils.getInstance ().skipActivity ( SplashActivity.this, HomeActivity.class );
+                                                   //是否首次安装
+                                                   if(application.isFirst())
+                                                   {
+                                                       ActivityUtils.getInstance ().skipActivity ( SplashActivity.this, GuideActivity.class );
+                                                       //写入初始化数据
+                                                       application.writeInitInfo ( "inited" );
+                                                   }
+                                                   else {
+                                                       //判断是否登录
+                                                       if ( application.isLogin ( ) ) {
+                                                           ActivityUtils.getInstance ( ).skipActivity ( SplashActivity.this, HomeActivity.class );
+
+                                                       }
+                                                       else {
+                                                           ActivityUtils.getInstance ( )
+                                                                        .skipActivity (
+                                                                                SplashActivity
+                                                                                        .this,
+                                                                                LoginActivity.class );
+                                                       }
+                                                   }
+
                                                }
                                            }
                                        });

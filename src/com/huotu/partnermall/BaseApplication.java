@@ -438,6 +438,24 @@ public class BaseApplication extends Application {
         }
     }
 
+    public void writeInitInfo(String initStr)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.FIRST_OPEN, initStr );
+    }
+
+    public boolean isFirst()
+    {
+        String initInfo = PreferenceHelper.readString ( getApplicationContext (), Constants.SYS_INFO, Constants.FIRST_OPEN );
+        if(TextUtils.isEmpty ( initInfo ))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     /**
      * 写入颜色信息
      * @param colorBean

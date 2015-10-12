@@ -637,10 +637,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //微信登录
                 /*ToastUtils.showShortToast ( HomeActivity.this, application );*/
-                Platform wechat = ShareSDK.getPlatform ( HomeActivity.this, Wechat.NAME );
+                /*Platform wechat = ShareSDK.getPlatform ( HomeActivity.this, Wechat.NAME );
                 login = new AutnLogin ( HomeActivity.this, mHandler, noAuthLayout );
                 login.authorize ( new Wechat ( HomeActivity.this ) );
-                noAuthLayout.setClickable ( false );
+                noAuthLayout.setClickable ( false );*/
             }
             break;
             default:
@@ -667,64 +667,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //刷新界面
                 String url = msg.obj.toString ();
                 viewPage.loadUrl ( url, titleText, null, null );
-            }
-            break;
-            //授权登录
-            case Constants.MSG_AUTH_COMPLETE:
-            {
-                //提示授权成功
-                Platform plat = ( Platform ) msg.obj;
-                ToastUtils.showShortToast ( HomeActivity.this, "微信授权成功，登陆中" );
-                login.authorize ( plat );
-            }
-            break;
-            case Constants.MSG_AUTH_ERROR:
-            {
-                //提示授权失败
-                ToastUtils.showShortToast ( HomeActivity.this, "微信授权失败" );
-            }
-            break;
-            case Constants.MSG_AUTH_CANCEL:
-            {
-                //提示取消授权
-                ToastUtils.showShortToast ( HomeActivity.this, "微信授权被取消" );
-            }
-            break;
-            case Constants.MSG_USERID_FOUND:
-            {
-                //提示授权成功
-                ToastUtils.showShortToast ( HomeActivity.this, "已经获取用户信息" );
-            }
-            break;
-            case Constants.MSG_LOGIN:
-            {
-                //提示授权成功
-                ToastUtils.showShortToast ( HomeActivity.this, "登录成功" );
-                //登录后更新界面
-                AccountModel account = ( AccountModel ) msg.obj;
-                application.writeMemberInfo ( account.getAccountName ( ), account.getAccountId (
-                                                                                               ),
-                                              account.getAccountIcon ( ), account.getAccountToken ( ) );
-                noAuthLayout.setVisibility ( View.GONE );
-                getAuthLayout.setVisibility ( View.VISIBLE );
-                /*BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application
-                                                             .getUserLogo ( ), R.drawable
-                                                             .ic_login_username, R.drawable
-                                                             .ic_login_username );*/
-                new LoadLogoImageAyscTask (resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username).execute (  );
-                //渲染用户名
-                userName.setText ( application.getUserName ( ) );
-                userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
-                userType.setTextColor (  SystemTools.obtainColor (
-                                                                     application.obtainMainColor (
-                                                                                                 )
-                                                                                     ) );
-            }
-            break;
-            case Constants.MSG_USERID_NO_FOUND:
-            {
-                //提示授权成功
-                ToastUtils.showShortToast ( HomeActivity.this, "获取用户信息失败" );
             }
             break;
             //分享
