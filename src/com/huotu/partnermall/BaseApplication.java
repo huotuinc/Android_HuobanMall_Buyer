@@ -66,13 +66,9 @@ public class BaseApplication extends Application {
     public MyLocationListener mMyLocationListener;
     //底部菜单是否隐藏 true显示， false隐藏
     public boolean isMenuHide = false;
-    //维护跳转页面标题信息栈
+    //维护页面标题信息栈
     public
     Stack< PageInfoModel > titleStack;
-    //维护不弹出新界面页面标题
-    public
-    Stack< PageInfoModel > homeStack;
-
     /**
      * 是否是左划或者返回
      * true 左划
@@ -108,8 +104,6 @@ public class BaseApplication extends Application {
         solveAsyncTaskOnPostExecuteBug ( );
 
         titleStack = new Stack< PageInfoModel > ( );
-        homeStack = new Stack< PageInfoModel > ( );
-
         //加载异常处理模块
         CrashHandler crashHandler = CrashHandler.getInstance ( );
         crashHandler.init ( getApplicationContext ( ), titleStack );

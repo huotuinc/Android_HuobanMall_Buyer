@@ -58,7 +58,7 @@ class KJWebView extends RelativeLayout {
         super(context, attrs);
         // TODO Auto-generated constructor stub
         this.context = context;
-        init();
+        init ( );
     }
 
     public KJWebView(Context context, AttributeSet attrs, int defStyle) {
@@ -275,7 +275,7 @@ class KJWebView extends RelativeLayout {
         mWebView.setWebViewClient ( value );
     }
 
-    public void loadUrl( final String url, final TextView titleView, Handler mHandler, final BaseApplication application){
+    public void loadUrl( final String url, final TextView titleView, final Handler mHandler, final BaseApplication application){
         mWebView.loadUrl ( url );
         if(null != titleView && !"".equals ( titleView ))
         {
@@ -287,11 +287,30 @@ class KJWebView extends RelativeLayout {
                             super.onReceivedTitle ( view, title );
                             titleView.setText ( title );
                             if ( null != application ) {
+
                                 //加入标题队列
-                                PageInfoModel pageInfo = new PageInfoModel ( );
-                                pageInfo.setPageTitle ( title );
-                                pageInfo.setPageUrl ( url );
-                                application.titleStack.push ( pageInfo );
+                                if(!"商品详情".equals ( title )) {
+                                    PageInfoModel pageInfo = new PageInfoModel ( );
+                                    pageInfo.setPageTitle ( title );
+                                    pageInfo.setPageUrl ( url );
+                                    application.titleStack.push ( pageInfo );
+                                }
+                                if(null != mHandler)
+                                {
+                                    if(url.contains ( "back" ))
+                                    {
+                                        //application.titleStack.clear ();
+                                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                                    }
+                                    else {
+                                        if ( canGoBack ( ) ) {
+                                            mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+                                        }
+                                        else {
+                                            mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                                        }
+                                    }
+                                }
                             }
                             else {
                                 PreferenceHelper.writeString ( context, Constants.BASE_INFO,
@@ -301,18 +320,6 @@ class KJWebView extends RelativeLayout {
                         }
                     }
                                         );
-        }
-        if(null != mHandler)
-        {
-            if(canGoBack())
-            {
-                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
-            }
-            else
-            {
-                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
-            }
-
         }
 
     }
@@ -327,18 +334,25 @@ class KJWebView extends RelativeLayout {
             {
                 PageInfoModel pageInfo = application.titleStack.peek ( );
                 titleView.setText ( pageInfo.getPageTitle () );
+                //mWebView.loadUrl ( pageInfo.getPageUrl ());
             }
             else if(!application.titleStack.isEmpty () && 1 < application.titleStack.size ())
             {
                 application.titleStack.pop ();
                 PageInfoModel pageInfo = application.titleStack.peek ( );
                 titleView.setText ( pageInfo.getPageTitle () );
+                //mWebView.loadUrl ( pageInfo.getPageUrl ());
             }
         }
 
         if(null != mHandler)
         {
-            mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+                if ( canGoBack ( ) ) {
+                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+                }
+                else {
+                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+            }
         }
 
     }

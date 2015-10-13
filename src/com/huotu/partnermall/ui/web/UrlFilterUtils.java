@@ -102,7 +102,7 @@ class UrlFilterUtils {
             bundle.putString ( Constants.INTENT_URL, url );
             ActivityUtils.getInstance ().showActivity ( aty,  WebViewActivity.class, bundle);
             return true;*/
-            view.loadUrl ( url, titleView, null, null );
+            view.loadUrl ( url, titleView, mHandler, application );
             return false;
         }
         return false;

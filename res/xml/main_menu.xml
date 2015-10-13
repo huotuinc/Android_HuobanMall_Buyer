@@ -5,28 +5,28 @@
         <menu_name>个人中心</menu_name>
         <menu_tag>personal</menu_tag>
         <menu_icon>sideslip_menu_icon_02</menu_icon>
-        <menu_url>personal</menu_url>
+        <menu_url>/UserCenter/Index.aspx?customerid=3447</menu_url>
         <menu_group>2</menu_group>
     </home_menu>
     <home_menu>
         <menu_name>我的订单</menu_name>
         <menu_tag>order</menu_tag>
         <menu_icon>sideslip_menu_icon_01</menu_icon>
-        <menu_url>order</menu_url>
+        <menu_url>/UserCenter/Order/List.aspx?customerid=</menu_url>
         <menu_group>1</menu_group>
     </home_menu>
     <home_menu>
         <menu_name>消息中心</menu_name>
         <menu_tag>messageCenter</menu_tag>
         <menu_icon>sideslip_menu_icon_03</menu_icon>
-        <menu_url>message</menu_url>
+        <menu_url>/UserCenter/notification/NotificationList.aspx?customerid=3447<![CDATA[&]]>userType=1<![CDATA[&]]>userid={1}</menu_url>
         <menu_group>2</menu_group>
     </home_menu>
     <home_menu>
         <menu_name>购物车</menu_name>
         <menu_tag>chart</menu_tag>
         <menu_icon>sideslip_menu_icon_04</menu_icon>
-        <menu_url>cart</menu_url>
+        <menu_url>/Mall/Cart.aspx?customerid=3447</menu_url>
         <menu_group>2</menu_group>
     </home_menu>
     <home_menu>
@@ -40,7 +40,7 @@
         <menu_name>收货地址</menu_name>
         <menu_tag>address</menu_tag>
         <menu_icon>sideslip_menu_icon_06</menu_icon>
-        <menu_url>address</menu_url>
+        <menu_url>/UserCenter/AddrManage/AddressList.aspx?customerid=3447<![CDATA[&]]>userid={1}</menu_url>
         <menu_group>2</menu_group>
     </home_menu>
     <home_menu>

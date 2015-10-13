@@ -206,7 +206,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                 else
                 {
                     //清空消息
-                    application.titleStack.clear ();
+                    application.titleStack.pop ();
                     //关闭界面
                     WebViewActivity.this.finish ();
                 }
@@ -215,7 +215,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
             case R.id.titleRightImage:
             {
                 PageInfoModel pageInfo = application.titleStack.peek ();
-                viewPage.loadUrl ( pageInfo.getPageUrl (), titleText, mHandler, application );
+                viewPage.loadUrl ( pageInfo.getPageUrl (), titleText, null, null );
             }
             break;
             case R.id.titleRightLeftImage:
