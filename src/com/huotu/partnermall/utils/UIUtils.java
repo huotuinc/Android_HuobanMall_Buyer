@@ -129,13 +129,16 @@ class UIUtils {
                                 String url = menu.getMenuUrl ();
                                 if(url.contains ( Constants.CUSTOMER_ID ))
                                 {
-                                    url = url.replace ( Constants.CUSTOMER_ID, "customerid="+application.readMerchantId () );
+                                    url = url.replace ( Constants.CUSTOMER_ID, "customerid=" +
+                                                                               application
+                                                                                       .readMerchantId ( ) );
                                 }
                                 if(url.contains ( Constants.USER_ID ))
                                 {
-                                    url = url.replace ( Constants.USER_ID, "userid="+application.readUserId ( ) );
+                                    url = url.replace ( Constants.USER_ID, "userid=" + application.readUserId ( ) );
                                 }
-
+                                AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), url );
+                                url = paramUtils.obtainUrl ();
                                 //加载具体的页面
                                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, application.obtainMerchantUrl () + url );
                                 mHandler.sendMessage ( msg );

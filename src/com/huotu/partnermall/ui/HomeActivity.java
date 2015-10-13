@@ -659,7 +659,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 String text = "这是我的分享测试数据！~我只是来酱油的！~请不要在意 好不好？？？？？";
                 String imageurl = "http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg";
                 String title = "江苏华漫";
-                String url = application.readCurrentUrl ();
+                String url = application.titleStack.peek ().getPageUrl ();
                 ShareModel msgModel = new ShareModel ();
                 msgModel.setImageUrl ( imageurl);
                 msgModel.setText ( text );

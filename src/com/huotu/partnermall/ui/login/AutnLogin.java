@@ -99,7 +99,7 @@ class AutnLogin {
         account.setAccountName ( accountDb.getUserName ( ) );
         account.setAccountIcon ( accountDb.getUserIcon ( ) );
         account.setAccountToken ( accountDb.getToken ( ) );
-
+        account.setAccountUnionId ( accountDb.get ( "unionid" ) );
         msg.obj = account;
         mHandler.sendMessage ( msg );
     }

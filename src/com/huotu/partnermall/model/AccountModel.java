@@ -16,6 +16,18 @@ class AccountModel implements Serializable {
     private String accountIcon;
     //用户Token
     private String accountToken;
+    //用户unionid
+    private String accountUnionId;
+
+    public
+    String getAccountUnionId ( ) {
+        return accountUnionId;
+    }
+
+    public
+    void setAccountUnionId ( String accountUnionId ) {
+        this.accountUnionId = accountUnionId;
+    }
 
     public
     String getAccountToken ( ) {

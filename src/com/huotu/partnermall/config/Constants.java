@@ -176,6 +176,8 @@ public class Constants {
 	//会员ID
 	public static final String MEMBER_ID                = "member_id";
 	//会员token
+	public static final String MEMBER_UNIONID             = "member_unionid";
+	//会员token
 	public static final String MEMBER_TOKEN             = "member_token";
 	//会员icon
 	public static final String MEMBER_ICON             = "member_icon";
@@ -355,6 +357,8 @@ public class Constants {
 
 	public static final String CUSTOMER_ID = "customerid={}";
 	public static final String USER_ID = "userid={}";
+
+	public static final String APP_ID = "huotu686ad1fe2bd8a02bb";
 
 
 }

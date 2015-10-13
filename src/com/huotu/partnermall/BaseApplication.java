@@ -155,8 +155,10 @@ public class BaseApplication extends Application {
 
     public String readCurrentUrl()
     {
-        return PreferenceHelper.readString ( getApplicationContext ( ), Constants.BASE_INFO,
-                                             Constants.CURRENT_URL );
+        return PreferenceHelper.readString (
+                getApplicationContext ( ), Constants.BASE_INFO,
+                Constants.CURRENT_URL
+                                           );
     }
 
     /**
@@ -317,12 +319,19 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS,  menuStr);
     }
 
-    public void writeMemberInfo(String userName, String userId, String userIcon, String userToken)
+    public void writeMemberInfo(String userName, String userId, String userIcon, String userToken, String unionid)
     {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID, userId );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_NAME, userName );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ICON, userIcon );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN, userToken );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID, unionid );
+    }
+
+    //获取用户unionId
+    public String readUserUnionId()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID );
     }
 
     //获取用户编号
@@ -334,7 +343,8 @@ public class BaseApplication extends Application {
     //获取商户ID
     public String readMerchantId()
     {
-        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID );
+        return PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO,
+                                             Constants.MERCHANT_INFO_ID );
     }
 
     /**

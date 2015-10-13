@@ -117,8 +117,9 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 AccountModel account = ( AccountModel ) msg.obj;
                 //和商城用户系统交互
                 application.writeMemberInfo (
-                        account.getAccountName ( ), "5464",
-                        account.getAccountIcon ( ), account.getAccountToken ( )
+                        account.getAccountName ( ), account.getAccountId (),
+                        account.getAccountIcon ( ), account.getAccountToken ( ),
+                        account.getAccountUnionId ()
                                             );
                 //跳转到首页
                 ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity.class );
