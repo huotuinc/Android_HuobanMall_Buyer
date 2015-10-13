@@ -334,7 +334,7 @@ public class Constants {
 	public static final String APPKEY = "b73ca64567fb49ee963477263283a1bf";
 
 	// 平台安全码
-	public static final String APP_SECRET = "1165a8d240b29af3f418b8d10599d0da";
+	public static final String APP_SECRET = "483686ad1fe2bd8a02bbdca24e109953a4a96c";
 
 	/**
 	 * capCode

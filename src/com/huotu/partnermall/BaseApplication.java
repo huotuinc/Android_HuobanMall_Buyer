@@ -555,7 +555,25 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO,
                                              Constants.WEIXIN_SHARE_SECRET );
     }
-
-
+    //获取商户信息
+    public String readWxParent()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID );
+    }
+    //获取微信支付的APPID
+    public String readWxAppId()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID );
+    }
+    //获取支付宝商户号
+    public String readAliMerchant()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID );
+    }
+    //获取支付宝收款方ID
+    public String readMerchantAli()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID );
+    }
 
 }

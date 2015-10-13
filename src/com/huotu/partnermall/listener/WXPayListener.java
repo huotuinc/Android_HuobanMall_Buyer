@@ -123,10 +123,10 @@ class WXPayListener implements View.OnClickListener {
             WXPayResult payResult = new WXPayResult();
             try
             {
-                WXPayUtilEx wxPay = new WXPayUtilEx(context,
+               /* WXPayUtilEx wxPay = new WXPayUtilEx(context,
                                                     handler, result.getResultData().getWxpayNotifyUri()  );
 
-                payResult =  wxPay.pay( this.body , this.price , productType , productId );
+                payResult =  wxPay.pay( this.body , this.price , productType , productId );*/
 
             } catch (Exception ex)
             {

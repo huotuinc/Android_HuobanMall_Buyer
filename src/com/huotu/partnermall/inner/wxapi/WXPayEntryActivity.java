@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.DeliveryGoodAsyncTask;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.PayGoodBean;
@@ -28,9 +29,10 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 public
 class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEventHandler {
 
-    public static String  WXPAYAPPID = WXPayUtilEx.wxpayAppId;
     private       Handler handler    = new Handler ( this );
     private IWXAPI api;
+    private
+    BaseApplication application;
 
     @Override
     public
@@ -64,9 +66,9 @@ class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEve
     protected
     void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
-        setContentView( R.layout.pay_result);
-
-        api = WXAPIFactory.createWXAPI ( this, WXPAYAPPID );
+        setContentView ( R.layout.pay_result );
+        application = ( BaseApplication ) this.getApplication ();
+        api = WXAPIFactory.createWXAPI ( this, application.readWeixinKey () );
         api.handleIntent ( getIntent ( ), this );
     }
 

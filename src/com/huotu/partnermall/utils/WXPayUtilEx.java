@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Xml;
 
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.model.WXPayResult;
 import com.tencent.mm.sdk.modelpay.PayReq;
@@ -29,11 +30,8 @@ import java.util.Random;
 public
 class WXPayUtilEx {
 
-    public static final String wxpayAppId     = Constants.WXPAY_ID;
-    private             String wxpayParterkey = Constants.wxpayParterkey;
     private String wxpayNotifyUrl;
     // API密钥，在商户平台设置
-    private             String wxpayApikey   = Constants.wxpayApikey;
     public static final int    SDK_WXPAY_PAY = 9001;
 
     // IWXAPI api;
@@ -57,20 +55,19 @@ class WXPayUtilEx {
 
     int productType=0;
     long productId=0;
+    private
+    BaseApplication application;
 
-    public WXPayUtilEx(Context context, Handler handler, String notifyurl)
+    public WXPayUtilEx(Context context, Handler handler, String notifyurl, BaseApplication application)
     {
         this.context = context;
         this.handler = handler;
-
         this.wxpayNotifyUrl = notifyurl;
-
         this.sb=new StringBuffer();
-
         this.req = new PayReq();
-
+        this.application = application;
         msgApi = WXAPIFactory.createWXAPI(context, null);
-        boolean isRegister = msgApi.registerApp(this.wxpayAppId);
+        boolean isRegister = msgApi.registerApp(application.readWeixinKey ());
     }
 
     /**
@@ -204,7 +201,7 @@ class WXPayUtilEx {
             sb.append('&');
         }
         sb.append("key=");
-        sb.append(this.wxpayApikey);
+        sb.append(application.readWxAppId());
 
         String packageSign;
         packageSign = getMessageDigest(sb.toString().getBytes()).toUpperCase(
@@ -284,10 +281,10 @@ class WXPayUtilEx {
 
             xml.append("</xml>");
             List<NameValuePair> packageParams = new LinkedList<NameValuePair> ();
-            packageParams.add(new BasicNameValuePair ("appid", this.wxpayAppId));
+            packageParams.add(new BasicNameValuePair ("appid", application.readWeixinKey ()));
             packageParams.add(new BasicNameValuePair("body", body));
             packageParams.add(new BasicNameValuePair("mch_id",
-                                                     this.wxpayParterkey));
+                                                     application.readWxParent()));
             packageParams.add(new BasicNameValuePair("nonce_str", nonceStr));
             packageParams.add(new BasicNameValuePair("notify_url",
                                                      this.wxpayNotifyUrl));
@@ -329,7 +326,7 @@ class WXPayUtilEx {
             sb.append('&');
         }
         sb.append("key=");
-        sb.append(this.wxpayApikey);
+        sb.append(application.readWxAppId());
 
         this.sb.append("sign str\n" + sb.toString() + "\n\n");
         String appSign = getMessageDigest(sb.toString().getBytes())
@@ -341,8 +338,8 @@ class WXPayUtilEx {
     private void genPayReq()
     {
 
-        req.appId = this.wxpayAppId;// Constant.WX_APPID;
-        req.partnerId = this.wxpayParterkey;// WXPayUtil.PARTERID;
+        req.appId = application.readWeixinKey ();// Constant.WX_APPID;
+        req.partnerId = application.readWxParent();// WXPayUtil.PARTERID;
         req.prepayId = prepay_id;
         req.packageValue = "Sign=WXPay";
         req.nonceStr = genNonceStr();

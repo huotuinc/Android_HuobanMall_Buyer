@@ -59,8 +59,8 @@ class AliPayListener implements View.OnClickListener {
             return;
         }
 
-        AliPayUtil aliPay = new AliPayUtil(aty, handler);
+        /*AliPayUtil aliPay = new AliPayUtil(aty, handler);
 
-        aliPay.pay(body.getSubject (), body.getBody (), body.getPrice (), body.getNotifyurl (), body.getProductType (), body.getProductId ());
+        aliPay.pay(body.getSubject (), body.getBody (), body.getPrice (), body.getNotifyurl (), body.getProductType (), body.getProductId ());*/
     }
 }

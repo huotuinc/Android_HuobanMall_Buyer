@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.alipay.sdk.app.PayTask;
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.model.PayGoodBean;
 
 import java.io.UnsupportedEncodingException;
@@ -20,12 +21,6 @@ import java.util.Random;
  */
 public
 class AliPayUtil {
-
-    // 商户PID
-    public static final String PARTNER = "2088211251545121";
-
-    // 商户收款账号
-    public static final String SELLER = "2088211251545121";//"heyun@chinaswt.cn";
 
     // 商户私钥，pkcs8格式
     public static final String RSA_PRIVATE =
@@ -61,12 +56,15 @@ class AliPayUtil {
     private String out_trade_no = "";
     private int    productType  = 0;
     private long   productId    = 0;
+    private
+    BaseApplication application;
 
 
     public
-    AliPayUtil ( Activity context, Handler handler ) {
+    AliPayUtil ( Activity context, Handler handler, BaseApplication application ) {
         this.handler = handler;
         this.context = context;
+        this.application = application;
     }
 
     public void pay( String subject , String body , String price ,String noticeUrl, final int productType, final long productId ){
@@ -131,10 +129,10 @@ class AliPayUtil {
      */
     public String getOrderInfo( String subject, String body, String price ) {
         // 签约合作者身份ID
-        String orderInfo = "partner=" + "\"" + PARTNER + "\"";
+        String orderInfo = "partner=" + "\"" + application.readAliMerchant () + "\"";
 
         // 签约卖家支付宝账号
-        orderInfo += "&seller_id=" + "\"" + SELLER + "\"";
+        orderInfo += "&seller_id=" + "\"" + application.readMerchantAli() + "\"";
 
         // 商户网站唯一订单号
         this.out_trade_no=getOutTradeNo();

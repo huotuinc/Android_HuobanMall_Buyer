@@ -106,34 +106,17 @@ class AuthParamUtils {
      */
     private String doSort(Map<String, String> map)
     {
-        map.put ( "appSecret", Constants.APP_SECRET );
+        TreeMap<String, String> treeMap = new TreeMap< String, String > ( map );
         StringBuffer buffer = new StringBuffer();
-        List arrayList = new ArrayList (map.entrySet());
-
-        Collections.sort (
-                arrayList, new Comparator ( ) {
-                    public
-                    int compare ( Object arg1, Object arg2 ) {
-                        Map.Entry obj1 = ( Map.Entry ) arg1;
-                        Map.Entry obj2 = ( Map.Entry ) arg2;
-                        return ( obj1.getKey ( ) ).toString ( ).compareTo (
-                                ( String ) obj2.getKey ( )
-                                                                          );
-                    }
-                }
-                         );
-
-        //
-        for (Iterator iter = arrayList.iterator(); iter.hasNext();)
+        Iterator it = treeMap.entrySet ().iterator ();
+        while(it.hasNext ())
         {
-            Map.Entry entry = (Map.Entry) iter.next();
-            String key = (String) entry.getKey();
-            // Log.i("key", key);
-            // Log.i("value", resultMap.get(key));
-            buffer.append(map.get(key));
+            Map.Entry entry =(Map.Entry) it.next();
+            buffer.append ( entry.getKey ()+"=" );
+            buffer.append ( entry.getValue ()+"&" );
         }
-
-        return buffer.toString();
+        String suffix = buffer.substring ( 0, buffer.length ()-1 )+Constants.APP_SECRET;
+        return suffix;
     }
 
 }

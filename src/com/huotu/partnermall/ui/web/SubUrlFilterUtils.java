@@ -8,7 +8,10 @@ import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.model.PayBodyModel;
+import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.ui.WebViewActivity;
+import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.ToastUtils;
@@ -115,11 +118,23 @@ class SubUrlFilterUtils {
             {
                 //支付宝支付
                 ToastUtils.showShortToast ( context, "跳转到支付宝支付" );
+                PayModel payModel = new PayModel ();
+                payModel.setTradeNo ( tradeNo );
+                payModel.setCustomId ( customerID );
+
+                PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
+                payFunc.aliPay ();
             }
             else if("2".equals ( paymentType ) || "9".equals ( paymentType ))
             {
                 //微信支付
                 ToastUtils.showShortToast ( context, "跳转到微信支付" );
+                PayModel payModel = new PayModel ();
+                payModel.setTradeNo ( tradeNo );
+                payModel.setCustomId ( customerID );
+
+                PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
+                payFunc.wxPay ( );
             }
             return true;
 
