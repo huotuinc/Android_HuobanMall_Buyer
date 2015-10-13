@@ -160,10 +160,10 @@ class XMLParserUtils {
             }
             return merchant;
         } catch (XmlPullParserException e) {
-            KJLoger.exception ( e );
+            KJLoger.e ( e.getMessage ( ) );
             return null;
         } catch (IOException e) {
-            KJLoger.exception ( e );
+            KJLoger.e ( e.getMessage ( ) );
             return null;
         }
 
@@ -237,10 +237,10 @@ class XMLParserUtils {
             }
             return menus;
         } catch (XmlPullParserException e) {
-            KJLoger.exception ( e );
+            KJLoger.e ( e.getMessage ( ) );
             return null;
         } catch (IOException e) {
-            KJLoger.exception ( e );
+            KJLoger.e ( e.getMessage ( ) );
             return null;
         }
 
@@ -283,10 +283,10 @@ class XMLParserUtils {
             return sysModel;
         }
         catch (XmlPullParserException e) {
-            KJLoger.exception ( e );
+            KJLoger.e ( e.getMessage ( ) );
             return null;
         } catch (IOException e) {
-            KJLoger.exception ( e );
+            KJLoger.e ( e.getMessage ( ) );
             return null;
         }
     }

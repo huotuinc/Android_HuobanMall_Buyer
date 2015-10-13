@@ -139,6 +139,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     //未登录时的头像
     private ImageView accountLogo;
 
+    private ImageView titleRightLeftImage;
+
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
@@ -197,6 +199,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         bottomMenuLayout = ( RelativeLayout ) this.findViewById ( R.id.menuL );
 
         menuView = ( KJWebView ) this.findViewById ( R.id.menuPage );
+        titleRightLeftImage = ( ImageView ) this.findViewById ( R.id.titleRightLeftImage );
+        titleRightLeftImage.setOnClickListener ( this );
     }
 
     @Override
@@ -247,6 +251,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //设置右侧图标
         Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
         SystemTools.loadBackground ( titleRightImage, rightDraw );
+        //设置分享图片
+        Drawable rightLeftDraw = resources.getDrawable ( R.drawable.home_title_right_share );
+        SystemTools.loadBackground ( titleRightLeftImage, rightLeftDraw );
 
         //设置侧滑界面
         loginLayout.setBackgroundColor (
@@ -399,7 +406,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                                                      ) {
-                        UrlFilterUtils filter = new UrlFilterUtils ( HomeActivity.this, HomeActivity.this, titleText, mHandler, application );
+                        UrlFilterUtils filter = new UrlFilterUtils (
+                                HomeActivity.this,
+                                HomeActivity.this,
+                                titleText, mHandler,
+                                application
+                        );
                         return filter.shouldOverrideUrlBySFriend ( viewPage, url );
                     }
 
@@ -407,7 +419,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onPageStarted ( WebView view, String url, Bitmap favicon ) {
                         super.onPageStarted ( view, url, favicon );
-
                     }
 
                     @Override
@@ -416,22 +427,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //页面加载完成后,读取菜单项
 
                         super.onPageFinished ( view, url );
-                        /*JSModel model = new JSModel ();
-                        view.addJavascriptInterface ( model, "obtainMenuStatus" );*/
                     }
 
                     @Override
                     public
-                    void onReceivedError ( WebView view, int errorCode, String description,
-                                           String failingUrl ) {
+                    void onReceivedError (
+                            WebView view, int errorCode, String description,
+                            String failingUrl
+                                         ) {
                         super.onReceivedError ( view, errorCode, description, failingUrl );
                         //错误页面处理
                         //隐藏菜单栏
                         //bottomMenuLayout.setVisibility ( View.GONE  );
-                        viewPage.loadUrl("file:///android_asset/maintenance.html", titleText, null, null);
+                        viewPage.loadUrl ( "file:///android_asset/maintenance.html", titleText,
+                                           null, null );
 
                     }
-
 
 
                 }
@@ -641,6 +652,58 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 login = new AutnLogin ( HomeActivity.this, mHandler, noAuthLayout );
                 login.authorize ( new Wechat ( HomeActivity.this ) );
                 noAuthLayout.setClickable ( false );*/
+            }
+            break;
+            case R.id.titleRightLeftImage:
+            {
+                String text = "这是我的分享测试数据！~我只是来酱油的！~请不要在意 好不好？？？？？";
+                String imageurl = "http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg";
+                String title = "江苏华漫";
+                String url = application.readCurrentUrl ();
+                ShareModel msgModel = new ShareModel ();
+                msgModel.setImageUrl ( imageurl);
+                msgModel.setText ( text );
+                msgModel.setTitle ( title );
+                msgModel.setUrl ( url );
+                share.initShareParams ( msgModel );
+                share.showShareWindow ( );
+                share.showAtLocation (
+                        findViewById ( R.id.titleRightLeftImage ),
+                        Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0
+                                     );
+                share.setPlatformActionListener (
+                        new PlatformActionListener ( ) {
+                            @Override
+                            public
+                            void onComplete (
+                                    Platform platform, int i, HashMap< String, Object > hashMap
+                                            ) {
+                                Message msg = Message.obtain ();
+                                msg.what = Constants.SHARE_SUCCESS;
+                                msg.obj = platform;
+                                mHandler.sendMessage ( msg );
+                            }
+
+                            @Override
+                            public
+                            void onError ( Platform platform, int i, Throwable throwable ) {
+                                Message msg = Message.obtain ();
+                                msg.what = Constants.SHARE_ERROR;
+                                msg.obj = platform;
+                                mHandler.sendMessage ( msg );
+                            }
+
+                            @Override
+                            public
+                            void onCancel ( Platform platform, int i ) {
+                                Message msg = Message.obtain ();
+                                msg.what = Constants.SHARE_CANCEL;
+                                msg.obj = platform;
+                                mHandler.sendMessage ( msg );
+                            }
+                        }
+                                                );
+                share.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );
             }
             break;
             default:

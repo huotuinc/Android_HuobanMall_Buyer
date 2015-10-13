@@ -31,7 +31,6 @@ class WXPayUtilEx {
 
     public static final String wxpayAppId     = Constants.WXPAY_ID;
     private             String wxpayParterkey = Constants.wxpayParterkey;
-
     private String wxpayNotifyUrl;
     // API密钥，在商户平台设置
     private             String wxpayApikey   = Constants.wxpayApikey;
@@ -63,9 +62,7 @@ class WXPayUtilEx {
     {
         this.context = context;
         this.handler = handler;
-        //this.wxpayAppId = "wxaeda2d5603b12302"; // "wxd8c58460d0199dd5";//
-        // appid;
-        //this.wxpayParterkey = "1251040401";// parterkey;
+
         this.wxpayNotifyUrl = notifyurl;
 
         this.sb=new StringBuffer();

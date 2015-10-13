@@ -235,6 +235,9 @@ public class Constants {
 	//联系客服
 	public static final String WEB_CONTACT = "mqqwpa://im/chat";
 
+	//支付
+	public static final String WEB_PAY = "/Mall/AppAlipay.aspx";
+
 	//是否测试环境
 	public static final boolean IS_TEST = true;
 

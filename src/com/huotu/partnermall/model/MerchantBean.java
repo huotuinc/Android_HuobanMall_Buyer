@@ -13,17 +13,17 @@ class MerchantBean extends BaseBean {
     private String merchantId;
     //商家名称
     private String merchantName;
-    //商家支付宝key
+    //商户私钥(pkcs8)，支付宝商户版获取
     private String alipayKey;
-    //商家微信Key
+    //商户平台的API密钥
     private String weixinKey;
-    //微信商家编号
+    //微信财付通账号(PartnerID)
     private String weixinMerchantId;
-    //商家微信编号
+    //使用微信支付的APPID
     private String merchantWeixinId;
-    //支付宝商户编号
+    //商户号(PartnerID)
     private String alipayMerchantId;
-    //商户支付宝编号
+    //收款商户帐号
     private String merchantAlipayId;
     //umengkey
     private String umengAppkey;

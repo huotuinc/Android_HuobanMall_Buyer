@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -19,13 +20,21 @@ import android.widget.TextView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.PageInfoModel;
+import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.web.SubUrlFilterUtils;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
+import com.huotu.partnermall.widgets.SharePopupWindow;
+
+import java.util.HashMap;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
 
 /**
  * 单张展示web页面
@@ -35,9 +44,9 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
 
     //获取资源文件对象
     private
-    Resources resources;
+    Resources       resources;
     private
-    Handler mHandler;
+    Handler         mHandler;
     //application
     private
     BaseApplication application;
@@ -58,22 +67,27 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
     KJWebView viewPage;
     private String url;
 
+    private ImageView titleRightLeftImage;
+
+    private SharePopupWindow share;
+
     @Override
 
     protected
     void onCreate ( Bundle savedInstanceState ) {
 
         super.onCreate ( savedInstanceState );
-        application = ( BaseApplication ) this.getApplication ();
-        resources = this.getResources ();
+        application = ( BaseApplication ) this.getApplication ( );
+        resources = this.getResources ( );
         this.setContentView ( R.layout.new_load_page );
         setImmerseLayout ( findViewById ( R.id.newtitleLayout ) );
         mHandler = new Handler ( this );
+        share = new SharePopupWindow ( WebViewActivity.this, WebViewActivity.this );
 
-        Bundle bundle = this.getIntent ().getExtras ();
+        Bundle bundle = this.getIntent ( ).getExtras ( );
         url = bundle.getString ( Constants.INTENT_URL );
-        findViewById (  );
-        initView ();
+        findViewById ( );
+        initView ( );
     }
 
     @Override
@@ -87,6 +101,8 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
         titleRightImage.setOnClickListener ( this );
         viewPage = ( KJWebView ) this.findViewById ( R.id.viewPage );
+        titleRightLeftImage = ( ImageView ) this.findViewById ( R.id.titleRightLeftImage );
+        titleRightLeftImage.setOnClickListener ( this );
     }
 
     @Override
@@ -101,6 +117,9 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         //设置右侧图标
         Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
         SystemTools.loadBackground ( titleRightImage, rightDraw );
+        //设置分享图片
+        Drawable rightLeftDraw = resources.getDrawable ( R.drawable.home_title_right_share );
+        SystemTools.loadBackground ( titleRightLeftImage, rightLeftDraw );
 
         loadPage ( );
     }
@@ -197,6 +216,59 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
             {
                 PageInfoModel pageInfo = application.titleStack.peek ();
                 viewPage.loadUrl ( pageInfo.getPageUrl (), titleText, mHandler, application );
+            }
+            break;
+            case R.id.titleRightLeftImage:
+            {
+                String text = "分享测试";
+                String imageurl = "http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg";
+                String title = "江苏华漫";
+                PageInfoModel pageInfo = application.titleStack.peek ();
+                String url = pageInfo.getPageUrl ();
+                ShareModel msgModel = new ShareModel ();
+                msgModel.setImageUrl ( imageurl);
+                msgModel.setText ( text );
+                msgModel.setTitle ( title );
+                msgModel.setUrl ( url );
+                share.initShareParams ( msgModel );
+                share.showShareWindow ( );
+                share.showAtLocation (
+                        findViewById ( R.id.titleRightLeftImage ),
+                        Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0
+                                     );
+                share.setPlatformActionListener (
+                        new PlatformActionListener ( ) {
+                            @Override
+                            public
+                            void onComplete (
+                                    Platform platform, int i, HashMap< String, Object > hashMap
+                                            ) {
+                                Message msg = Message.obtain ();
+                                msg.what = Constants.SHARE_SUCCESS;
+                                msg.obj = platform;
+                                mHandler.sendMessage ( msg );
+                            }
+
+                            @Override
+                            public
+                            void onError ( Platform platform, int i, Throwable throwable ) {
+                                Message msg = Message.obtain ();
+                                msg.what = Constants.SHARE_ERROR;
+                                msg.obj = platform;
+                                mHandler.sendMessage ( msg );
+                            }
+
+                            @Override
+                            public
+                            void onCancel ( Platform platform, int i ) {
+                                Message msg = Message.obtain ();
+                                msg.what = Constants.SHARE_CANCEL;
+                                msg.obj = platform;
+                                mHandler.sendMessage ( msg );
+                            }
+                        }
+                                                );
+                share.setOnDismissListener ( new PoponDismissListener ( WebViewActivity.this ) );
             }
             break;
             default:

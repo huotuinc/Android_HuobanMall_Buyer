@@ -6,14 +6,18 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.ui.WebViewActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.widgets.KJWebView;
+import com.huotu.partnermall.widgets.PayPopWindow;
 
 /**
  * 拦截页面操作类
@@ -47,9 +51,14 @@ class UrlFilterUtils {
      */
     public boolean shouldOverrideUrlBySFriend(KJWebView view, String url) {
         if(url.contains( Constants.WEB_TAG_NEWFRAME)){
-            String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
+            /*String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
             view.loadUrl ( urlStr, titleView, null, null );
-            return false;
+            return false;*/
+            String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
+            Bundle bundle = new Bundle (  );
+            bundle.putString ( Constants.INTENT_URL, urlStr );
+            ActivityUtils.getInstance ().showActivity ( aty,  WebViewActivity.class, bundle);
+            return true;
         }
         else if ( url.contains ( Constants.WEB_CONTACT ) )
         {
@@ -68,25 +77,33 @@ class UrlFilterUtils {
             {
                 //弹出修改密码框
             }
-            return false;
+            return true;
         }else if(url.contains(Constants.WEB_TAG_LOGOUT)){
             //处理登出操作
 
-            return false;
+            return true;
         }else if(url.contains(Constants.WEB_TAG_INFO)){
             //处理信息保护
-            return false;
+            return true;
         }else if(url.contains(Constants.WEB_TAG_FINISH)){
             if(view.canGoBack())
                 view.goBack(null, null, null);
 
-        }else
+        }
+        else if(url.contains ( Constants.WEB_PAY ) )
+        {
+            //支付模块
+
+        }
+        else
         {
             //跳转到新界面
-            Bundle bundle = new Bundle (  );
+            /*Bundle bundle = new Bundle (  );
             bundle.putString ( Constants.INTENT_URL, url );
             ActivityUtils.getInstance ().showActivity ( aty,  WebViewActivity.class, bundle);
-            return true;
+            return true;*/
+            view.loadUrl ( url, titleView, null, null );
+            return false;
         }
         return false;
     }

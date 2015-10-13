@@ -66,9 +66,12 @@ public class BaseApplication extends Application {
     public MyLocationListener mMyLocationListener;
     //底部菜单是否隐藏 true显示， false隐藏
     public boolean isMenuHide = false;
-    //维护标题信息栈
+    //维护跳转页面标题信息栈
     public
     Stack< PageInfoModel > titleStack;
+    //维护不弹出新界面页面标题
+    public
+    Stack< PageInfoModel > homeStack;
 
     /**
      * 是否是左划或者返回
@@ -104,9 +107,8 @@ public class BaseApplication extends Application {
         ShareSDK.initSDK ( getApplicationContext ( ) );
         solveAsyncTaskOnPostExecuteBug ( );
 
-        //配置微信支付环境
-        wApi = WXAPIFactory.createWXAPI ( getApplicationContext ( ), Constants.WXPAY_ID, true );
         titleStack = new Stack< PageInfoModel > ( );
+        homeStack = new Stack< PageInfoModel > ( );
 
         //加载异常处理模块
         CrashHandler crashHandler = CrashHandler.getInstance ( );
@@ -169,7 +171,7 @@ public class BaseApplication extends Application {
     {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
+        NetworkInfo info = cm.getActiveNetworkInfo ( );
         return info != null;// 网络是否连接
     }
 
@@ -264,7 +266,9 @@ public class BaseApplication extends Application {
     public boolean checkMenuInfo()
     {
         //菜单信息
-        String menuStr = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS );
+        String menuStr = PreferenceHelper.readString ( getApplicationContext ( ), Constants
+                                                               .MERCHANT_INFO, Constants
+                                                               .MERCHANT_INFO_MENUS );
         if(null != menuStr && !"".equals ( menuStr.trim () ))
         {
             return  true;
@@ -281,10 +285,32 @@ public class BaseApplication extends Application {
      */
     public void writeMerchantInfo(MerchantBean merchant)
     {
+        //商户ID
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID, merchant.getMerchantId ( ) );
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY,  merchant.getAlipayKey ( ));
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_WEIXIN_KEY, merchant.getWeixinKey ( ) );
+        //版本号
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.APP_VERSION, merchant.getAppVersion ( ) );
+        //APP名称
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.APP_NAME, merchant.getAppName ( ) );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID,  merchant.getWeixinMerchantId ( ));
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID, merchant.getMerchantWeixinId ( ) );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_KEY, merchant.getWeixinKey ( ) );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, merchant.getAlipayMerchantId ( ) );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID, merchant.getMerchantAlipayId ( ) );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.LOCATION_KEY, merchant.getLocationKey ( ) );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY, merchant.getAlipayKey ( ) );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.U_MENG_KEY, merchant.getUmengAppkey ( ) );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.U_MENG_CHANNEL, merchant.getUmengChannel ( ) );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.U_MENG_SECRET, merchant.getUmengMessageSecret ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.PREFIX, merchant.getHttpPrefix ( ));
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.SHARE_KEY, merchant.getShareSDKKey ( ));
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.TENCENT_KEY, merchant.getTencentKey ( ));
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.TENCENT_SECRET, merchant.getTencentSecret ( ));
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.SINA_KEY, merchant.getSinaKey ( ));
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.SINA_SECRET, merchant.getSinaSecret ( ));
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.SINA_REDIRECT_URI, merchant.getSinaRedirectUri ( ));
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.WEIXIN_SHARE_key, merchant.getWeixinShareKey ( ));
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.WEIXIN_SHARE_SECRET, merchant.getWeixinShareSecret ( ));
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.PUSH_KEY, merchant.getPushKey ( ));
 
     }
 
@@ -498,6 +524,19 @@ public class BaseApplication extends Application {
     public String readSysMenu()
     {
         return PreferenceHelper.readString (  getApplicationContext (), Constants.SYS_INFO, Constants.SYS_MENU );
+    }
+
+    //获取微信key
+    public String readWeixinKey()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.WEIXIN_SHARE_key );
+    }
+
+    //获取微信安全码
+    public String readWeixinSecret()
+    {
+        return PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO,
+                                             Constants.WEIXIN_SHARE_SECRET );
     }
 
 
