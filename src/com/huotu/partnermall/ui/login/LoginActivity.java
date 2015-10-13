@@ -115,9 +115,9 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 ToastUtils.showShortToast ( LoginActivity.this, "登录成功" );
                 //登录后更新界面
                 AccountModel account = ( AccountModel ) msg.obj;
+                //和商城用户系统交互
                 application.writeMemberInfo (
-                        account.getAccountName ( ), account.getAccountId (
-                                                                         ),
+                        account.getAccountName ( ), "5464",
                         account.getAccountIcon ( ), account.getAccountToken ( )
                                             );
                 //跳转到首页

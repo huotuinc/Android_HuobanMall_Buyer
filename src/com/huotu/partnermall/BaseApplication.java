@@ -155,7 +155,8 @@ public class BaseApplication extends Application {
 
     public String readCurrentUrl()
     {
-        return PreferenceHelper.readString ( getApplicationContext (), Constants.BASE_INFO, Constants.CURRENT_URL );
+        return PreferenceHelper.readString ( getApplicationContext ( ), Constants.BASE_INFO,
+                                             Constants.CURRENT_URL );
     }
 
     /**
@@ -322,6 +323,18 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_NAME, userName );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ICON, userIcon );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN, userToken );
+    }
+
+    //获取用户编号
+    public String readUserId()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID );
+    }
+
+    //获取商户ID
+    public String readMerchantId()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID );
     }
 
     /**

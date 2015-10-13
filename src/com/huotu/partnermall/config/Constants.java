@@ -353,5 +353,8 @@ public class Constants {
 	public static final String COLOR_MAIN = "mainColor";
 	public static final String COLOR_SECOND = "secondColor";
 
+	public static final String CUSTOMER_ID = "customerid={}";
+	public static final String USER_ID = "userid={}";
+
 
 }

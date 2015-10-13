@@ -125,8 +125,19 @@ class UIUtils {
                             @Override
                             public
                             void onClick ( View v ) {
+
+                                String url = menu.getMenuUrl ();
+                                if(url.contains ( Constants.CUSTOMER_ID ))
+                                {
+                                    url = url.replace ( Constants.CUSTOMER_ID, "customerid="+application.readMerchantId () );
+                                }
+                                if(url.contains ( Constants.USER_ID ))
+                                {
+                                    url = url.replace ( Constants.USER_ID, "userid="+application.readUserId ( ) );
+                                }
+
                                 //加载具体的页面
-                                Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, application.obtainMerchantUrl () + menu.getMenuUrl () );
+                                Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, application.obtainMerchantUrl () + url );
                                 mHandler.sendMessage ( msg );
 
                                 //隐藏侧滑菜单
