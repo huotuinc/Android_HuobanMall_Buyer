@@ -6,15 +6,29 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.AccountModel;
+import com.huotu.partnermall.model.MerchantPayInfo;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
+import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.HttpUtil;
+import com.huotu.partnermall.utils.JSONUtil;
+import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.utils.VolleyHttpUtil;
+
+import org.json.JSONObject;
+
+import java.lang.reflect.Method;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -121,6 +135,19 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                         account.getAccountIcon ( ), account.getAccountToken ( ),
                         account.getAccountUnionId ()
                                             );
+                //获取商户支付信息
+                AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "http://mallapi.huobanj.cn/PayConfig?customerid=3447" );
+                String url = paramUtils.obtainUrls ();
+                JSONUtil<MerchantPayInfo> jsonUtil = new JSONUtil<MerchantPayInfo>();
+                MerchantPayInfo merchantPayInfo = new MerchantPayInfo();
+                String merchantStr = HttpUtil.getInstance ().doGet ( "http://www.baidu.com" );
+                merchantPayInfo = jsonUtil.toBean(merchantStr, merchantPayInfo);
+
+                //赋值
+
+
+
+
                 //跳转到首页
                 ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity.class );
             }

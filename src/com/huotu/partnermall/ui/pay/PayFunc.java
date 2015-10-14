@@ -60,7 +60,7 @@ class PayFunc {
         int productType= 0;
         long productId= 0;
         prepareBuy = new FMPrepareBuy ();
-        String notifyurl= prepareBuy.getResultData().getAlipayNotifyUri();
+        String notifyurl= "";
         aliPay.pay(subject, body, price, notifyurl, productType, productId);
     }
 }

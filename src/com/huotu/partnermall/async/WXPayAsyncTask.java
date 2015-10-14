@@ -47,7 +47,7 @@ class WXPayAsyncTask extends AsyncTask<Void, Void, WXPayResult > {
         try
         {
             WXPayUtilEx wxPay = new WXPayUtilEx(context,
-                                                handler, prepareBuy.getResultData().getWxpayNotifyUri(), application  );
+                                                handler, "", application  );
 
             payResult =  wxPay.pay( this.body , this.price , productType , productId );
 

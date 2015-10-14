@@ -15,13 +15,10 @@ public
 class VolleyHttpUtil {
 
     private String url;
-    private Activity context;
     private JsonObjectRequest request;
 
-    public VolleyHttpUtil(String url, Activity context, JsonObjectRequest request)
+    public VolleyHttpUtil( JsonObjectRequest request)
     {
-        this.url = url;
-        this.context = context;
         this.request = request;
     }
 

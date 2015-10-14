@@ -104,6 +104,51 @@ class AuthParamUtils {
 
     }
 
+    public String obtainUrls()
+    {
+        StringBuilder builder = new StringBuilder (  );
+        try {
+            Map< String, String > paramMap = new HashMap< String, String > ( );
+                //获取url中的参数
+                String params = url.substring ( url.indexOf ( ".aspx?" ) + 6, url.length ( ) );
+                String[] str = params.split ( "&" );
+                if ( str.length > 0 ) {
+                    for ( String map : str ) {
+                        //获取参数
+                        String[] values = map.split ( "=" );
+                        if ( 2 == values.length ) {
+                            paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
+                        }
+                        else if ( 1 == values.length ) {
+                            paramMap.put ( values[ 0 ], null );
+                        }
+                    }
+                }
+
+                //添加额外固定参数
+                //1、timestamp
+                paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
+                //appid
+                paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
+                //生成sigin
+                paramMap.put ( "sign", getSign ( paramMap ) );
+
+                builder.append ( url );
+                builder.append ( "&timestamp="+paramMap.get ( "timestamp" ) );
+                builder.append ( "&appid="+paramMap.get ( "appid" ) );
+                builder.append ( "&sign="+paramMap.get ( "sign" ) );
+
+            return builder.toString ();
+        }
+        catch ( UnsupportedEncodingException e)
+        {
+            // TODO Auto-generated catch block
+            KJLoger.e ( e.getMessage ( ) );
+            return null;
+        }
+
+    }
+
     private String getSign(Map map)
     {
         String values = this.doSort(map);
