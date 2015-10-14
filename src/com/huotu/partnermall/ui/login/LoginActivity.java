@@ -1,5 +1,6 @@
 package com.huotu.partnermall.ui.login;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -137,17 +138,9 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                                             );
                 //获取商户支付信息
                 AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "http://mallapi.huobanj.cn/PayConfig?customerid=3447" );
-                String url = paramUtils.obtainUrls ();
-                JSONUtil<MerchantPayInfo> jsonUtil = new JSONUtil<MerchantPayInfo>();
-                MerchantPayInfo merchantPayInfo = new MerchantPayInfo();
-                String merchantStr = HttpUtil.getInstance ().doGet ( "http://www.baidu.com" );
-                merchantPayInfo = jsonUtil.toBean(merchantStr, merchantPayInfo);
-
+                final String url = paramUtils.obtainUrls ( );
+                HttpUtil.getInstance ().doVolley(LoginActivity.this, application, url);
                 //赋值
-
-
-
-
                 //跳转到首页
                 ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity.class );
             }

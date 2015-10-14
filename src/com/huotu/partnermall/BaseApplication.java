@@ -288,13 +288,8 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.APP_VERSION, merchant.getAppVersion ( ) );
         //APP名称
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.APP_NAME, merchant.getAppName ( ) );
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID,  merchant.getWeixinMerchantId ( ));
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID, merchant.getMerchantWeixinId ( ) );
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_KEY, merchant.getWeixinKey ( ) );
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, merchant.getAlipayMerchantId ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID, merchant.getMerchantAlipayId ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.LOCATION_KEY, merchant.getLocationKey ( ) );
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY, merchant.getAlipayKey ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.U_MENG_KEY, merchant.getUmengAppkey ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.U_MENG_CHANNEL, merchant.getUmengChannel ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.U_MENG_SECRET, merchant.getUmengMessageSecret ( ) );
@@ -576,4 +571,18 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID );
     }
 
+    public void writeAlipay(String parentId, String appKey)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY, appKey );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, parentId );
+    }
+
+    public void writeWx(String parentId, String appId, String appKey)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID,  parentId);
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID, appId );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_KEY, appKey );
+
+
+    }
 }

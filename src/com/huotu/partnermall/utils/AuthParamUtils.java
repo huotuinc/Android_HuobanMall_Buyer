@@ -76,18 +76,21 @@ class AuthParamUtils {
             }
             else
             {
+                paramMap.put ( "customerid", application.readMerchantId ( ) );
                 //添加额外固定参数
                 //1、timestamp
                 paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
                 //appid
                 paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
                 //unionid
-                paramMap.put ( "unionid", URLEncoder.encode ( application.readUserUnionId ( ), "UTF-8" ) );
+                paramMap.put ( "unionid", URLEncoder.encode ( application.readUserUnionId ( ),
+                                                              "UTF-8" ) );
                 //生成sigin
                 paramMap.put ( "sign", getSign ( paramMap ) );
 
                 builder.append ( url );
                 builder.append ( "?timestamp="+paramMap.get ( "timestamp" ) );
+                builder.append ( "&customerid"+application.readMerchantId ( ) );
                 builder.append ( "&appid="+paramMap.get ( "appid" ) );
                 builder.append ( "&unionid="+paramMap.get ( "unionid" ) );
                 builder.append ( "&sign="+paramMap.get ( "sign" ) );
@@ -110,7 +113,7 @@ class AuthParamUtils {
         try {
             Map< String, String > paramMap = new HashMap< String, String > ( );
                 //获取url中的参数
-                String params = url.substring ( url.indexOf ( ".aspx?" ) + 6, url.length ( ) );
+                String params = url.substring ( url.indexOf ( "?" ) + 1, url.length ( ) );
                 String[] str = params.split ( "&" );
                 if ( str.length > 0 ) {
                     for ( String map : str ) {

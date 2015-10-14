@@ -1,5 +1,15 @@
 package com.huotu.partnermall.utils;
 
+import android.content.Context;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.model.MerchantPayInfo;
 import com.mob.tools.network.SSLSocketFactoryEx;
 
 import java.io.IOException;
@@ -13,6 +23,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.security.KeyStore;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
@@ -34,6 +45,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 public class HttpUtil
 {
@@ -305,5 +317,45 @@ public class HttpUtil
         }
         return buffer.toString().substring(1, buffer.length());
     }
+
+    public void doVolley(Context context, final BaseApplication application, String url ){
+        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+
+
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONUtil<MerchantPayInfo > jsonUtil = new JSONUtil<MerchantPayInfo>();
+                MerchantPayInfo merchantPayInfo = new MerchantPayInfo();
+                merchantPayInfo = jsonUtil.toBean(response.toString (), merchantPayInfo);
+                if(null != merchantPayInfo) {
+                    List<MerchantPayInfo.MerchantPayModel> merchantPays = merchantPayInfo.getData ();
+                    if ( ! merchantPays.isEmpty ( ) ) {
+                        for ( MerchantPayInfo.MerchantPayModel merchantPay : merchantPays) {
+
+                            if(400 == merchantPay.getPayType ())
+                            {
+                                //支付宝信息
+                                application.writeAlipay( merchantPay.getPartnerId (),  merchantPay.getAppKey () );
+                            }
+                            else if(300 == merchantPay.getPayType ())
+                            {
+                                //微信支付
+                                application.writeWx( merchantPay.getPartnerId (), merchantPay.getAppId (),  merchantPay.getAppKey () );
+                            }
+                        }
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+
+
+        });
+        Volley.newRequestQueue ( context ).add( re);
+    }
+
 
 }
