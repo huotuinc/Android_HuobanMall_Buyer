@@ -117,8 +117,6 @@
 
     <!--引导界面图片-->
     <string-array name="guide_icon">
-        <item>login_bg</item>
-        <item>splash_bg</item>
-        <item>login_bg</item>
+        <item>newfeature_0</item>
     </string-array>
 </resources>
