@@ -41,6 +41,7 @@ import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
+import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
@@ -388,14 +389,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setSupportZoom ( true );
         viewPage.setBuiltInZoomControls ( true );
         viewPage.setJavaScriptEnabled ( true );
-        viewPage.setCacheMode ( WebSettings.LOAD_NO_CACHE );
+        viewPage.setCacheMode ( WebSettings.LOAD_DEFAULT );
         viewPage.setSaveFormData ( true );
         viewPage.setAllowFileAccess ( true );
         viewPage.setLoadWithOverviewMode ( false );
         viewPage.setSavePassword ( true );
         viewPage.setLoadsImagesAutomatically ( true );
+        viewPage.setDomStorageEnabled(true);
+        //首页鉴权
+        AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ) );
+        String url = paramUtils.obtainUrl ();
         //首页默认为商户站点 + index
-        viewPage.loadUrl ( application.obtainMerchantUrl ( ), titleText, null, application );
+        viewPage.loadUrl ( url, titleText, null, application );
 
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
@@ -443,7 +448,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                            mHandler, application );
 
                     }
-
 
                 }
                                   );

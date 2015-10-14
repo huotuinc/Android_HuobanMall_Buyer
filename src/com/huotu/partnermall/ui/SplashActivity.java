@@ -9,10 +9,12 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
@@ -43,10 +45,10 @@ public class SplashActivity extends BaseActivity {
 
     public static final String TAG = SplashActivity.class.getSimpleName ( );
 
-    private ImageView mSplashItem_iv = null;
+    private RelativeLayout mSplashItem_iv = null;
     private
     BaseApplication application;
-    private Intent locationI = null;
+    private Intent  locationI    = null;
     private boolean isConnection = false;// 假定无网络连接
     private
     MsgPopWindow popWindow;
@@ -54,7 +56,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected
     void findViewById ( ) {
-        mSplashItem_iv = ( ImageView ) findViewById ( R.id.splash_loading_item );
+        mSplashItem_iv = ( RelativeLayout ) findViewById ( R.id.welcomeTips );
     }
 
     @Override
@@ -70,27 +72,30 @@ public class SplashActivity extends BaseActivity {
         Constants.SCREEN_HEIGHT = metrics.heightPixels;
         Constants.SCREEN_WIDTH = metrics.widthPixels;
 
-        mHandler = new Handler ( getMainLooper());
-        findViewById();
-        initView();
+        mHandler = new Handler ( getMainLooper ( ) );
+        findViewById ( );
+        initView ( );
     }
 
     @Override
-    protected void initView() {
-        Animation translate = AnimationUtils.loadAnimation(this,
-                                                           R.anim.splash_loading);
-        translate.setAnimationListener(new AnimationListener() {
+    protected
+    void initView ( ) {
+        AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
+        anima.setDuration(Constants.ANIMATION_COUNT);// 设置动画显示时间
+        mSplashItem_iv.setAnimation(anima);
+        anima.setAnimationListener (
+                new AnimationListener ( ) {
 
-                                           @Override
-                                           public void onAnimationStart(Animation animation) {
-                                               //检测网络
-                                               isConnection = application.checkNet ( SplashActivity.this );
-                                               if(!isConnection)
-                                               {
-                                                   application.isConn = false;
+                    @Override
+                    public
+                    void onAnimationStart ( Animation animation ) {
+                        //检测网络
+                        isConnection = application.checkNet ( SplashActivity.this );
+                        if ( ! isConnection ) {
+                            application.isConn = false;
                                                    //无网络日志
                                                    popWindow = new MsgPopWindow ( SplashActivity.this,  new SettingNetwork(), new CancelNetwork(),  "网络连接错误", "请打开你的网络连接！", false);
-                                                   popWindow.showAtLocation ( SplashActivity.this.findViewById ( R.id.splash_logo ), Gravity.CENTER, 0,0 );
+                                                   popWindow.showAtLocation ( SplashActivity.this.findViewById ( R.id.welcomeTips ), Gravity.CENTER, 0,0 );
                                                    popWindow.setOnDismissListener ( new PoponDismissListener (SplashActivity.this) );
                                                }
                                                else
@@ -191,7 +196,6 @@ public class SplashActivity extends BaseActivity {
                                                }
                                            }
                                        });
-        mSplashItem_iv.setAnimation ( translate );
     }
 
     @Override

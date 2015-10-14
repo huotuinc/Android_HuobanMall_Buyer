@@ -40,37 +40,58 @@ class AuthParamUtils {
         StringBuilder builder = new StringBuilder (  );
         try {
             Map< String, String > paramMap = new HashMap< String, String > ( );
-            //获取url中的参数
-            String params = url.substring ( url.indexOf ( ".aspx?" ) + 6, url.length ( ) );
-            String[] str = params.split ( "&" );
-            if ( str.length > 0 ) {
-                for ( String map : str ) {
-                    //获取参数
-                    String[] values = map.split ( "=" );
-                    if ( 2 == values.length ) {
-                        paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
-                    }
-                    else if ( 1 == values.length ) {
-                        paramMap.put ( values[ 0 ], null );
+            if(!application.obtainMerchantUrl ().equals ( url ))
+            {
+                //获取url中的参数
+                String params = url.substring ( url.indexOf ( ".aspx?" ) + 6, url.length ( ) );
+                String[] str = params.split ( "&" );
+                if ( str.length > 0 ) {
+                    for ( String map : str ) {
+                        //获取参数
+                        String[] values = map.split ( "=" );
+                        if ( 2 == values.length ) {
+                            paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
+                        }
+                        else if ( 1 == values.length ) {
+                            paramMap.put ( values[ 0 ], null );
+                        }
                     }
                 }
+
+                //添加额外固定参数
+                //1、timestamp
+                paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
+                //appid
+                paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
+                //unionid
+                paramMap.put ( "unionid", URLEncoder.encode ( application.readUserUnionId ( ), "UTF-8" ) );
+                //生成sigin
+                paramMap.put ( "sign", getSign ( paramMap ) );
+
+                builder.append ( url );
+                builder.append ( "&timestamp="+paramMap.get ( "timestamp" ) );
+                builder.append ( "&appid="+paramMap.get ( "appid" ) );
+                builder.append ( "&unionid="+paramMap.get ( "unionid" ) );
+                builder.append ( "&sign="+paramMap.get ( "sign" ) );
             }
+            else
+            {
+                //添加额外固定参数
+                //1、timestamp
+                paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
+                //appid
+                paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
+                //unionid
+                paramMap.put ( "unionid", URLEncoder.encode ( application.readUserUnionId ( ), "UTF-8" ) );
+                //生成sigin
+                paramMap.put ( "sign", getSign ( paramMap ) );
 
-            //添加额外固定参数
-            //1、timestamp
-            paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
-            //appid
-            paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
-            //unionid
-            paramMap.put ( "unionid", URLEncoder.encode ( application.readUserUnionId ( ), "UTF-8" ) );
-            //生成sigin
-            paramMap.put ( "sign", getSign ( paramMap ) );
-
-            builder.append ( url );
-            builder.append ( "&timestamp="+paramMap.get ( "timestamp" ) );
-            builder.append ( "&appid="+paramMap.get ( "appid" ) );
-            builder.append ( "&unionid="+paramMap.get ( "unionid" ) );
-            builder.append ( "&sign="+paramMap.get ( "sign" ) );
+                builder.append ( url );
+                builder.append ( "?timestamp="+paramMap.get ( "timestamp" ) );
+                builder.append ( "&appid="+paramMap.get ( "appid" ) );
+                builder.append ( "&unionid="+paramMap.get ( "unionid" ) );
+                builder.append ( "&sign="+paramMap.get ( "sign" ) );
+            }
 
             return builder.toString ();
         }
@@ -106,7 +127,16 @@ class AuthParamUtils {
      */
     private String doSort(Map<String, String> map)
     {
-        TreeMap<String, String> treeMap = new TreeMap< String, String > ( map );
+        //将MAP中的key转成小写
+        Map<String, String> lowerMap = new HashMap< String, String > (  );
+        Iterator lowerIt = map.entrySet ().iterator ();
+        while ( lowerIt.hasNext () )
+        {
+            Map.Entry entry = ( Map.Entry ) lowerIt.next ();
+            lowerMap.put ( String.valueOf ( entry.getKey () ).toLowerCase (), String.valueOf ( entry.getValue () ) );
+        }
+
+        TreeMap<String, String> treeMap = new TreeMap< String, String > ( lowerMap );
         StringBuffer buffer = new StringBuffer();
         Iterator it = treeMap.entrySet ().iterator ();
         while(it.hasNext ())

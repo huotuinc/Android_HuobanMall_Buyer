@@ -11,6 +11,7 @@ import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.model.PayBodyModel;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.ui.WebViewActivity;
+import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.KJLoger;
@@ -138,6 +139,14 @@ class SubUrlFilterUtils {
             }
             return true;
 
+        }
+        else if(url.contains ( Constants.AUTH_FAILURE ))
+        {
+            //鉴权失效
+            //清除登录信息
+            application.logout ();
+            //跳转到登录界面
+            ActivityUtils.getInstance ().skipActivity ( aty, LoginActivity.class );
         }
         else
         {

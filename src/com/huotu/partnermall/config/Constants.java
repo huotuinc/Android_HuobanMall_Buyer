@@ -239,6 +239,8 @@ public class Constants {
 
 	//支付
 	public static final String WEB_PAY = "/Mall/AppAlipay.aspx";
+	//鉴权失效
+	public static final String AUTH_FAILURE = "/UserCenter/Login.aspx";
 
 	//是否测试环境
 	public static final boolean IS_TEST = true;
@@ -340,6 +342,8 @@ public class Constants {
 	 * capCode
 	 */
 	public static final String CAP_CODE = "default";
+
+	public final static int ANIMATION_COUNT = 1000;
 
 	/**
 	 * app系统配置
