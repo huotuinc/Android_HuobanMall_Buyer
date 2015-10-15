@@ -70,8 +70,6 @@ class WXPayUtil {
 
     public static String NotifyUrl = "http://121.14.73.81:8080/agent/wxpay/payNotifyUrl.jsp";
 
-    public static String PARTERID = "1220397601";
-
     /**
      * 微信公众平台商户模块和商户约定的密钥
      *
@@ -176,7 +174,7 @@ class WXPayUtil {
     {
         PayReq req = new PayReq();
         req.appId = Constants.WXPAY_ID;
-        req.partnerId = PARTERID;
+        req.partnerId = application.readWxpayParentId ();
         req.prepayId = result.prepayId;
         req.nonceStr = nonceStr;
         req.timeStamp = String.valueOf(timeStamp);
@@ -362,7 +360,7 @@ class WXPayUtil {
             packageParams.add(new BasicNameValuePair("input_charset", "UTF-8"));
             packageParams.add(new BasicNameValuePair("notify_url", NotifyUrl));
             packageParams.add(new BasicNameValuePair("out_trade_no", genOutTradNo()));
-            packageParams.add(new BasicNameValuePair("partner", PARTERID));
+            packageParams.add(new BasicNameValuePair("partner", application.readWxpayParentId ()));
             packageParams.add(new BasicNameValuePair("spbill_create_ip", getIP() ));
             packageParams.add(new BasicNameValuePair("total_fee", fee));
             String packageValue = genPackage(packageParams);

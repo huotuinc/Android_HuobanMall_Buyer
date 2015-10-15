@@ -201,7 +201,7 @@ class WXPayUtilEx {
             sb.append('&');
         }
         sb.append("key=");
-        sb.append(application.readWxpayAppId ( ));
+        sb.append(application.readWxpayAppKey ( ));
 
         String packageSign;
         packageSign = getMessageDigest(sb.toString().getBytes()).toUpperCase(
@@ -326,7 +326,7 @@ class WXPayUtilEx {
             sb.append('&');
         }
         sb.append("key=");
-        sb.append(application.readWxpayAppId ( ));
+        sb.append(application.readWxpayAppKey ( ));
 
         this.sb.append("sign str\n" + sb.toString() + "\n\n");
         String appSign = getMessageDigest(sb.toString().getBytes())

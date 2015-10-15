@@ -90,7 +90,7 @@ class AuthParamUtils {
 
                 builder.append ( url );
                 builder.append ( "?timestamp="+paramMap.get ( "timestamp" ) );
-                builder.append ( "&customerid"+application.readMerchantId ( ) );
+                builder.append ( "&customerid="+application.readMerchantId ( ) );
                 builder.append ( "&appid="+paramMap.get ( "appid" ) );
                 builder.append ( "&unionid="+paramMap.get ( "unionid" ) );
                 builder.append ( "&sign="+paramMap.get ( "sign" ) );

@@ -416,12 +416,16 @@ public class HttpUtil
                         //支付
                         if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))
                         {
+                            //添加支付宝回调路径
+                            payModel.setNotifyurl ( application.obtainMerchantUrl ()+"Alipay/Notify.aspx" );
                             //alipay
                             PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
                             payFunc.aliPay ();
                         }
                         else if("2".equals ( payModel.getPaymentType () ) || "9".equals ( payModel.getPaymentType () ))
                         {
+                            //添加微信回调路径
+                            payModel.setNotifyurl ( application.obtainMerchantUrl ()+"Weixin/Notify/PaymentNotifyV3.aspx" );
                             PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
                             payFunc.wxPay ( );
                         }

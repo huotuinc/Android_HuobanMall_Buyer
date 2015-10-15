@@ -42,7 +42,7 @@ class OrderModel {
 
     public class OrderData
     {
-        private double Final_Amount;
+        private int Final_Amount;
         private String Tostr;
 
         public
@@ -56,12 +56,12 @@ class OrderModel {
         }
 
         public
-        double getFinal_Amount ( ) {
+        int getFinal_Amount ( ) {
             return Final_Amount;
         }
 
         public
-        void setFinal_Amount ( double final_Amount ) {
+        void setFinal_Amount ( int final_Amount ) {
             Final_Amount = final_Amount;
         }
     }

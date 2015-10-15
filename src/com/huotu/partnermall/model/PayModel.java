@@ -9,12 +9,23 @@ class PayModel extends BaseBean {
     private String customId;
     private String tradeNo;
     private String paymentType;
-    private double amount;
+    private int amount;
     private String detail;
+    private String notifyurl;
 
     public
     String getDetail ( ) {
         return detail;
+    }
+
+    public
+    String getNotifyurl ( ) {
+        return notifyurl;
+    }
+
+    public
+    void setNotifyurl ( String notifyurl ) {
+        this.notifyurl = notifyurl;
     }
 
     public
@@ -23,13 +34,12 @@ class PayModel extends BaseBean {
     }
 
     public
-    double getAmount ( ) {
-
+    int getAmount ( ) {
         return amount;
     }
 
     public
-    void setAmount ( double amount ) {
+    void setAmount ( int amount ) {
         this.amount = amount;
     }
 

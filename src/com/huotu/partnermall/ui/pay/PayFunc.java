@@ -47,7 +47,7 @@ class PayFunc {
         long productId = 0;
         prepareBuy = new FMPrepareBuy ();
         //调用微信支付模块
-        new WXPayAsyncTask (handler, body, price, productType, productId, context, prepareBuy, application).execute();
+        new WXPayAsyncTask (handler, body, price, productType, productId, context, prepareBuy, application, payModel.getNotifyurl ()).execute();
     }
 
     public void aliPay()
@@ -60,8 +60,7 @@ class PayFunc {
         int productType= 0;
         long productId= 0;
         prepareBuy = new FMPrepareBuy ();
-        String notifyurl= "";
-        aliPay.pay(subject, body, price, notifyurl, productType, productId);
+        aliPay.pay(subject, body, price, payModel.getNotifyurl (), productType, productId);
     }
 }
 
