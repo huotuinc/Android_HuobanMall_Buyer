@@ -59,27 +59,27 @@
     <SinaWeibo
         Id="1"
         SortId="1"
-        AppKey="1850373953"
-        AppSecret="c3e809d6c9b25577b8030bb5d3d5c863"
-        RedirectUrl="http://partnermall.buyer.callback.html"
-        ShareByAppClient="false"
+        AppKey="1994677353"
+        AppSecret="0783d8dd1f0eb5a45687cde79aa10108"
+        RedirectUrl="https://api.weibo.com/oauth2/default.html"
+        ShareByAppClient="true"
         Enable="true" />
 
     <TencentWeibo
         Id="5"
         SortId="5"
-        AppKey="1104785503"
-        AppSecret="0j1coHhmuLie67Vl"
-        RedirectUri="http://sharesdk.cn"
+        AppKey="1101260450"
+        AppSecret="qBjXnyJfVgppCpKF"
+        RedirectUri="https://api.weibo.com/oauth2/default.html"
         Enable="false" />
 k
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <QZone
         Id="4"
         SortId="4 "
-        AppId="1104785503"
-        AppKey="0j1coHhmuLie67Vl"
-        ShareByAppClient="false"
+        AppId="1101260450"
+        AppKey="qBjXnyJfVgppCpKF"
+        ShareByAppClient="true"
         Enable="true" />
     
     <!-- 
@@ -121,9 +121,9 @@ k
 	<QQ
         Id="7"
         SortId="7"
-        AppId="1104785503"
-        AppKey="0j1coHhmuLie67Vl"
-        ShareByAppClient="true"
+        AppId="1101260450"
+        AppKey="qBjXnyJfVgppCpKF"
+        ShareByAppClient="false"
         Enable="false" />
     
     <Facebook

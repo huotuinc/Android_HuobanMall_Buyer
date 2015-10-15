@@ -119,24 +119,21 @@ class SharePopupWindow extends PopupWindow {
      */
     private void share(int position) {
 
-        /*if (position == 0) {
+        if (position == 0) {
             //sina分享
             sinaWeibo ( );
-        } else if (position == 1) {
-            //微信朋友圈分享
-            wechatMoments ( );
         } else if(position==2){
             //qq控件分享
             qzone();
-        }else{*/
+        }else{
             Platform plat = null;
             plat = ShareSDK.getPlatform ( context, getPlatform ( position ) );
             if (platformActionListener != null) {
-                plat.setPlatformActionListener(platformActionListener);
+                plat.setPlatformActionListener ( platformActionListener );
             }
 
             plat.share(shareParams);
-        /*}*/
+        }
     }
 
 
@@ -149,10 +146,7 @@ class SharePopupWindow extends PopupWindow {
     public void initShareParams(ShareModel shareModel) {
         if (shareModel != null) {
             Platform.ShareParams sp = new Platform.ShareParams ();
-            sp.setShareType(Platform.SHARE_TEXT);
             sp.setShareType(Platform.SHARE_WEBPAGE);
-            sp.setShareType ( Platform.SHARE_IMAGE );
-            sp.setShareType ( Platform.SHARE_MUSIC );
             sp.setTitle ( shareModel.getText ( ) );
             sp.setText(shareModel.getText());
             sp.setUrl(shareModel.getUrl());
@@ -190,38 +184,18 @@ class SharePopupWindow extends PopupWindow {
      */
     private void qzone() {
         Platform.ShareParams sp = new Platform.ShareParams ();
-        sp.setTitle(shareParams.getTitle());
-        sp.setTitleUrl(shareParams.getUrl()); // 标题的超链接
-        sp.setText(shareParams.getText());
-        sp.setImageUrl(shareParams.getImageUrl());
-        sp.setComment("我对此分享内容的评论");
-        sp.setSite(shareParams.getTitle ( ) );
-        sp.setSiteUrl(shareParams.getUrl ( ) );
-
-        Platform qzone = ShareSDK.getPlatform(context, QZone.NAME);
-
-        qzone.setPlatformActionListener(platformActionListener); // 设置分享事件回调 //
-        // 执行图文分享
-        qzone.share(sp);
-    }
-
-    /**
-     * 分享到微信朋友圈
-     */
-    private void wechatMoments()
-    {
-        Platform.ShareParams sp = new Platform.ShareParams (  );
         sp.setTitle ( shareParams.getTitle ( ) );
         sp.setTitleUrl ( shareParams.getUrl ( ) ); // 标题的超链接
         sp.setText ( shareParams.getText ( ) );
         sp.setImageUrl ( shareParams.getImageUrl ( ) );
+        sp.setComment ( "我对此分享内容的评论" );
         sp.setSite ( shareParams.getTitle ( ) );
         sp.setSiteUrl ( shareParams.getUrl ( ) );
-        Platform moments = ShareSDK.getPlatform ( context, WechatMoments.NAME);
-        moments.setPlatformActionListener ( platformActionListener );
-        //执行分享
-        moments.share ( sp );
-
+        Platform qzone = ShareSDK.getPlatform(context, QZone.NAME);
+        qzone.SSOSetting ( true );
+        qzone.setPlatformActionListener(platformActionListener); // 设置分享事件回调 //
+        // 执行图文分享
+        qzone.share(sp);
     }
 
     /**
@@ -229,7 +203,7 @@ class SharePopupWindow extends PopupWindow {
      */
     private void sinaWeibo()
     {
-        Platform.ShareParams sp = new Platform.ShareParams (  );
+        Platform.ShareParams sp = new Platform.ShareParams ( );
         sp.setTitle ( shareParams.getTitle ( ) );
         sp.setTitleUrl ( shareParams.getUrl ( ) ); // 标题的超链接
         sp.setText ( shareParams.getText ( ) );
@@ -237,7 +211,7 @@ class SharePopupWindow extends PopupWindow {
         sp.setSite ( shareParams.getTitle ( ) );
         sp.setSiteUrl ( shareParams.getUrl ( ) );
         Platform sinaWeibo = ShareSDK.getPlatform ( context, SinaWeibo.NAME );
-
+        sinaWeibo.SSOSetting ( true );
         sinaWeibo.setPlatformActionListener ( platformActionListener );
         //执行分享
         sinaWeibo.share ( sp );
