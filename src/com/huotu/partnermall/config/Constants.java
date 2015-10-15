@@ -171,6 +171,8 @@ public class Constants {
 	public static final String MERCHANT_INFO            = "merchant_info";
 	//会员信息
 	public static final String MEMBER_INFO              = "member_info";
+	//会员等级
+	public static final String MEMBER_level              = "member_level";
 	//会员名称
 	public static final String MEMBER_NAME              = "member_name";
 	//会员ID

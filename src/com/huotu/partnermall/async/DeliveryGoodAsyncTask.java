@@ -49,7 +49,7 @@ class DeliveryGoodAsyncTask extends AsyncTask<Void,Void, FMDeliveryGood > {
 
     @Override
     protected FMDeliveryGood doInBackground(Void... params) {
-        FMDeliveryGood result=null;
+        FMDeliveryGood result = null;
         try {
             return null;
         }

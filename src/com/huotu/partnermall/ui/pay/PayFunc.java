@@ -41,8 +41,8 @@ class PayFunc {
     public void wxPay()
     {
         //根据订单号获取支付信息
-        String body = "";
-        String price = "";
+        String body = payModel.getDetail ();
+        String price = String.valueOf ( payModel.getAmount () );
         int productType = 0;
         long productId = 0;
         prepareBuy = new FMPrepareBuy ();
@@ -54,9 +54,9 @@ class PayFunc {
     {
         AliPayUtil aliPay = new AliPayUtil(aty, handler, application);
         //根据订单号获取订单信息
-        String body = "";
-        String subject = "";
-        String price = "";
+        String body = payModel.getDetail ( );
+        String price = String.valueOf ( payModel.getAmount () );
+        String subject = payModel.getDetail ();
         int productType= 0;
         long productId= 0;
         prepareBuy = new FMPrepareBuy ();

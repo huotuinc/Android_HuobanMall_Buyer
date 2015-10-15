@@ -129,10 +129,10 @@ class AliPayUtil {
      */
     public String getOrderInfo( String subject, String body, String price ) {
         // 签约合作者身份ID
-        String orderInfo = "partner=" + "\"" + application.readAliMerchant () + "\"";
+        String orderInfo = "partner=" + "\"" + application.readAlipayParentId () + "\"";
 
         // 签约卖家支付宝账号
-        orderInfo += "&seller_id=" + "\"" + application.readMerchantAli() + "\"";
+        orderInfo += "&seller_id=" + "\"" + application.readAlipayAppKey () + "\"";
 
         // 商户网站唯一订单号
         this.out_trade_no=getOutTradeNo();

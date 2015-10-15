@@ -481,6 +481,17 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.FIRST_OPEN, initStr );
     }
 
+    //记录会员等级
+    public void writeMemberLevel(String level)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_level, level );
+    }
+
+    public String readMemberLevel()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_level );
+    }
+
     public boolean isFirst()
     {
         String initInfo = PreferenceHelper.readString ( getApplicationContext (), Constants.SYS_INFO, Constants.FIRST_OPEN );
@@ -577,12 +588,44 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, parentId );
     }
 
+    public String readAlipayAppKey()
+    {
+        return PreferenceHelper.readString (
+                getApplicationContext ( ), Constants.MERCHANT_INFO,
+                Constants.ALIPAY_KEY
+                                    );
+    }
+
+    public String readAlipayParentId()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID );
+    }
+
     public void writeWx(String parentId, String appId, String appKey)
     {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID,  parentId);
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID, appId );
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_KEY, appKey );
-
-
+        PreferenceHelper.writeString (
+                getApplicationContext ( ), Constants.MERCHANT_INFO,
+                Constants.WEIXIN_KEY, appKey
+                                     );
     }
+
+    //
+    public String readWxpayParentId()
+    {
+        return PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID );
+    }
+
+    public String readWxpayAppId()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID );
+    }
+
+    public String readWxpayAppKey()
+    {
+        return PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO,
+                                      Constants.WEIXIN_KEY );
+    }
+
 }

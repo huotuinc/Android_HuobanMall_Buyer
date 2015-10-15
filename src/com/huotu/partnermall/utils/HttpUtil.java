@@ -1,6 +1,9 @@
 package com.huotu.partnermall.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -9,7 +12,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.model.MemberModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
+import com.huotu.partnermall.model.OrderModel;
+import com.huotu.partnermall.model.PayModel;
+import com.huotu.partnermall.ui.pay.PayFunc;
 import com.mob.tools.network.SSLSocketFactoryEx;
 
 import java.io.IOException;
@@ -345,6 +352,82 @@ public class HttpUtil
                         }
                     }
                 }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+
+
+        });
+        Volley.newRequestQueue ( context ).add( re);
+    }
+
+    public void doVolleyName(Context context, final BaseApplication application, String url, final TextView userType ){
+        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONUtil<MemberModel > jsonUtil = new JSONUtil<MemberModel>();
+                MemberModel memberIfo = new MemberModel();
+                memberIfo = jsonUtil.toBean(response.toString (), memberIfo);
+                if(null != memberIfo) {
+                    MemberModel.MemberInfo member = memberIfo.getData ();
+                    if ( null != member ) {
+                        //记录会员等级
+                        userType.setText ( member.getLevelName () );
+                        application.writeMemberLevel ( member.getLevelName () );
+                    }
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                application.writeMemberLevel ( "普通会员" );
+            }
+
+
+        });
+        Volley.newRequestQueue ( context ).add( re);
+    }
+
+    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel ){
+        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONUtil<OrderModel > jsonUtil = new JSONUtil<OrderModel>();
+                OrderModel orderInfo = new OrderModel();
+                orderInfo = jsonUtil.toBean(response.toString (), orderInfo);
+                if(null != orderInfo) {
+                    OrderModel.OrderData order = orderInfo.getData ();
+                    payModel.setAmount ( order.getFinal_Amount () );
+                    payModel.setDetail ( order.getTostr () );
+
+                    if ( null != order ) {
+                        //支付
+                        if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))
+                        {
+                            //alipay
+                            PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
+                            payFunc.aliPay ();
+                        }
+                        else if("2".equals ( payModel.getPaymentType () ) || "9".equals ( payModel.getPaymentType () ))
+                        {
+                            PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
+                            payFunc.wxPay ( );
+                        }
+                    }
+                }
+
             }
         }, new Response.ErrorListener() {
             @Override

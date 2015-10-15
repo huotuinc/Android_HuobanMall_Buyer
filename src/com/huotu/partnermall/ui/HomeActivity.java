@@ -25,7 +25,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.Volley;
 import com.huotu.partnermall.AppManager;
 
 import com.huotu.partnermall.BaseApplication;
@@ -42,6 +47,7 @@ import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
@@ -53,6 +59,8 @@ import com.huotu.partnermall.widgets.PhotoSelectView;
 import com.huotu.partnermall.widgets.PopTimeView;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import com.huotu.partnermall.widgets.UserInfoView;
+
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -218,10 +226,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             //渲染用户名
             userName.setText ( application.getUserName ( ) );
             userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
-            userType.setTextColor ( SystemTools.obtainColor (
-                                                                 application.obtainMainColor (
-                                                                                             )
-                                                                                 )  );
+            userType.setTextColor (
+                    SystemTools.obtainColor (
+                            application.obtainMainColor (
+                                                        )
+                                            )
+                                  );
+            userType.setText ( application.readMemberLevel (  ) );
         }
         else {
             noAuthLayout.setVisibility ( View.VISIBLE );
@@ -313,9 +324,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             userName.setText ( application.getUserName ( ) );
             userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
             userType.setTextColor ( SystemTools.obtainColor (
-                                                                 application.obtainMainColor (
-                                                                                             )
-                                                                                 ) );
+                                            application.obtainMainColor (
+                                                                        )
+                                                            ) );
+            //获取用户等级
+            StringBuilder builder = new StringBuilder (  );
+            builder.append ( "http://mallapi.huobanj.cn/Weixin/GetUserLevelName" );
+            builder.append ( "?customerId="+application.readMerchantId ( ) );
+            builder.append ( "&unionId="+application.readUserUnionId ( ) );
+            builder.append ( "&userId=0" );
+            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString () );
+            String nameUrl = param.obtainUrlName ();
+            HttpUtil.getInstance ( ).doVolleyName ( HomeActivity.this, application, nameUrl, userType );
         }
         else {
             noAuthLayout.setVisibility ( View.VISIBLE );

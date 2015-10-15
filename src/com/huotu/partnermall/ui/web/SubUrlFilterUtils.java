@@ -14,6 +14,8 @@ import com.huotu.partnermall.ui.WebViewActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.utils.ActivityUtils;
+import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
@@ -89,6 +91,7 @@ class SubUrlFilterUtils {
             String tradeNo = null;
             String customerID = null;
             String paymentType = null;
+            PayModel payModel = new PayModel ();
             url = url.substring ( url.indexOf ( ".aspx?" )+6, url.length () );
             String[] str = url.split ( "&" );
             for(String map : str)
@@ -99,14 +102,17 @@ class SubUrlFilterUtils {
                     if("trade_no".equals ( values[0] ))
                     {
                         tradeNo = values[1];
+                        payModel.setTradeNo ( tradeNo );
                     }
                     else if("customerID".equals ( values[0] ))
                     {
                         customerID = values[1];
+                        payModel.setCustomId ( customerID );
                     }
                     else if("paymentType".equals ( values[0] ))
                     {
                         paymentType = values[1];
+                        payModel.setPaymentType ( paymentType );
                     }
                 }
                 else
@@ -114,29 +120,13 @@ class SubUrlFilterUtils {
                     KJLoger.i ( "支付参数出错." );
                 }
             }
-
-            if("1".equals ( paymentType ) || "7".equals ( paymentType ))
-            {
-                //支付宝支付
-                ToastUtils.showShortToast ( context, "跳转到支付宝支付" );
-                PayModel payModel = new PayModel ();
-                payModel.setTradeNo ( tradeNo );
-                payModel.setCustomId ( customerID );
-
-                PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
-                payFunc.aliPay ();
-            }
-            else if("2".equals ( paymentType ) || "9".equals ( paymentType ))
-            {
-                //微信支付
-                ToastUtils.showShortToast ( context, "跳转到微信支付" );
-                PayModel payModel = new PayModel ();
-                payModel.setTradeNo ( tradeNo );
-                payModel.setCustomId ( customerID );
-
-                PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
-                payFunc.wxPay ( );
-            }
+            //获取用户等级
+            StringBuilder builder = new StringBuilder (  );
+            builder.append ( "http://mallapi.huobanj.cn/order/GetOrderInfo" );
+            builder.append ( "?orderid="+tradeNo );
+            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString () );
+            String orderUrl = param.obtainUrlOrder ( );
+            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel );
             return true;
 
         }
