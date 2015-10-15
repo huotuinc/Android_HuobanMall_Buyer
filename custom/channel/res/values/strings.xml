@@ -114,4 +114,9 @@
     <string name="pay_result_tip">这个界面用于显示第三方app通过微信支付的结果</string>
     
     <string name="auth_weixin">微信账号登录</string>
+
+    <!--引导界面图片-->
+    <string-array name="guide_icon">
+        <item>newfeature_0</item>
+    </string-array>
 </resources>

@@ -425,6 +425,7 @@ public class HttpUtil
                         else if("2".equals ( payModel.getPaymentType () ) || "9".equals ( payModel.getPaymentType () ))
                         {
                             //添加微信回调路径
+                            payModel.setAmount ( 100 * payModel.getAmount () );
                             payModel.setNotifyurl ( application.obtainMerchantUrl ()+"Weixin/Notify/PaymentNotifyV3.aspx" );
                             PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
                             payFunc.wxPay ( );

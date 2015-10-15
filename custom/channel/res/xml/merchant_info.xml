@@ -12,14 +12,14 @@
     </merchant>
     <!--微信支付信息-->
     <weixinpay>
-        <weixin_merchant_id>111</weixin_merchant_id>
-        <merchant_weixin_id>120</merchant_weixin_id>
+        <weixin_merchant_id>1251040401</weixin_merchant_id>
+        <merchant_weixin_id>0db0d4908a6ae6a09b0a7727878f0ca6</merchant_weixin_id>
         <weixin_key>wx2f2604e380cf6be1</weixin_key>
     </weixinpay>
     <!--支付宝支付信息-->
     <alipay>
-        <alipay_merchant_id>133</alipay_merchant_id>
-        <merchant_alipay_id>120</merchant_alipay_id>
+        <alipay_merchant_id>2088211251545121</alipay_merchant_id>
+        <merchant_alipay_id>2088211251545121</merchant_alipay_id>
         <alipay_key>130</alipay_key>
     </alipay>
     <!--UMENG统计信息-->

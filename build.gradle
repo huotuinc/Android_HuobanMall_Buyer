@@ -52,7 +52,7 @@ android {
             jniLibs.srcDirs = ['libs']
         }
 
-        /*yaoshengji{
+        yaoshengji{
             manifest.srcFile '/custom/channel/AndroidManifest.xml'
             java.srcDirs = ['src']
             resources.srcDirs = ['src']
@@ -61,7 +61,7 @@ android {
             res.srcDirs = ['/custom/channel/res']
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
-        }*/
+        }
 
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
@@ -79,18 +79,16 @@ android {
 
     //打包渠道
     productFlavors {
-        /*yaoshengji{
-            applicationId 'com.huotu.partnermall.yaoshengji'
-        }*/
+        yaoshengji{
+            applicationId 'cy.com.morefan'
+        }
     }
 
     buildTypes{
 
         release{
-            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.huotu
-            zipAlignEnabled true
         }
         debug{
             signingConfig signingConfigs.huotu

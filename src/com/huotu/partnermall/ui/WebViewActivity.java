@@ -22,10 +22,12 @@ import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.PageInfoModel;
+import com.huotu.partnermall.model.PayGoodBean;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.web.SubUrlFilterUtils;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
+import com.huotu.partnermall.utils.AliPayUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
@@ -292,7 +294,73 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
 
     @Override
     public
-    boolean handleMessage ( Message msg ) {
+    boolean handleMessage ( Message msg )
+    {
+        switch ( msg.what )
+        {
+            //分享
+            case Constants.SHARE_SUCCESS:
+            {
+                //分享成功
+                Platform platform = ( Platform ) msg.obj;
+                int action = msg.arg1;
+                if("WechatMoments".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "微信朋友圈分享成功" );
+                }
+                else if("Wechat".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "微信分享成功" );
+                }
+                else if("QZone".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "QQ空间分享成功" );
+                }
+                else if("SinaWeibo".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "sina微博分享成功" );
+                }
+
+            }
+            break;
+            case Constants.SHARE_ERROR:
+            {
+                //分享失败
+                Platform platform = ( Platform ) msg.obj;
+                int action = msg.arg1;
+                ToastUtils.showShortToast ( WebViewActivity.this, platform.getName () + "分享失败" );
+            }
+            break;
+            case Constants.SHARE_CANCEL:
+            {
+                //分享取消
+                Platform platform = ( Platform ) msg.obj;
+                int action = msg.arg1;
+                ToastUtils.showShortToast ( WebViewActivity.this, platform.getName () + "分享取消" );
+            }
+            break;
+            case AliPayUtil.SDK_PAY_FLAG: {
+                PayGoodBean payGoodBean = ( PayGoodBean ) msg.obj;
+                String tag = payGoodBean.getTag ( );
+                String[] tags = tag.split ( ";" );
+                for ( String str:tags )
+                {
+                    if(str.contains ( "resultStatus" ))
+                    {
+                        String code = str.substring ( str.indexOf ( "{" )+1, str.indexOf ( "}" ) );
+                        if(!"9000".equals ( code ))
+                        {
+                            //支付宝支付信息提示
+                            ToastUtils.showShortToast ( WebViewActivity.this, "支付宝支付失败，code:"+code );
+                        }
+                    }
+                }
+            }
+            break;
+            default:
+                break;
+        }
         return false;
+
     }
 }

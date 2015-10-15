@@ -87,4 +87,9 @@
     <dimen name="progress_height">40dp</dimen>
     <!--分享框-->
     <dimen name="share_pop_height">200dp</dimen>
+    <dimen name="loginBtnMargin">50dp</dimen>
+    <!--登录按钮宽度-->
+    <dimen name="loginBtnWidth">150dp</dimen>
+    <!--登录按钮宽度-->
+    <dimen name="loginBtnHeight">60dp</dimen>
 </resources>

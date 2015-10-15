@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/login_bg" >
+    <Button
+        android:id="@+id/loginId"
+        android:layout_width="@dimen/loginBtnWidth"
+        android:layout_height="@dimen/loginBtnHeight"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/loginBtnMargin"
+        android:text="微信授权登录"
+        android:background="@drawable/btn_common"/>
+</RelativeLayout>

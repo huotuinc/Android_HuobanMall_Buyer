@@ -6,10 +6,6 @@
     android:versionCode="1"
     android:versionName="1.0">
 
-    <permission
-        android:name="com.huotu.partnermall.inner.permission.JPUSH_MESSAGE"
-        android:protectionLevel="signature" />
-    <uses-permission android:name="com.huotu.partnermall.inner.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -95,6 +91,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.huotu.partnermall.ui.guide.GuideActivity"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.huotu.partnermall.ui.login.LoginActivity"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
         <activity
             android:name="com.huotu.partnermall.ui.HomeActivity"
             android:launchMode="singleTop"
@@ -200,7 +207,7 @@
             </intent-filter>
         </activity>
         <!--微信分享回调-->
-        <activity android:name="com.huotu.partnermall.inner.wxapi.WXEntryActivity"
+        <activity android:name="cy.com.morefan.wxapi.WXEntryActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
@@ -224,7 +231,7 @@
 
         <!--微信支付回调-->
         <activity
-            android:name="com.huotu.partnermall.inner.wxapi.WXPayEntryActivity"
+            android:name="cy.com.morefan.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"/>
         <receiver
