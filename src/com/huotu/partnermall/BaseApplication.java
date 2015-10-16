@@ -153,6 +153,11 @@ public class BaseApplication extends Application {
         return tm.getDeviceId ( );
     }
 
+    public String readMemberId()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID );
+    }
+
     public String readCurrentUrl()
     {
         return PreferenceHelper.readString (

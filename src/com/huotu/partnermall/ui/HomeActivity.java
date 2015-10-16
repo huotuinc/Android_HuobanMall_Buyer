@@ -207,6 +207,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         menuView = ( KJWebView ) this.findViewById ( R.id.menuPage );
         titleRightLeftImage = ( ImageView ) this.findViewById ( R.id.titleRightLeftImage );
+        titleRightLeftImage.setClickable ( false );
         titleRightLeftImage.setOnClickListener ( this );
     }
 
@@ -330,7 +331,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             builder.append ( "http://mallapi.huobanj.cn/Weixin/GetUserLevelName" );
             builder.append ( "?customerId="+application.readMerchantId ( ) );
             builder.append ( "&unionId="+application.readUserUnionId ( ) );
-            builder.append ( "&userId=0" );
+            builder.append ( "&userId=" + application.readMemberId() );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString () );
             String nameUrl = param.obtainUrlName ();
             HttpUtil.getInstance ( ).doVolleyName ( HomeActivity.this, application, nameUrl, userType );
@@ -389,6 +390,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onPageFinished ( WebView view, String url ) {
                         super.onPageFinished ( view, url );
+                        titleRightImage.setClickable ( true );
                     }
                 }
                                   );
@@ -448,8 +450,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onPageFinished ( WebView view, String url ) {
                         //页面加载完成后,读取菜单项
-
                         super.onPageFinished ( view, url );
+                        //titleRightLeftImage.setClickable ( true );
                     }
 
                     @Override

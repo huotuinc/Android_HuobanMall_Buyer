@@ -104,6 +104,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         titleRightImage.setOnClickListener ( this );
         viewPage = ( KJWebView ) this.findViewById ( R.id.viewPage );
         titleRightLeftImage = ( ImageView ) this.findViewById ( R.id.titleRightLeftImage );
+        titleRightLeftImage.setClickable ( false );
         titleRightLeftImage.setOnClickListener ( this );
     }
 
@@ -171,6 +172,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                     void onPageFinished ( WebView view, String url ) {
                         super.onPageFinished ( view, url );
                         //页面加载完成后,读取菜单项
+                       // titleRightLeftImage.setClickable ( true );
 
                     }
 

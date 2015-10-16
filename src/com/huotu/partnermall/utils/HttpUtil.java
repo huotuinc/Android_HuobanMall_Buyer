@@ -392,6 +392,7 @@ public class HttpUtil
                         //写入userID
                         //并跳转
                         application.writeMemberId ( String.valueOf ( mall.getUserid () ) );
+                        application.writeMemberLevel ( mall.getLevelName () );
                         //跳转到首页
                         ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
                     }
