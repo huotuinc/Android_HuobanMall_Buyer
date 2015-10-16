@@ -4,7 +4,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.android.volley.Request;
@@ -16,6 +18,7 @@ import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
 import com.huotu.partnermall.ui.HomeActivity;
@@ -28,6 +31,8 @@ import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.VolleyHttpUtil;
+import com.huotu.partnermall.widgets.NoticePopWindow;
+import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
 import org.json.JSONObject;
 
@@ -44,11 +49,18 @@ public
 class LoginActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
 
     private
-    Button loginBtn;
+    Button    loginBtn;
     private
     AutnLogin login;
     //handler对象
     public Handler mHandler;
+    public
+    ProgressPopupWindow progress;
+    //windows类
+    WindowManager wManager;
+
+    public
+    NoticePopWindow noticePop;
 
     @Override
     protected
@@ -57,7 +69,9 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
         mHandler = new Handler ( this );
         setContentView ( R.layout.login_ui );
         findViewById ( );
-        initView();
+        initView ( );
+        wManager = this.getWindowManager ( );
+        progress = new ProgressPopupWindow ( LoginActivity.this, LoginActivity.this, wManager );
     }
 
     @Override
@@ -74,12 +88,31 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     }
 
     @Override
+    protected
+    void onDestroy ( ) {
+        super.onDestroy ( );
+        progress.dismissView ( );
+    }
+
+    @Override
+    protected
+    void onResume ( ) {
+        super.onResume ( );
+        progress.dismissView ( );
+        loginBtn.setClickable ( true );
+    }
+
+    @Override
     public
     void onClick ( View v ) {
-        switch ( v.getId () )
-        {
-            case R.id.loginId:
-            {
+        switch ( v.getId ( ) ) {
+            case R.id.loginId: {
+                //
+                progress.showProgress ( );
+                progress.showAtLocation (
+                        findViewById ( R.id.loginId ),
+                        Gravity.CENTER, 0, 0
+                                        );
                 //微信授权登录
                 Platform wechat = ShareSDK.getPlatform ( LoginActivity.this, Wechat.NAME );
                 login = new AutnLogin ( LoginActivity.this, mHandler, loginBtn );
@@ -102,6 +135,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             //授权登录
             case Constants.MSG_AUTH_COMPLETE:
             {
+                progress.dismissView ( );
                 //提示授权成功
                 Platform plat = ( Platform ) msg.obj;
                 ToastUtils.showShortToast ( LoginActivity.this, "微信授权成功，登陆中" );
@@ -110,14 +144,28 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             break;
             case Constants.MSG_AUTH_ERROR:
             {
+                progress.dismissView ( );
                 //提示授权失败
-                ToastUtils.showShortToast ( LoginActivity.this, "微信授权失败" );
+                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权失败");
+                noticePop.showNotice ();
+                noticePop.showAtLocation (
+                        findViewById ( R.id.loginId ),
+                        Gravity.CENTER, 0, 0
+                                         );
+
             }
             break;
             case Constants.MSG_AUTH_CANCEL:
             {
                 //提示取消授权
-                ToastUtils.showShortToast ( LoginActivity.this, "微信授权被取消" );
+                progress.dismissView ();
+                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权被取消");
+                noticePop.showNotice ();
+                noticePop.showAtLocation (
+                        findViewById ( R.id.loginId ),
+                        Gravity.CENTER, 0, 0
+                                         );
+
             }
             break;
             case Constants.MSG_USERID_FOUND:
@@ -150,7 +198,12 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             case Constants.MSG_USERID_NO_FOUND:
             {
                 //提示授权成功
-                ToastUtils.showShortToast ( LoginActivity.this, "获取用户信息失败" );
+                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "获取用户信息失败");
+                noticePop.showNotice ();
+                noticePop.showAtLocation (
+                        findViewById ( R.id.loginId ),
+                        Gravity.CENTER, 0, 0
+                                         );
             }
             break;
         }

@@ -21,7 +21,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/sideslip_login_icon_margin"
             android:layout_marginEnd="@dimen/sideslip_login_icon_margin"
-            android:layout_marginTop="@dimen/sideslip_login_icon_margin"/>
+            android:layout_marginTop="@dimen/sideslip_login_icon_margin"
+            android:visibility="gone"/>
         <RelativeLayout
             android:id="@+id/noAuth"
             android:layout_width="wrap_content"

@@ -3,8 +3,6 @@ package com.huotu.partnermall.ui;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.LightingColorFilter;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -680,7 +678,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             break;
             case R.id.titleRightLeftImage:
             {
-                String text = "这是我的分享测试数据！~我只是来酱油的！~请不要在意 好不好？？？？？";
+                String text = "买家版分享";
                 String imageurl = "http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg";
                 String title = "江苏华漫";
                 String url = application.titleStack.peek ().getPageUrl ();

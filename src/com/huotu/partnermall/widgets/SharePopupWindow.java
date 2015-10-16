@@ -22,6 +22,7 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.tencent.qzone.QZone;
+import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
 
 /**
@@ -119,12 +120,9 @@ class SharePopupWindow extends PopupWindow {
      */
     private void share(int position) {
 
-        if (position == 0) {
-            //sina分享
-            sinaWeibo ( );
-        } else if(position==2){
+       if(position==2){
             //qq控件分享
-            qzone();
+            qzone ( );
         }else{
             Platform plat = null;
             plat = ShareSDK.getPlatform ( context, getPlatform ( position ) );
@@ -165,7 +163,7 @@ class SharePopupWindow extends PopupWindow {
         String platform = "";
         switch (position) {
             case 0:
-                platform = SinaWeibo.NAME;
+                platform = Wechat.NAME;
                 break;
             case 1:
                 platform = WechatMoments.NAME;
@@ -211,7 +209,6 @@ class SharePopupWindow extends PopupWindow {
         sp.setSite ( shareParams.getTitle ( ) );
         sp.setSiteUrl ( shareParams.getUrl ( ) );
         Platform sinaWeibo = ShareSDK.getPlatform ( context, SinaWeibo.NAME );
-        sinaWeibo.SSOSetting ( true );
         sinaWeibo.setPlatformActionListener ( platformActionListener );
         //执行分享
         sinaWeibo.share ( sp );

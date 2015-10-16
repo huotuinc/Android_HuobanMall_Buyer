@@ -72,7 +72,6 @@
         AppSecret="qBjXnyJfVgppCpKF"
         RedirectUri="https://api.weibo.com/oauth2/default.html"
         Enable="false" />
-k
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <QZone
         Id="4"
@@ -100,7 +99,7 @@ k
         AppId="wxe6c5fb423ca4a637"
         AppSecret="99943c3d25c0129539591e54f1a58793"
         BypassApproval="false"
-        Enable="false" />
+        Enable="true" />
     
     <WechatMoments
         Id="3"
