@@ -118,29 +118,20 @@ class AuthParamUtils {
     public
     Map obtainParams(AccountModel account)
     {
-        try {
             Map< String, Object > paramMap = new HashMap< String, Object > ( );
-            paramMap.put ( "customerId", Integer.parseInt ( application.readMerchantId ( ) ) );
-            paramMap.put ( "sex", account.getSex ( ) );
-            paramMap.put ( "nickname", URLEncoder.encode ( account.getNickname ( ), "UTF-8" ) );
-            paramMap.put ( "openid", URLEncoder.encode (  account.getOpenid ( ), "UTF-8" ) );
-            paramMap.put ( "city", URLEncoder.encode ( account.getCity ( ), "UTF-8" ) );
-            paramMap.put ( "country", URLEncoder.encode ( account.getCountry ( ), "UTF-8" ) );
-            paramMap.put ( "province", URLEncoder.encode ( account.getProvince ( ), "UTF-8" ) );
-            paramMap.put ( "headimgurl", URLEncoder.encode ( account.getAccountIcon ( ), "UTF-8" ) );
-            paramMap.put ( "unionid", URLEncoder.encode ( account.getAccountUnionId ( ), "UTF-8" ) );
-            paramMap.put ( "timestamp", timestamp );
-            paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID, "UTF-8" ) );
+            paramMap.put ( "customerId", application.readMerchantId ( ) );
+            paramMap.put ( "sex", String.valueOf ( account.getSex ( ) ) );
+            paramMap.put ( "nickname", account.getNickname ( ) );
+            paramMap.put ( "openid", account.getOpenid ( ) );
+            paramMap.put ( "city", account.getCity ( ) );
+            paramMap.put ( "country", account.getCountry ( ) );
+            paramMap.put ( "province", account.getProvince ( ) );
+            paramMap.put ( "headimgurl", account.getAccountIcon ( ) );
+            paramMap.put ( "unionid", account.getAccountUnionId ( ) );
+            paramMap.put ( "timestamp", String.valueOf ( timestamp ) );
+            paramMap.put ( "appid", Constants.APP_ID );
             paramMap.put ( "sign", getSign ( paramMap ) );
             return paramMap ;
-        }
-        catch ( UnsupportedEncodingException e)
-        {
-            // TODO Auto-generated catch block
-            KJLoger.e ( e.getMessage ( ) );
-            return null;
-        }
-
     }
 
     public String obtainUrls()

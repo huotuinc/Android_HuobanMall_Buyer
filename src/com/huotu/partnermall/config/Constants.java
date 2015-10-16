@@ -244,6 +244,9 @@ public class Constants {
 	//鉴权失效
 	public static final String AUTH_FAILURE = "/UserCenter/Login.aspx";
 
+	//鉴权失效
+	public static final int LOGIN_AUTH_ERROR = 2131;
+
 	//是否测试环境
 	public static final boolean IS_TEST = true;
 

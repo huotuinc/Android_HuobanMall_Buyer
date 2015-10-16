@@ -161,6 +161,11 @@ public class BaseApplication extends Application {
                                            );
     }
 
+    public void writeMemberId(String userId)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID, userId );
+    }
+
     /**
      * 判断网络是否连接
      */

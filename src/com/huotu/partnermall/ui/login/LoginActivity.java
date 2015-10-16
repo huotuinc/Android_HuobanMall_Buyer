@@ -143,6 +143,20 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 login.authorize ( plat );
             }
             break;
+            //授权登录
+            case Constants.LOGIN_AUTH_ERROR:
+            {
+                progress.dismissView ( );
+                //提示授权失败
+                String notice = ( String ) msg.obj;
+                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, notice);
+                noticePop.showNotice ( );
+                noticePop.showAtLocation (
+                        findViewById ( R.id.loginId ),
+                        Gravity.CENTER, 0, 0
+                                         );
+            }
+            break;
             case Constants.MSG_AUTH_ERROR:
             {
                 progress.dismissView ( );
@@ -177,15 +191,13 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             break;
             case Constants.MSG_LOGIN:
             {
-                //提示授权成功
-                ToastUtils.showShortToast ( LoginActivity.this, "登录成功" );
                 //登录后更新界面
                 AccountModel account = ( AccountModel ) msg.obj;
                 //和商城用户系统交互
                 application.writeMemberInfo (
-                        account.getAccountName ( ), account.getAccountId (),
+                        account.getAccountName ( ), account.getAccountId ( ),
                         account.getAccountIcon ( ), account.getAccountToken ( ),
-                        account.getAccountUnionId ()
+                        account.getAccountUnionId ( )
                                             );
                 //获取商户支付信息
                 AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "http://mallapi.huobanj.cn/PayConfig?customerid=3447" );
@@ -193,11 +205,10 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 HttpUtil.getInstance ().doVolley(LoginActivity.this, application, url);
                 //和商家授权
                 final Map param = paramUtils.obtainParams ( account );
-                //String authUrl = "http://mallapi.huobanj.cn/weixin/loginorregister";
-                String authUrl = "http://192.168.1.56:8032/weixin/loginorregister";
-                HttpUtil.getInstance ().doVolley ( LoginActivity.this, application, authUrl, param );
-                //跳转到首页
-                ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity.class );
+                String authUrl = "http://mallapi.huobanj.cn/weixin/loginorregister";
+                //String authUrl = "http://192.168.1.56:8032/weixin/loginorregister";
+                HttpUtil.getInstance ().doVolley ( LoginActivity.this, LoginActivity.this,
+                                                   mHandler, application, authUrl, param );
             }
             break;
             case Constants.MSG_USERID_NO_FOUND:

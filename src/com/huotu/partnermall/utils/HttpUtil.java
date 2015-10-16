@@ -3,6 +3,7 @@ package com.huotu.partnermall.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -12,11 +13,13 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.MemberModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
 import com.huotu.partnermall.model.OrderModel;
 import com.huotu.partnermall.model.PayModel;
+import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.pay.PayFunc;
 import com.mob.tools.network.SSLSocketFactoryEx;
 
@@ -29,6 +32,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.AccessControlContext;
 import java.security.KeyStore;
 import java.util.Iterator;
 import java.util.List;
@@ -371,12 +375,43 @@ public class HttpUtil
         Volley.newRequestQueue ( context ).add( re);
     }
 
-    public void doVolley(Context context, final BaseApplication application, String url, Map param ){
-        final GsonRequest re = new GsonRequest (Request.Method.POST, url, AuthMallModel.class, null, param, new Response.Listener<JSONObject >(){
+    public void doVolley( final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, Map param ){
+        final GsonRequest re = new GsonRequest (Request.Method.POST, url, AuthMallModel.class, null, param, new Response.Listener<AuthMallModel >(){
 
 
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(AuthMallModel response) {
+
+                AuthMallModel authMallModel = new AuthMallModel();
+                authMallModel = response;
+                if(200 == authMallModel.getCode ())
+                {
+                    AuthMallModel.AuthMall mall = authMallModel.getData ();
+                    if(null != mall)
+                    {
+                        //写入userID
+                        //并跳转
+                        application.writeMemberId ( String.valueOf ( mall.getUserid () ) );
+                        //跳转到首页
+                        ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
+                    }
+                    else
+                    {
+                        Message msg = new Message();
+                        msg.what = Constants.LOGIN_AUTH_ERROR;
+                        msg.obj = authMallModel.getMsg ();
+                        mHandler.sendMessage ( msg );
+                    }
+
+                }
+                else
+                {
+                    //授权失败
+                    Message msg = new Message();
+                    msg.what = Constants.LOGIN_AUTH_ERROR;
+                    msg.obj = authMallModel.getMsg ();
+                    mHandler.sendMessage ( msg );
+                }
 
             }
         }, new Response.ErrorListener() {

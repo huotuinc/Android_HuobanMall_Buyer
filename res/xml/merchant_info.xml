@@ -8,7 +8,8 @@
     </appinfo>
     <!--商家信息-->
     <merchant>
-        <app_merchant_id>3447</app_merchant_id>
+        <!--3447-->
+        <app_merchant_id>4493</app_merchant_id>
     </merchant>
     <!--微信支付信息-->
     <weixinpay>
