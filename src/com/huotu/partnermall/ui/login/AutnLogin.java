@@ -95,11 +95,31 @@ class AutnLogin {
 
         PlatformDb accountDb = plat.getDb ();
         AccountModel account = new AccountModel ();
-        account.setAccountId ( accountDb.getUserId () );
+        account.setAccountId ( accountDb.getUserId ( ) );
         account.setAccountName ( accountDb.getUserName ( ) );
         account.setAccountIcon ( accountDb.getUserIcon ( ) );
         account.setAccountToken ( accountDb.getToken ( ) );
         account.setAccountUnionId ( accountDb.get ( "unionid" ) );
+        account.setCity ( accountDb.get ( "city" ) );
+        String sex = accountDb.getUserGender ( );
+        if("f".equals ( sex ))
+        {
+            account.setSex ( 2 );
+        }
+        else if("m".equals ( sex ))
+        {
+            account.setSex ( 1 );
+        }
+        else if(null == sex)
+        {
+            account.setSex ( 0 );
+        }
+
+        account.setOpenid ( accountDb.get ( "openid" ) );
+        account.setCountry ( accountDb.get ( "country" ) );
+        account.setProvince ( accountDb.get ( "province" ) );
+        account.setNickname ( accountDb.get ( "nickname" ) );
+
         msg.obj = account;
         mHandler.sendMessage ( msg );
     }

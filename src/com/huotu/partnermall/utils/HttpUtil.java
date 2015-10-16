@@ -12,6 +12,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.MemberModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
 import com.huotu.partnermall.model.OrderModel;
@@ -158,7 +159,7 @@ public class HttpUtil
             }
             if (null != conn)
             {
-                conn.disconnect();
+                conn.disconnect ( );
             }
 
         }
@@ -177,9 +178,9 @@ public class HttpUtil
         HttpPost httpPost = new HttpPost(url);
 
         try {
-            httpPost.setEntity(new StringEntity (entity));
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
+            httpPost.setEntity ( new StringEntity ( entity ) );
+            httpPost.setHeader ( "Accept", "application/json" );
+            httpPost.setHeader ( "Content-type", "application/json" );
 
             HttpResponse resp = httpClient.execute(httpPost);
             if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
@@ -325,6 +326,12 @@ public class HttpUtil
         return buffer.toString().substring(1, buffer.length());
     }
 
+    /**
+     * 获取支付信息
+     * @param context
+     * @param application
+     * @param url
+     */
     public void doVolley(Context context, final BaseApplication application, String url ){
         final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
@@ -362,6 +369,25 @@ public class HttpUtil
 
         });
         Volley.newRequestQueue ( context ).add( re);
+    }
+
+    public void doVolley(Context context, final BaseApplication application, String url, Map param ){
+        final GsonRequest re = new GsonRequest (Request.Method.POST, url, AuthMallModel.class, null, param, new Response.Listener<JSONObject >(){
+
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+
+
+        });
+        Volley.newRequestQueue ( context ).add( re );
     }
 
     public void doVolleyName(Context context, final BaseApplication application, String url, final TextView userType ){

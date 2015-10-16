@@ -1,7 +1,11 @@
 package com.huotu.partnermall.utils;
 
+import com.google.gson.JsonObject;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.model.AccountModel;
+
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -104,6 +108,38 @@ class AuthParamUtils {
                 KJLoger.e ( e.getMessage ( ) );
                 return null;
             }
+
+    }
+
+    /**
+     * 获取post参数
+     * @return
+     */
+    public
+    Map obtainParams(AccountModel account)
+    {
+        try {
+            Map< String, Object > paramMap = new HashMap< String, Object > ( );
+            paramMap.put ( "customerId", Integer.parseInt ( application.readMerchantId ( ) ) );
+            paramMap.put ( "sex", account.getSex ( ) );
+            paramMap.put ( "nickname", URLEncoder.encode ( account.getNickname ( ), "UTF-8" ) );
+            paramMap.put ( "openid", URLEncoder.encode (  account.getOpenid ( ), "UTF-8" ) );
+            paramMap.put ( "city", URLEncoder.encode ( account.getCity ( ), "UTF-8" ) );
+            paramMap.put ( "country", URLEncoder.encode ( account.getCountry ( ), "UTF-8" ) );
+            paramMap.put ( "province", URLEncoder.encode ( account.getProvince ( ), "UTF-8" ) );
+            paramMap.put ( "headimgurl", URLEncoder.encode ( account.getAccountIcon ( ), "UTF-8" ) );
+            paramMap.put ( "unionid", URLEncoder.encode ( account.getAccountUnionId ( ), "UTF-8" ) );
+            paramMap.put ( "timestamp", timestamp );
+            paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID, "UTF-8" ) );
+            paramMap.put ( "sign", getSign ( paramMap ) );
+            return paramMap ;
+        }
+        catch ( UnsupportedEncodingException e)
+        {
+            // TODO Auto-generated catch block
+            KJLoger.e ( e.getMessage ( ) );
+            return null;
+        }
 
     }
 

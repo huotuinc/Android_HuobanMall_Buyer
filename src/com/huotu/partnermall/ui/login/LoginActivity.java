@@ -37,6 +37,7 @@ import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -190,7 +191,11 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "http://mallapi.huobanj.cn/PayConfig?customerid=3447" );
                 final String url = paramUtils.obtainUrls ( );
                 HttpUtil.getInstance ().doVolley(LoginActivity.this, application, url);
-                //赋值
+                //和商家授权
+                final Map param = paramUtils.obtainParams ( account );
+                //String authUrl = "http://mallapi.huobanj.cn/weixin/loginorregister";
+                String authUrl = "http://192.168.1.56:8032/weixin/loginorregister";
+                HttpUtil.getInstance ().doVolley ( LoginActivity.this, application, authUrl, param );
                 //跳转到首页
                 ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity.class );
             }
