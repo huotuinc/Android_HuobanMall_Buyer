@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -50,9 +51,9 @@ public
 class LoginActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
 
     private
-    Button    loginBtn;
+    RelativeLayout loginL;
     private
-    AutnLogin login;
+    AutnLogin      login;
     //handler对象
     public Handler mHandler;
     public
@@ -78,14 +79,19 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     @Override
     protected
     void findViewById ( ) {
-        loginBtn = ( Button ) this.findViewById ( R.id.loginId );
-        loginBtn.setOnClickListener ( this );
+        loginL = ( RelativeLayout ) this.findViewById ( R.id.loginL );
+        loginL.setOnClickListener ( this );
     }
 
     @Override
     protected
     void initView ( ) {
-
+        loginL.setBackgroundColor (
+                SystemTools.obtainColor (
+                        application.obtainMainColor (
+                                                    )
+                                        )
+                                         );
     }
 
     @Override
@@ -100,26 +106,27 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     void onResume ( ) {
         super.onResume ( );
         progress.dismissView ( );
-        loginBtn.setClickable ( true );
+        loginL.setClickable ( true );
     }
 
     @Override
     public
     void onClick ( View v ) {
         switch ( v.getId ( ) ) {
-            case R.id.loginId: {
+            case R.id.loginL: {
                 //
                 progress.showProgress ( );
                 progress.showAtLocation (
-                        findViewById ( R.id.loginId ),
+                        findViewById ( R.id.loginL ),
                         Gravity.CENTER, 0, 0
                                         );
                 //微信授权登录
                 Platform wechat = ShareSDK.getPlatform ( LoginActivity.this, Wechat.NAME );
-                login = new AutnLogin ( LoginActivity.this, mHandler, loginBtn );
+                login = new AutnLogin ( LoginActivity.this, mHandler, loginL );
                 login.authorize ( new Wechat ( LoginActivity.this ) );
-                loginBtn.setClickable ( false );
-                //ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity.class );
+                loginL.setClickable ( false );
+                //ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity
+                // .class );
             }
             break;
             default:
@@ -152,7 +159,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, notice);
                 noticePop.showNotice ( );
                 noticePop.showAtLocation (
-                        findViewById ( R.id.loginId ),
+                        findViewById ( R.id.loginL ),
                         Gravity.CENTER, 0, 0
                                          );
             }
@@ -164,7 +171,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权失败");
                 noticePop.showNotice ();
                 noticePop.showAtLocation (
-                        findViewById ( R.id.loginId ),
+                        findViewById ( R.id.loginL ),
                         Gravity.CENTER, 0, 0
                                          );
 
@@ -177,7 +184,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权被取消");
                 noticePop.showNotice ();
                 noticePop.showAtLocation (
-                        findViewById ( R.id.loginId ),
+                        findViewById ( R.id.loginL ),
                         Gravity.CENTER, 0, 0
                                          );
 
@@ -220,7 +227,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "获取用户信息失败");
                 noticePop.showNotice ();
                 noticePop.showAtLocation (
-                        findViewById ( R.id.loginId ),
+                        findViewById ( R.id.loginL ),
                         Gravity.CENTER, 0, 0
                                          );
             }

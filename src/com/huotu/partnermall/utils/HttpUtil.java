@@ -427,7 +427,6 @@ public class HttpUtil
                     AuthMallModel.AuthMall mall = authMallModel.getData ();
                     if(null != mall)
                     {
-
                         //写入userID
                         //和商城用户系统交互
                         application.writeMemberInfo (
@@ -447,6 +446,14 @@ public class HttpUtil
                         mHandler.sendMessage ( msg );
                     }
 
+                }
+                else if(403 == authMallModel.getCode ())
+                {
+                    //授权失败
+                    Message msg = new Message();
+                    msg.what = Constants.LOGIN_AUTH_ERROR;
+                    msg.obj = authMallModel.getMsg ();
+                    mHandler.sendMessage ( msg );
                 }
                 else
                 {
