@@ -155,7 +155,8 @@ public class BaseApplication extends Application {
 
     public String readMemberId()
     {
-        return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID );
+        return PreferenceHelper.readString ( getApplicationContext ( ), Constants.MEMBER_INFO,
+                                             Constants.MEMBER_ID );
     }
 
     public String readCurrentUrl()
@@ -314,6 +315,15 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.WEIXIN_SHARE_SECRET, merchant.getWeixinShareSecret ( ));
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.PUSH_KEY, merchant.getPushKey ( ));
 
+    }
+
+    /**
+     * 记录域名
+     * @param domain
+     */
+    public void writeDomain(String domain)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.PREFIX, domain);
     }
 
     public void writeMenus(List<MenuBean> menus)

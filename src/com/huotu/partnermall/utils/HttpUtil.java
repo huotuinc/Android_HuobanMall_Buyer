@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -14,7 +15,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.AuthMallModel;
+import com.huotu.partnermall.model.MSiteModel;
 import com.huotu.partnermall.model.MemberModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
 import com.huotu.partnermall.model.OrderModel;
@@ -38,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
@@ -331,6 +335,40 @@ public class HttpUtil
     }
 
     /**
+     * 根据商户编号获取商户域名
+     * @param context
+     * @param application
+     * @param url
+     */
+    public void doVolleySite( Context context, final BaseApplication application, String url )
+    {
+        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+
+
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONUtil<MSiteModel > jsonUtil = new JSONUtil<MSiteModel>();
+                MSiteModel mSite = new MSiteModel();
+                mSite = jsonUtil.toBean(response.toString (), mSite);
+                if(null != mSite) {
+                    MSiteModel.MSiteData mSiteData = mSite.getData ();
+                    if ( null != mSiteData.getMsiteUrl () ) {
+                        String domain = mSiteData.getMsiteUrl ( );
+                        application.writeDomain ( domain );
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+
+
+        });
+        Volley.newRequestQueue ( context ).add( re);
+    }
+    /**
      * 获取支付信息
      * @param context
      * @param application
@@ -375,7 +413,7 @@ public class HttpUtil
         Volley.newRequestQueue ( context ).add( re);
     }
 
-    public void doVolley( final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, Map param ){
+    public void doVolley( final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, Map param, final AccountModel account ){
         final GsonRequest re = new GsonRequest (Request.Method.POST, url, AuthMallModel.class, null, param, new Response.Listener<AuthMallModel >(){
 
 
@@ -389,9 +427,14 @@ public class HttpUtil
                     AuthMallModel.AuthMall mall = authMallModel.getData ();
                     if(null != mall)
                     {
+
                         //写入userID
-                        //并跳转
-                        application.writeMemberId ( String.valueOf ( mall.getUserid () ) );
+                        //和商城用户系统交互
+                        application.writeMemberInfo (
+                                account.getAccountName ( ), account.getAccountId ( ),
+                                account.getAccountIcon ( ), account.getAccountToken ( ),
+                                account.getAccountUnionId ( )
+                                                    );
                         application.writeMemberLevel ( mall.getLevelName () );
                         //跳转到首页
                         ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
@@ -419,6 +462,10 @@ public class HttpUtil
             @Override
             public void onErrorResponse(VolleyError error) {
 
+                Message msg = new Message();
+                msg.what = Constants.LOGIN_AUTH_ERROR;
+                msg.obj = "调用授权接口失败，请确认！";
+                mHandler.sendMessage ( msg );
             }
 
 
@@ -440,8 +487,16 @@ public class HttpUtil
                     MemberModel.MemberInfo member = memberIfo.getData ();
                     if ( null != member ) {
                         //记录会员等级
-                        userType.setText ( member.getLevelName () );
-                        application.writeMemberLevel ( member.getLevelName () );
+                        if( TextUtils.isEmpty ( member.getLevelName () ))
+                        {
+                            userType.setText ( "未设置会员等级" );
+                            application.writeMemberLevel ( "未设置会员等级" );
+                        }
+                        else
+                        {
+                            userType.setText ( member.getLevelName () );
+                            application.writeMemberLevel ( member.getLevelName () );
+                        }
                     }
                 }
 

@@ -180,6 +180,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         titleLeftImage.setOnClickListener ( this );
         //构建标题右侧图标，点击事件
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
+        titleRightImage.setVisibility ( View.GONE );
         titleRightImage.setOnClickListener ( this );
         loginLayout = ( RelativeLayout ) this.findViewById ( R.id.loginLayout );
         loginSetting = ( ImageView ) this.findViewById ( R.id.sideslip_setting );
@@ -207,7 +208,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         menuView = ( KJWebView ) this.findViewById ( R.id.menuPage );
         titleRightLeftImage = ( ImageView ) this.findViewById ( R.id.titleRightLeftImage );
-        titleRightLeftImage.setClickable ( false );
+        titleRightLeftImage.setVisibility ( View.GONE );
         titleRightLeftImage.setOnClickListener ( this );
     }
 
@@ -365,7 +366,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         menuView.setCacheMode ( WebSettings.LOAD_NO_CACHE );
 
         //首页默认为商户站点 + index
-        menuView.loadUrl ( application.readSysMenu (), null, null, null);
+        String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
+        menuView.loadUrl ( menuUrl, null, null, null);
         menuView.setWebViewClient (
                 new WebViewClient ( ) {
 
@@ -390,7 +392,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onPageFinished ( WebView view, String url ) {
                         super.onPageFinished ( view, url );
-                        titleRightImage.setClickable ( true );
                     }
                 }
                                   );
@@ -452,6 +453,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //页面加载完成后,读取菜单项
                         super.onPageFinished ( view, url );
                         //titleRightLeftImage.setClickable ( true );
+                        titleRightImage.setVisibility ( View.VISIBLE );
+                        titleRightLeftImage.setVisibility ( View.VISIBLE );
                     }
 
                     @Override
