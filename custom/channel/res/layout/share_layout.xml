@@ -4,7 +4,7 @@
               android:layout_width="fill_parent"
               android:layout_height="@dimen/share_pop_height"
               android:orientation="vertical"
-              android:background="@color/lightyellow">
+              android:background="@color/mintcream">
 
     <TextView
         android:id="@+id/share_title"
@@ -13,7 +13,7 @@
         android:padding="10dip"
         android:text="分享到"
         android:textSize="@dimen/normal_label"
-        android:textColor="@color/dimgrey"
+        android:textColor="@color/index_title_txt_color"
         />
 
     <View
@@ -48,6 +48,6 @@
         android:layout_below="@+id/cancelBtn"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@color/lightyellow"/>
+        android:background="@color/mintcream"/>
 
 </LinearLayout>
