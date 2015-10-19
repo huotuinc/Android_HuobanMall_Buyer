@@ -166,6 +166,8 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                     public
                     void onPageStarted ( WebView view, String url, Bitmap favicon ) {
                         super.onPageStarted ( view, url, favicon );
+                        titleRightImage.setVisibility ( View.GONE );
+                        titleRightLeftImage.setVisibility ( View.GONE );
 
                     }
 

@@ -445,6 +445,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onPageStarted ( WebView view, String url, Bitmap favicon ) {
                         super.onPageStarted ( view, url, favicon );
+                        titleRightImage.setVisibility ( View.GONE );
+                        titleRightLeftImage.setVisibility ( View.GONE );
                     }
 
                     @Override

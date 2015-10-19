@@ -16,6 +16,8 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.utils.WindowUtils;
 
+import java.util.HashMap;
+
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
@@ -181,16 +183,13 @@ class SharePopupWindow extends PopupWindow {
      * 分享到QQ空间
      */
     private void qzone() {
+
         Platform.ShareParams sp = new Platform.ShareParams ();
         sp.setTitle ( shareParams.getTitle ( ) );
         sp.setTitleUrl ( shareParams.getUrl ( ) ); // 标题的超链接
         sp.setText ( shareParams.getText ( ) );
         sp.setImageUrl ( shareParams.getImageUrl ( ) );
-        sp.setComment ( "我对此分享内容的评论" );
-        sp.setSite ( shareParams.getTitle ( ) );
-        sp.setSiteUrl ( shareParams.getUrl ( ) );
         Platform qzone = ShareSDK.getPlatform(context, QZone.NAME);
-        qzone.SSOSetting ( true );
         qzone.setPlatformActionListener(platformActionListener); // 设置分享事件回调 //
         // 执行图文分享
         qzone.share(sp);
