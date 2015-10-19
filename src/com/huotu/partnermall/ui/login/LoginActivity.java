@@ -215,7 +215,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 HttpUtil.getInstance ().doVolley(LoginActivity.this, application, url);
                 //和商家授权
                 final Map param = paramUtils.obtainParams ( account );
-                String authUrl = "http://mallapi.huobanj.cn/weixin/loginorregister";
+                String authUrl = "http://mallapi.huobanj.cn/weixin/LoginAuthorize";
                 //String authUrl = "http://192.168.1.56:8032/weixin/loginorregister";
                 HttpUtil.getInstance ().doVolley ( LoginActivity.this, LoginActivity.this,
                                                    mHandler, application, authUrl, param, account );

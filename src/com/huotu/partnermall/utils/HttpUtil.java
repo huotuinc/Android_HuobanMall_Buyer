@@ -428,6 +428,7 @@ public class HttpUtil
                     if(null != mall)
                     {
                         //写入userID
+                        account.setAccountId ( String.valueOf ( mall.getUserid () ) );
                         //和商城用户系统交互
                         application.writeMemberInfo (
                                 account.getAccountName ( ), account.getAccountId ( ),

@@ -63,12 +63,14 @@ class AuthParamUtils {
                 }
 
                 //添加额外固定参数
+                paramMap.put ( "buserId", application.readUserId ( ) );
                 //1、timestamp
                 paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
                 //appid
                 paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
                 //unionid
                 paramMap.put ( "unionid", URLEncoder.encode ( application.readUserUnionId ( ), "UTF-8" ) );
+
                 //生成sigin
                 paramMap.put ( "sign", getSign ( paramMap ) );
 
@@ -77,9 +79,11 @@ class AuthParamUtils {
                 builder.append ( "&appid="+paramMap.get ( "appid" ) );
                 builder.append ( "&unionid="+paramMap.get ( "unionid" ) );
                 builder.append ( "&sign="+paramMap.get ( "sign" ) );
+                builder.append ( "&buserId="+application.readUserId () );
             }
             else
             {
+                paramMap.put ( "buserId", application.readUserId() );
                 paramMap.put ( "customerid", application.readMerchantId ( ) );
                 //添加额外固定参数
                 //1、timestamp
@@ -87,8 +91,10 @@ class AuthParamUtils {
                 //appid
                 paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
                 //unionid
-                paramMap.put ( "unionid", URLEncoder.encode ( application.readUserUnionId ( ),
-                                                              "UTF-8" ) );
+                paramMap.put (
+                        "unionid", URLEncoder.encode (
+                                application.readUserUnionId ( ),
+                                "UTF-8" ) );
                 //生成sigin
                 paramMap.put ( "sign", getSign ( paramMap ) );
 
@@ -98,6 +104,7 @@ class AuthParamUtils {
                 builder.append ( "&appid="+paramMap.get ( "appid" ) );
                 builder.append ( "&unionid="+paramMap.get ( "unionid" ) );
                 builder.append ( "&sign="+paramMap.get ( "sign" ) );
+                builder.append ( "&buserId="+application.readUserId () );
             }
 
             return builder.toString ();
