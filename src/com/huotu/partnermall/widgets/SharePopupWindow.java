@@ -84,7 +84,7 @@ class SharePopupWindow extends PopupWindow {
         // 设置SelectPicPopupWindow弹出窗体的高
         this.setHeight( LinearLayout.LayoutParams.WRAP_CONTENT);
         // 设置SelectPicPopupWindow弹出窗体可点击
-        this.setFocusable(false);
+        this.setFocusable(true);
         // 设置SelectPicPopupWindow弹出窗体动画效果
         this.setAnimationStyle(R.style.AnimationPop);
         WindowUtils.backgroundAlpha ( aty, 0.4f );
