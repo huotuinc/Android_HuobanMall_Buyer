@@ -488,7 +488,7 @@ public class HttpUtil
         Volley.newRequestQueue ( context ).add( re );
     }
 
-    public void doVolleyObtainUser(final Activity aty, final Context context, final BaseApplication application, String url, final View view, final WindowManager wManager)
+    public void doVolleyObtainUser(final Activity aty, final Context context, final BaseApplication application, String url, final View view, final WindowManager wManager, final Handler mHandler)
     {
         final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
@@ -507,10 +507,10 @@ public class HttpUtil
                         List<String> users = new ArrayList< String > (  );
                         for( SwitchUserModel.SwitchUser user:userList)
                         {
-                            users.add ( user.getWxNickName () );
+                            users.add ( user.getUsername ( ) );
                         }
                         //弹出切换用户面板
-                        SwitchUserPopWin userPop = new SwitchUserPopWin ( aty, users,  application, wManager );
+                        SwitchUserPopWin userPop = new SwitchUserPopWin ( aty, users,  application, wManager, mHandler );
                         userPop.initView ();
                         userPop.showAtLocation (
                                 view,

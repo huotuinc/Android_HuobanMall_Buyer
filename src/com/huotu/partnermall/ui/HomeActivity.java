@@ -584,7 +584,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url );
                 final String rootUrls = paramUtil.obtainUrls ( );
                 HttpUtil.getInstance ().doVolleyObtainUser ( HomeActivity.this, HomeActivity.this, application,
-                                                             rootUrls, findViewById ( R.id.titleRightLeftImage ), wManager );
+                                                             rootUrls, findViewById ( R.id.titleRightLeftImage ), wManager, mHandler );
 
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
