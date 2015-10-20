@@ -30,6 +30,7 @@ import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.pay.PayFunc;
+import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.mob.tools.network.SSLSocketFactoryEx;
 
 import java.io.IOException;
@@ -502,7 +503,7 @@ public class HttpUtil
                 if(null != switchUser)
                 {
                     List<SwitchUserModel.SwitchUser> userList = switchUser.getData ();
-                    if(null!=userList && !userList.isEmpty ())
+                    if( (null != userList) && (!userList.isEmpty ()) && (userList.size () > 1) )
                     {
                         List<String> users = new ArrayList< String > (  );
                         for( SwitchUserModel.SwitchUser user:userList)
@@ -518,6 +519,23 @@ public class HttpUtil
                                              );
                         userPop.setOnDismissListener ( new PoponDismissListener ( aty ) );
                     }
+                    else
+                    {
+                        NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "你只绑定了一个账户，无需切换。");
+                        noticePop.showNotice ();
+                        noticePop.showAtLocation (
+                                view,
+                                Gravity.CENTER, 0, 0
+                                                 );
+                    }
+                } else
+                {
+                    NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "未检测到你的账户信息，请确认。");
+                    noticePop.showNotice ();
+                    noticePop.showAtLocation (
+                            view,
+                            Gravity.CENTER, 0, 0
+                                             );
                 }
             }
         }, new Response.ErrorListener() {
