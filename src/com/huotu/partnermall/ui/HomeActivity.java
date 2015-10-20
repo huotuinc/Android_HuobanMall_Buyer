@@ -46,6 +46,7 @@ import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
+import com.huotu.partnermall.utils.SwitchUserPopWin;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
@@ -147,6 +148,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     private ImageView accountLogo;
 
     private ImageView titleRightLeftImage;
+
+    private SwitchUserPopWin switchUser;
 
     @Override
     protected
@@ -577,6 +580,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             case R.id.sideslip_setting:
             {
                 //切换用户
+                switchUser = new SwitchUserPopWin ( HomeActivity.this, null, application, wManager );
+                switchUser.initView ( );
+                switchUser.showAtLocation (
+                        findViewById ( R.id.titleRightLeftImage ),
+                        Gravity.CENTER, 0, 0
+                                          );
+                switchUser.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );
+
+                String url = "http://mallapi.huobanj.cn/weixin/getuserlist";
+
 
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );

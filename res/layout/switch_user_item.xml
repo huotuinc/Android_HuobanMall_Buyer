@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/userLDtails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:onClick="onClick"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:background="@color/theme_color">
+
+        <TextView
+            android:id="@+id/accountName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="我们检查出您注册了多个账户"
+            android:textSize="@dimen/main_title_text_size"
+            android:textColor="@color/darksalmon"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/line_gray_shape" />
+</LinearLayout>
