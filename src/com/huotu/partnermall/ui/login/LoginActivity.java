@@ -209,14 +209,14 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 HttpUtil.getInstance ().doVolleySite(LoginActivity.this, application, rootUrls );
                 //获取商户支付信息
                 String targetUrl = "http://mallapi.huobanj.cn/PayConfig?customerid=";
-                targetUrl += "3447";//动态获取商户编号，现在暂时使用3447
+                targetUrl += application.readMerchantId ();//动态获取商户编号，现在暂时使用3447
                 AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), targetUrl );
                 final String url = paramUtils.obtainUrls ( );
                 HttpUtil.getInstance ().doVolley(LoginActivity.this, application, url);
                 //和商家授权
                 final Map param = paramUtils.obtainParams ( account );
-                String authUrl = "http://mallapi.huobanj.cn/weixin/loginorregister";
-                //String authUrl = "http://192.168.1.56:8032/weixin/loginorregister";
+                String authUrl = "http://mallapi.huobanj.cn/weixin/LoginAuthorize";
+                //String authUrl = "http://192.168.1.56:8032/weixin/LoginAuthorize";
                 HttpUtil.getInstance ().doVolley ( LoginActivity.this, LoginActivity.this,
                                                    mHandler, application, authUrl, param, account );
             }
