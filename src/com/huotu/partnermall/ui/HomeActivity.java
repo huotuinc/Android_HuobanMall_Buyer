@@ -580,16 +580,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             case R.id.sideslip_setting:
             {
                 //切换用户
-                switchUser = new SwitchUserPopWin ( HomeActivity.this, null, application, wManager );
-                switchUser.initView ( );
-                switchUser.showAtLocation (
-                        findViewById ( R.id.titleRightLeftImage ),
-                        Gravity.CENTER, 0, 0
-                                          );
-                switchUser.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );
-
-                String url = "http://mallapi.huobanj.cn/weixin/getuserlist";
-
+                String url = "http://mallapi.huobanj.cn/weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
+                AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url );
+                final String rootUrls = paramUtil.obtainUrls ( );
+                HttpUtil.getInstance ().doVolleyObtainUser ( HomeActivity.this, HomeActivity.this, application,
+                                                             rootUrls, findViewById ( R.id.titleRightLeftImage ), wManager );
 
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -15,6 +18,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.MSiteModel;
@@ -22,6 +27,7 @@ import com.huotu.partnermall.model.MemberModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
 import com.huotu.partnermall.model.OrderModel;
 import com.huotu.partnermall.model.PayModel;
+import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.pay.PayFunc;
 import com.mob.tools.network.SSLSocketFactoryEx;
@@ -37,6 +43,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.security.AccessControlContext;
 import java.security.KeyStore;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -481,6 +488,48 @@ public class HttpUtil
         Volley.newRequestQueue ( context ).add( re );
     }
 
+    public void doVolleyObtainUser(final Activity aty, final Context context, final BaseApplication application, String url, final View view, final WindowManager wManager)
+    {
+        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+
+
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONUtil<SwitchUserModel > jsonUtil = new JSONUtil<SwitchUserModel>();
+                SwitchUserModel switchUser = new SwitchUserModel();
+                switchUser = jsonUtil.toBean(response.toString (), switchUser);
+
+                if(null != switchUser)
+                {
+                    List<SwitchUserModel.SwitchUser> userList = switchUser.getData ();
+                    if(null!=userList && !userList.isEmpty ())
+                    {
+                        List<String> users = new ArrayList< String > (  );
+                        for( SwitchUserModel.SwitchUser user:userList)
+                        {
+                            users.add ( user.getWxNickName () );
+                        }
+                        //弹出切换用户面板
+                        SwitchUserPopWin userPop = new SwitchUserPopWin ( aty, users,  application, wManager );
+                        userPop.initView ();
+                        userPop.showAtLocation (
+                                view,
+                                Gravity.CENTER, 0, 0
+                                             );
+                        userPop.setOnDismissListener ( new PoponDismissListener ( aty ) );
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+
+
+        });
+        Volley.newRequestQueue ( context ).add( re);
+    }
     public void doVolleyName(Context context, final BaseApplication application, String url, final TextView userType ){
         final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
