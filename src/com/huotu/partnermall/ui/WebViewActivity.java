@@ -221,7 +221,8 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
             break;
             case R.id.titleRightImage:
             {
-                viewPage.reload ();
+                PageInfoModel pageInfo = application.titleStack.peek ();
+                viewPage.loadUrl ( pageInfo.getPageUrl (), titleText, null, null );
             }
             break;
             case R.id.titleRightLeftImage:

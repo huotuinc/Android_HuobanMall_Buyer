@@ -569,12 +569,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             break;
             case R.id.titleRightImage:
             {
-                /*//当前的url
+                //当前的url
                 PageInfoModel pageInfo = application.titleStack.peek ( );
                 //刷新页面
                 Message msg = mHandler.obtainMessage ( Constants.FRESHEN_PAGE_MESSAGE_TAG, pageInfo.getPageUrl ());
-                mHandler.sendMessage ( msg );*/
-                viewPage.reload ();
+                mHandler.sendMessage ( msg );
             }
             break;
             case R.id.sideslip_setting:
