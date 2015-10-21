@@ -46,6 +46,7 @@ import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
+import com.huotu.partnermall.utils.SwitchUserPopWin;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
@@ -147,6 +148,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     private ImageView accountLogo;
 
     private ImageView titleRightLeftImage;
+
+    private SwitchUserPopWin switchUser;
 
     @Override
     protected
@@ -295,7 +298,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         SystemTools.loadBackground (
                 loginSetting, resources.getDrawable (
                         R.drawable
-                                .sideslip_login_lefttop_setting
+                                .switch_white
                                                     )
                                    );
         //设置登录界面背景
@@ -445,8 +448,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onPageStarted ( WebView view, String url, Bitmap favicon ) {
                         super.onPageStarted ( view, url, favicon );
-                        titleRightImage.setVisibility ( View.GONE );
-                        titleRightLeftImage.setVisibility ( View.GONE );
+
                     }
 
                     @Override
@@ -567,42 +569,23 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             break;
             case R.id.titleRightImage:
             {
-                //当前的url
+                /*//当前的url
                 PageInfoModel pageInfo = application.titleStack.peek ( );
                 //刷新页面
                 Message msg = mHandler.obtainMessage ( Constants.FRESHEN_PAGE_MESSAGE_TAG, pageInfo.getPageUrl ());
-                mHandler.sendMessage ( msg );
+                mHandler.sendMessage ( msg );*/
+                viewPage.reload ();
             }
             break;
             case R.id.sideslip_setting:
             {
-                //设置界面
-                //设置界面的url
-                String settingUrl = application.createUrl(Constants.PAGE_TYPE_SETTING);
-                //String settingUrl = "http://www.baidu.com";
-                Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, settingUrl);
-                mHandler.sendMessage ( msg );
-                /*MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
-                popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );
-                popWindow.setOnDismissListener ( new PoponDismissListener (HomeActivity.this) );*/
-                //测试弹出选择图片
-                /*if(null == photo)
-                {
-                    photo = new PhotoSelectView ( this,this );
-                }
-                photo.show ();*/
-                //测试修改用户名
-                //userInfoView.show( UserInfoView.Type.Name, null, "方小开");
-                //测试弹出时间控件
-                /*if (YEAR == null)
-                    initYears();
-                if (popTimeView == null) {
-                    popTimeView = new PopTimeView (this, application);
-                    popTimeView.setOnDateBackListener(this);
-                }*/
+                //切换用户
+                String url = "http://mallapi.huobanj.cn/weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
+                AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url );
+                final String rootUrls = paramUtil.obtainUrls ( );
+                HttpUtil.getInstance ().doVolleyObtainUser ( HomeActivity.this, HomeActivity.this, application,
+                                                             rootUrls, findViewById ( R.id.titleRightLeftImage ), wManager, mHandler );
 
-                // mainZoomOut(layAll);
-                //popTimeView.show("1987-09-21");
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
             }

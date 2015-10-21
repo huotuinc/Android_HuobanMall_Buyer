@@ -1,5 +1,7 @@
 package com.huotu.partnermall.utils;
 
+import android.text.TextUtils;
+
 import com.google.gson.JsonObject;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
@@ -138,7 +140,27 @@ class AuthParamUtils {
             paramMap.put ( "timestamp", String.valueOf ( timestamp ) );
             paramMap.put ( "appid", Constants.APP_ID );
             paramMap.put ( "sign", getSign ( paramMap ) );
+            //去掉null值
+            paramMap = removeNull(paramMap);
             return paramMap ;
+    }
+
+    private Map removeNull(Map map)
+    {
+        Map<String, String> lowerMap = new HashMap< String, String > (  );
+        Iterator lowerIt = map.entrySet ().iterator ();
+        while ( lowerIt.hasNext () )
+        {
+
+            Map.Entry entry = ( Map.Entry ) lowerIt.next ();
+            Object value = entry.getValue ( );
+            if( null != value )
+            {
+                lowerMap.put ( String.valueOf ( entry.getKey () ).toLowerCase (), String.valueOf ( value ) );
+            }
+        }
+
+        return lowerMap;
     }
 
     public String obtainUrls()
@@ -304,7 +326,11 @@ class AuthParamUtils {
         while ( lowerIt.hasNext () )
         {
             Map.Entry entry = ( Map.Entry ) lowerIt.next ();
-            lowerMap.put ( String.valueOf ( entry.getKey () ).toLowerCase (), String.valueOf ( entry.getValue () ) );
+            Object value = entry.getValue ( );
+            if( ! TextUtils.isEmpty ( String.valueOf ( value ) ) )
+            {
+                lowerMap.put ( String.valueOf ( entry.getKey () ).toLowerCase (), String.valueOf ( value ) );
+            }
         }
 
         TreeMap<String, String> treeMap = new TreeMap< String, String > ( lowerMap );

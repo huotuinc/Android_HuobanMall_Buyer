@@ -166,8 +166,6 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                     public
                     void onPageStarted ( WebView view, String url, Bitmap favicon ) {
                         super.onPageStarted ( view, url, favicon );
-                        titleRightImage.setVisibility ( View.GONE );
-                        titleRightLeftImage.setVisibility ( View.GONE );
 
                     }
 
@@ -223,8 +221,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
             break;
             case R.id.titleRightImage:
             {
-                PageInfoModel pageInfo = application.titleStack.peek ();
-                viewPage.loadUrl ( pageInfo.getPageUrl (), titleText, null, null );
+                viewPage.reload ();
             }
             break;
             case R.id.titleRightLeftImage:

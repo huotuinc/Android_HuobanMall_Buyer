@@ -16,13 +16,11 @@
             android:layout_width="@dimen/title_back_width"
             android:layout_height="@dimen/title_back_width"
             android:id="@+id/sideslip_setting"
-            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/sideslip_login_icon_margin"
-            android:layout_marginEnd="@dimen/sideslip_login_icon_margin"
-            android:layout_marginTop="@dimen/sideslip_login_icon_margin"
-            android:visibility="gone"/>
+            android:layout_marginEnd="@dimen/sideslip_login_icon_margin"/>
         <RelativeLayout
             android:id="@+id/noAuth"
             android:layout_width="wrap_content"
