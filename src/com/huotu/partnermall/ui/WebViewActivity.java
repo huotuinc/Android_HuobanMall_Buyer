@@ -232,8 +232,13 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                 String text = application.obtainMerchantName ()+"分享";
                 String imageurl = application.obtainMerchantLogo ();
                 String title = application.obtainMerchantName ()+"分享";
-                PageInfoModel pageInfo = application.titleStack.peek ();
-                String url = pageInfo.getPageUrl ();
+                if(0 == application.titleStack.size ()) {
+                    url = application.obtainMerchantUrl ();
+                }
+                else
+                {
+                    url = application.titleStack.peek ().getPageUrl ();
+                }
                 ShareModel msgModel = new ShareModel ();
                 msgModel.setImageUrl ( imageurl);
                 msgModel.setText ( text );
