@@ -161,6 +161,12 @@ public class SplashActivity extends BaseActivity {
                                                        SysModel sysModel = XMLParserUtils.getInstance ( ).readSys ( SplashActivity.this );
                                                        application.writeSysInfo(sysModel);
                                                    }
+                                                   //获取商户logo信息
+                                                   String logoUrl = "http://mallapi.huobanj.cn/mall/getConfig";
+                                                   logoUrl += "?customerId="+application.readMerchantId ();
+                                                   AuthParamUtils paramLogo = new AuthParamUtils ( application, System.currentTimeMillis (), logoUrl );
+                                                   final String logoUrls = paramLogo.obtainUrls ( );
+                                                   HttpUtil.getInstance ( ).doVolleyLogo(SplashActivity.this, application, logoUrls );
                                                    //获取商家域名
                                                    //获取商户站点
                                                    String rootUrl = "http://mallapi.huobanj.cn/mall/getmsiteurl";
