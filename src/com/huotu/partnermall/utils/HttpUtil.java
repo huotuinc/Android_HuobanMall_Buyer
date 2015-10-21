@@ -541,30 +541,16 @@ public class HttpUtil
                 if(null != switchUser)
                 {
                     List<SwitchUserModel.SwitchUser> userList = switchUser.getData ();
-                    if( (null != userList) && (!userList.isEmpty ()) && (userList.size () > 1) )
+                    if( (null != userList) && (!userList.isEmpty ()) && (userList.size () > 0) )
                     {
-                        List<String> users = new ArrayList< String > (  );
-                        for( SwitchUserModel.SwitchUser user:userList)
-                        {
-                            users.add ( user.getUsername ( ) );
-                        }
                         //弹出切换用户面板
-                        SwitchUserPopWin userPop = new SwitchUserPopWin ( aty, users,  application, wManager, mHandler );
+                        SwitchUserPopWin userPop = new SwitchUserPopWin ( aty, userList,  application, wManager, mHandler, view );
                         userPop.initView ();
                         userPop.showAtLocation (
                                 view,
                                 Gravity.CENTER, 0, 0
                                                );
                         userPop.setOnDismissListener ( new PoponDismissListener ( aty ) );
-                    }
-                    else
-                    {
-                        NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "你只绑定了一个账户，无需切换。");
-                        noticePop.showNotice ();
-                        noticePop.showAtLocation (
-                                view,
-                                Gravity.CENTER, 0, 0
-                                                 );
                     }
                 } else
                 {

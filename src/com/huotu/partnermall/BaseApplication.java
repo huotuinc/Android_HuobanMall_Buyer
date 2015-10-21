@@ -155,8 +155,10 @@ public class BaseApplication extends Application {
 
     public String readMemberId()
     {
-        return PreferenceHelper.readString ( getApplicationContext ( ), Constants.MEMBER_INFO,
-                                             Constants.MEMBER_ID );
+        return PreferenceHelper.readString (
+                getApplicationContext ( ), Constants.MEMBER_INFO,
+                Constants.MEMBER_ID
+                                           );
     }
 
     public String readCurrentUrl()
@@ -342,6 +344,16 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ICON, userIcon );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN, userToken );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID, unionid );
+    }
+
+    public void writeUserName(String userName)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_NAME, userName );
+    }
+
+    public void writeUserIcon(String userIcon)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ICON, userIcon );
     }
 
     //获取用户unionId

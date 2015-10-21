@@ -40,6 +40,7 @@ import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.model.ShareModel;
+import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
@@ -235,7 +236,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                                         )
                                             )
                                   );
-            userType.setText ( application.readMemberLevel (  ) );
+            userType.setText ( application.readMemberLevel ( ) );
         }
         else {
             noAuthLayout.setVisibility ( View.VISIBLE );
@@ -809,6 +810,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_back );
                 SystemTools.loadBackground ( titleLeftImage, leftDraw );
                 application.isLeftImg = false;
+            }
+            break;
+            case Constants.SWITCH_USER_NOTIFY:
+            {
+                SwitchUserModel.SwitchUser user = ( SwitchUserModel.SwitchUser ) msg.obj;
+                //更新userId
+                application.writeMemberId ( String.valueOf ( user.getUserid ( ) ) );
+                //更新昵称
+                application.writeUserName ( user.getWxNickName () );
+                application.writeUserIcon(user.getWxHeadImg ());
+
+                application.writeMemberLevel(user.getLevelName ());
             }
             break;
             default:
