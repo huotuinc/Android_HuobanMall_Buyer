@@ -40,6 +40,7 @@ import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.model.ShareModel;
+import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
@@ -235,7 +236,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                                         )
                                             )
                                   );
-            userType.setText ( application.readMemberLevel (  ) );
+            userType.setText ( application.readMemberLevel ( ) );
         }
         else {
             noAuthLayout.setVisibility ( View.VISIBLE );
@@ -459,7 +460,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //titleRightLeftImage.setClickable ( true );
                         titleRightImage.setVisibility ( View.VISIBLE );
                         titleRightLeftImage.setVisibility ( View.VISIBLE );
-                        titleText.setText ( view.getTitle () );
+                        titleText.setText ( view.getTitle ( ) );
                     }
 
                     @Override
@@ -577,7 +578,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //刷新页面
                 Message msg = mHandler.obtainMessage ( Constants.FRESHEN_PAGE_MESSAGE_TAG, pageInfo.getPageUrl ());
                 mHandler.sendMessage ( msg );*/
-                viewPage.reload ();
+                viewPage.reload ( );
             }
             break;
             case R.id.sideslip_setting:
@@ -809,6 +810,24 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_back );
                 SystemTools.loadBackground ( titleLeftImage, leftDraw );
                 application.isLeftImg = false;
+            }
+            break;
+            case Constants.SWITCH_USER_NOTIFY:
+            {
+                SwitchUserModel.SwitchUser user = ( SwitchUserModel.SwitchUser ) msg.obj;
+                //更新userId
+                application.writeMemberId ( String.valueOf ( user.getUserid ( ) ) );
+                //更新昵称
+                application.writeUserName ( user.getWxNickName () );
+                application.writeUserIcon ( user.getWxHeadImg ( ) );
+
+                application.writeMemberLevel(user.getLevelName ());
+
+                //更新界面
+                userName.setText ( user.getWxNickName () );
+                userName.setText ( user.getLevelName ( ) );
+                new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute ( );
+
             }
             break;
             default:

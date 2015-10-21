@@ -3,17 +3,23 @@ package com.huotu.partnermall.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.ui.login.LoginActivity;
+import com.huotu.partnermall.widgets.NoticePopWindow;
 
 import java.util.List;
 
@@ -27,25 +33,28 @@ class SwitchUserPopWin extends PopupWindow {
     Activity context;
     private View popView;
     private
-    List< String > users;
+    List< SwitchUserModel.SwitchUser > users;
     private
-    BaseApplication application;
+    BaseApplication                    application;
     private WindowManager wManager;
     private
     Handler mHandler;
+    private View view;
 
     public
-    SwitchUserPopWin ( Activity context, List< String > users, BaseApplication application, WindowManager wManager, Handler mHandler) {
+    SwitchUserPopWin ( Activity context, List< SwitchUserModel.SwitchUser > users, BaseApplication application,
+                       WindowManager wManager, Handler mHandler, View view ) {
 
         this.context = context;
         this.users = users;
         this.application = application;
         this.wManager = wManager;
         this.mHandler = mHandler;
+        this.view = view;
     }
 
-    public void initView()
-    {
+    public
+    void initView ( ) {
         LayoutInflater inflater = ( LayoutInflater ) context.getSystemService ( Context.LAYOUT_INFLATER_SERVICE );
         popView = inflater.inflate ( R.layout.switch_user_layout, null );
 
@@ -73,43 +82,58 @@ class SwitchUserPopWin extends PopupWindow {
 
             for ( int i = 0 ; i < size ; i++ ) {
 
+                final SwitchUserModel.SwitchUser user = users.get ( i );
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( ViewGroup
                                                                                       .LayoutParams.MATCH_PARENT, (wManager.getDefaultDisplay ().getHeight ()/15));
                 LinearLayout userItem = ( LinearLayout ) LayoutInflater.from ( context ).inflate ( R.layout.switch_user_item, null );
                 final TextView account = ( TextView ) userItem.findViewById ( R.id.accountName );
+                ImageView tag = ( ImageView ) userItem.findViewById ( R.id.switchUserTag );
+                if(application.readUserId ().equals ( String.valueOf ( user.getUserid
+                                                                               ( ) ) ))
+                {
+                    tag.setVisibility ( View.VISIBLE );
+                }
                 //设置ID
                 userItem.setId ( i );
-                account.setText ( users.get ( i ) );
+                account.setText ( user.getUsername ( ) );
                 userItem.setLayoutParams ( lp );
-                account.setOnClickListener ( new View.OnClickListener ( ) {
-                                                  @Override
-                                                  public
-                                                  void onClick ( View v ) {
+                account.setOnClickListener (
+                        new View.OnClickListener ( ) {
+                            @Override
+                            public
+                            void onClick ( View v ) {
 
-                                                      //
-                                                      dismiss ( );
-                                                      ToastUtils.showShortToast ( context,
-                                                                                  "3S后即将切换到账户：" +
-                                                                                  account.getText
-                                                                                          ( )
-                                                                                         .toString ( ) );
+                                //
+                                dismiss ( );
+                                //判断当前的用户
+                                if ( application.readUserId ( ).equals (
+                                        String.valueOf (
+                                                user.getUserid
+                                                        ( )
+                                                       )
+                                                                       ) ) {
 
-                                                      mHandler.postDelayed ( new Runnable ( ) {
-                                                                                 @Override
-                                                                                 public
-                                                                                 void run ( ) {
+                                    NoticePopWindow noticePop = new NoticePopWindow ( context,
+                                                                                      context,
+                                                                                      wManager,
+                                                                                      "当前登录的是该用户，无需切换。" );
+                                    noticePop.showNotice ( );
+                                    noticePop.showAtLocation (
+                                            view,
+                                            Gravity.CENTER, 0, 0
+                                                             );
 
-//鉴权失效
-                                                                                     //清除登录信息
-                                                                                     application.logout ();
-                                                                                     application.titleStack.clear ();
-                                                                                     //跳转到登录界面
-                                                                                     ActivityUtils.getInstance ().skipActivity ( context, LoginActivity.class );
-
-                                                                                 }
-                                                                             }, 3000 );
-                                                  }
-                                              } );
+                                }
+                                else {
+                                    //切换用户通知
+                                    Message msg = new Message ( );
+                                    msg.what = Constants.SWITCH_USER_NOTIFY;
+                                    msg.obj = user;
+                                    mHandler.sendMessage ( msg );
+                                }
+                            }
+                        }
+                                           );
                 userLayout.addView ( userItem );
 
             }
