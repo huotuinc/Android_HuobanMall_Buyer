@@ -200,20 +200,8 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             {
                 //登录后更新界面
                 AccountModel account = ( AccountModel ) msg.obj;
-                //获取商家域名
-                //获取商户站点
-                String rootUrl = "http://mallapi.huobanj.cn/mall/getmsiteurl";
-                rootUrl += "?customerId="+application.readMerchantId ();
-                AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), rootUrl );
-                final String rootUrls = paramUtil.obtainUrls ( );
-                HttpUtil.getInstance ().doVolleySite(LoginActivity.this, application, rootUrls );
-                //获取商户支付信息
-                String targetUrl = "http://mallapi.huobanj.cn/PayConfig?customerid=";
-                targetUrl += "3447";//动态获取商户编号，现在暂时使用3447////application.readMerchantId ();
-                AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), targetUrl );
-                final String url = paramUtils.obtainUrls ( );
-                HttpUtil.getInstance ().doVolley(LoginActivity.this, application, url);
                 //和商家授权
+                AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "" );
                 final Map param = paramUtils.obtainParams ( account );
                 String authUrl = "http://mallapi.huobanj.cn/weixin/LoginAuthorize";
                 //String authUrl = "http://192.168.1.56:8032/weixin/LoginAuthorize";

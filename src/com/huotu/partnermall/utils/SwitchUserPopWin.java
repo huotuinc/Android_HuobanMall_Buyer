@@ -52,16 +52,25 @@ class SwitchUserPopWin extends PopupWindow {
         LinearLayout userLayout = ( LinearLayout ) popView.findViewById ( R.id.userL );
 
         if ( null == users || users.isEmpty ( ) ) {
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( ViewGroup
+            /*LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( ViewGroup
                                                                                   .LayoutParams.MATCH_PARENT, (wManager.getDefaultDisplay ().getHeight ()/15));
             LinearLayout userItem = ( LinearLayout ) LayoutInflater.from ( context ).inflate ( R.layout.switch_user_item, null );
             TextView account = ( TextView ) userItem.findViewById ( R.id.accountName );
             account.setText ( application.getUserName ( ) );
             userItem.setLayoutParams ( lp );
-            userLayout.addView ( userItem );
+            userLayout.addView ( userItem );*/
         }
         else {
-            int size = users.size ( );
+            int size = 0;
+            if(5 > users.size ( ))
+            {
+                size = users.size ( );
+            }
+            else
+            {
+                size = 4;
+            }
+
             for ( int i = 0 ; i < size ; i++ ) {
 
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( ViewGroup
@@ -80,7 +89,7 @@ class SwitchUserPopWin extends PopupWindow {
                                                       //
                                                       dismiss ( );
                                                       ToastUtils.showShortToast ( context,
-                                                                                  "2S后即将切换到账户：" +
+                                                                                  "3S后即将切换到账户：" +
                                                                                   account.getText
                                                                                           ( )
                                                                                          .toString ( ) );
@@ -93,11 +102,12 @@ class SwitchUserPopWin extends PopupWindow {
 //鉴权失效
                                                                                      //清除登录信息
                                                                                      application.logout ();
+                                                                                     application.titleStack.clear ();
                                                                                      //跳转到登录界面
                                                                                      ActivityUtils.getInstance ().skipActivity ( context, LoginActivity.class );
 
                                                                                  }
-                                                                             }, 2000 );
+                                                                             }, 3000 );
                                                   }
                                               } );
                 userLayout.addView ( userItem );
@@ -129,12 +139,12 @@ class SwitchUserPopWin extends PopupWindow {
             break;
             case 3:
             {
-                this.setHeight ( (wManager.getDefaultDisplay ().getWidth ()/7) * 6 );
+                this.setHeight ( (wManager.getDefaultDisplay ().getWidth ()/5) * 4 );
             }
             break;
             case 4:
             {
-                this.setHeight ( (wManager.getDefaultDisplay ().getWidth ()/7) * 6 );
+                this.setHeight ( (wManager.getDefaultDisplay ().getWidth ()/5) * 4 );
             }
             break;
             case 5:

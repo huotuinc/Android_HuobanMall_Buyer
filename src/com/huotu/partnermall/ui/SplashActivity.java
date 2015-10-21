@@ -29,6 +29,8 @@ import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.guide.GuideActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
+import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PropertiesUtil;
 import com.huotu.partnermall.utils.XMLParserUtils;
@@ -159,6 +161,19 @@ public class SplashActivity extends BaseActivity {
                                                        SysModel sysModel = XMLParserUtils.getInstance ( ).readSys ( SplashActivity.this );
                                                        application.writeSysInfo(sysModel);
                                                    }
+                                                   //获取商家域名
+                                                   //获取商户站点
+                                                   String rootUrl = "http://mallapi.huobanj.cn/mall/getmsiteurl";
+                                                   rootUrl += "?customerId="+application.readMerchantId ();
+                                                   AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), rootUrl );
+                                                   final String rootUrls = paramUtil.obtainUrls ( );
+                                                   HttpUtil.getInstance ( ).doVolleySite(SplashActivity.this, application, rootUrls );
+                                                   //获取商户支付信息
+                                                   String targetUrl = "http://mallapi.huobanj.cn/PayConfig?customerid=";
+                                                   targetUrl += "3447";//动态获取商户编号，现在暂时使用3447////application.readMerchantId ();
+                                                   AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), targetUrl );
+                                                   final String url = paramUtils.obtainUrls ( );
+                                                   HttpUtil.getInstance ().doVolley(SplashActivity.this, application, url);
                                                }
                                            }
 
