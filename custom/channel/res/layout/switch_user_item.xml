@@ -13,21 +13,26 @@
         android:orientation="horizontal"
         android:padding="5dp"
         android:background="@color/theme_color">
-        <ImageView
-            android:id="@+id/switchUserTag"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:background="@drawable/switch_tag"
-            android:layout_marginLeft="20dp"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/accountName"
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="我们检查出您注册了多个账户"
-            android:textSize="@dimen/main_title_text_size"
-            android:textColor="@color/darksalmon"/>
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/accountName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="我们检查出您注册了多个账户"
+                android:textSize="@dimen/main_title_text_size"
+                android:textColor="@color/darksalmon"/>
+            <ImageView
+                android:id="@+id/switchUserTag"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/switch_tag"
+                android:layout_marginRight="10dp"
+                android:visibility="gone"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
     </LinearLayout>
 
     <ImageView

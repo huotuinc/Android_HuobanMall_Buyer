@@ -460,7 +460,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //titleRightLeftImage.setClickable ( true );
                         titleRightImage.setVisibility ( View.VISIBLE );
                         titleRightLeftImage.setVisibility ( View.VISIBLE );
-                        titleText.setText ( view.getTitle () );
+                        titleText.setText ( view.getTitle ( ) );
                     }
 
                     @Override
@@ -578,7 +578,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //刷新页面
                 Message msg = mHandler.obtainMessage ( Constants.FRESHEN_PAGE_MESSAGE_TAG, pageInfo.getPageUrl ());
                 mHandler.sendMessage ( msg );*/
-                viewPage.reload ();
+                viewPage.reload ( );
             }
             break;
             case R.id.sideslip_setting:
@@ -819,9 +819,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 application.writeMemberId ( String.valueOf ( user.getUserid ( ) ) );
                 //更新昵称
                 application.writeUserName ( user.getWxNickName () );
-                application.writeUserIcon(user.getWxHeadImg ());
+                application.writeUserIcon ( user.getWxHeadImg ( ) );
 
                 application.writeMemberLevel(user.getLevelName ());
+
+                //更新界面
+                userName.setText ( user.getWxNickName () );
+                userName.setText ( user.getLevelName ( ) );
+                new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute ( );
+
             }
             break;
             default:
