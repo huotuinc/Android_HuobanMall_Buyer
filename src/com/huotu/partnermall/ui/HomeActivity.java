@@ -459,6 +459,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //titleRightLeftImage.setClickable ( true );
                         titleRightImage.setVisibility ( View.VISIBLE );
                         titleRightLeftImage.setVisibility ( View.VISIBLE );
+                        titleText.setText ( view.getTitle () );
                     }
 
                     @Override
@@ -475,6 +476,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                            mHandler, application );
 
                     }
+
+
 
                 }
                                   );
@@ -569,11 +572,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             break;
             case R.id.titleRightImage:
             {
-                //当前的url
+                /*//当前的url
                 PageInfoModel pageInfo = application.titleStack.peek ( );
                 //刷新页面
                 Message msg = mHandler.obtainMessage ( Constants.FRESHEN_PAGE_MESSAGE_TAG, pageInfo.getPageUrl ());
-                mHandler.sendMessage ( msg );
+                mHandler.sendMessage ( msg );*/
+                viewPage.reload ();
             }
             break;
             case R.id.sideslip_setting:

@@ -304,7 +304,6 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.U_MENG_KEY, merchant.getUmengAppkey ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.U_MENG_CHANNEL, merchant.getUmengChannel ( ) );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.U_MENG_SECRET, merchant.getUmengMessageSecret ( ) );
-        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.PREFIX, merchant.getHttpPrefix ( ));
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.SHARE_KEY, merchant.getShareSDKKey ( ));
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.TENCENT_KEY, merchant.getTencentKey ( ));
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.TENCENT_SECRET, merchant.getTencentSecret ( ));

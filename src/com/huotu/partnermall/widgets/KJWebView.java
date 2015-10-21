@@ -188,15 +188,16 @@ class KJWebView extends RelativeLayout {
 
     public void setPageTitle(final TextView titleView)
     {
-        mWebView.setWebChromeClient ( new WebChromeClient ()
-                                      {
-                                          @Override
-                                          public
-                                          void onReceivedTitle ( WebView view, String title ) {
-                                              super.onReceivedTitle ( view, title );
-                                              titleView.setText ( title );
-                                          }
-                                      });
+        mWebView.setWebChromeClient (
+                new WebChromeClient ( ) {
+                    @Override
+                    public
+                    void onReceivedTitle ( WebView view, String title ) {
+                        super.onReceivedTitle ( view, title );
+                        titleView.setText ( title );
+                    }
+                }
+                                    );
     }
 
     public void setBarHeight(int height){
@@ -327,7 +328,7 @@ class KJWebView extends RelativeLayout {
     public void goBack(final TextView titleView, Handler mHandler, BaseApplication application)
     {
         mWebView.goBack ( );
-        if(null != titleView && !"".equals ( titleView ))
+        /*if(null != titleView && !"".equals ( titleView ))
         {
             //先移除栈顶标题
             if(!application.titleStack.isEmpty () && 1 == application.titleStack.size ())
@@ -343,7 +344,7 @@ class KJWebView extends RelativeLayout {
                 titleView.setText ( pageInfo.getPageTitle () );
                 //mWebView.loadUrl ( pageInfo.getPageUrl ());
             }
-        }
+        }*/
 
         if(null != mHandler)
         {
