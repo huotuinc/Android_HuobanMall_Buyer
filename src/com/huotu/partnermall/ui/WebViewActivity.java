@@ -177,6 +177,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                        // titleRightLeftImage.setClickable ( true );
                         titleRightImage.setVisibility ( View.VISIBLE );
                         titleRightLeftImage.setVisibility ( View.VISIBLE );
+                        titleText.setText ( view.getTitle ( ) );
                     }
 
                     @Override
@@ -221,8 +222,9 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
             break;
             case R.id.titleRightImage:
             {
-                PageInfoModel pageInfo = application.titleStack.peek ();
-                viewPage.loadUrl ( pageInfo.getPageUrl (), titleText, null, null );
+                /*PageInfoModel pageInfo = application.titleStack.peek ( );
+                viewPage.loadUrl ( pageInfo.getPageUrl (), titleText, null, null );*/
+                viewPage.reload ();
             }
             break;
             case R.id.titleRightLeftImage:
