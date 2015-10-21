@@ -671,10 +671,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             break;
             case R.id.titleRightLeftImage:
             {
-                String text = "买家版分享";
-                String imageurl = "http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg";
-                String title = "江苏华漫";
-                String url = application.titleStack.peek ().getPageUrl ();
+                String text = application.obtainMerchantName ()+"分享";
+                String imageurl = application.obtainMerchantLogo ();
+                String title = application.obtainMerchantName ()+"分享";
+                String url = null;
+                if(0 == application.titleStack.size ())
+                {
+                    url = application.obtainMerchantUrl ();
+                }
+                else
+                {
+                    url = application.titleStack.peek ().getPageUrl ();
+                }
                 ShareModel msgModel = new ShareModel ();
                 msgModel.setImageUrl ( imageurl);
                 msgModel.setText ( text );
@@ -753,8 +761,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //分享成功
                 Platform platform = ( Platform ) msg.obj;
                 int action = msg.arg1;
-                if("WechatMoments".equals ( platform.getName () ))
-                {
+                if("WechatMoments".equals ( platform.getName () )) {
                     ToastUtils.showShortToast ( HomeActivity.this, "微信朋友圈分享成功" );
                 }
                 else if("Wechat".equals ( platform.getName () ))

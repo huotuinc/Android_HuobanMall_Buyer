@@ -229,11 +229,16 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
             break;
             case R.id.titleRightLeftImage:
             {
-                String text = "分享测试";
-                String imageurl = "http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg";
-                String title = "江苏华漫";
-                PageInfoModel pageInfo = application.titleStack.peek ();
-                String url = pageInfo.getPageUrl ();
+                String text = application.obtainMerchantName ()+"分享";
+                String imageurl = application.obtainMerchantLogo ();
+                String title = application.obtainMerchantName ()+"分享";
+                if(0 == application.titleStack.size ()) {
+                    url = application.obtainMerchantUrl ();
+                }
+                else
+                {
+                    url = application.titleStack.peek ().getPageUrl ();
+                }
                 ShareModel msgModel = new ShareModel ();
                 msgModel.setImageUrl ( imageurl);
                 msgModel.setText ( text );

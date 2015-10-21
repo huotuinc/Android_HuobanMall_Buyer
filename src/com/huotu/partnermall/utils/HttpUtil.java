@@ -24,6 +24,7 @@ import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.MSiteModel;
 import com.huotu.partnermall.model.MemberModel;
+import com.huotu.partnermall.model.MerchantInfoModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
 import com.huotu.partnermall.model.OrderModel;
 import com.huotu.partnermall.model.PayModel;
@@ -376,6 +377,43 @@ public class HttpUtil
         });
         Volley.newRequestQueue ( context ).add( re);
     }
+
+    /**
+     * 获取商户logo
+     * @param context
+     * @param application
+     * @param url
+     */
+    public void doVolleyLogo(Context context, final BaseApplication application, String url)
+    {
+        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONUtil<MerchantInfoModel > jsonUtil = new JSONUtil<MerchantInfoModel>();
+                MerchantInfoModel merchantInfo = new MerchantInfoModel();
+                merchantInfo = jsonUtil.toBean(response.toString (), merchantInfo);
+                if(null != merchantInfo) {
+                    if ( null != merchantInfo.getMall_logo ( ) && null != merchantInfo.getMall_name () ) {
+                        String logo = application.obtainMerchantUrl () + merchantInfo.getMall_logo ( );
+                        String name = merchantInfo.getMall_name ( );
+                        application.writeMerchantLogo ( logo );
+                        application.writeMerchantName ( name );
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+
+
+        });
+        Volley.newRequestQueue ( context ).add( re);
+    }
     /**
      * 获取支付信息
      * @param context
@@ -516,7 +554,7 @@ public class HttpUtil
                         userPop.showAtLocation (
                                 view,
                                 Gravity.CENTER, 0, 0
-                                             );
+                                               );
                         userPop.setOnDismissListener ( new PoponDismissListener ( aty ) );
                     }
                     else

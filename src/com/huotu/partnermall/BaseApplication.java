@@ -247,9 +247,11 @@ public class BaseApplication extends Application {
         //商户菜单
         String merchantMenus = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS );
         //商户类别菜单
-        String merChantCatagory = PreferenceHelper.readString ( getApplicationContext ( ),
-                                                                Constants.MERCHANT_INFO,
-                                                                Constants.MERCHANT_INFO_CATAGORY );
+        String merChantCatagory = PreferenceHelper.readString (
+                getApplicationContext ( ),
+                Constants.MERCHANT_INFO,
+                Constants.MERCHANT_INFO_CATAGORY
+                                                              );
 
         if((null == merchantId) && (null == merchantAlipayKey) && (null == merchantWeixinKey) && (null == merchantMenus) && (null == merChantCatagory))
         {
@@ -463,6 +465,30 @@ public class BaseApplication extends Application {
     public String obtainMerchantUrl()
     {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.PREFIX );
+    }
+
+    //获取商家的访问渠道
+    public String obtainMerchantLogo()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.MERCHANT_LOGO );
+    }
+
+    //获取商家的访问渠道
+    public void writeMerchantLogo(String logo)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.MERCHANT_LOGO, logo );
+    }
+
+    //获取商家的访问渠道
+    public String obtainMerchantName()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.MERCHANT_NAME);
+    }
+
+    //获取商家的访问渠道
+    public void writeMerchantName(String name)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.MERCHANT_NAME, name );
     }
 
     /**

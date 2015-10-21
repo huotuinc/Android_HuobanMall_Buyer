@@ -111,6 +111,10 @@ public class Constants {
 	public static final String MERCHANT_ALIPAY_ID = "merchant_alipay_id";
 	//商户支付宝KEY信息
 	public static final String ALIPAY_KEY         = "alipay_key";
+	//商户logo
+	public static final String MERCHANT_LOGO        = "merchant_logo";
+	//商户名称
+	public static final String MERCHANT_NAME        = "merchant_name";
 
 	//UMENG统计信息
 	public static final String U_MENG            = "umeng";
