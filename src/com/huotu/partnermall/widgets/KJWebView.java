@@ -294,8 +294,7 @@ class KJWebView extends RelativeLayout {
                                     pageInfo.setPageTitle ( title );
                                     pageInfo.setPageUrl ( url );
                                     application.titleStack.push ( pageInfo );
-                                }
-                                if(null != mHandler)
+                                }if(null != mHandler)
                                 {
                                     if(url.contains ( "back" ))
                                     {
@@ -303,7 +302,8 @@ class KJWebView extends RelativeLayout {
                                         mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
                                     }
                                     else {
-                                        if ( canGoBack ( ) ) {
+
+                                            if ( canGoBack ( ) ) {
                                             mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
                                         }
                                         else {
