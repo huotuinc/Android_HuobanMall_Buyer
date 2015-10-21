@@ -448,8 +448,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onPageStarted ( WebView view, String url, Bitmap favicon ) {
                         super.onPageStarted ( view, url, favicon );
-                        titleRightImage.setVisibility ( View.GONE );
-                        titleRightLeftImage.setVisibility ( View.GONE );
+
                     }
 
                     @Override
@@ -570,11 +569,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             break;
             case R.id.titleRightImage:
             {
-                //当前的url
+                /*//当前的url
                 PageInfoModel pageInfo = application.titleStack.peek ( );
                 //刷新页面
                 Message msg = mHandler.obtainMessage ( Constants.FRESHEN_PAGE_MESSAGE_TAG, pageInfo.getPageUrl ());
-                mHandler.sendMessage ( msg );
+                mHandler.sendMessage ( msg );*/
+                viewPage.reload ();
             }
             break;
             case R.id.sideslip_setting:

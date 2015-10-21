@@ -372,4 +372,12 @@ class KJWebView extends RelativeLayout {
         mWebView.addJavascriptInterface ( jsModel, jsFunc );
     }
 
+    /**
+     * 刷新
+     */
+    public void reload()
+    {
+        mWebView.reload ();
+    }
+
 }
