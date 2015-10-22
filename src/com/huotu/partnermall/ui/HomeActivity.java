@@ -825,7 +825,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
                 //更新界面
                 userName.setText ( user.getWxNickName () );
-                userName.setText ( user.getLevelName ( ) );
+                userType.setText ( user.getLevelName ( ) );
                 new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute ( );
 
             }
