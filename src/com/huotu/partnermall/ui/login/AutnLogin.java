@@ -71,9 +71,10 @@ class AutnLogin {
                                              public
                                              void onError ( Platform platform, int action, Throwable throwable ) {
                                                  view.setClickable ( true );
-                                                 if (action == Platform.ACTION_USER_INFOR) {
-                                                     mHandler.sendEmptyMessage ( Constants.MSG_AUTH_ERROR );
-                                                 }
+                                                 Message msg = new Message();
+                                                 msg.what = Constants.MSG_AUTH_ERROR;
+                                                 msg.obj = throwable;
+                                                 mHandler.sendMessage ( msg );
                                              }
 
                                              @Override

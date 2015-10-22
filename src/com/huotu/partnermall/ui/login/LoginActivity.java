@@ -175,13 +175,27 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             case Constants.MSG_AUTH_ERROR:
             {
                 progress.dismissView ( );
-                //提示授权失败
-                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权失败");
-                noticePop.showNotice ();
-                noticePop.showAtLocation (
-                        findViewById ( R.id.loginL ),
-                        Gravity.CENTER, 0, 0
-                                         );
+                Throwable throwable = ( Throwable ) msg.obj;
+                if("cn.sharesdk.wechat.utils.WechatClientNotExistException".equals ( throwable.toString () ))
+                {
+                    //手机没有安装微信客户端
+                    noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "手机没有安装微信客户端");
+                    noticePop.showNotice ();
+                    noticePop.showAtLocation (
+                            findViewById ( R.id.loginL ),
+                            Gravity.CENTER, 0, 0
+                                             );
+                }
+                else
+                {
+                    //提示授权失败
+                    noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权失败");
+                    noticePop.showNotice ();
+                    noticePop.showAtLocation (
+                            findViewById ( R.id.loginL ),
+                            Gravity.CENTER, 0, 0
+                                             );
+                }
 
             }
             break;
