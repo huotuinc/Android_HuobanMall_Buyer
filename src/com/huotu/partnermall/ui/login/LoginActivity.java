@@ -105,7 +105,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     protected
     void onResume ( ) {
         super.onResume ( );
-        progress.dismissView ( );
+        //progress.dismissView ( );
         loginL.setClickable ( true );
     }
 
@@ -143,7 +143,6 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             //授权登录
             case Constants.MSG_AUTH_COMPLETE:
             {
-                progress.dismissView ( );
                 //提示授权成功
                 Platform plat = ( Platform ) msg.obj;
                 ToastUtils.showShortToast ( LoginActivity.this, "微信授权成功，登陆中" );
@@ -198,6 +197,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             break;
             case Constants.MSG_LOGIN:
             {
+                progress.dismissView ( );
                 //登录后更新界面
                 AccountModel account = ( AccountModel ) msg.obj;
                 //和商家授权

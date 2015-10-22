@@ -26,7 +26,7 @@ public
 class ShareAdapter extends BaseAdapter {
 
 
-    private static String[] shareNames = new String[] { "微信" , "微信朋友圈" , "QQ空间" };
+    private static String[] shareNames = new String[] { "微信好友" , "微信朋友圈" , "QQ空间" };
     private        int[]    shareIcons = new int[] {
             R.drawable.logo_wechat , R.drawable.logo_wechatmoments , R.drawable.logo_qzone
     };

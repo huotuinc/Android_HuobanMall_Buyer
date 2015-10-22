@@ -474,9 +474,9 @@ public class HttpUtil
                     if(null != mall)
                     {
                         //写入userID
-                        account.setAccountId ( String.valueOf ( mall.getUserid () ) );
-                        account.setAccountName ( mall.getNickName () );
-                        account.setAccountIcon ( mall.getHeadImgUrl () );
+                        account.setAccountId ( String.valueOf ( mall.getUserid ( ) ) );
+                        account.setAccountName ( mall.getNickName ( ) );
+                        account.setAccountIcon ( mall.getHeadImgUrl ( ) );
 
                         //和商城用户系统交互
                         application.writeMemberInfo (
@@ -544,7 +544,7 @@ public class HttpUtil
                 if(null != switchUser)
                 {
                     List<SwitchUserModel.SwitchUser> userList = switchUser.getData ();
-                    if( (null != userList) && (!userList.isEmpty ()) && (userList.size () > 0) )
+                    if( (null != userList) && (!userList.isEmpty ()) && (userList.size () > 1) )
                     {
                         //弹出切换用户面板
                         SwitchUserPopWin userPop = new SwitchUserPopWin ( aty, userList,  application, wManager, mHandler, view );
@@ -554,6 +554,15 @@ public class HttpUtil
                                 Gravity.CENTER, 0, 0
                                                );
                         userPop.setOnDismissListener ( new PoponDismissListener ( aty ) );
+                    }
+                    else if((null != userList) && (!userList.isEmpty ()) && (userList.size () == 1))
+                    {
+                        NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "无其他账户，请绑定其他账户。");
+                        noticePop.showNotice ();
+                        noticePop.showAtLocation (
+                                view,
+                                Gravity.CENTER, 0, 0
+                                                 );
                     }
                 } else
                 {

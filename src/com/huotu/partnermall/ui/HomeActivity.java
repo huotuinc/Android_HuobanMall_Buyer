@@ -785,7 +785,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //分享失败
                 Platform platform = ( Platform ) msg.obj;
                 int action = msg.arg1;
-                ToastUtils.showShortToast ( HomeActivity.this, platform.getName () + "分享失败" );
+                if("WechatMoments".equals ( platform.getName () )) {
+                    ToastUtils.showShortToast ( HomeActivity.this, "微信朋友圈分享失败" );
+                }
+                else if("Wechat".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( HomeActivity.this, "微信分享失败" );
+                }
+                else if("QZone".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( HomeActivity.this, "QQ空间分享失败" );
+                }
+                else if("SinaWeibo".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( HomeActivity.this, "sina微博分享失败" );
+                }
             }
             break;
             case Constants.SHARE_CANCEL:
@@ -793,7 +807,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //分享取消
                 Platform platform = ( Platform ) msg.obj;
                 int action = msg.arg1;
-                ToastUtils.showShortToast ( HomeActivity.this, platform.getName () + "分享取消" );
+                if("WechatMoments".equals ( platform.getName () )) {
+                    ToastUtils.showShortToast ( HomeActivity.this, "微信朋友圈分享取消" );
+                }
+                else if("Wechat".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( HomeActivity.this, "微信分享取消" );
+                }
+                else if("QZone".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( HomeActivity.this, "QQ空间分享取消" );
+                }
+                else if("SinaWeibo".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( HomeActivity.this, "sina微博分享取消" );
+                }
             }
             break;
             case Constants.LEFT_IMG_SIDE:
