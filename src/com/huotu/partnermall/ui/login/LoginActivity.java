@@ -1,5 +1,6 @@
 package com.huotu.partnermall.ui.login;
 
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -63,12 +65,17 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
 
     public
     NoticePopWindow noticePop;
+    private
+    TextView        loginText;
+    public
+    AssetManager    am;
 
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
         mHandler = new Handler ( this );
+        am = this.getAssets ();
         setContentView ( R.layout.login_ui );
         findViewById ( );
         initView ( );
@@ -81,17 +88,19 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     void findViewById ( ) {
         loginL = ( RelativeLayout ) this.findViewById ( R.id.loginL );
         loginL.setOnClickListener ( this );
+        loginText = ( TextView ) this.findViewById ( R.id.loginText );
     }
 
     @Override
     protected
     void initView ( ) {
+        //SystemTools.setFontStyle ( loginText, am );
         loginL.setBackgroundColor (
                 SystemTools.obtainColor (
                         application.obtainMainColor (
                                                     )
                                         )
-                                         );
+                                  );
     }
 
     @Override

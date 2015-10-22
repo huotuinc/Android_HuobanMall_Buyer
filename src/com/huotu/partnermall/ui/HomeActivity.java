@@ -1,5 +1,6 @@
 package com.huotu.partnermall.ui;
 
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -152,6 +153,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
     private SwitchUserPopWin switchUser;
 
+    public
+    AssetManager am;
+
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
@@ -162,6 +166,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         mHandler = new Handler ( this );
         share = new SharePopupWindow ( HomeActivity.this, HomeActivity.this );
         wManager = this.getWindowManager ( );
+        am = this.getAssets ( );
         AppManager.getInstance ( ).addActivity ( this );
         setContentView ( R.layout.activity_home );
         //设置沉浸模式
@@ -192,6 +197,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         //标题栏文字
         titleText = ( TextView ) this.findViewById ( R.id.titleText );
+        //SystemTools.setFontStyle ( titleText, am );
         viewPage = ( KJWebView ) this.findViewById ( R.id.viewPage );
         mainMenuLayout = ( LinearLayout ) this.findViewById ( R.id.mainMenuLayout );
 
@@ -205,7 +211,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         getAuthLayout = ( RelativeLayout ) this.findViewById ( R.id.getAuth );
         userLogo = ( ImageView ) this.findViewById ( R.id.accountIcon );
         userName = ( TextView ) this.findViewById ( R.id.accountName );
+        //SystemTools.setFontStyle ( userName, am );
         userType = ( TextView ) this.findViewById ( R.id.accountType );
+        //SystemTools.setFontStyle ( userType, am );
 
         //初始化底部菜单
         bottomMenuLayout = ( RelativeLayout ) this.findViewById ( R.id.menuL );
@@ -350,7 +358,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         }
 
         //动态加载侧滑菜单
-        UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler );
+        UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am );
         ui.loadMenus ( );
         //加载底部菜单
         //ui.loadMainMenu ( null, bottomMenuLayout );
@@ -573,6 +581,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             break;
             case R.id.titleRightImage:
             {
+                SystemTools.setRotateAnimation(titleRightImage);
                 /*//当前的url
                 PageInfoModel pageInfo = application.titleStack.peek ( );
                 //刷新页面

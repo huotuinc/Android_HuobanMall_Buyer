@@ -1,6 +1,7 @@
 package com.huotu.partnermall.utils;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -41,12 +42,14 @@ class UIUtils {
     Resources       resources;
     private LinearLayout  mainMenuLayout;
     private WindowManager wManager;
-    private  Handler       mHandler;
+    private Handler       mHandler;
+    private
+    AssetManager am;
 
     public
     UIUtils (
             BaseApplication application, Context context, Resources resources, LinearLayout
-            mainMenuLayout, WindowManager wManager, Handler       mHandler
+            mainMenuLayout, WindowManager wManager, Handler mHandler, AssetManager am
             ) {
         this.application = application;
         this.context = context;
@@ -54,6 +57,7 @@ class UIUtils {
         this.mainMenuLayout = mainMenuLayout;
         this.mHandler = mHandler;
         this.wManager = wManager;
+        this.am = am;
     }
 
     /**
@@ -119,7 +123,9 @@ class UIUtils {
                 SystemTools.loadBackground ( menuIcon,  menuIconDraw);
                 //设置文本
                 TextView menuText = ( TextView ) menuLayout.findViewById ( R.id.menuText );
+                //SystemTools.setFontStyle ( menuText, am );
                 menuText.setText ( menu.getMenuName ( ) );
+
                 menuLayout.setOnClickListener (
                         new View.OnClickListener ( ) {
                             @Override

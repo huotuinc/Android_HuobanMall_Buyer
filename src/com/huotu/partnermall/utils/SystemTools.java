@@ -11,9 +11,16 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import android.annotation.SuppressLint;
+import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SystemTools
@@ -132,6 +139,39 @@ public class SystemTools
         String[] colors = colorStr.split ( "," );
         return Color.argb ( Integer.parseInt ( colors[0] ), Integer.parseInt ( colors[1] ), Integer.parseInt ( colors[2] ), Integer.parseInt ( colors[3] ) );
     }
+
+    /**
+     * 图片渐变
+     * @param view
+     */
+    public static void setFlickerAnimation(ImageView view) {
+        final Animation animation = new AlphaAnimation (0, 1); // Change alpha from fully visible to invisible
+        animation.setDuration(500); // duration - half a second
+        animation.setRepeatCount ( 3 ); // Repeat animation infinitely
+        animation.setFillAfter(true);
+        view.setAnimation ( animation);
+        animation.startNow ();
+    }
+
+    public static void setRotateAnimation(ImageView view) {
+        final Animation animation = new RotateAnimation (0f,360f,Animation.RELATIVE_TO_SELF,
+                                                         0.5f,Animation.RELATIVE_TO_SELF,0.5f); // Change alpha from fully visible to invisible
+        animation.setDuration ( 1000 ); // duration - half a second
+        animation.setRepeatCount ( 3 ); // Repeat animation infinitely
+        animation.setFillAfter ( true );
+        view.setAnimation ( animation );
+        animation.startNow ( );
+    }
+
+    /**
+     * 设置字体theme
+     * @param view
+     */
+    /*public static void setFontStyle(TextView view, AssetManager am )
+    {
+        Typeface font = Typeface.createFromAsset ( am, "fonts/font.TTF");
+        view.setTypeface ( font );
+    }*/
 
     
 }
