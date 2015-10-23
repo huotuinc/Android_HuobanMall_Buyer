@@ -46,9 +46,11 @@ import java.net.URLEncoder;
 import java.security.AccessControlContext;
 import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.http.HttpResponse;
@@ -555,9 +557,14 @@ public class HttpUtil
                     List<SwitchUserModel.SwitchUser> userList = switchUser.getData ();
                     if( (null != userList) && (!userList.isEmpty ()) && (userList.size () > 1) )
                     {
+                        //去重复数据
+                        List<SwitchUserModel.SwitchUser> sourceList = new ArrayList< SwitchUserModel.SwitchUser > (  );
+                        sourceList = clearData(userList);
+                        //关闭载入数据条
+                        mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
                         //弹出切换用户面板
-                        SwitchUserPopWin userPop = new SwitchUserPopWin ( aty, userList,  application, wManager, mHandler, view );
-                        userPop.initView ();
+                        SwitchUserPopWin userPop = new SwitchUserPopWin ( aty, sourceList,  application, wManager, mHandler, view );
+                        userPop.initView ( );
                         userPop.showAtLocation (
                                 view,
                                 Gravity.CENTER, 0, 0
@@ -566,6 +573,9 @@ public class HttpUtil
                     }
                     else if((null != userList) && (!userList.isEmpty ()) && (userList.size () == 1))
                     {
+                        //关闭载入数据条
+                        mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
+
                         NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "无其他账户，请绑定其他账户。");
                         noticePop.showNotice ();
                         noticePop.showAtLocation (
@@ -575,6 +585,9 @@ public class HttpUtil
                     }
                 } else
                 {
+                    //关闭载入数据条
+                    mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
+
                     NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "未检测到你的账户信息，请确认。");
                     noticePop.showNotice ();
                     noticePop.showAtLocation (
@@ -657,7 +670,7 @@ public class HttpUtil
                             payModel.setNotifyurl ( application.obtainMerchantUrl ()+"Alipay/Notify.aspx" );
                             //alipay
                             PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
-                            payFunc.aliPay ();
+                            payFunc.aliPay ( );
                         }
                         else if("2".equals ( payModel.getPaymentType () ) || "9".equals ( payModel.getPaymentType () ))
                         {
@@ -680,6 +693,26 @@ public class HttpUtil
 
         });
         Volley.newRequestQueue ( context ).add( re);
+    }
+
+    /**
+     * 清楚重复数据
+     * @param dataList
+     * @return
+     */
+    private List<SwitchUserModel.SwitchUser> clearData(List<SwitchUserModel.SwitchUser> dataList)
+    {
+        if(!dataList.isEmpty()){
+            for(int i=0;i<dataList.size();i++){
+                for(int j=dataList.size()-1;j>i;j--){
+                    if(dataList.get(i).getUserid () == dataList.get(j).getUserid ()){
+                        dataList.remove(j);
+                    }
+                }
+            }
+        }
+
+        return dataList;
     }
 
 

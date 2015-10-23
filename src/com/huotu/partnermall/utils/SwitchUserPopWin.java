@@ -70,17 +70,12 @@ class SwitchUserPopWin extends PopupWindow {
             userLayout.addView ( userItem );*/
         }
         else {
-            int size = 0;
-            if(5 > users.size ( ))
+            if(5 < users.size ( ))
             {
-                size = users.size ( );
-            }
-            else
-            {
-                size = 4;
+                users = users.subList ( 0, 5 );
             }
 
-            for ( int i = 0 ; i < size ; i++ ) {
+            for ( int i = 0 ; i < users.size () ; i++ ) {
 
                 final SwitchUserModel.SwitchUser user = users.get ( i );
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( ViewGroup

@@ -99,15 +99,18 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         homeTitle = ( RelativeLayout ) this.findViewById ( R.id.newtitleLayout );
         titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
         titleLeftImage.setOnClickListener ( this );
-        titleLeftImage.setClickable ( false );
+       // titleLeftImage.setClickable ( false );
+        titleLeftImage.setVisibility ( View.GONE );
         titleText = ( TextView ) this.findViewById ( R.id.titleText );
         SystemTools.setFontStyle ( titleText, application );
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
-        titleRightImage.setClickable ( false );
+        //titleRightImage.setClickable ( false );
+        titleRightImage.setVisibility ( View.GONE );
         titleRightImage.setOnClickListener ( this );
         viewPage = ( KJWebView ) this.findViewById ( R.id.viewPage );
         titleRightLeftImage = ( ImageView ) this.findViewById ( R.id.titleRightLeftImage );
-        titleRightLeftImage.setClickable ( false );
+        //titleRightLeftImage.setClickable ( false );
+        titleRightLeftImage.setVisibility ( View.GONE );
         titleRightLeftImage.setOnClickListener ( this );
     }
 
@@ -176,12 +179,12 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                         super.onPageFinished ( view, url );
                         //页面加载完成后,读取菜单项
                        // titleRightLeftImage.setClickable ( true );
-                        /*titleLeftImage.setVisibility ( View.VISIBLE );
+                        titleLeftImage.setVisibility ( View.VISIBLE );
                         titleRightImage.setVisibility ( View.VISIBLE );
-                        titleRightLeftImage.setVisibility ( View.VISIBLE );*/
-                        titleLeftImage.setClickable ( true );
+                        titleRightLeftImage.setVisibility ( View.VISIBLE );
+                        /*titleLeftImage.setClickable ( true );
                         titleRightImage.setClickable ( true );
-                        titleRightLeftImage.setClickable ( true );
+                        titleRightLeftImage.setClickable ( true );*/
                         titleText.setText ( view.getTitle ( ) );
                     }
 

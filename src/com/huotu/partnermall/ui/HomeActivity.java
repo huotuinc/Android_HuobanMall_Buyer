@@ -58,6 +58,7 @@ import com.huotu.partnermall.widgets.KJWebView;
 import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 import com.huotu.partnermall.widgets.PhotoSelectView;
 import com.huotu.partnermall.widgets.PopTimeView;
+import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import com.huotu.partnermall.widgets.UserInfoView;
 
@@ -154,6 +155,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     private SwitchUserPopWin switchUser;
 
     public
+    ProgressPopupWindow progress;
+
+    public
     AssetManager am;
 
     @Override
@@ -177,6 +181,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //初始化修改信息组件
         userInfoView = new UserInfoView ( this, application );
         userInfoView.setOnUserInfoBackListener ( this );
+        progress = new ProgressPopupWindow ( HomeActivity.this, HomeActivity.this, wManager );
     }
 
     @Override
@@ -187,11 +192,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //构建标题左侧图标，点击事件
         titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
         titleLeftImage.setOnClickListener ( this );
-        titleLeftImage.setClickable ( false );
-        //titleLeftImage.setVisibility ( View.GONE );
+        //titleLeftImage.setClickable ( false );
+        titleLeftImage.setVisibility ( View.GONE );
         //构建标题右侧图标，点击事件
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
-        titleRightImage.setClickable ( false );
+        //titleRightImage.setClickable ( false );
+        titleRightImage.setVisibility ( View.GONE );
         titleRightImage.setOnClickListener ( this );
         loginLayout = ( RelativeLayout ) this.findViewById ( R.id.loginLayout );
         loginSetting = ( ImageView ) this.findViewById ( R.id.sideslip_setting );
@@ -222,7 +228,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         menuView = ( KJWebView ) this.findViewById ( R.id.menuPage );
         titleRightLeftImage = ( ImageView ) this.findViewById ( R.id.titleRightLeftImage );
-        titleRightLeftImage.setClickable ( false );
+        //titleRightLeftImage.setClickable ( false );
+        titleRightLeftImage.setVisibility ( View.GONE );
         titleRightLeftImage.setOnClickListener ( this );
     }
 
@@ -471,10 +478,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         super.onPageFinished ( view, url );
                         //titleRightLeftImage.setClickable ( true );
                        // titleLeftImage.setVisibility ( View.VISIBLE );
-                        titleLeftImage.setClickable ( true );
-                        titleRightImage.setClickable ( true );
-                        titleRightLeftImage.setClickable ( true );
+                        //titleLeftImage.setClickable ( true );
+                        //titleRightImage.setClickable ( true );
+                        //titleRightLeftImage.setClickable ( true );
+                        titleLeftImage.setVisibility ( View.VISIBLE );
+                        titleRightImage.setVisibility ( View.VISIBLE );
+                        titleRightLeftImage.setVisibility ( View.VISIBLE );
                         titleText.setText ( view.getTitle ( ) );
+                        //切换背景
+                        titleRightImage.clearAnimation ();
+                        Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
+                        SystemTools.loadBackground ( titleRightImage, rightDraw );
                     }
 
                     @Override
@@ -587,6 +601,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             break;
             case R.id.titleRightImage:
             {
+                //切换背景
+                Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh_loding );
+                SystemTools.loadBackground ( titleRightImage, rightDraw );
                 SystemTools.setRotateAnimation(titleRightImage);
                 /*//当前的url
                 PageInfoModel pageInfo = application.titleStack.peek ( );
@@ -602,11 +619,19 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 String url = "http://mallapi.huobanj.cn/weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
                 AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url );
                 final String rootUrls = paramUtil.obtainUrls ( );
-                HttpUtil.getInstance ().doVolleyObtainUser ( HomeActivity.this, HomeActivity.this, application,
-                                                             rootUrls, findViewById ( R.id.titleRightLeftImage ), wManager, mHandler );
+                HttpUtil.getInstance ().doVolleyObtainUser (
+                        HomeActivity.this, HomeActivity.this, application,
+                        rootUrls, findViewById ( R.id.titleRightLeftImage ), wManager, mHandler
+                                                           );
 
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
+                //切换进度条
+                progress.showProgress ( "正在获取用户数据" );
+                progress.showAtLocation (
+                        findViewById ( R.id.titleLeftImage ),
+                        Gravity.CENTER, 0, 0
+                                        );
             }
             break;
             /*case R.id.sideslip_home: {
@@ -722,7 +747,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             void onComplete (
                                     Platform platform, int i, HashMap< String, Object > hashMap
                                             ) {
-                                Message msg = Message.obtain ();
+                                Message msg = Message.obtain ( );
                                 msg.what = Constants.SHARE_SUCCESS;
                                 msg.obj = platform;
                                 mHandler.sendMessage ( msg );
@@ -731,7 +756,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             @Override
                             public
                             void onError ( Platform platform, int i, Throwable throwable ) {
-                                Message msg = Message.obtain ();
+                                Message msg = Message.obtain ( );
                                 msg.what = Constants.SHARE_ERROR;
                                 msg.obj = platform;
                                 mHandler.sendMessage ( msg );
@@ -740,7 +765,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             @Override
                             public
                             void onCancel ( Platform platform, int i ) {
-                                Message msg = Message.obtain ();
+                                Message msg = Message.obtain ( );
                                 msg.what = Constants.SHARE_CANCEL;
                                 msg.obj = platform;
                                 mHandler.sendMessage ( msg );
@@ -876,6 +901,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 userType.setText ( user.getLevelName ( ) );
                 new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute ( );
 
+            }
+            break;
+            case Constants.LOAD_SWITCH_USER_OVER:
+            {
+                progress.dismissView ( );
             }
             break;
             default:

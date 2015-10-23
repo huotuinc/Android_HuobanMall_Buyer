@@ -124,7 +124,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
         switch ( v.getId ( ) ) {
             case R.id.loginL: {
                 //
-                progress.showProgress ( );
+                progress.showProgress ( null );
                 progress.showAtLocation (
                         findViewById ( R.id.loginL ),
                         Gravity.CENTER, 0, 0
@@ -161,6 +161,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             //授权登录
             case Constants.LOGIN_AUTH_ERROR:
             {
+                loginL.setClickable ( true );
                 progress.dismissView ( );
                 //提示授权失败
                 String notice = ( String ) msg.obj;
@@ -174,6 +175,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             break;
             case Constants.MSG_AUTH_ERROR:
             {
+                loginL.setClickable ( true );
                 progress.dismissView ( );
                 Throwable throwable = ( Throwable ) msg.obj;
                 if("cn.sharesdk.wechat.utils.WechatClientNotExistException".equals ( throwable.toString () ))
@@ -188,6 +190,8 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 }
                 else
                 {
+                    loginL.setClickable ( true );
+                    progress.dismissView ();
                     //提示授权失败
                     noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权失败");
                     noticePop.showNotice ();
@@ -201,6 +205,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             break;
             case Constants.MSG_AUTH_CANCEL:
             {
+                loginL.setClickable ( true );
                 //提示取消授权
                 progress.dismissView ();
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权被取消");
