@@ -378,7 +378,28 @@ class KJWebView extends RelativeLayout {
      */
     public void reload()
     {
-        mWebView.reload ();
+        mWebView.reload ( );
+    }
+
+
+    public int getContentHeight()
+    {
+       return mWebView.getContentHeight ();
+    }
+
+    public float getScale()
+    {
+        return mWebView.getScale ( );
+    }
+
+    public int getWebHeight()
+    {
+        return mWebView.getHeight ();
+    }
+
+    public int getWebScrollY()
+    {
+        return mWebView.getScrollY ();
     }
 
 }
