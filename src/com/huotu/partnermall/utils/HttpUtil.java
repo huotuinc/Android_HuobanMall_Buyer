@@ -396,8 +396,17 @@ public class HttpUtil
                 MerchantInfoModel merchantInfo = new MerchantInfoModel();
                 merchantInfo = jsonUtil.toBean(response.toString (), merchantInfo);
                 if(null != merchantInfo) {
+                    String logo = null;
                     if ( null != merchantInfo.getMall_logo ( ) && null != merchantInfo.getMall_name () ) {
-                        String logo = application.obtainMerchantUrl () + merchantInfo.getMall_logo ( );
+                        if(!TextUtils.isEmpty ( application.obtainMerchantUrl () ))
+                        {
+                            logo =  application.obtainMerchantUrl () + merchantInfo.getMall_logo ( );
+                        }
+                        else
+                        {
+                            logo = merchantInfo.getMall_logo ( );
+                        }
+
                         String name = merchantInfo.getMall_name ( );
                         application.writeMerchantLogo ( logo );
                         application.writeMerchantName ( name );

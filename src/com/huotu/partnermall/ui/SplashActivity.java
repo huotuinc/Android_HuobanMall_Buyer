@@ -161,12 +161,6 @@ public class SplashActivity extends BaseActivity {
                                                        SysModel sysModel = XMLParserUtils.getInstance ( ).readSys ( SplashActivity.this );
                                                        application.writeSysInfo(sysModel);
                                                    }
-                                                   //获取商户logo信息
-                                                   String logoUrl = "http://mallapi.huobanj.cn/mall/getConfig";
-                                                   logoUrl += "?customerId="+application.readMerchantId ();
-                                                   AuthParamUtils paramLogo = new AuthParamUtils ( application, System.currentTimeMillis (), logoUrl );
-                                                   final String logoUrls = paramLogo.obtainUrls ( );
-                                                   HttpUtil.getInstance ( ).doVolleyLogo(SplashActivity.this, application, logoUrls );
                                                    //获取商家域名
                                                    //获取商户站点
                                                    String rootUrl = "http://mallapi.huobanj.cn/mall/getmsiteurl";
@@ -174,9 +168,17 @@ public class SplashActivity extends BaseActivity {
                                                    AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), rootUrl );
                                                    final String rootUrls = paramUtil.obtainUrls ( );
                                                    HttpUtil.getInstance ( ).doVolleySite(SplashActivity.this, application, rootUrls );
+                                                   //获取商户logo信息
+                                                   String logoUrl = "http://mallapi.huobanj.cn/mall/getConfig";
+                                                   logoUrl += "?customerId="+application.readMerchantId ();
+                                                   AuthParamUtils paramLogo = new AuthParamUtils ( application, System.currentTimeMillis (), logoUrl );
+                                                   final String logoUrls = paramLogo.obtainUrls ( );
+                                                   HttpUtil.getInstance ( ).doVolleyLogo (
+                                                           SplashActivity.this, application,
+                                                           logoUrls );
                                                    //获取商户支付信息
                                                    String targetUrl = "http://mallapi.huobanj.cn/PayConfig?customerid=";
-                                                   targetUrl += "3447";//动态获取商户编号，现在暂时使用3447////application.readMerchantId ();
+                                                   targetUrl += application.readMerchantId ();//动态获取商户编号，现在暂时使用3447////application.readMerchantId ();
                                                    AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), targetUrl );
                                                    final String url = paramUtils.obtainUrls ( );
                                                    HttpUtil.getInstance ().doVolley(SplashActivity.this, application, url);
