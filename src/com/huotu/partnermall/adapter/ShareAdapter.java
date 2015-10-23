@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.utils.SystemTools;
 
@@ -35,11 +36,13 @@ class ShareAdapter extends BaseAdapter {
     };
 
     private LayoutInflater inflater;
+    private
+    BaseApplication application;
 
     public
-    ShareAdapter ( Context context ) {
+    ShareAdapter ( Context context, BaseApplication application ) {
+        this.application = application;
         inflater = LayoutInflater.from ( context );
-        am = context.getAssets ();
     }
 
     @Override
@@ -68,7 +71,7 @@ class ShareAdapter extends BaseAdapter {
         }
         ImageView shareIcon = (ImageView) convertView.findViewById(R.id.share_icon);
         TextView shareTitle = (TextView ) convertView.findViewById(R.id.share_title);
-        //SystemTools.setFontStyle ( shareTitle, am );
+        SystemTools.setFontStyle ( shareTitle, application );
         shareIcon.setImageResource(shareIcons[position]);
         shareTitle.setText(shareNames[position]);
 

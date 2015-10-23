@@ -94,7 +94,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     @Override
     protected
     void initView ( ) {
-        //SystemTools.setFontStyle ( loginText, am );
+        SystemTools.setFontStyle ( loginText, application );
         loginL.setBackgroundColor (
                 SystemTools.obtainColor (
                         application.obtainMainColor (

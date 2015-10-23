@@ -164,7 +164,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         application = ( BaseApplication ) HomeActivity.this.getApplication ( );
         resources = HomeActivity.this.getResources ( );
         mHandler = new Handler ( this );
-        share = new SharePopupWindow ( HomeActivity.this, HomeActivity.this );
+        share = new SharePopupWindow ( HomeActivity.this, HomeActivity.this, application );
         wManager = this.getWindowManager ( );
         am = this.getAssets ( );
         AppManager.getInstance ( ).addActivity ( this );
@@ -197,7 +197,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         //标题栏文字
         titleText = ( TextView ) this.findViewById ( R.id.titleText );
-        //SystemTools.setFontStyle ( titleText, am );
+        SystemTools.setFontStyle ( titleText, application );
         viewPage = ( KJWebView ) this.findViewById ( R.id.viewPage );
         mainMenuLayout = ( LinearLayout ) this.findViewById ( R.id.mainMenuLayout );
 
@@ -211,9 +211,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         getAuthLayout = ( RelativeLayout ) this.findViewById ( R.id.getAuth );
         userLogo = ( ImageView ) this.findViewById ( R.id.accountIcon );
         userName = ( TextView ) this.findViewById ( R.id.accountName );
-        //SystemTools.setFontStyle ( userName, am );
+        SystemTools.setFontStyle ( userName, application );
         userType = ( TextView ) this.findViewById ( R.id.accountType );
-        //SystemTools.setFontStyle ( userType, am );
+        SystemTools.setFontStyle ( userType, application );
 
         //初始化底部菜单
         bottomMenuLayout = ( RelativeLayout ) this.findViewById ( R.id.menuL );

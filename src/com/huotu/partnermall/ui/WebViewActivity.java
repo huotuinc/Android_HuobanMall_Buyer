@@ -84,7 +84,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         this.setContentView ( R.layout.new_load_page );
         setImmerseLayout ( findViewById ( R.id.newtitleLayout ) );
         mHandler = new Handler ( this );
-        share = new SharePopupWindow ( WebViewActivity.this, WebViewActivity.this );
+        share = new SharePopupWindow ( WebViewActivity.this, WebViewActivity.this, application );
 
         Bundle bundle = this.getIntent ( ).getExtras ( );
         url = bundle.getString ( Constants.INTENT_URL );
@@ -100,6 +100,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
         titleLeftImage.setOnClickListener ( this );
         titleText = ( TextView ) this.findViewById ( R.id.titleText );
+        SystemTools.setFontStyle ( titleText, application );
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
         titleRightImage.setVisibility ( View.GONE );
         titleRightImage.setOnClickListener ( this );

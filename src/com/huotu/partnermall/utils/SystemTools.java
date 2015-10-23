@@ -23,6 +23,8 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.huotu.partnermall.BaseApplication;
+
 public class SystemTools
 {
 
@@ -167,11 +169,10 @@ public class SystemTools
      * 设置字体theme
      * @param view
      */
-    /*public static void setFontStyle(TextView view, AssetManager am )
+    public static void setFontStyle(TextView view, BaseApplication application )
     {
-        Typeface font = Typeface.createFromAsset ( am, "fonts/font.TTF");
-        view.setTypeface ( font );
-    }*/
+        view.setTypeface ( application.font );
+    }
 
     
 }

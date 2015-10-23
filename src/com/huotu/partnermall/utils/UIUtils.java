@@ -123,7 +123,7 @@ class UIUtils {
                 SystemTools.loadBackground ( menuIcon,  menuIconDraw);
                 //设置文本
                 TextView menuText = ( TextView ) menuLayout.findViewById ( R.id.menuText );
-                //SystemTools.setFontStyle ( menuText, am );
+                SystemTools.setFontStyle ( menuText, application );
                 menuText.setText ( menu.getMenuName ( ) );
 
                 menuLayout.setOnClickListener (
