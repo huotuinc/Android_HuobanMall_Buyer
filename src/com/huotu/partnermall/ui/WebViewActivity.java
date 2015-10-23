@@ -99,6 +99,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         homeTitle = ( RelativeLayout ) this.findViewById ( R.id.newtitleLayout );
         titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
         titleLeftImage.setOnClickListener ( this );
+        titleLeftImage.setVisibility ( View.GONE );
         titleText = ( TextView ) this.findViewById ( R.id.titleText );
         SystemTools.setFontStyle ( titleText, application );
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
@@ -176,6 +177,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                         super.onPageFinished ( view, url );
                         //页面加载完成后,读取菜单项
                        // titleRightLeftImage.setClickable ( true );
+                        titleLeftImage.setVisibility ( View.VISIBLE );
                         titleRightImage.setVisibility ( View.VISIBLE );
                         titleRightLeftImage.setVisibility ( View.VISIBLE );
                         titleText.setText ( view.getTitle ( ) );

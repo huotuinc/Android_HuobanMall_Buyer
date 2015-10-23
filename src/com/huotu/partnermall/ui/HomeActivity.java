@@ -187,6 +187,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //构建标题左侧图标，点击事件
         titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
         titleLeftImage.setOnClickListener ( this );
+        titleLeftImage.setVisibility ( View.GONE );
         //构建标题右侧图标，点击事件
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
         titleRightImage.setVisibility ( View.GONE );
@@ -466,6 +467,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //页面加载完成后,读取菜单项
                         super.onPageFinished ( view, url );
                         //titleRightLeftImage.setClickable ( true );
+                        titleLeftImage.setVisibility ( View.VISIBLE );
                         titleRightImage.setVisibility ( View.VISIBLE );
                         titleRightLeftImage.setVisibility ( View.VISIBLE );
                         titleText.setText ( view.getTitle ( ) );
@@ -683,6 +685,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 String text = application.obtainMerchantName ()+"分享";
                 String imageurl = application.obtainMerchantLogo ();
+                if(!imageurl.contains ( "http://" ))
+                {
+                    //加上域名
+                    imageurl = application.obtainMerchantUrl () + imageurl;
+                }
                 String title = application.obtainMerchantName ()+"分享";
                 String url = null;
                 if(0 == application.titleStack.size ())
