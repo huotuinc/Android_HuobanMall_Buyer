@@ -17,6 +17,7 @@
         android:layout_height="@dimen/loginBtnHeight"
         >
         <TextView
+            android:id="@+id/loginText"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/loginBtnHeight"
             android:text="微信授权登录"

@@ -2,6 +2,7 @@ package com.huotu.partnermall.widgets;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +11,12 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.huotu.partnermall.adapter.ShareAdapter;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ShareModel;
+import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.WindowUtils;
 
 import java.util.HashMap;
@@ -37,11 +40,14 @@ class SharePopupWindow extends PopupWindow {
     private PlatformActionListener platformActionListener;
     private Platform.ShareParams   shareParams;
     private Activity               aty;
+    private
+    AssetManager am;
 
     public
     SharePopupWindow ( Context cx, Activity aty ) {
         this.context = cx;
         this.aty = aty;
+        am = context.getAssets ();
     }
 
     public
@@ -69,16 +75,20 @@ class SharePopupWindow extends PopupWindow {
         Button btn_cancel = ( Button ) view.findViewById ( R.id.btn_cancel );
         // 取消按钮
         btn_cancel.setOnClickListener (
-                new View.OnClickListener () {
+                new View.OnClickListener ( ) {
 
-                                          public void onClick(View v) {
-                                              // 销毁弹出框
-                                              dismiss();
-                                          }
-                                      });
+                    public
+                    void onClick ( View v ) {
+                        // 销毁弹出框
+                        dismiss ( );
+                    }
+                }
+                                      );
+        TextView shareTitle = ( TextView ) view.findViewById ( R.id.share_title );
+        //SystemTools.setFontStyle ( shareTitle, am );
 
         // 设置SelectPicPopupWindow的View
-        this.setContentView(view);
+        this.setContentView ( view);
         // 设置SelectPicPopupWindow弹出窗体的宽
         this.setWidth( LinearLayout.LayoutParams.FILL_PARENT);
         // 设置SelectPicPopupWindow弹出窗体的高

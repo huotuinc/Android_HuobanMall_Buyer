@@ -1,5 +1,6 @@
 package com.huotu.partnermall.ui.login;
 
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -63,12 +65,17 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
 
     public
     NoticePopWindow noticePop;
+    private
+    TextView        loginText;
+    public
+    AssetManager    am;
 
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
         mHandler = new Handler ( this );
+        am = this.getAssets ();
         setContentView ( R.layout.login_ui );
         findViewById ( );
         initView ( );
@@ -81,17 +88,19 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     void findViewById ( ) {
         loginL = ( RelativeLayout ) this.findViewById ( R.id.loginL );
         loginL.setOnClickListener ( this );
+        loginText = ( TextView ) this.findViewById ( R.id.loginText );
     }
 
     @Override
     protected
     void initView ( ) {
+        //SystemTools.setFontStyle ( loginText, am );
         loginL.setBackgroundColor (
                 SystemTools.obtainColor (
                         application.obtainMainColor (
                                                     )
                                         )
-                                         );
+                                  );
     }
 
     @Override
@@ -105,7 +114,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     protected
     void onResume ( ) {
         super.onResume ( );
-        progress.dismissView ( );
+        //progress.dismissView ( );
         loginL.setClickable ( true );
     }
 
@@ -143,7 +152,6 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             //授权登录
             case Constants.MSG_AUTH_COMPLETE:
             {
-                progress.dismissView ( );
                 //提示授权成功
                 Platform plat = ( Platform ) msg.obj;
                 ToastUtils.showShortToast ( LoginActivity.this, "微信授权成功，登陆中" );
@@ -167,13 +175,27 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             case Constants.MSG_AUTH_ERROR:
             {
                 progress.dismissView ( );
-                //提示授权失败
-                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权失败");
-                noticePop.showNotice ();
-                noticePop.showAtLocation (
-                        findViewById ( R.id.loginL ),
-                        Gravity.CENTER, 0, 0
-                                         );
+                Throwable throwable = ( Throwable ) msg.obj;
+                if("cn.sharesdk.wechat.utils.WechatClientNotExistException".equals ( throwable.toString () ))
+                {
+                    //手机没有安装微信客户端
+                    noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "手机没有安装微信客户端");
+                    noticePop.showNotice ();
+                    noticePop.showAtLocation (
+                            findViewById ( R.id.loginL ),
+                            Gravity.CENTER, 0, 0
+                                             );
+                }
+                else
+                {
+                    //提示授权失败
+                    noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权失败");
+                    noticePop.showNotice ();
+                    noticePop.showAtLocation (
+                            findViewById ( R.id.loginL ),
+                            Gravity.CENTER, 0, 0
+                                             );
+                }
 
             }
             break;
@@ -198,6 +220,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             break;
             case Constants.MSG_LOGIN:
             {
+                progress.dismissView ( );
                 //登录后更新界面
                 AccountModel account = ( AccountModel ) msg.obj;
                 //和商家授权
