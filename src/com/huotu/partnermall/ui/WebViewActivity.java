@@ -99,16 +99,15 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         homeTitle = ( RelativeLayout ) this.findViewById ( R.id.newtitleLayout );
         titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
         titleLeftImage.setOnClickListener ( this );
-        titleLeftImage.setVisibility ( View.GONE );
+        titleLeftImage.setClickable ( false );
         titleText = ( TextView ) this.findViewById ( R.id.titleText );
         SystemTools.setFontStyle ( titleText, application );
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
-        titleRightImage.setVisibility ( View.GONE );
+        titleRightImage.setClickable ( false );
         titleRightImage.setOnClickListener ( this );
         viewPage = ( KJWebView ) this.findViewById ( R.id.viewPage );
         titleRightLeftImage = ( ImageView ) this.findViewById ( R.id.titleRightLeftImage );
         titleRightLeftImage.setClickable ( false );
-        titleRightLeftImage.setVisibility ( View.GONE );
         titleRightLeftImage.setOnClickListener ( this );
     }
 
@@ -177,9 +176,12 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                         super.onPageFinished ( view, url );
                         //页面加载完成后,读取菜单项
                        // titleRightLeftImage.setClickable ( true );
-                        titleLeftImage.setVisibility ( View.VISIBLE );
+                        /*titleLeftImage.setVisibility ( View.VISIBLE );
                         titleRightImage.setVisibility ( View.VISIBLE );
-                        titleRightLeftImage.setVisibility ( View.VISIBLE );
+                        titleRightLeftImage.setVisibility ( View.VISIBLE );*/
+                        titleLeftImage.setClickable ( true );
+                        titleRightImage.setClickable ( true );
+                        titleRightLeftImage.setClickable ( true );
                         titleText.setText ( view.getTitle ( ) );
                     }
 
@@ -235,7 +237,13 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
             {
                 String text = application.obtainMerchantName ()+"分享";
                 String imageurl = application.obtainMerchantLogo ();
+                if(!imageurl.contains ( "http://" ))
+                {
+                    //加上域名
+                    imageurl = application.obtainMerchantUrl () + imageurl;
+                }
                 String title = application.obtainMerchantName ()+"分享";
+                String url = null;
                 if(0 == application.titleStack.size ()) {
                     url = application.obtainMerchantUrl ();
                 }
@@ -344,7 +352,21 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                 //分享失败
                 Platform platform = ( Platform ) msg.obj;
                 int action = msg.arg1;
-                ToastUtils.showShortToast ( WebViewActivity.this, platform.getName () + "分享失败" );
+                if("WechatMoments".equals ( platform.getName () )) {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "微信朋友圈分享失败" );
+                }
+                else if("Wechat".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "微信分享失败" );
+                }
+                else if("QZone".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "QQ空间分享失败" );
+                }
+                else if("SinaWeibo".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "sina微博分享失败" );
+                }
             }
             break;
             case Constants.SHARE_CANCEL:
@@ -352,7 +374,21 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                 //分享取消
                 Platform platform = ( Platform ) msg.obj;
                 int action = msg.arg1;
-                ToastUtils.showShortToast ( WebViewActivity.this, platform.getName () + "分享取消" );
+                if("WechatMoments".equals ( platform.getName () )) {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "微信朋友圈分享取消" );
+                }
+                else if("Wechat".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "微信分享取消" );
+                }
+                else if("QZone".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "QQ空间分享取消" );
+                }
+                else if("SinaWeibo".equals ( platform.getName () ))
+                {
+                    ToastUtils.showShortToast ( WebViewActivity.this, "sina微博分享取消" );
+                }
             }
             break;
             case AliPayUtil.SDK_PAY_FLAG: {

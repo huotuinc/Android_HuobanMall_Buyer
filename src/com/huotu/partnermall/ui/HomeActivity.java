@@ -187,10 +187,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //构建标题左侧图标，点击事件
         titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
         titleLeftImage.setOnClickListener ( this );
-        titleLeftImage.setVisibility ( View.GONE );
+        titleLeftImage.setClickable ( false );
+        //titleLeftImage.setVisibility ( View.GONE );
         //构建标题右侧图标，点击事件
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
-        titleRightImage.setVisibility ( View.GONE );
+        titleRightImage.setClickable ( false );
         titleRightImage.setOnClickListener ( this );
         loginLayout = ( RelativeLayout ) this.findViewById ( R.id.loginLayout );
         loginSetting = ( ImageView ) this.findViewById ( R.id.sideslip_setting );
@@ -221,7 +222,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         menuView = ( KJWebView ) this.findViewById ( R.id.menuPage );
         titleRightLeftImage = ( ImageView ) this.findViewById ( R.id.titleRightLeftImage );
-        titleRightLeftImage.setVisibility ( View.GONE );
+        titleRightLeftImage.setClickable ( false );
         titleRightLeftImage.setOnClickListener ( this );
     }
 
@@ -458,7 +459,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onPageStarted ( WebView view, String url, Bitmap favicon ) {
                         super.onPageStarted ( view, url, favicon );
-
+                        /*titleLeftImage.setClickable ( false );
+                        titleRightImage.setClickable ( false );
+                        titleRightLeftImage.setClickable ( false );*/
                     }
 
                     @Override
@@ -467,9 +470,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //页面加载完成后,读取菜单项
                         super.onPageFinished ( view, url );
                         //titleRightLeftImage.setClickable ( true );
-                        titleLeftImage.setVisibility ( View.VISIBLE );
-                        titleRightImage.setVisibility ( View.VISIBLE );
-                        titleRightLeftImage.setVisibility ( View.VISIBLE );
+                       // titleLeftImage.setVisibility ( View.VISIBLE );
+                        titleLeftImage.setClickable ( true );
+                        titleRightImage.setClickable ( true );
+                        titleRightLeftImage.setClickable ( true );
                         titleText.setText ( view.getTitle ( ) );
                     }
 
