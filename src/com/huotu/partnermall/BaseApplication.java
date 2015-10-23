@@ -4,7 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -69,6 +71,12 @@ public class BaseApplication extends Application {
     //维护页面标题信息栈
     public
     Stack< PageInfoModel > titleStack;
+
+    public
+    AssetManager am;
+    public Typeface font;
+
+
     /**
      * 是否是左划或者返回
      * true 左划
@@ -93,7 +101,8 @@ public class BaseApplication extends Application {
         mMyLocationListener = new MyLocationListener ( );
         mLocationClient.registerLocationListener ( mMyLocationListener );
         mGeofenceClient = new GeofenceClient ( getApplicationContext ( ) );
-
+        am = this.getAssets ( );
+        font = Typeface.createFromAsset ( am, "fonts/font.TTF");
         // 初始化Volley实例
         VolleyUtil.init ( this );
         // 极光初始化

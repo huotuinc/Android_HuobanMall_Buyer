@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.adapter.ShareAdapter;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ShareModel;
@@ -42,12 +43,14 @@ class SharePopupWindow extends PopupWindow {
     private Activity               aty;
     private
     AssetManager am;
+    private
+    BaseApplication application;
 
     public
-    SharePopupWindow ( Context cx, Activity aty ) {
+    SharePopupWindow ( Context cx, Activity aty, BaseApplication application ) {
         this.context = cx;
         this.aty = aty;
-        am = context.getAssets ();
+        this.application = application;
     }
 
     public
@@ -69,10 +72,11 @@ class SharePopupWindow extends PopupWindow {
                 null
                                                             );
         GridView     gridView = ( GridView ) view.findViewById ( R.id.share_gridview );
-        ShareAdapter adapter  = new ShareAdapter ( context );
+        ShareAdapter adapter  = new ShareAdapter ( context, application );
         gridView.setAdapter ( adapter );
 
         Button btn_cancel = ( Button ) view.findViewById ( R.id.btn_cancel );
+        SystemTools.setFontStyle ( btn_cancel, application );
         // 取消按钮
         btn_cancel.setOnClickListener (
                 new View.OnClickListener ( ) {
@@ -85,7 +89,7 @@ class SharePopupWindow extends PopupWindow {
                 }
                                       );
         TextView shareTitle = ( TextView ) view.findViewById ( R.id.share_title );
-        //SystemTools.setFontStyle ( shareTitle, am );
+        SystemTools.setFontStyle ( shareTitle, application );
 
         // 设置SelectPicPopupWindow的View
         this.setContentView ( view);
