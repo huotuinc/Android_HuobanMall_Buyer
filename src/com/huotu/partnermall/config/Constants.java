@@ -285,6 +285,11 @@ public class Constants {
 	public static final int LOAD_PAGE_MESSAGE_TAG = 4381;
 
 	/**
+	 * 关闭载入用户数据
+	 */
+	public static final int LOAD_SWITCH_USER_OVER = 8888;
+
+	/**
 	 * tile栏刷新页面
 	 */
 	public static final int FRESHEN_PAGE_MESSAGE_TAG = 4380;

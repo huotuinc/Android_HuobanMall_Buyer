@@ -159,7 +159,7 @@ public class SystemTools
         final Animation animation = new RotateAnimation (0f,360f,Animation.RELATIVE_TO_SELF,
                                                          0.5f,Animation.RELATIVE_TO_SELF,0.5f); // Change alpha from fully visible to invisible
         animation.setDuration ( 1000 ); // duration - half a second
-        animation.setRepeatCount ( 3 ); // Repeat animation infinitely
+        animation.setRepeatCount ( Animation.INFINITE ); // Repeat animation infinitely
         animation.setFillAfter ( true );
         view.setAnimation ( animation );
         animation.startNow ( );

@@ -27,7 +27,7 @@ import java.util.List;
  * 引导界面
  */
 public
-class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, Handler.Callback {
 
 
     private ViewPager        mVPActivity;
@@ -36,6 +36,7 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
     private int lastValue = - 1;
     private
     Resources resources;
+    public Handler mHandler;
 
     //引导图片资源
     private String[] pics;
@@ -47,6 +48,7 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
         super.onCreate ( arg0 );
         resources = this.getResources ();
         setContentView ( R.layout.guide_ui );
+        mHandler = new Handler ( this );
         views = new ArrayList< View > ( );
         mVPActivity = ( ViewPager ) findViewById ( R.id.vp_activity );
         initImage ( );
@@ -129,19 +131,34 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
         if(arg0 == 0){
             if(lastValue == pics.length-1){
 
-                //判断是否登录
-                if ( application.isLogin ( ) ) {
-                    ActivityUtils.getInstance ( ).skipActivity ( GuideActivity.this, HomeActivity.class );
+                //延时2秒后跳入新界面
+                mHandler.postDelayed ( new Runnable ( ) {
+                                           @Override
+                                           public
+                                           void run ( ) {
 
-                }
-                else {
-                    ActivityUtils.getInstance ( )
-                                 .skipActivity (
-                                         GuideActivity
-                                                 .this,
-                                         LoginActivity.class );
-                }
+                                               //判断是否登录
+                                               if ( application.isLogin ( ) ) {
+                                                   ActivityUtils.getInstance ( ).skipActivity ( GuideActivity.this, HomeActivity.class );
+
+                                               }
+                                               else {
+                                                   ActivityUtils.getInstance ( )
+                                                                .skipActivity (
+                                                                        GuideActivity
+                                                                                .this,
+                                                                        LoginActivity.class );
+                                               }
+                                           }
+                                       }, 2000 );
+
             }
         }
+    }
+
+    @Override
+    public
+    boolean handleMessage ( Message msg ) {
+        return false;
     }
 }

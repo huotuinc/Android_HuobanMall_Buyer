@@ -118,5 +118,7 @@
     <!--引导界面图片-->
     <string-array name="guide_icon">
         <item>newfeature_0</item>
+        <item>newfeature_1</item>
+        <item>newfeature_2</item>
     </string-array>
 </resources>
