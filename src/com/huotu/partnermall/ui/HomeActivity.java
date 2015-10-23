@@ -11,6 +11,7 @@ import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
@@ -501,12 +502,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //错误页面处理
                         //隐藏菜单栏
                         //bottomMenuLayout.setVisibility ( View.GONE  );
-                        viewPage.loadUrl ( "file:///android_asset/maintenance.html", titleText,
-                                           mHandler, application );
+                        viewPage.loadUrl (
+                                "file:///android_asset/maintenance.html", titleText,
+                                mHandler, application
+                                         );
 
                     }
-
-
 
                 }
                                   );
