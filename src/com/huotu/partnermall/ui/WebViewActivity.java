@@ -186,6 +186,10 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                         titleRightImage.setClickable ( true );
                         titleRightLeftImage.setClickable ( true );*/
                         titleText.setText ( view.getTitle ( ) );
+                        //切换背景
+                        titleRightImage.clearAnimation ();
+                        Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
+                        SystemTools.loadBackground ( titleRightImage, rightDraw );
                     }
 
                     @Override
@@ -230,6 +234,8 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
             break;
             case R.id.titleRightImage:
             {
+                Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh_loding );
+                SystemTools.loadBackground ( titleRightImage, rightDraw );
                 SystemTools.setRotateAnimation(titleRightImage);
                 /*PageInfoModel pageInfo = application.titleStack.peek ( );
                 viewPage.loadUrl ( pageInfo.getPageUrl (), titleText, null, null );*/
