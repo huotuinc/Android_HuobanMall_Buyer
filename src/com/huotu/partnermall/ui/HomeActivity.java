@@ -460,20 +460,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                                        public
                                                        void onSChanged ( int l, int t, int oldl, int oldt ) {
                                                            // TODO Auto-generated method stub
-                                                           float webcontent = viewPage.getContentHeight()*viewPage.getScale();//webview的高度
-                                                           float webnow = viewPage.getWebHeight ( )+ viewPage.getWebScrollY ( );//当前webview的高度
-                                                           if( webnow < webcontent/4 ){
-
-
-                                                           }else {
-
-
-                                                           }
-//已经处于顶端
-                                                           if (viewPage.getWebScaleY() == 0) {
-
-
-                                                           }
                                                        }
                                                    } );
 
@@ -519,10 +505,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         titleRightLeftImage.setVisibility ( View.VISIBLE );
                         titleText.setText ( view.getTitle ( ) );
                         //切换背景
-                        titleRightImage.clearAnimation ();
+                        titleRightImage.clearAnimation ( );
                         Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
                         SystemTools.loadBackground ( titleRightImage, rightDraw );
-                        homeTitle.setVisibility ( View.VISIBLE );
                     }
 
                     @Override
