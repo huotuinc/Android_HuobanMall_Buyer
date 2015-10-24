@@ -42,7 +42,7 @@ class KJWebView extends RelativeLayout {
 
     private Context context;
     private boolean isAdd = false;  //判断是否已经加入进度条
-    private WebView mWebView = null;  //
+    private KJSubWebView mWebView = null;  //
     private RelativeLayout progressBar_circle = null;  //包含圆形进度条的布局
     private int barHeight = 8;  //水平进度条的高
     private boolean isLoadProgress = true;//是否加载进度条
@@ -70,7 +70,7 @@ class KJWebView extends RelativeLayout {
 
     private void init(){
 
-        mWebView = new WebView(context);
+        mWebView = new KJSubWebView(context);
         this.addView(mWebView, LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 
         mWebView.setWebChromeClient (
@@ -394,12 +394,22 @@ class KJWebView extends RelativeLayout {
 
     public int getWebHeight()
     {
-        return mWebView.getHeight ();
+        return mWebView.getHeight ( );
     }
 
     public int getWebScrollY()
     {
-        return mWebView.getScrollY ();
+        return mWebView.getScrollY ( );
     }
 
+    //检测web界面滑动界面
+    public void setOnCustomScroolChangeListener(KJSubWebView.ScrollInterface scroll)
+    {
+        mWebView.setOnCustomScroolChangeListener ( scroll );
+    }
+
+    public float getWebScaleY()
+    {
+        return mWebView.getScaleY ();
+    }
 }

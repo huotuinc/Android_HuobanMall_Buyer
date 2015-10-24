@@ -60,6 +60,8 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     public Handler mHandler;
     public
     ProgressPopupWindow progress;
+    public
+    ProgressPopupWindow successProgress;
     //windows类
     WindowManager wManager;
 
@@ -81,6 +83,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
         initView ( );
         wManager = this.getWindowManager ( );
         progress = new ProgressPopupWindow ( LoginActivity.this, LoginActivity.this, wManager );
+        successProgress = new ProgressPopupWindow ( LoginActivity.this, LoginActivity.this, wManager );
     }
 
     @Override
@@ -108,13 +111,18 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     void onDestroy ( ) {
         super.onDestroy ( );
         progress.dismissView ( );
+        successProgress.dismissView ();
     }
 
     @Override
     protected
     void onResume ( ) {
         super.onResume ( );
-        //progress.dismissView ( );
+        if(null != progress)
+        {
+            progress.dismissView ( );
+        }
+
         loginL.setClickable ( true );
     }
 
@@ -154,7 +162,6 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             {
                 //提示授权成功
                 Platform plat = ( Platform ) msg.obj;
-                ToastUtils.showShortToast ( LoginActivity.this, "微信授权成功，登陆中" );
                 login.authorize ( plat );
             }
             break;
@@ -219,8 +226,12 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             break;
             case Constants.MSG_USERID_FOUND:
             {
-                //提示授权成功
-                ToastUtils.showShortToast ( LoginActivity.this, "已经获取用户信息" );
+                successProgress.showProgress ( "已经获取用户信息" );
+                successProgress.showAtLocation (
+                        findViewById ( R.id.loginL ),
+                        Gravity.CENTER, 0, 0
+                                        );
+
             }
             break;
             case Constants.MSG_LOGIN:
@@ -239,6 +250,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             break;
             case Constants.MSG_USERID_NO_FOUND:
             {
+                progress.dismissView ();
                 //提示授权成功
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "获取用户信息失败");
                 noticePop.showNotice ();

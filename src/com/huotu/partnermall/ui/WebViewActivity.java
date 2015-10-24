@@ -30,6 +30,7 @@ import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AliPayUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.widgets.KJSubWebView;
 import com.huotu.partnermall.widgets.KJWebView;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 
@@ -152,7 +153,16 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         viewPage.setSavePassword ( true );
         viewPage.setLoadsImagesAutomatically ( true );
         viewPage.loadUrl ( url, titleText, null, application );
+        viewPage.setOnCustomScroolChangeListener (
+                new KJSubWebView.ScrollInterface ( ) {
 
+                    @Override
+                    public
+                    void onSChanged ( int l, int t, int oldl, int oldt ) {
+
+                    }
+                }
+                                                 );
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
 
@@ -162,7 +172,10 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                             WebView view, String
                             url
                                                      ) {
-                        SubUrlFilterUtils filter = new SubUrlFilterUtils ( WebViewActivity.this, WebViewActivity.this, titleText, mHandler, application );
+                        SubUrlFilterUtils filter = new SubUrlFilterUtils ( WebViewActivity.this,
+                                                                           WebViewActivity.this,
+                                                                           titleText, mHandler,
+                                                                           application );
                         return filter.shouldOverrideUrlBySFriend ( viewPage, url );
                     }
 
@@ -178,7 +191,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                     void onPageFinished ( WebView view, String url ) {
                         super.onPageFinished ( view, url );
                         //页面加载完成后,读取菜单项
-                       // titleRightLeftImage.setClickable ( true );
+                        // titleRightLeftImage.setClickable ( true );
                         titleLeftImage.setVisibility ( View.VISIBLE );
                         titleRightImage.setVisibility ( View.VISIBLE );
                         titleRightLeftImage.setVisibility ( View.VISIBLE );
@@ -187,8 +200,9 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                         titleRightLeftImage.setClickable ( true );*/
                         titleText.setText ( view.getTitle ( ) );
                         //切换背景
-                        titleRightImage.clearAnimation ();
-                        Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
+                        titleRightImage.clearAnimation ( );
+                        Drawable rightDraw = resources.getDrawable ( R.drawable
+                                                                             .main_title_left_refresh );
                         SystemTools.loadBackground ( titleRightImage, rightDraw );
                     }
 

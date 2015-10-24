@@ -4,6 +4,7 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,6 +56,7 @@ import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.widgets.CircleImageDrawable;
 import com.huotu.partnermall.widgets.CropperView;
+import com.huotu.partnermall.widgets.KJSubWebView;
 import com.huotu.partnermall.widgets.KJWebView;
 import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 import com.huotu.partnermall.widgets.PhotoSelectView;
@@ -390,6 +392,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //首页默认为商户站点 + index
         String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
         menuView.loadUrl ( menuUrl, null, null, null);
+        menuView.setOnCustomScroolChangeListener ( new KJSubWebView.ScrollInterface ( ){
+
+                                                       @Override
+                                                       public
+                                                       void onSChanged ( int l, int t, int oldl, int oldt ) {
+
+                                                       }
+                                                   });
         menuView.setWebViewClient (
                 new WebViewClient ( ) {
 
@@ -445,6 +455,28 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //首页默认为商户站点 + index
         viewPage.loadUrl ( url, titleText, null, application );
 
+        viewPage.setOnCustomScroolChangeListener ( new KJSubWebView.ScrollInterface ( ) {
+                                                       @Override
+                                                       public
+                                                       void onSChanged ( int l, int t, int oldl, int oldt ) {
+                                                           // TODO Auto-generated method stub
+                                                           float webcontent = viewPage.getContentHeight()*viewPage.getScale();//webview的高度
+                                                           float webnow = viewPage.getWebHeight ( )+ viewPage.getWebScrollY ( );//当前webview的高度
+                                                           if( webnow < webcontent/4 ){
+
+
+                                                           }else {
+
+
+                                                           }
+//已经处于顶端
+                                                           if (viewPage.getWebScaleY() == 0) {
+
+
+                                                           }
+                                                       }
+                                                   } );
+
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
 
@@ -490,6 +522,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         titleRightImage.clearAnimation ();
                         Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
                         SystemTools.loadBackground ( titleRightImage, rightDraw );
+                        homeTitle.setVisibility ( View.VISIBLE );
                     }
 
                     @Override

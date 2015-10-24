@@ -6,7 +6,8 @@
         android:id="@+id/titleLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@android:color/transparent">
             <include layout="@layout/title_index"></include>
         </RelativeLayout>
     <RelativeLayout

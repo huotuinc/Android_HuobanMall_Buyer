@@ -142,6 +142,12 @@ public class SystemTools
         return Color.argb ( Integer.parseInt ( colors[0] ), Integer.parseInt ( colors[1] ), Integer.parseInt ( colors[2] ), Integer.parseInt ( colors[3] ) );
     }
 
+    public static int obtainAlphaColor(String colorStr)
+    {
+        String[] colors = colorStr.split ( "," );
+        return Color.argb ( 12, Integer.parseInt ( colors[1] ), Integer.parseInt ( colors[2] ), Integer.parseInt ( colors[3] ) );
+    }
+
     /**
      * 图片渐变
      * @param view
