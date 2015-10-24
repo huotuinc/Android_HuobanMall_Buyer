@@ -332,7 +332,16 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         if (event.getKeyCode () == KeyEvent.KEYCODE_BACK
             && event.getAction() == KeyEvent.ACTION_DOWN)
         {
-            //禁止返回按钮
+            if(viewPage.canGoBack ())
+            {
+                viewPage.goBack ( titleText, mHandler, application );
+            }
+            else {
+                //清空消息
+                application.titleStack.pop ();
+                //关闭当前页
+                closeSelf ( WebViewActivity.this );
+            }
             return true;
         }
         // TODO Auto-generated method stub

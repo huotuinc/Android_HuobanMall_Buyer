@@ -574,7 +574,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         {
             if(viewPage.canGoBack ())
             {
-                //viewPage.goBack ();
+                viewPage.goBack ( titleText, mHandler, application );
             }
             else {
                 if ( ( System.currentTimeMillis ( ) - exitTime ) > 2000 ) {
