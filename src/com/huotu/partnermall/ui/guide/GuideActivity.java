@@ -18,6 +18,7 @@ import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
+import com.huotu.partnermall.utils.ToastUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
     private
     Resources resources;
     public Handler mHandler;
+    private long exitTime = 0l;
 
     //引导图片资源
     private String[] pics;
@@ -130,27 +132,33 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
     void onPageScrollStateChanged ( int arg0 ) {
         if(arg0 == 0){
             if(lastValue == pics.length-1){
+                if ( ( System.currentTimeMillis ( ) - exitTime ) > 2000 ) {
+                    ToastUtils.showLongToast ( getApplicationContext ( ), "再滑一次进入登录界面" );
+                    exitTime = System.currentTimeMillis ( );
+                }
+                else {
+                    //延时2秒后跳入新界面
+                    mHandler.postDelayed ( new Runnable ( ) {
+                                               @Override
+                                               public
+                                               void run ( ) {
 
-                //延时2秒后跳入新界面
-                mHandler.postDelayed ( new Runnable ( ) {
-                                           @Override
-                                           public
-                                           void run ( ) {
+                                                   //判断是否登录
+                                                   if ( application.isLogin ( ) ) {
+                                                       ActivityUtils.getInstance ( ).skipActivity ( GuideActivity.this, HomeActivity.class );
 
-                                               //判断是否登录
-                                               if ( application.isLogin ( ) ) {
-                                                   ActivityUtils.getInstance ( ).skipActivity ( GuideActivity.this, HomeActivity.class );
-
+                                                   }
+                                                   else {
+                                                       ActivityUtils.getInstance ( )
+                                                                    .skipActivity (
+                                                                            GuideActivity
+                                                                                    .this,
+                                                                            LoginActivity.class );
+                                                   }
                                                }
-                                               else {
-                                                   ActivityUtils.getInstance ( )
-                                                                .skipActivity (
-                                                                        GuideActivity
-                                                                                .this,
-                                                                        LoginActivity.class );
-                                               }
-                                           }
-                                       }, 2000 );
+                                           }, 2000 );
+                }
+
 
             }
         }
