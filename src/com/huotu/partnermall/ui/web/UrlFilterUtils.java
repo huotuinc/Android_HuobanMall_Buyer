@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
+import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.PayPopWindow;
 
 /**
@@ -31,21 +33,25 @@ public
 class UrlFilterUtils {
 
     private
-    Context context;
+    Context  context;
     private
     Activity aty;
     TextView titleView;
     private Handler mHandler;
     private
     BaseApplication application;
+    //windows类
+    private WindowManager wManager;
 
-    public UrlFilterUtils(Activity aty, Context context, TextView titleView, Handler mHandler, BaseApplication application)
-    {
+    public
+    UrlFilterUtils ( Activity aty, Context context, TextView titleView, Handler mHandler,
+                     BaseApplication application, WindowManager wManager ) {
         this.context = context;
         this.titleView = titleView;
         this.mHandler = mHandler;
         this.application = application;
         this.aty = aty;
+        this.wManager = wManager;
     }
 
     /**
@@ -54,15 +60,16 @@ class UrlFilterUtils {
      * @param url
      * @return
      */
-    public boolean shouldOverrideUrlBySFriend(KJWebView view, String url) {
-        if(url.contains( Constants.WEB_TAG_NEWFRAME)){
+    public
+    boolean shouldOverrideUrlBySFriend ( KJWebView view, String url ) {
+        if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
             /*String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
             view.loadUrl ( urlStr, titleView, null, null );
             return false;*/
             String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
-            Bundle bundle = new Bundle (  );
+            Bundle bundle = new Bundle ( );
             bundle.putString ( Constants.INTENT_URL, urlStr );
-            ActivityUtils.getInstance ().showActivity ( aty,  WebViewActivity.class, bundle);
+            ActivityUtils.getInstance ( ).showActivity ( aty, WebViewActivity.class, bundle );
             return true;
         }
         else if ( url.contains ( Constants.WEB_CONTACT ) )
@@ -71,7 +78,21 @@ class UrlFilterUtils {
             //获取QQ号码
             String qq = url.substring ( 0, url.indexOf ( "&version=" ));
             //调佣本地的QQ号码
-            context.startActivity ( new Intent ( Intent.ACTION_VIEW, Uri.parse ( qq ) ) );
+            try
+            {
+                context.startActivity ( new Intent ( Intent.ACTION_VIEW, Uri.parse ( qq ) ) );
+            } catch ( Exception e )
+            {
+                if(e.getMessage ().contains ( "No Activity found to handle Intent" ))
+                {
+                    NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "请安装QQ客户端");
+                    noticePop.showNotice ();
+                    noticePop.showAtLocation (
+                            titleView,
+                            Gravity.CENTER, 0, 0
+                                             );
+                }
+            }
             return true;
         }
         else if(url.contains(Constants.WEB_TAG_USERINFO)){

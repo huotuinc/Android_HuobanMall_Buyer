@@ -476,7 +476,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                 HomeActivity.this,
                                 HomeActivity.this,
                                 titleText, mHandler,
-                                application
+                                application,
+                                wManager
                         );
                         return filter.shouldOverrideUrlBySFriend ( viewPage, url );
                     }
