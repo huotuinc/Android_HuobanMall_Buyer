@@ -163,13 +163,13 @@ public class SplashActivity extends BaseActivity {
                                                    }
                                                    //获取商家域名
                                                    //获取商户站点
-                                                   String rootUrl = "http://mallapi.huobanj.cn/mall/getmsiteurl";
+                                                   String rootUrl = Constants.INTERFACE_PREFIX + "mall/getmsiteurl";
                                                    rootUrl += "?customerId="+application.readMerchantId ();
                                                    AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), rootUrl );
                                                    final String rootUrls = paramUtil.obtainUrls ( );
                                                    HttpUtil.getInstance ( ).doVolleySite(SplashActivity.this, application, rootUrls );
                                                    //获取商户logo信息
-                                                   String logoUrl = "http://mallapi.huobanj.cn/mall/getConfig";
+                                                   String logoUrl = Constants.INTERFACE_PREFIX + "mall/getConfig";
                                                    logoUrl += "?customerId="+application.readMerchantId ();
                                                    AuthParamUtils paramLogo = new AuthParamUtils ( application, System.currentTimeMillis (), logoUrl );
                                                    final String logoUrls = paramLogo.obtainUrls ( );
@@ -177,7 +177,7 @@ public class SplashActivity extends BaseActivity {
                                                            SplashActivity.this, application,
                                                            logoUrls );
                                                    //获取商户支付信息
-                                                   String targetUrl = "http://mallapi.huobanj.cn/PayConfig?customerid=";
+                                                   String targetUrl = Constants.INTERFACE_PREFIX + "PayConfig?customerid=";
                                                    targetUrl += application.readMerchantId ();//动态获取商户编号，现在暂时使用3447////application.readMerchantId ();
                                                    AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), targetUrl );
                                                    final String url = paramUtils.obtainUrls ( );

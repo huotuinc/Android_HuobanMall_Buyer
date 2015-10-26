@@ -353,7 +353,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                                             ) );
             //获取用户等级
             StringBuilder builder = new StringBuilder (  );
-            builder.append ( "http://mallapi.huobanj.cn/Weixin/GetUserLevelName" );
+            builder.append ( Constants.INTERFACE_PREFIX + "Weixin/GetUserLevelName" );
             builder.append ( "?customerId="+application.readMerchantId ( ) );
             builder.append ( "&unionId="+application.readUserUnionId ( ) );
             builder.append ( "&userId=" + application.readMemberId() );
@@ -636,7 +636,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             case R.id.sideslip_setting:
             {
                 //切换用户
-                String url = "http://mallapi.huobanj.cn/weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
+                String url = Constants.INTERFACE_PREFIX + "weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
                 AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url );
                 final String rootUrls = paramUtil.obtainUrls ( );
                 HttpUtil.getInstance ().doVolleyObtainUser (

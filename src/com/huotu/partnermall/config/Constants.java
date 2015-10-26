@@ -383,5 +383,8 @@ public class Constants {
 
 	public static final String APP_ID = "huotu686ad1fe2bd8a02bb";
 
+	//接口连接前缀
+	public static final String INTERFACE_PREFIX = "http://mallapi.huobanj.cn/";
+
 
 }

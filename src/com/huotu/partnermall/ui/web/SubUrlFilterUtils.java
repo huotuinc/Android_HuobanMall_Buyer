@@ -126,7 +126,7 @@ class SubUrlFilterUtils {
             }
             //获取用户等级
             StringBuilder builder = new StringBuilder (  );
-            builder.append ( "http://mallapi.huobanj.cn/order/GetOrderInfo" );
+            builder.append ( Constants.INTERFACE_PREFIX + "order/GetOrderInfo" );
             builder.append ( "?orderid="+tradeNo );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString () );
             String orderUrl = param.obtainUrlOrder ( );
