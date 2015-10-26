@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.PayBodyModel;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.ui.WebViewActivity;
@@ -19,6 +22,7 @@ import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
+import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
 import java.util.regex.Pattern;
 
@@ -35,16 +39,23 @@ class SubUrlFilterUtils {
     TextView titleView;
     private Handler mHandler;
     private
-    BaseApplication application;
+    BaseApplication     application;
+    public
+    ProgressPopupWindow payProgress;
+    public WindowManager wManager;
 
     public
-    SubUrlFilterUtils ( Activity aty, Context context, TextView titleView, Handler mHandler,
-                     BaseApplication application ) {
+    SubUrlFilterUtils (
+            Activity aty, Context context, TextView titleView, Handler mHandler,
+            BaseApplication application
+                      ) {
         this.context = context;
         this.titleView = titleView;
         this.mHandler = mHandler;
         this.application = application;
         this.aty = aty;
+        wManager = aty.getWindowManager ( );
+        payProgress = new ProgressPopupWindow ( context, aty, wManager );
     }
 
     /**
@@ -54,15 +65,16 @@ class SubUrlFilterUtils {
      * @return
      */
     public
-    boolean shouldOverrideUrlBySFriend ( KJWebView view, String url) {
-        if(url.contains( Constants.WEB_TAG_NEWFRAME)){
+    boolean shouldOverrideUrlBySFriend ( KJWebView view, String url ) {
+        if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
 
             String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
-            Bundle bundle = new Bundle (  );
+            Bundle bundle = new Bundle ( );
             bundle.putString ( Constants.INTENT_URL, urlStr );
-            ActivityUtils.getInstance ().showActivity ( aty,  WebViewActivity.class, bundle);
+            ActivityUtils.getInstance ( ).showActivity ( aty, WebViewActivity.class, bundle );
             return true;
-        }else if(url.contains(Constants.WEB_TAG_USERINFO)){
+        }
+        else if ( url.contains ( Constants.WEB_TAG_USERINFO ) ) {
             //修改用户信息
             //判断修改信息的类型
             String type = url.substring(url.indexOf("=", 1)+1, url.indexOf("&", 1));
@@ -88,6 +100,12 @@ class SubUrlFilterUtils {
 
         } else if(url.contains ( Constants.WEB_PAY ) )
         {
+            //支付进度
+            payProgress.showProgress ( "正在加载支付信息" );
+            payProgress.showAtLocation (
+                    titleView,
+                    Gravity.CENTER, 0, 0
+                                           );
             //支付模块
             //获取信息
             //截取问号后面的
@@ -130,7 +148,7 @@ class SubUrlFilterUtils {
             builder.append ( "?orderid="+tradeNo );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString () );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel );
+            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress );
             return true;
 
         }

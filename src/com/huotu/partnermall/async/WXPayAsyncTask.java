@@ -9,6 +9,7 @@ import com.huotu.partnermall.model.FMPrepareBuy;
 import com.huotu.partnermall.model.WXPayResult;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WXPayUtilEx;
+import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
 /**
  * 异步执行微信支付
@@ -22,21 +23,23 @@ class WXPayAsyncTask extends AsyncTask<Void, Void, WXPayResult > {
     private int     productType;
     private long    productId;
     private
-    Context context;
+    Context         context;
     private
-    FMPrepareBuy prepareBuy;
+    FMPrepareBuy    prepareBuy;
     private
     BaseApplication application;
-    private String notifyUrl;
+    private String              notifyUrl;
 
-    public WXPayAsyncTask(Handler handler , String body , String price , int productType, long productId, Context context, FMPrepareBuy prepareBuy, BaseApplication application, String notifyUrl )
-    {
+    public
+    WXPayAsyncTask ( Handler handler, String body, String price, int productType, long productId,
+                     Context context, FMPrepareBuy prepareBuy, BaseApplication application,
+                     String notifyUrl) {
 
         this.handler = handler;
-        this.body=body;
-        this.price=price;
-        this.productType=productType;
-        this.productId= productId;
+        this.body = body;
+        this.price = price;
+        this.productType = productType;
+        this.productId = productId;
         this.context = context;
         this.prepareBuy = prepareBuy;
         this.application = application;
@@ -54,10 +57,11 @@ class WXPayAsyncTask extends AsyncTask<Void, Void, WXPayResult > {
 
             payResult =  wxPay.pay( this.body , this.price , productType , productId );
 
+
         } catch (Exception ex)
         {
-            payResult.setCode(0);
-            payResult.setMessage(ex.getMessage());
+            payResult.setCode ( 0 );
+            payResult.setMessage ( ex.getMessage ( ) );
         }
         return payResult;
     }

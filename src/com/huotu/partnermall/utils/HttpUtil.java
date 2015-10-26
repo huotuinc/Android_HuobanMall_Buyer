@@ -32,12 +32,14 @@ import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.widgets.NoticePopWindow;
+import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.mob.tools.network.SSLSocketFactoryEx;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -647,7 +649,7 @@ public class HttpUtil
         Volley.newRequestQueue ( context ).add( re);
     }
 
-    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel ){
+    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress ){
         final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
@@ -659,7 +661,7 @@ public class HttpUtil
                 orderInfo = jsonUtil.toBean(response.toString (), orderInfo);
                 if(null != orderInfo) {
                     OrderModel.OrderData order = orderInfo.getData ();
-                    payModel.setAmount ( order.getFinal_Amount () );
+                    payModel.setAmount ( (int)(100 * format2Decimal ( order.getFinal_Amount () )) );
                     payModel.setDetail ( order.getTostr () );
 
                     if ( null != order ) {
@@ -669,16 +671,17 @@ public class HttpUtil
                             //添加支付宝回调路径
                             payModel.setNotifyurl ( application.obtainMerchantUrl ()+"Alipay/Notify.aspx" );
                             //alipay
-                            PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
+                            PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, payProgress );
                             payFunc.aliPay ( );
+
                         }
                         else if("2".equals ( payModel.getPaymentType () ) || "9".equals ( payModel.getPaymentType () ))
                         {
                             //添加微信回调路径
-                            payModel.setAmount ( 100 * payModel.getAmount () );
-                            payModel.setNotifyurl ( application.obtainMerchantUrl ()+"Weixin/Notify/PaymentNotifyV3.aspx" );
-                            PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
+                            payModel.setNotifyurl ( application.obtainMerchantUrl ( ) + "Weixin/Notify/PaymentNotifyV3.aspx" );
+                            PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, payProgress );
                             payFunc.wxPay ( );
+
                         }
                     }
                 }
@@ -687,7 +690,7 @@ public class HttpUtil
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                payProgress.dismissView ();
             }
 
 
@@ -715,5 +718,11 @@ public class HttpUtil
         return dataList;
     }
 
+    //保留2位小数
+    private double format2Decimal(double d)
+    {
+        BigDecimal bg = new BigDecimal ( d );
+        return bg.setScale ( 2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
 
 }
