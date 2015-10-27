@@ -23,6 +23,7 @@ class MyBroadcastReceiver extends BroadcastReceiver {
     public static String ACTION_REFRESH_TASK_LIST = "cy.com.morefan.REFRESH_TASK_LIST" ;
     public static String ACTION_ALARM_UP = "cy.com.morefan.ACTION_ALARM_UP" ;
     public static String ACTION_FLOW_ADD = "cy.com.morefan.ACTION_FLOW_ADD";
+    public static String ACTION_PAY_SUCCESS = "com.huotu.partner.ACTION_PAY_SUCCESS";
     public static String REFRESH_TASK_STATUS = "cy.com.morefan.pre.status";
 
     public static String GET_VOICE_REGISTER = "cy.com.morefan.voice.register";

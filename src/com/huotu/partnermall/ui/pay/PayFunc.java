@@ -52,7 +52,7 @@ class PayFunc {
         prepareBuy = new FMPrepareBuy ();
         payProgress.dismissView ();
         //调用微信支付模块
-        new WXPayAsyncTask (handler, body, price, productType, productId, context, prepareBuy, application, payModel.getNotifyurl (), payModel.getAttach ()).execute();
+        new WXPayAsyncTask (handler, body, price, productType, productId, context, prepareBuy, application, payModel.getNotifyurl (), payModel.getAttach (), payModel.getTradeNo ()).execute();
     }
 
     public void aliPay()

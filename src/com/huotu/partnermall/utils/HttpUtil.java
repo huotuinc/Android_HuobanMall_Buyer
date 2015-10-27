@@ -664,6 +664,7 @@ public class HttpUtil
                     payModel.setAmount ( (int)(100 * format2Decimal ( order.getFinal_Amount () )) );
                     payModel.setDetail ( order.getTostr () );
 
+
                     if ( null != order ) {
                         //支付
                         if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))

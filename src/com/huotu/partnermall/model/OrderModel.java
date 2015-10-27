@@ -46,6 +46,11 @@ class OrderModel {
         private String Tostr;
 
         public
+        void setFinal_Amount ( double final_Amount ) {
+            Final_Amount = final_Amount;
+        }
+
+        public
         String getTostr ( ) {
             return Tostr;
         }
@@ -60,9 +65,5 @@ class OrderModel {
             return Final_Amount;
         }
 
-        public
-        void setFinal_Amount ( int final_Amount ) {
-            Final_Amount = final_Amount;
-        }
     }
 }

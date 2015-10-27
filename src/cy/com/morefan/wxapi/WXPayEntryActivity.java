@@ -81,7 +81,8 @@ class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEve
             String msg = "";
             if( resp.errCode== 0)
             {
-                msg="支付成功";
+                msg="支付成功11";
+                //MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_PAY_SUCCESS );
                 this.finish();
                 ToastUtils.showLongToast ( WXPayEntryActivity.this, msg );
                 return;

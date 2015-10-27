@@ -76,13 +76,14 @@ class WXPayUtilEx {
      * 必须异步调用
      *
      */
-    public WXPayResult pay(String body, String fee , int productType, long productid, String attach)
+    public WXPayResult pay(String body, String fee , int productType, long productid, String attach, String orderId)
     {
         this.body = body;
         this.fee = fee;
         this.productId=productid;
         this.productType=productType;
         this.attach = attach;
+        this.out_trade_no = orderId;
 
         Map<String, String> getPrePayXml = getPrePayId();
 
@@ -280,7 +281,7 @@ class WXPayUtilEx {
         {
             String nonceStr = genNonceStr();
 
-            out_trade_no=genOutTradNo();
+            //out_trade_no=genOutTradNo();
 
             xml.append ( "</xml>" );
             List<NameValuePair> packageParams = new LinkedList<NameValuePair> ();
