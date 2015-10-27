@@ -50,10 +50,21 @@ class MerchantPayInfo {
         private String partnerId;
         private String appId;
         private String appKey;
+        private String notify;
 
         public
         int getPayType ( ) {
             return payType;
+        }
+
+        public
+        String getNotify ( ) {
+            return notify;
+        }
+
+        public
+        void setNotify ( String notify ) {
+            this.notify = notify;
         }
 
         public

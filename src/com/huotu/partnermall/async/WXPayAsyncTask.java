@@ -29,11 +29,12 @@ class WXPayAsyncTask extends AsyncTask<Void, Void, WXPayResult > {
     private
     BaseApplication application;
     private String              notifyUrl;
+    private String attach;
 
     public
     WXPayAsyncTask ( Handler handler, String body, String price, int productType, long productId,
                      Context context, FMPrepareBuy prepareBuy, BaseApplication application,
-                     String notifyUrl) {
+                     String notifyUrl, String attach) {
 
         this.handler = handler;
         this.body = body;
@@ -44,6 +45,7 @@ class WXPayAsyncTask extends AsyncTask<Void, Void, WXPayResult > {
         this.prepareBuy = prepareBuy;
         this.application = application;
         this.notifyUrl = notifyUrl;
+        this.attach = attach;
     }
 
     @Override
@@ -55,7 +57,7 @@ class WXPayAsyncTask extends AsyncTask<Void, Void, WXPayResult > {
             WXPayUtilEx wxPay = new WXPayUtilEx(context,
                                                 handler, notifyUrl, application  );
 
-            payResult =  wxPay.pay( this.body , this.price , productType , productId );
+            payResult =  wxPay.pay( this.body , this.price , productType , productId, attach );
 
 
         } catch (Exception ex)

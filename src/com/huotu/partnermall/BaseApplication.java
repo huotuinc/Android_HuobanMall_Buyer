@@ -648,10 +648,11 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID );
     }
 
-    public void writeAlipay(String parentId, String appKey)
+    public void writeAlipay(String parentId, String appKey, String notify)
     {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY, appKey );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, parentId );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_NOTIFY, notify );
     }
 
     public String readAlipayAppKey()
@@ -667,7 +668,7 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID );
     }
 
-    public void writeWx(String parentId, String appId, String appKey)
+    public void writeWx(String parentId, String appId, String appKey, String notify)
     {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID,  parentId);
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID, appId );
@@ -675,8 +676,21 @@ public class BaseApplication extends Application {
                 getApplicationContext ( ), Constants.MERCHANT_INFO,
                 Constants.WEIXIN_KEY, appKey
                                      );
+        PreferenceHelper.writeString (
+                getApplicationContext ( ), Constants.MERCHANT_INFO,
+                Constants.WEIXIN_NOTIFY, notify
+                                     );
     }
 
+    public String readAlipayNotify()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_NOTIFY );
+    }
+
+    public String readWeixinNotify()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_NOTIFY );
+    }
     //
     public String readWxpayParentId()
     {

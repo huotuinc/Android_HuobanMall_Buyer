@@ -386,5 +386,8 @@ public class Constants {
 	//接口连接前缀
 	public static final String INTERFACE_PREFIX = "http://mallapi.huobanj.cn/";
 
+	public static final String ALIPAY_NOTIFY = "alipay_notify";
+	public static final String WEIXIN_NOTIFY = "weixin_notify";
+
 
 }

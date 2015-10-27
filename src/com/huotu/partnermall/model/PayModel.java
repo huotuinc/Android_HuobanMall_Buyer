@@ -12,6 +12,17 @@ class PayModel extends BaseBean {
     private int amount;
     private String detail;
     private String notifyurl;
+    private String attach;
+
+    public
+    String getAttach ( ) {
+        return attach;
+    }
+
+    public
+    void setAttach ( String attach ) {
+        this.attach = attach;
+    }
 
     public
     String getDetail ( ) {

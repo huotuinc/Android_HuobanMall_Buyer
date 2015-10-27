@@ -58,6 +58,8 @@ class WXPayUtilEx {
     private
     BaseApplication application;
 
+    private String attach;
+
     public WXPayUtilEx(Context context, Handler handler, String notifyurl, BaseApplication application)
     {
         this.context = context;
@@ -74,12 +76,13 @@ class WXPayUtilEx {
      * 必须异步调用
      *
      */
-    public WXPayResult pay(String body, String fee , int productType, long productid)
+    public WXPayResult pay(String body, String fee , int productType, long productid, String attach)
     {
         this.body = body;
         this.fee = fee;
         this.productId=productid;
         this.productType=productType;
+        this.attach = attach;
 
         Map<String, String> getPrePayXml = getPrePayId();
 
@@ -279,9 +282,10 @@ class WXPayUtilEx {
 
             out_trade_no=genOutTradNo();
 
-            xml.append("</xml>");
+            xml.append ( "</xml>" );
             List<NameValuePair> packageParams = new LinkedList<NameValuePair> ();
             packageParams.add(new BasicNameValuePair ("appid", application.readWxpayAppId ( )));
+            packageParams.add(new BasicNameValuePair("attach", attach));
             packageParams.add(new BasicNameValuePair("body", body));
             packageParams.add(new BasicNameValuePair("mch_id",
                                                      application.readWxpayParentId ()));
