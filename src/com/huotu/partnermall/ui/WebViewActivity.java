@@ -24,6 +24,7 @@ import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.model.PayGoodBean;
 import com.huotu.partnermall.model.ShareModel;
+import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.web.SubUrlFilterUtils;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
@@ -43,7 +44,7 @@ import cn.sharesdk.framework.PlatformActionListener;
  * 单张展示web页面
  */
 public
-class WebViewActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
+class WebViewActivity extends BaseActivity implements View.OnClickListener, Handler.Callback, MyBroadcastReceiver.BroadcastListener {
 
     //获取资源文件对象
     private
@@ -74,6 +75,8 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
 
     private SharePopupWindow share;
 
+    private MyBroadcastReceiver myBroadcastReceiver;
+
     @Override
 
     protected
@@ -86,7 +89,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         setImmerseLayout ( findViewById ( R.id.newtitleLayout ) );
         mHandler = new Handler ( this );
         share = new SharePopupWindow ( WebViewActivity.this, WebViewActivity.this, application );
-
+        myBroadcastReceiver = new MyBroadcastReceiver(WebViewActivity.this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
         Bundle bundle = this.getIntent ( ).getExtras ( );
         url = bundle.getString ( Constants.INTENT_URL );
         findViewById ( );
@@ -447,4 +450,25 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         return false;
 
     }
+
+    @Override
+    protected
+    void onDestroy ( ) {
+        super.onDestroy ( );
+        if( null != myBroadcastReceiver)
+        {
+            myBroadcastReceiver.unregisterReceiver();
+        }
+    }
+
+    @Override
+    public
+    void onFinishReceiver ( MyBroadcastReceiver.ReceiverType type, Object msg ) {
+        if(type == MyBroadcastReceiver.ReceiverType.wxPaySuccess)
+        {
+            viewPage.goBack ( titleText, null, application);
+        }
+
+    }
+
 }

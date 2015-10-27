@@ -39,7 +39,7 @@ class MyBroadcastReceiver extends BroadcastReceiver {
     public enum ReceiverType{
         WXNotBack,AlarmUp, RefreshTaskList,UserMainDataUpdate, Sms, Login, Logout, ShareToWeixinSuccess,
         ShareToSinaSuccess, ShareToQzoneSuccess, BackgroundBackToUpdate, FlowAdd,Register,RefreshTaskDetail,
-        WX_Pay_Callback,requestFlow,sendFlow
+        WX_Pay_Callback,requestFlow,sendFlow,wxPaySuccess
     }
     public interface BroadcastListener{
         void onFinishReceiver(ReceiverType type, Object msg);
@@ -143,6 +143,10 @@ class MyBroadcastReceiver extends BroadcastReceiver {
             listener.onFinishReceiver(ReceiverType.requestFlow,null);
         }else if( intent.getAction().equals(ACTION_SENDFLOW)){
             listener.onFinishReceiver(ReceiverType.sendFlow,null);
+        }
+        else if(intent.getAction().equals(ACTION_PAY_SUCCESS))
+        {
+            listener.onFinishReceiver(ReceiverType.wxPaySuccess,null);
         }
     }
 }
