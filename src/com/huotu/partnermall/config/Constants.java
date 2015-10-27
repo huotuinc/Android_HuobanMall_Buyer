@@ -389,5 +389,6 @@ public class Constants {
 	public static final String ALIPAY_NOTIFY = "alipay_notify";
 	public static final String WEIXIN_NOTIFY = "weixin_notify";
 
+	public static final String COMMON_SHARE_LOGO = "http://1804.img.pp.sohu.com.cn/images/2013/1/14/16/2/6205e011f029437o_13cfbf362e6g85.jpg";
 
 }

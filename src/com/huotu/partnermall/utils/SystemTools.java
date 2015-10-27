@@ -180,5 +180,33 @@ public class SystemTools
         view.setTypeface ( application.font );
     }
 
-    
+    /**
+     * 封装分享链接
+     * @param url
+     * @return
+     */
+    public static String shareUrl(BaseApplication application, String url)
+    {
+        String param = "gduid=" + application.readUserId ();
+        if(application.obtainMerchantUrl ().equals (url) )
+        {
+            //其他界面
+            return  url + "?" + param;
+        }
+        //首页
+        else if(application.obtainMerchantUrl ().equals ( url.substring ( 0, url.indexOf ( "?" )) ))
+        {
+            return  url.replace ( url.substring ( url.indexOf ( "?" ) + 1, url.length () ), param );
+        }
+        else if(url.contains ( "unionid" ) && url.contains ( "sign" ) && url.contains ( "appid" ) && url.contains ( "timestamp" ))
+        {
+            //原生界面进入界面
+            return  url.replace ( url.substring ( url.indexOf ( "timestamp=" ), url.length () ), param );
+        }
+        else
+        {
+            //其他界面
+            return  url + "?" + param;
+        }
+    }
 }

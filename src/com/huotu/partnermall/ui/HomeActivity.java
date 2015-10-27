@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -739,15 +740,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     //加上域名
                     imageurl = application.obtainMerchantUrl () + imageurl;
                 }
+                else if(TextUtils.isEmpty ( imageurl ))
+                {
+                    imageurl = Constants.COMMON_SHARE_LOGO;
+                }
                 String title = application.obtainMerchantName ()+"分享";
                 String url = null;
                 if(0 == application.titleStack.size ())
                 {
                     url = application.obtainMerchantUrl ();
+                    url = SystemTools.shareUrl ( application, url );
                 }
                 else
                 {
                     url = application.titleStack.peek ().getPageUrl ();
+                    url = SystemTools.shareUrl(application, url);
                 }
                 ShareModel msgModel = new ShareModel ();
                 msgModel.setImageUrl ( imageurl);

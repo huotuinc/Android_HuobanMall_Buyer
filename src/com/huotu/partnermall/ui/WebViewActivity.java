@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -268,6 +269,10 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                     //加上域名
                     imageurl = application.obtainMerchantUrl () + imageurl;
                 }
+                else if( TextUtils.isEmpty ( imageurl ))
+                {
+                    imageurl = Constants.COMMON_SHARE_LOGO;
+                }
                 String title = application.obtainMerchantName ()+"分享";
                 String url = null;
                 if(0 == application.titleStack.size ()) {
@@ -276,6 +281,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                 else
                 {
                     url = application.titleStack.peek ().getPageUrl ();
+                    url = SystemTools.shareUrl ( application, url );
                 }
                 ShareModel msgModel = new ShareModel ();
                 msgModel.setImageUrl ( imageurl);
