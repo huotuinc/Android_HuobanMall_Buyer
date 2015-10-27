@@ -521,10 +521,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //错误页面处理
                         //隐藏菜单栏
                         //bottomMenuLayout.setVisibility ( View.GONE  );
-                        viewPage.loadUrl (
+                        /*viewPage.loadUrl (
                                 "file:///android_asset/maintenance.html", titleText,
                                 mHandler, application
-                                         );
+                                         );*/
 
                     }
 

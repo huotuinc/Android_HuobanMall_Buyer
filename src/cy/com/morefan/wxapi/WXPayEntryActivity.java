@@ -47,8 +47,8 @@ class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEve
             case DeliveryGoodAsyncTask.PAY_OK:
             {
                 ToastUtils.showLongToast(this, msg.obj.toString());
-                MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_FLOW_ADD );
-                MyBroadcastReceiver.sendBroadcast(this,MyBroadcastReceiver.ACTION_WX_PAY_CALLBACK);
+                //MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_FLOW_ADD );
+                //MyBroadcastReceiver.sendBroadcast(this,MyBroadcastReceiver.ACTION_WX_PAY_CALLBACK);
                 this.finish();
             }
             break;
@@ -82,6 +82,9 @@ class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEve
             if( resp.errCode== 0)
             {
                 msg="支付成功";
+                this.finish();
+                ToastUtils.showLongToast ( WXPayEntryActivity.this, msg );
+                return;
             }else if( resp.errCode== -1){
                 msg="支付失败";
                 this.finish();
@@ -106,11 +109,11 @@ class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEve
                 //Log.i("wxpay>>>prepayid",payResp.prepayId);
             }
 
-            PayGoodBean para=new PayGoodBean ();
+            /*PayGoodBean para=new PayGoodBean ();
             JSONUtil<PayGoodBean> jsonUtil=new JSONUtil<PayGoodBean>();
             para = jsonUtil.toBean( payResp.extData, para);
 
-            new DeliveryGoodAsyncTask ( WXPayEntryActivity.this , handler ,  para.getOrderNo(),para.getProductType(), para.getProductId() ).execute();
+            new DeliveryGoodAsyncTask ( WXPayEntryActivity.this , handler ,  para.getOrderNo(),para.getProductType(), para.getProductId() ).execute();*/
         }
     }
 

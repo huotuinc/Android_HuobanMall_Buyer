@@ -146,7 +146,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         viewPage.setSupportZoom ( true );
         viewPage.setBuiltInZoomControls ( true );
         viewPage.setJavaScriptEnabled ( true );
-        viewPage.setCacheMode ( WebSettings.LOAD_NO_CACHE );
+        viewPage.setCacheMode ( WebSettings.LOAD_DEFAULT );
         viewPage.setSaveFormData ( true );
         viewPage.setAllowFileAccess ( true );
         viewPage.setLoadWithOverviewMode ( false );
@@ -216,7 +216,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                         //错误页面处理
                         //隐藏菜单栏
                         //bottomMenuLayout.setVisibility ( View.GONE  );
-                        viewPage.loadUrl ( "file:///android_asset/maintenance.html", titleText, mHandler, application );
+                        /*viewPage.loadUrl ( "file:///android_asset/maintenance.html", titleText, mHandler, application );*/
 
                     }
 
