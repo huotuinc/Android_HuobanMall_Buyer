@@ -450,12 +450,12 @@ public class HttpUtil
                             if(400 == merchantPay.getPayType ())
                             {
                                 //支付宝信息
-                                application.writeAlipay( merchantPay.getPartnerId (),  merchantPay.getAppKey () );
+                                application.writeAlipay( merchantPay.getPartnerId (),  merchantPay.getAppKey (), merchantPay.getNotify () );
                             }
                             else if(300 == merchantPay.getPayType ())
                             {
                                 //微信支付
-                                application.writeWx( merchantPay.getPartnerId (), merchantPay.getAppId (),  merchantPay.getAppKey () );
+                                application.writeWx( merchantPay.getPartnerId (), merchantPay.getAppId ( ),  merchantPay.getAppKey ( ), merchantPay.getNotify ( ) );
                             }
                         }
                     }
@@ -669,7 +669,7 @@ public class HttpUtil
                         if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))
                         {
                             //添加支付宝回调路径
-                            payModel.setNotifyurl ( application.obtainMerchantUrl ()+"Alipay/Notify.aspx" );
+                            payModel.setNotifyurl ( application.obtainMerchantUrl () + application.readAlipayNotify ( ) );
                             //alipay
                             PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, payProgress );
                             payFunc.aliPay ( );
@@ -677,8 +677,9 @@ public class HttpUtil
                         }
                         else if("2".equals ( payModel.getPaymentType () ) || "9".equals ( payModel.getPaymentType () ))
                         {
+                            payModel.setAttach ( payModel.getCustomId ()+"_0" );
                             //添加微信回调路径
-                            payModel.setNotifyurl ( application.obtainMerchantUrl ( ) + "Weixin/Notify/PaymentNotifyV3.aspx" );
+                            payModel.setNotifyurl ( application.obtainMerchantUrl ( ) + application.readWeixinNotify() );
                             PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, payProgress );
                             payFunc.wxPay ( );
 
