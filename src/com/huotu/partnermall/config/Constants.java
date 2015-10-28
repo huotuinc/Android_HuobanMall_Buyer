@@ -350,7 +350,7 @@ public class Constants {
 	/**
 	 * 操作平台码
 	 */
-	public static final String OPERATION_CODE = "FM2015AD";
+	public static final String OPERATION_CODE = "BUYER_2015DC";
 
 	public static final String APPKEY = "b73ca64567fb49ee963477263283a1bf";
 
@@ -391,4 +391,8 @@ public class Constants {
 
 	public static final String COMMON_SHARE_LOGO = "http://1804.img.pp.sohu.com.cn/images/2013/1/14/16/2/6205e011f029437o_13cfbf362e6g85.jpg";
 
+	//数据包版本号
+	public static final String DATA_INIT            = "data_init";
+	//会员信息
+	public static final String PACKAGE_VERSION              = "package_version";
 }

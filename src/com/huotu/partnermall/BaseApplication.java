@@ -708,4 +708,15 @@ public class BaseApplication extends Application {
                                       Constants.WEIXIN_KEY );
     }
 
+    //写入数据包版本号
+    public void writePackageVersion(String packageVersion)
+    {
+        PreferenceHelper.readString ( getApplicationContext (), Constants.DATA_INIT, Constants.PACKAGE_VERSION, packageVersion );
+    }
+
+    //读取数据包版本号
+    public String readPackageVersion()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.DATA_INIT, Constants.PACKAGE_VERSION );
+    }
 }

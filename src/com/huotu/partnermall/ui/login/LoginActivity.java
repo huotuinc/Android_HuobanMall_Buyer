@@ -240,7 +240,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 //登录后更新界面
                 AccountModel account = ( AccountModel ) msg.obj;
                 //和商家授权
-                AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "" );
+                AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "", LoginActivity.this );
                 final Map param = paramUtils.obtainParams ( account );
                 String authUrl = Constants.INTERFACE_PREFIX + "weixin/LoginAuthorize";
                 //String authUrl = "http://192.168.1.56:8032/weixin/LoginAuthorize";

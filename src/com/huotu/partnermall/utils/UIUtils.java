@@ -143,7 +143,7 @@ class UIUtils {
                                 {
                                     url = url.replace ( Constants.USER_ID, "userid=" + application.readUserId ( ) );
                                 }
-                                AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), url );
+                                AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), url, context );
                                 url = paramUtils.obtainUrl ();
                                 //加载具体的页面
                                 Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, application.obtainMerchantUrl () + url );

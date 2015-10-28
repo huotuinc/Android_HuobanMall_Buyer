@@ -22,6 +22,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.AuthMallModel;
+import com.huotu.partnermall.model.MDataPackageModel;
 import com.huotu.partnermall.model.MSiteModel;
 import com.huotu.partnermall.model.MemberModel;
 import com.huotu.partnermall.model.MerchantInfoModel;
@@ -345,6 +346,58 @@ public class HttpUtil
             
         }
         return buffer.toString().substring(1, buffer.length());
+    }
+
+    /**
+     * 获取数据包版本信息
+     * @param context
+     * @param application
+     * @param url
+     */
+    public void doVolleyPackage( Context context, final BaseApplication application, String url )
+    {
+        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+
+
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONUtil<MDataPackageModel > jsonUtil = new JSONUtil<MDataPackageModel>();
+                MDataPackageModel packageModel = new MDataPackageModel();
+                packageModel = jsonUtil.toBean(response.toString (), packageModel);
+                if(null != packageModel) {
+                    MDataPackageModel.MDataPackageData dataPackageData = packageModel.getData ();
+                    if ( application.readPackageVersion ().equals ( dataPackageData.getVersion () ) ) {
+                        //没有更新，直接执行以下步骤
+                        if(0 == dataPackageData.getUpdateData ())
+                        {
+                            //无更新，
+                            application.writePackageVersion ( dataPackageData.getVersion () );
+                            
+                        }
+                        else if(1 == dataPackageData.getUpdateData ())
+                        {
+                            application.writePackageVersion ( dataPackageData.getVersion () );
+                            //下载数据
+
+                        }
+                    }
+                    else
+                    {
+                        application.writePackageVersion ( dataPackageData.getVersion () );
+                        //直接下载文件，并更新version
+
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+
+
+        });
+        Volley.newRequestQueue ( context ).add( re);
     }
 
     /**

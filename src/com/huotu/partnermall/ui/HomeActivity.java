@@ -358,7 +358,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             builder.append ( "?customerId="+application.readMerchantId ( ) );
             builder.append ( "&unionId="+application.readUserUnionId ( ) );
             builder.append ( "&userId=" + application.readMemberId() );
-            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString () );
+            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), HomeActivity.this );
             String nameUrl = param.obtainUrlName ();
             HttpUtil.getInstance ( ).doVolleyName ( HomeActivity.this, application, nameUrl, userType );
         }
@@ -451,7 +451,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setLoadsImagesAutomatically ( true );
         viewPage.setDomStorageEnabled(true);
         //首页鉴权
-        AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ) );
+        AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         String url = paramUtils.obtainUrl ();
         //首页默认为商户站点 + index
         viewPage.loadUrl ( url, titleText, null, application );
@@ -638,7 +638,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //切换用户
                 String url = Constants.INTERFACE_PREFIX + "weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
-                AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url );
+                AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url, HomeActivity.this );
                 final String rootUrls = paramUtil.obtainUrls ( );
                 HttpUtil.getInstance ().doVolleyObtainUser (
                         HomeActivity.this, HomeActivity.this, application,
