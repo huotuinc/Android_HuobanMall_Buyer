@@ -205,8 +205,17 @@ public class SystemTools
         }
         else
         {
-            //其他界面
-            return  url + "?" + param;
+            if(url.contains ( "?" ))
+            {
+                //其他界面
+                return  url + "&" + param;
+            }
+            else
+            {
+                //其他界面
+                return  url + "?" + param;
+            }
+
         }
     }
 }
