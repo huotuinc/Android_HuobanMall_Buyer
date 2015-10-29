@@ -363,6 +363,7 @@ public class Constants {
 
 	// 平台安全码
 	public static final String APP_SECRET = "483686ad1fe2bd8a02bbdca24e109953a4a96c";
+	//public static final String APP_SECRET = "0ad8abe244331aacf89c9231848c9f49";
 
 	/**
 	 * capCode
@@ -388,10 +389,14 @@ public class Constants {
 	public static final String CUSTOMER_ID = "customerid={}";
 	public static final String USER_ID     = "userid={}";
 
+	//测试
 	public static final String APP_ID = "huotu686ad1fe2bd8a02bb";
+	//正式
+	//public static final String APP_ID = "huotuacf89c9231848c9f49";
 
 	//接口连接前缀
 	public static final String INTERFACE_PREFIX = "http://mallapi.huobanj.cn/";
+	//public static final String INTERFACE_PREFIX = "http://mallapi.huobanmall.com/";
 	//接口连接前缀
 	//public static final String INTERFACE_PREFIX = "http://192.168.1.56:8089/";
 
