@@ -179,7 +179,7 @@ class UrlFilterUtils {
             builder.append ( "?orderid="+tradeNo );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress );
+            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress, titleView );
             return true;
 
         }

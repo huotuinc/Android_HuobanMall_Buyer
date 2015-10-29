@@ -1,7 +1,10 @@
 package com.huotu.partnermall.utils;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -25,6 +28,7 @@ import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.MDataPackageModel;
 import com.huotu.partnermall.model.MSiteModel;
 import com.huotu.partnermall.model.MemberModel;
+import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantInfoModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
 import com.huotu.partnermall.model.OrderModel;
@@ -33,6 +37,7 @@ import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.widgets.NoticePopWindow;
+import com.huotu.partnermall.widgets.PayPopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.mob.tools.network.SSLSocketFactoryEx;
 
@@ -354,7 +359,7 @@ public class HttpUtil
      * @param application
      * @param url
      */
-    public void doVolleyPackage( Context context, final BaseApplication application, String url )
+    public void doVolleyPackage( final Context context, final BaseApplication application, String url )
     {
         final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
@@ -366,26 +371,15 @@ public class HttpUtil
                 packageModel = jsonUtil.toBean(response.toString (), packageModel);
                 if(null != packageModel) {
                     MDataPackageModel.MDataPackageData dataPackageData = packageModel.getData ();
-                    if ( application.readPackageVersion ().equals ( dataPackageData.getVersion () ) ) {
+                    if ( 0 == dataPackageData.getUpdateData () ) {
                         //没有更新，直接执行以下步骤
-                        if(0 == dataPackageData.getUpdateData ())
-                        {
-                            //无更新，
-                            application.writePackageVersion ( dataPackageData.getVersion () );
-                            
-                        }
-                        else if(1 == dataPackageData.getUpdateData ())
-                        {
-                            application.writePackageVersion ( dataPackageData.getVersion () );
-                            //下载数据
-
-                        }
                     }
                     else
                     {
-                        application.writePackageVersion ( dataPackageData.getVersion () );
+                        application.writePackageVersion ( dataPackageData.getVersion ( ) );
                         //直接下载文件，并更新version
-
+                        //下载数据
+                        //new HttpDownloader().execute ( dataPackageData.getDownloadUrl () );
                     }
                 }
             }
@@ -503,12 +497,12 @@ public class HttpUtil
                             if(400 == merchantPay.getPayType ())
                             {
                                 //支付宝信息
-                                application.writeAlipay( merchantPay.getPartnerId (),  merchantPay.getAppKey (), merchantPay.getNotify () );
+                                application.writeAlipay( merchantPay.getPartnerId (),  merchantPay.getAppKey (), merchantPay.getNotify (), merchantPay.isWebPagePay () );
                             }
                             else if(300 == merchantPay.getPayType ())
                             {
                                 //微信支付
-                                application.writeWx( merchantPay.getPartnerId (), merchantPay.getAppId ( ),  merchantPay.getAppKey ( ), merchantPay.getNotify ( ) );
+                                application.writeWx( merchantPay.getPartnerId (), merchantPay.getAppId ( ),  merchantPay.getAppKey ( ), merchantPay.getNotify ( ), merchantPay.isWebPagePay ( ) );
                             }
                         }
                     }
@@ -551,8 +545,30 @@ public class HttpUtil
                                 account.getAccountUnionId ( )
                                                     );
                         application.writeMemberLevel ( mall.getLevelName () );
-                        //跳转到首页
-                        ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
+
+                        //设置侧滑栏菜单
+                        List<MenuBean > menus = new ArrayList< MenuBean > (  );
+                        MenuBean menu = null;
+                        List<AuthMallModel.MenuModel > home_menus = mall.getHome_menus ();
+                        for(AuthMallModel.MenuModel home_menu:home_menus)
+                        {
+                            menu = new MenuBean ();
+                            menu.setMenuGroup ( String.valueOf ( home_menu.getMenu_group () ) );
+                            menu.setMenuIcon ( home_menu.getMenu_icon ( ) );
+                            menu.setMenuName ( home_menu.getMenu_name ( ) );
+                            menu.setMenuUrl ( home_menu.getMenu_url ( ) );
+                            menus.add ( menu );
+                        }
+                        if(null != menus && !menus.isEmpty ())
+                        {
+                            application.writeMenus ( menus );
+                            //跳转到首页
+                            ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
+                        }
+                        else
+                        {
+                            mHandler.sendEmptyMessage ( Constants.INIT_MENU_ERROR );
+                        }
                     }
                     else
                     {
@@ -702,7 +718,7 @@ public class HttpUtil
         Volley.newRequestQueue ( context ).add( re);
     }
 
-    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress ){
+    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress, final TextView titleView ){
         final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
@@ -719,8 +735,14 @@ public class HttpUtil
 
 
                     if ( null != order ) {
+                        payProgress.dismissView ();
+                        PayPopWindow payPopWindow = new PayPopWindow (aty, context, mHandler, application, payModel);
+                        payPopWindow.showAtLocation (
+                                titleView,
+                                Gravity.BOTTOM, 0, 0
+                                                    );
                         //支付
-                        if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))
+                        /*if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))
                         {
                             //添加支付宝回调路径
                             payModel.setNotifyurl ( application.obtainMerchantUrl () + application.readAlipayNotify ( ) );
@@ -737,7 +759,7 @@ public class HttpUtil
                             PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, payProgress );
                             payFunc.wxPay ( );
 
-                        }
+                        }*/
                     }
                 }
 
@@ -745,7 +767,7 @@ public class HttpUtil
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                payProgress.dismissView ();
+                payProgress.dismissView ( );
             }
 
 

@@ -216,7 +216,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 //提示取消授权
                 progress.dismissView ();
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权被取消");
-                noticePop.showNotice ();
+                noticePop.showNotice ( );
                 noticePop.showAtLocation (
                         findViewById ( R.id.loginL ),
                         Gravity.CENTER, 0, 0
@@ -244,8 +244,10 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 final Map param = paramUtils.obtainParams ( account );
                 String authUrl = Constants.INTERFACE_PREFIX + "weixin/LoginAuthorize";
                 //String authUrl = "http://192.168.1.56:8032/weixin/LoginAuthorize";
-                HttpUtil.getInstance ().doVolley ( LoginActivity.this, LoginActivity.this,
-                                                   mHandler, application, authUrl, param, account );
+                HttpUtil.getInstance ().doVolley (
+                        LoginActivity.this, LoginActivity.this,
+                        mHandler, application, authUrl, param, account
+                                                 );
             }
             break;
             case Constants.MSG_USERID_NO_FOUND:
@@ -253,6 +255,18 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 progress.dismissView ();
                 //提示授权成功
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "获取用户信息失败");
+                noticePop.showNotice ();
+                noticePop.showAtLocation (
+                        findViewById ( R.id.loginL ),
+                        Gravity.CENTER, 0, 0
+                                         );
+            }
+            break;
+            case Constants.INIT_MENU_ERROR:
+            {
+                progress.dismissView ();
+                //提示初始化菜单失败
+                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "初始化菜单失败");
                 noticePop.showNotice ();
                 noticePop.showAtLocation (
                         findViewById ( R.id.loginL ),

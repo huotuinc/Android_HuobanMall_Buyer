@@ -648,11 +648,13 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID );
     }
 
-    public void writeAlipay(String parentId, String appKey, String notify)
+    public void writeAlipay(String parentId, String appKey, String notify, boolean isWebPay)
     {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY, appKey );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, parentId );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_NOTIFY, notify );
+        PreferenceHelper.writeBoolean ( getApplicationContext ( ), Constants.MERCHANT_INFO,
+                                        Constants.IS_WEB_ALIPAY, isWebPay );
     }
 
     public String readAlipayAppKey()
@@ -668,7 +670,7 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID );
     }
 
-    public void writeWx(String parentId, String appId, String appKey, String notify)
+    public void writeWx(String parentId, String appId, String appKey, String notify, boolean isWebPay)
     {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID,  parentId);
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID, appId );
@@ -680,6 +682,10 @@ public class BaseApplication extends Application {
                 getApplicationContext ( ), Constants.MERCHANT_INFO,
                 Constants.WEIXIN_NOTIFY, notify
                                      );
+        PreferenceHelper.writeBoolean (
+                getApplicationContext ( ), Constants.MERCHANT_INFO,
+                Constants.IS_WEB_WEIXINPAY, isWebPay
+                                      );
     }
 
     public String readAlipayNotify()
@@ -711,7 +717,7 @@ public class BaseApplication extends Application {
     //写入数据包版本号
     public void writePackageVersion(String packageVersion)
     {
-        PreferenceHelper.readString ( getApplicationContext (), Constants.DATA_INIT, Constants.PACKAGE_VERSION, packageVersion );
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.DATA_INIT, Constants.PACKAGE_VERSION, packageVersion );
     }
 
     //读取数据包版本号

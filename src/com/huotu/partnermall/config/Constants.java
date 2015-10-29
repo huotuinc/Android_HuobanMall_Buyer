@@ -250,6 +250,8 @@ public class Constants {
 
 	//鉴权失效
 	public static final int LOGIN_AUTH_ERROR = 2131;
+	//网页支付
+	public static final int PAY_NET = 2222;
 
 	//是否测试环境
 	public static final boolean IS_TEST = true;
@@ -293,6 +295,11 @@ public class Constants {
 	 * tile栏刷新页面
 	 */
 	public static final int FRESHEN_PAGE_MESSAGE_TAG = 4380;
+
+	/**
+	 * 初始化菜单失败
+	 */
+	public static final int INIT_MENU_ERROR = 6361;
 
 	/**
 	 * 切换用户
@@ -385,9 +392,14 @@ public class Constants {
 
 	//接口连接前缀
 	public static final String INTERFACE_PREFIX = "http://mallapi.huobanj.cn/";
+	//接口连接前缀
+	//public static final String INTERFACE_PREFIX = "http://192.168.1.56:8089/";
+
 
 	public static final String ALIPAY_NOTIFY = "alipay_notify";
 	public static final String WEIXIN_NOTIFY = "weixin_notify";
+	public static final String IS_WEB_WEIXINPAY = "is_web_weixinpay";
+	public static final String IS_WEB_ALIPAY = "is_web_alipay";
 
 	public static final String COMMON_SHARE_LOGO = "http://1804.img.pp.sohu.com.cn/images/2013/1/14/16/2/6205e011f029437o_13cfbf362e6g85.jpg";
 

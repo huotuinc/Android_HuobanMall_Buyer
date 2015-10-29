@@ -22,6 +22,7 @@ import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
+import com.huotu.partnermall.widgets.PayPopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
 import java.util.regex.Pattern;
@@ -101,7 +102,7 @@ class SubUrlFilterUtils {
         } else if(url.contains ( Constants.WEB_PAY ) )
         {
             //支付进度
-            payProgress.showProgress ( "正在加载支付信息" );
+            payProgress.showProgress ( "正在启用支付模块" );
             payProgress.showAtLocation (
                     titleView,
                     Gravity.CENTER, 0, 0
@@ -148,7 +149,7 @@ class SubUrlFilterUtils {
             builder.append ( "?orderid="+tradeNo );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress );
+            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress, titleView );
             return true;
 
         }

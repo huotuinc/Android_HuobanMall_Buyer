@@ -1,5 +1,7 @@
 package com.huotu.partnermall.model;
 
+import java.util.List;
+
 public
 class AuthMallModel  {
 
@@ -43,6 +45,18 @@ class AuthMallModel  {
         private String levelName;
         private String nickName;
         private String headImgUrl;
+        private
+        List<MenuModel> home_menus;
+
+        public
+        List< MenuModel > getHome_menus ( ) {
+            return home_menus;
+        }
+
+        public
+        void setHome_menus ( List< MenuModel > home_menus ) {
+            this.home_menus = home_menus;
+        }
 
         public
         String getNickName ( ) {
@@ -82,6 +96,54 @@ class AuthMallModel  {
         public
         void setUserid ( int userid ) {
             this.userid = userid;
+        }
+    }
+
+    public class MenuModel
+    {
+        private int menu_group;
+        private String menu_name;
+        private String menu_url;
+        private String menu_icon;
+
+        public
+        int getMenu_group ( ) {
+            return menu_group;
+        }
+
+        public
+        void setMenu_group ( int menu_group ) {
+            this.menu_group = menu_group;
+        }
+
+        public
+        String getMenu_name ( ) {
+            return menu_name;
+        }
+
+        public
+        void setMenu_name ( String menu_name ) {
+            this.menu_name = menu_name;
+        }
+
+        public
+        String getMenu_url ( ) {
+            return menu_url;
+        }
+
+        public
+        void setMenu_url ( String menu_url ) {
+            this.menu_url = menu_url;
+        }
+
+        public
+        String getMenu_icon ( ) {
+            return menu_icon;
+        }
+
+        public
+        void setMenu_icon ( String menu_icon ) {
+            this.menu_icon = menu_icon;
         }
     }
 }

@@ -3,7 +3,7 @@
                 android:id="@+id/popLayout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/weixin_pay_height"
-                android:background="@color/lightyellow">
+                android:background="@color/title_bg">
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -43,6 +43,6 @@
         android:layout_below="@+id/cancelBtn"
         android:layout_marginLeft="@dimen/weixin_pay_margin"
         android:layout_marginRight="@dimen/weixin_pay_margin"
-        android:background="@color/lightyellow"/>
+        android:background="@color/title_bg"/>
 
 </RelativeLayout>

@@ -24,6 +24,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.model.PayGoodBean;
+import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
@@ -450,6 +451,13 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                 }
             }
             break;
+            case Constants.PAY_NET:
+            {
+                PayModel payModel = ( PayModel ) msg.obj;
+                //调用JS
+                viewPage.loadUrl ( "javascript:utils.Go2Payment("+payModel.getCustomId ()+","+ payModel.getTradeNo ()+","+ payModel.getPaymentType ()+", "
+                                   + "false);\n", titleText, null, application );
+            }
             default:
                 break;
         }

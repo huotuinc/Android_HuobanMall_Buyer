@@ -1,11 +1,14 @@
 package com.huotu.partnermall.ui;
 
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -54,6 +57,7 @@ public class SplashActivity extends BaseActivity {
     private boolean isConnection = false;// 假定无网络连接
     private
     MsgPopWindow popWindow;
+    public DownloadManager downloadManager;
 
     @Override
     protected
@@ -67,7 +71,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate ( savedInstanceState );
         application = ( BaseApplication ) SplashActivity.this.getApplication ( );
         setContentView ( R.layout.activity_splash );
-
+        downloadManager = ( DownloadManager ) this.getSystemService ( Context.DOWNLOAD_SERVICE );
         DisplayMetrics metrics = new DisplayMetrics ( );
         getWindowManager ( ).getDefaultDisplay ( ).getMetrics ( metrics );
         Constants.SCREEN_DENSITY = metrics.density;
@@ -82,9 +86,9 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected
     void initView ( ) {
-        AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
-        anima.setDuration(Constants.ANIMATION_COUNT);// 设置动画显示时间
-        mSplashItem_iv.setAnimation(anima);
+        AlphaAnimation anima = new AlphaAnimation ( 0.0f, 1.0f );
+        anima.setDuration ( Constants.ANIMATION_COUNT );// 设置动画显示时间
+        mSplashItem_iv.setAnimation ( anima );
         anima.setAnimationListener (
                 new AnimationListener ( ) {
 
@@ -95,9 +99,11 @@ public class SplashActivity extends BaseActivity {
                         isConnection = application.checkNet ( SplashActivity.this );
                         if ( ! isConnection ) {
                             application.isConn = false;
-                                                   //无网络日志
-                                                   popWindow = new MsgPopWindow ( SplashActivity.this,  new SettingNetwork(), new CancelNetwork(),  "网络连接错误", "请打开你的网络连接！", false);
-                                                   popWindow.showAtLocation ( SplashActivity.this.findViewById ( R.id.welcomeTips ), Gravity.CENTER, 0,0 );
+                            //无网络日志
+                            popWindow = new MsgPopWindow ( SplashActivity.this, new
+                                    SettingNetwork ( ), new CancelNetwork ( ), "网络连接错误",
+                                                           "请打开你的网络连接！", false );
+                            popWindow.showAtLocation ( SplashActivity.this.findViewById ( R.id.welcomeTips ), Gravity.CENTER, 0,0 );
                                                    popWindow.setOnDismissListener ( new PoponDismissListener (SplashActivity.this) );
                                                }
                                                else
@@ -123,7 +129,7 @@ public class SplashActivity extends BaseActivity {
                                                            KJLoger.e ( "载入商户信息失败。" );
                                                        }
                                                    }
-                                                   if(!application.checkMenuInfo ())
+                                                   /*if(!application.checkMenuInfo ())
                                                    {
                                                        //设置菜单
                                                        List<MenuBean> menus = XMLParserUtils.getInstance ().readMenuInfo ( SplashActivity.this );
@@ -136,7 +142,7 @@ public class SplashActivity extends BaseActivity {
                                                        {
                                                            KJLoger.e ( "载入主菜单失败。" );
                                                        }
-                                                   }
+                                                   }*/
                                                    //设置
                                                    //加载颜色配置信息
                                                    if(!application.checkColorInfo ()) {
@@ -163,7 +169,13 @@ public class SplashActivity extends BaseActivity {
                                                    }
                                                    //获取数据包更新信息
                                                    String packageUrl = Constants.INTERFACE_PREFIX + "mall/CheckDataPacket";
-                                                   packageUrl += "?customerId="+application.readMerchantId () + "&dataPacketVersion="+application.readPackageVersion ();
+                                                   String packageVersion = application.readPackageVersion ();
+                                                   if( TextUtils.isEmpty ( packageVersion ))
+                                                   {
+                                                       packageVersion = "1.0.0";
+                                                       application.writePackageVersion ( packageVersion );
+                                                   }
+                                                   packageUrl += "?customerId="+application.readMerchantId () + "&dataPacketVersion="+ packageVersion;
                                                    AuthParamUtils paramPackage = new AuthParamUtils ( application, System.currentTimeMillis (), packageUrl, SplashActivity.this );
                                                    final String packageUrls = paramPackage.obtainUrls ( );
                                                    HttpUtil.getInstance ( ).doVolleyPackage(SplashActivity.this, application, packageUrls );
