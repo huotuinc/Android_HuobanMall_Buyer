@@ -29,15 +29,17 @@ class PayFunc {
     Context         context;
     private
     Activity        aty;
+    private ProgressPopupWindow progress;
 
     public
     PayFunc ( Context context, PayModel payModel, BaseApplication application, Handler handler,
-              Activity aty ) {
+              Activity aty, ProgressPopupWindow progress ) {
         this.payModel = payModel;
         this.application = application;
         this.handler = handler;
         this.context = context;
         this.aty = aty;
+        this.progress = progress;
     }
 
     public
@@ -48,6 +50,7 @@ class PayFunc {
         int    productType = 0;
         long   productId   = 0;
         prepareBuy = new FMPrepareBuy ();
+        progress.dismissView ();
         //调用微信支付模块
         new WXPayAsyncTask (handler, body, price, productType, productId, context, prepareBuy, application, payModel.getNotifyurl (), payModel.getAttach (), payModel.getTradeNo ()).execute();
     }
@@ -62,6 +65,7 @@ class PayFunc {
         int productType= 0;
         long productId= 0;
         prepareBuy = new FMPrepareBuy ();
+        progress.dismissView ();
         aliPay.pay(subject, body, price, payModel.getNotifyurl (), productType, productId);
     }
 }

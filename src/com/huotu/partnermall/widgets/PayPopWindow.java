@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,6 +38,7 @@ class PayPopWindow extends PopupWindow {
     private BaseApplication application;
     private PayModel payModel;
     private Context context;
+    public ProgressPopupWindow progress;
 
 
     public
@@ -47,6 +49,7 @@ class PayPopWindow extends PopupWindow {
         this.application = application;
         this.payModel = payModel;
         this.context = context;
+        progress = new ProgressPopupWindow ( context, aty, aty.getWindowManager () );
         LayoutInflater inflater = ( LayoutInflater ) aty.getSystemService ( Context.LAYOUT_INFLATER_SERVICE );
 
         payView = inflater.inflate ( R.layout.pop_pay_ui, null );
@@ -59,10 +62,15 @@ class PayPopWindow extends PopupWindow {
                     @Override
                     public
                     void onClick ( View v ) {
+                        progress.showProgress ( "正在加载支付信息" );
+                        progress.showAtLocation (
+                                aty.findViewById (R.id.titleText ),
+                                Gravity.CENTER, 0, 0
+                                                );
                         payModel.setAttach ( payModel.getCustomId ( ) + "_0" );
                         //添加微信回调路径
                         payModel.setNotifyurl ( application.obtainMerchantUrl ( ) + application.readWeixinNotify ( ) );
-                                              PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty );
+                                              PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, progress );
                                               payFunc.wxPay ( );
                                               dismissView ( );
                                           }
@@ -77,7 +85,6 @@ class PayPopWindow extends PopupWindow {
                                                msg.obj = payModel;
                                                mHandler.sendMessage ( msg );
                                                dismissView ( );
-
                                            }
                                        } );
         cancelBtn.setOnClickListener ( new View.OnClickListener ( ) {

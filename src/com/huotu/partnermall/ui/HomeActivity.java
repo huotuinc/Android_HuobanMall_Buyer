@@ -497,6 +497,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     void onPageFinished ( WebView view, String url ) {
                         //页面加载完成后,读取菜单项
                         super.onPageFinished ( view, url );
+                        if(url.contains ( "&back" ) || url.contains ( "?back" ))
+                        {
+                            //application.titleStack.clear ();
+                            mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                        }
                         //titleRightLeftImage.setClickable ( true );
                        // titleLeftImage.setVisibility ( View.VISIBLE );
                         //titleLeftImage.setClickable ( true );

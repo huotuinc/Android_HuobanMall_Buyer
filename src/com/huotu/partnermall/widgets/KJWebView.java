@@ -297,7 +297,7 @@ class KJWebView extends RelativeLayout {
                                     application.titleStack.push ( pageInfo );
                                 }if(null != mHandler)
                                 {
-                                    if(url.contains ( "back" ))
+                                    if(url.contains ( "&back" ) || url.contains ( "?back" ))
                                     {
                                         //application.titleStack.clear ();
                                         mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
@@ -346,15 +346,24 @@ class KJWebView extends RelativeLayout {
             }
         }*/
 
-        if(null != mHandler)
+        /*if(null != mHandler)
         {
-                if ( canGoBack ( ) ) {
-                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+                application.titleStack.pop ( );
+                PageInfoModel pageInfo = application.titleStack.peek ( );
+                String url =  pageInfo.getPageUrl ();
+                if(url.contains ( "&back" ) || url.contains ( "?back" ))
+                {
+                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
                 }
                 else {
-                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
-            }
-        }
+                    if ( canGoBack ( ) ) {
+                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+                    }
+                    else {
+                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                    }
+                }
+        }*/
 
     }
 
