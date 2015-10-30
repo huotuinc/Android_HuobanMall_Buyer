@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Stack;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 
 /**
@@ -76,6 +77,8 @@ public class BaseApplication extends Application {
     AssetManager am;
     public Typeface font;
 
+    public Platform plat;
+
 
     /**
      * 是否是左划或者返回
@@ -102,7 +105,7 @@ public class BaseApplication extends Application {
         mLocationClient.registerLocationListener ( mMyLocationListener );
         mGeofenceClient = new GeofenceClient ( getApplicationContext ( ) );
         am = this.getAssets ( );
-        font = Typeface.createFromAsset ( am, "fonts/font.TTF");
+        font = Typeface.createFromAsset ( am, "fonts/font.TTF" );
         // 初始化Volley实例
         VolleyUtil.init ( this );
         // 极光初始化
@@ -462,6 +465,11 @@ public class BaseApplication extends Application {
     //登出
     public void logout()
     {
+        //取消授权
+        if(null != plat)
+        {
+            plat.removeAccount ();
+        }
         PreferenceHelper.clean ( getApplicationContext (), Constants.MEMBER_INFO );
     }
 

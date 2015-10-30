@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
@@ -72,6 +73,9 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     public
     AssetManager    am;
 
+    public
+    BaseApplication application;
+
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
@@ -79,6 +83,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
         mHandler = new Handler ( this );
         am = this.getAssets ();
         setContentView ( R.layout.login_ui );
+        application = ( BaseApplication ) this.getApplication ();
         findViewById ( );
         initView ( );
         wManager = this.getWindowManager ( );
@@ -139,7 +144,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                                         );
                 //微信授权登录
                 Platform wechat = ShareSDK.getPlatform ( LoginActivity.this, Wechat.NAME );
-                login = new AutnLogin ( LoginActivity.this, mHandler, loginL );
+                login = new AutnLogin ( LoginActivity.this, mHandler, loginL, application );
                 login.authorize ( new Wechat ( LoginActivity.this ) );
                 loginL.setClickable ( false );
                 //ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity

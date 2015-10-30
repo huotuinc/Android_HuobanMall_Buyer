@@ -1,11 +1,13 @@
 package com.huotu.partnermall.ui;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +19,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -163,6 +167,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
     public
     AssetManager am;
+
+    private ValueCallback< Uri > mUploadMessage;
+    private final static int FILECHOOSER_RESULTCODE = 1;
 
     @Override
     protected
@@ -456,13 +463,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //首页默认为商户站点 + index
         viewPage.loadUrl ( url, titleText, null, application );
 
-        viewPage.setOnCustomScroolChangeListener ( new KJSubWebView.ScrollInterface ( ) {
-                                                       @Override
-                                                       public
-                                                       void onSChanged ( int l, int t, int oldl, int oldt ) {
-                                                           // TODO Auto-generated method stub
-                                                       }
-                                                   } );
+        viewPage.setOnCustomScroolChangeListener (
+                new KJSubWebView.ScrollInterface ( ) {
+                    @Override
+                    public
+                    void onSChanged ( int l, int t, int oldl, int oldt ) {
+                        // TODO Auto-generated method stub
+                    }
+                }
+                                                 );
 
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
@@ -497,13 +506,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     void onPageFinished ( WebView view, String url ) {
                         //页面加载完成后,读取菜单项
                         super.onPageFinished ( view, url );
-                        if(url.contains ( "&back" ) || url.contains ( "?back" ))
-                        {
+                        if ( url.contains ( "&back" ) || url.contains ( "?back" ) ) {
                             //application.titleStack.clear ();
                             mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
                         }
                         //titleRightLeftImage.setClickable ( true );
-                       // titleLeftImage.setVisibility ( View.VISIBLE );
+                        // titleLeftImage.setVisibility ( View.VISIBLE );
                         //titleLeftImage.setClickable ( true );
                         //titleRightImage.setClickable ( true );
                         //titleRightLeftImage.setClickable ( true );
@@ -513,7 +521,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         titleText.setText ( view.getTitle ( ) );
                         //切换背景
                         titleRightImage.clearAnimation ( );
-                        Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
+                        Drawable rightDraw = resources.getDrawable ( R.drawable
+                                                                             .main_title_left_refresh );
                         SystemTools.loadBackground ( titleRightImage, rightDraw );
                     }
 
@@ -536,6 +545,38 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
                 }
                                   );
+
+        viewPage.setWebChromeClient(new WebChromeClient (){
+                                        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                                            mUploadMessage = uploadMsg;
+                                            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                                            i.addCategory(Intent.CATEGORY_OPENABLE);
+                                            i.setType("image/*");
+                                            HomeActivity.this.startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
+                                        }
+
+                                        public void openFileChooser( ValueCallback uploadMsg, String acceptType ) {
+                                            openFileChooser ( uploadMsg );
+                                        }
+
+                                        //For Android 4.1
+                                        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture){
+
+                                            openFileChooser ( uploadMsg );
+
+                                        }
+                                    });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (null == mUploadMessage)
+                return;
+            Uri result = intent == null || resultCode != RESULT_OK ? null : intent.getData();
+            mUploadMessage.onReceiveValue(result);
+            mUploadMessage = null;
+        }
     }
 
     @Override

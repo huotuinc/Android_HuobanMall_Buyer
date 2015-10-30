@@ -417,6 +417,12 @@ class KJWebView extends RelativeLayout {
         mWebView.setOnCustomScroolChangeListener ( scroll );
     }
 
+    //
+    public void setWebChromeClient(WebChromeClient webChromeClient)
+    {
+        mWebView.setWebChromeClient ( webChromeClient );
+    }
+
     public float getWebScaleY()
     {
         return mWebView.getScaleY ();
