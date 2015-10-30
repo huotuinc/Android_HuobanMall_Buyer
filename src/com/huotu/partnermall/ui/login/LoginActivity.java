@@ -175,6 +175,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             {
                 loginL.setClickable ( true );
                 progress.dismissView ( );
+                successProgress.dismissView ();
                 //提示授权失败
                 String notice = ( String ) msg.obj;
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, notice);
