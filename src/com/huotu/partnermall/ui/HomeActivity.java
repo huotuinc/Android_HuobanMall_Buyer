@@ -52,6 +52,7 @@ import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
+import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
@@ -546,7 +547,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 }
                                   );
 
-        viewPage.setWebChromeClient(new WebChromeClient (){
+        viewPage.setWebChromeClient(new KJWebChromeClient (new WebChromeClient ()
+                                    {
                                         public void openFileChooser(ValueCallback<Uri> uploadMsg) {
                                             mUploadMessage = uploadMsg;
                                             Intent i = new Intent(Intent.ACTION_GET_CONTENT);
@@ -565,7 +567,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                             openFileChooser ( uploadMsg );
 
                                         }
-                                    });
+                                    }));
     }
 
     @Override
