@@ -620,6 +620,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         if (event.getKeyCode () == KeyEvent.KEYCODE_BACK
             && event.getAction() == KeyEvent.ACTION_DOWN)
         {
+
             if(viewPage.canGoBack ())
             {
                 viewPage.goBack ( titleText, mHandler, application );

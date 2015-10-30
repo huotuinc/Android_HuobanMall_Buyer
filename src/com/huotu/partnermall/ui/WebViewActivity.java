@@ -482,7 +482,6 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         {
             viewPage.goBack ( titleText, null, application);
         }
-
     }
 
 }
