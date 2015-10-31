@@ -412,7 +412,7 @@ public class HttpUtil
                 mSite = jsonUtil.toBean(response.toString (), mSite);
                 if(null != mSite) {
                     MSiteModel.MSiteData mSiteData = mSite.getData ();
-                    if ( null != mSiteData.getMsiteUrl () ) {
+                    if ( null != mSiteData.getMsiteUrl ( ) ) {
                         String domain = mSiteData.getMsiteUrl ( );
                         application.writeDomain ( domain );
                     }
@@ -718,7 +718,7 @@ public class HttpUtil
         Volley.newRequestQueue ( context ).add( re);
     }
 
-    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress, final TextView titleView ){
+    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress, final TextView titleView, final WindowManager wManager ){
         final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
@@ -728,20 +728,27 @@ public class HttpUtil
                 JSONUtil<OrderModel > jsonUtil = new JSONUtil<OrderModel>();
                 OrderModel orderInfo = new OrderModel();
                 orderInfo = jsonUtil.toBean(response.toString (), orderInfo);
-                if(null != orderInfo) {
-                    OrderModel.OrderData order = orderInfo.getData ();
-                    payModel.setAmount ( (int)(100 * format2Decimal ( order.getFinal_Amount () )) );
-                    payModel.setDetail ( order.getTostr () );
+                if(200 == orderInfo.getCode ()) {
+                    if ( null != orderInfo ) {
+                        OrderModel.OrderData order = orderInfo.getData ( );
+                        if(null == order)
+                        {
+
+                        }
+                        else
+                        {
+                            payModel.setAmount ( ( int ) ( 100 * format2Decimal ( order.getFinal_Amount ( ) ) ) );
+                            payModel.setDetail ( order.getTostr ( ) );
 
 
-                    if ( null != order ) {
-                        payProgress.dismissView ();
-                        PayPopWindow payPopWindow = new PayPopWindow (aty, context, mHandler, application, payModel);
-                        payPopWindow.showAtLocation (
-                                titleView,
-                                Gravity.BOTTOM, 0, 0
-                                                    );
-                        //支付
+                            if ( null != order ) {
+                                payProgress.dismissView ( );
+                                PayPopWindow payPopWindow = new PayPopWindow ( aty, context, mHandler, application, payModel );
+                                payPopWindow.showAtLocation (
+                                        titleView,
+                                        Gravity.BOTTOM, 0, 0
+                                                            );
+                                //支付
                         /*if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))
                         {
                             //添加支付宝回调路径
@@ -760,7 +767,31 @@ public class HttpUtil
                             payFunc.wxPay ( );
 
                         }*/
+                        }
+
+                        }
                     }
+                    else
+                    {
+                        payProgress.dismissView ( );
+                        NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "获取订单信息失败。");
+                        noticePop.showNotice ();
+                        noticePop.showAtLocation (
+                                titleView,
+                                Gravity.CENTER, 0, 0
+                                                 );
+                    }
+                }
+                else
+                {
+                    //支付信息获取错误
+                    payProgress.dismissView ( );
+                    NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "获取订单信息失败。");
+                    noticePop.showNotice ();
+                    noticePop.showAtLocation (
+                            titleView,
+                            Gravity.CENTER, 0, 0
+                                             );
                 }
 
             }
