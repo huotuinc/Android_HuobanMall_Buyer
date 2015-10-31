@@ -49,7 +49,7 @@ class FileZipUtil {
             ze=(ZipEntry)zList.nextElement();
             if(ze.isDirectory()){
                 KJLoger.i("upZipFile", "ze.getName() = "+ze.getName());
-                String dirstr = folderPath + ze.getName();
+                String dirstr = folderPath + File.separator + ze.getName();
                 //dirstr.trim();
                 dirstr = new String(dirstr.getBytes("8859_1"), "GB2312");
                 KJLoger.i("upZipFile", "str = "+dirstr);

@@ -3,6 +3,8 @@ package com.huotu.partnermall.utils;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
@@ -118,8 +120,10 @@ class UIUtils {
                 menuLayout.setId ( i );
                 //设置图标
                 ImageView menuIcon = ( ImageView ) menuLayout.findViewById ( R.id.menuIcon );
-                int iconId = resources.getIdentifier ( menu.getMenuIcon (), "drawable", application.readSysInfo () );
-                Drawable menuIconDraw = resources.getDrawable ( iconId );
+                //从sd卡上获取图标
+                /*int iconId = resources.getIdentifier ( menu.getMenuIcon (), "drawable", application.readSysInfo () );
+                Drawable menuIconDraw = resources.getDrawable ( iconId );*/
+                Drawable menuIconDraw = new BitmapDrawable ( SystemTools.readBitmapFromSD ( menu.getMenuIcon () ) );
                 SystemTools.loadBackground ( menuIcon,  menuIconDraw);
                 //设置文本
                 TextView menuText = ( TextView ) menuLayout.findViewById ( R.id.menuText );

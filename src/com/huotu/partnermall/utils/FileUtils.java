@@ -31,7 +31,7 @@ class FileUtils {
     File creatSDFile(String fileName) throws IOException {
 
         File file = new File(SDPATH + fileName);
-        file.createNewFile();
+        file.createNewFile ( );
         return file;
     }
 
@@ -52,12 +52,31 @@ class FileUtils {
     public void isFileExist(String fileName){
 
         File file = new File(SDPATH + fileName);
-        if(file.exists ())
+        //判断是文件夹
+        if(file.isDirectory ( ))
         {
-            file.delete();
+            if(file.exists ())
+            {
+                //删除文件夹
+                    String[] children = file.list();
+                    //递归删除目录中的子目录下
+                    for (int i=0; i<children.length; i++) {
+                        new File(file, children[i]).delete ();
+                    }
+                // 目录此时为空，可以删除
+                file.delete();
+            }
+        }
+        else
+        {
+            if(file.exists ())
+            {
+                file.delete();
+            }
         }
 
     }
+
     /**
      * 将一个InputStream里面的数据写入到SD卡中
      */

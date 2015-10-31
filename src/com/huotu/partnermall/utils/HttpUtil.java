@@ -379,7 +379,7 @@ public class HttpUtil
                         application.writePackageVersion ( dataPackageData.getVersion ( ) );
                         //直接下载文件，并更新version
                         //下载数据
-                        //new HttpDownloader().execute ( dataPackageData.getDownloadUrl () );
+                        new HttpDownloader().execute ( dataPackageData.getDownloadUrl () );
                     }
                 }
             }
