@@ -149,7 +149,7 @@ class SubUrlFilterUtils {
             builder.append ( "?orderid="+tradeNo );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress, titleView );
+            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress, titleView, wManager );
             return true;
 
         }
