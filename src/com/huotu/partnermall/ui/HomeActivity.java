@@ -291,7 +291,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             int statusBarHeight = getStatusBarHeight ( HomeActivity.this );
             loginLayout.setPadding ( 0, statusBarHeight, 0, 0 );
         }
-
         //初始化侧滑菜单面板
         application.layDrag = ( DrawerLayout ) this.findViewById ( R.id.layDrag );
         //设置title背景
@@ -413,7 +412,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         //首页默认为商户站点 + index
         String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
-        menuView.loadUrl ( menuUrl, null, null, null);
+        menuView.loadUrl ( menuUrl, null, null, null, swipeRefreshLayout );
         menuView.setOnCustomScroolChangeListener ( new KJSubWebView.ScrollInterface ( ){
 
                                                        @Override
@@ -430,7 +429,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                     ) {
-                        viewPage.loadUrl(url, titleText, mHandler, application);
+                        viewPage.loadUrl( url, titleText, mHandler, application, swipeRefreshLayout);
                         return true;
                     }
 
@@ -472,87 +471,78 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         String url = paramUtils.obtainUrl ();
         //首页默认为商户站点 + index
-        viewPage.loadUrl ( url, titleText, null, application );
+        viewPage.loadUrl( url, titleText, null, application, swipeRefreshLayout);
 
-        viewPage.setOnCustomScroolChangeListener (
-                new KJSubWebView.ScrollInterface ( ) {
+        viewPage.setOnCustomScroolChangeListener(
+                new KJSubWebView.ScrollInterface() {
                     @Override
-                    public
-                    void onSChanged ( int l, int t, int oldl, int oldt ) {
+                    public void onSChanged(int l, int t, int oldl, int oldt) {
                         // TODO Auto-generated method stub
-                        if(viewPage.getWebScrollY() == 0)
-                        {
+                        if (viewPage.getWebScrollY() == 0) {
                             swipeRefreshLayout.setEnabled(true);
-                        }
-                        else
-                        {
+                        } else {
                             swipeRefreshLayout.setEnabled(false);
                         }
                     }
                 }
-                                                 );
+        );
 
-        viewPage.setWebViewClient (
-                new WebViewClient ( ) {
+        viewPage.setWebViewClient(
+                new WebViewClient() {
 
                     //重写此方法，浏览器内部跳转
-                    public
-                    boolean shouldOverrideUrlLoading (
+                    public boolean shouldOverrideUrlLoading(
                             WebView view, String
                             url
-                                                     ) {
-                        UrlFilterUtils filter = new UrlFilterUtils (
+                    ) {
+                        UrlFilterUtils filter = new UrlFilterUtils(
                                 HomeActivity.this,
                                 HomeActivity.this,
                                 titleText, mHandler,
                                 application,
                                 wManager
                         );
-                        return filter.shouldOverrideUrlBySFriend ( viewPage, url );
+                        return filter.shouldOverrideUrlBySFriend( viewPage, url, swipeRefreshLayout);
                     }
 
                     @Override
-                    public
-                    void onPageStarted ( WebView view, String url, Bitmap favicon ) {
-                        super.onPageStarted ( view, url, favicon );
+                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                        super.onPageStarted(view, url, favicon);
                         /*titleLeftImage.setClickable ( false );
                         titleRightImage.setClickable ( false );
                         titleRightLeftImage.setClickable ( false );*/
                     }
 
                     @Override
-                    public
-                    void onPageFinished ( WebView view, String url ) {
+                    public void onPageFinished(WebView view, String url) {
                         //页面加载完成后,读取菜单项
-                        swipeRefreshLayout.setRefreshing(false);
-                        super.onPageFinished ( view, url );
-                        if ( url.contains ( "&back" ) || url.contains ( "?back" ) ) {
+                        super.onPageFinished(view, url);
+                        if (url.contains("&back") || url.contains("?back")) {
                             //application.titleStack.clear ();
-                            mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                            mHandler.sendEmptyMessage(Constants.LEFT_IMG_SIDE);
                         }
                         //titleRightLeftImage.setClickable ( true );
                         // titleLeftImage.setVisibility ( View.VISIBLE );
                         //titleLeftImage.setClickable ( true );
                         //titleRightImage.setClickable ( true );
                         //titleRightLeftImage.setClickable ( true );
-                        titleLeftImage.setVisibility ( View.VISIBLE );
-                        titleRightImage.setVisibility ( View.GONE );
-                        titleRightLeftImage.setVisibility ( View.VISIBLE );
-                        titleText.setText ( view.getTitle ( ) );
+                        titleLeftImage.setVisibility(View.VISIBLE);
+                        titleRightImage.setVisibility(View.GONE);
+                        titleRightLeftImage.setVisibility(View.VISIBLE);
+                        titleText.setText(view.getTitle());
                         //切换背景
-                        titleRightImage.clearAnimation ( );
-                        Drawable rightDraw = resources.getDrawable ( R.drawable
-                                                                             .main_title_left_refresh );
-                        SystemTools.loadBackground ( titleRightImage, rightDraw );
+                        titleRightImage.clearAnimation();
+                        Drawable rightDraw = resources.getDrawable(R.drawable
+                                .main_title_left_refresh);
+                        SystemTools.loadBackground(titleRightImage, rightDraw);
                     }
 
                     @Override
-                    public
-                    void onReceivedError (
+                    public void onReceivedError(
                             WebView view, int errorCode, String description,
                             String failingUrl
-                                         ) {
-                        super.onReceivedError ( view, errorCode, description, failingUrl );
+                    ) {
+                        super.onReceivedError(view, errorCode, description, failingUrl);
                         //错误页面处理
                         //隐藏菜单栏
                         //bottomMenuLayout.setVisibility ( View.GONE  );
@@ -564,39 +554,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     }
 
                 }
-                                  );
+        );
 
-        viewPage.setWebChromeClient(new KJWebChromeClient (new WebChromeClient ()
-                                    {
-                                        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-                                            mUploadMessage = uploadMsg;
-                                            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                                            i.addCategory(Intent.CATEGORY_OPENABLE);
-                                            i.setType("image/*");
-                                            HomeActivity.this.startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
-                                        }
-
-                                        public void openFileChooser( ValueCallback uploadMsg, String acceptType ) {
-                                            openFileChooser ( uploadMsg );
-                                        }
-
-                                        //For Android 4.1
-                                        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture){
-
-                                            openFileChooser ( uploadMsg );
-
-                                        }
-
-                                        @Override
-                                        public void onProgressChanged(WebView view, int newProgress) {
-
-                                            if (newProgress == 100) {
-                                                //隐藏进度条
-                                                swipeRefreshLayout.setRefreshing(false);
-                                            }
-                                            super.onProgressChanged(view, newProgress);
-                                        }
-        }));
     }
 
     @Override
@@ -897,14 +856,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //加载菜单页面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url, titleText, mHandler, application );
+                viewPage.loadUrl ( url, titleText, mHandler, application, swipeRefreshLayout );
             }
             break;
             case Constants.FRESHEN_PAGE_MESSAGE_TAG:
             {
                 //刷新界面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url, titleText, null, null );
+                viewPage.loadUrl ( url, titleText, null, null, swipeRefreshLayout );
             }
             break;
             //分享

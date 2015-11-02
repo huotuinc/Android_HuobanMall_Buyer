@@ -166,7 +166,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         viewPage.setUseWideViewPort(true);
         //是否需要避免页面放大缩小操作
 
-        viewPage.setSupportZoom ( true );
+        viewPage.setSupportZoom(true);
         viewPage.setBuiltInZoomControls(true);
         viewPage.setJavaScriptEnabled(true);
         viewPage.setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -175,7 +175,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         viewPage.setLoadWithOverviewMode(false);
         viewPage.setSavePassword(true);
         viewPage.setLoadsImagesAutomatically(true);
-        viewPage.loadUrl(url, titleText, null, application);
+        viewPage.loadUrl( url, titleText, null, application, swipeRefreshLayout);
         viewPage.setOnCustomScroolChangeListener(
                 new KJSubWebView.ScrollInterface() {
 
@@ -201,7 +201,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                                 WebViewActivity.this,
                                 titleText, mHandler,
                                 application);
-                        return filter.shouldOverrideUrlBySFriend(viewPage, url);
+                        return filter.shouldOverrideUrlBySFriend(viewPage, url, swipeRefreshLayout);
                     }
 
                     @Override
@@ -213,7 +213,6 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
-                        swipeRefreshLayout.setRefreshing(false);
                         //页面加载完成后,读取菜单项
                         // titleRightLeftImage.setClickable ( true );
                         titleLeftImage.setVisibility(View.VISIBLE);
@@ -248,19 +247,6 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
 
 
         );
-
-        viewPage.setWebChromeClient(new KJWebChromeClient(new WebChromeClient() {
-
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-
-                if (newProgress == 100) {
-                    //隐藏进度条
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-                super.onProgressChanged(view, newProgress);
-            }
-        }));
 
     }
 
@@ -498,7 +484,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                 PayModel payModel = ( PayModel ) msg.obj;
                 //调用JS
                 viewPage.loadUrl ( "javascript:utils.Go2Payment("+payModel.getCustomId ()+","+ payModel.getTradeNo ()+","+ payModel.getPaymentType ()+", "
-                                   + "false);\n", titleText, null, application );
+                                   + "false);\n", titleText, null, application, swipeRefreshLayout );
             }
             default:
                 break;

@@ -24,6 +24,7 @@ import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
 import com.huotu.partnermall.widgets.PayPopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
+import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
 
 import java.util.regex.Pattern;
 
@@ -66,7 +67,7 @@ class SubUrlFilterUtils {
      * @return
      */
     public
-    boolean shouldOverrideUrlBySFriend ( KJWebView view, String url ) {
+    boolean shouldOverrideUrlBySFriend ( KJWebView view, String url, ScrollSwipeRefreshLayout swipeRefreshLayout ) {
         if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
 
             String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
@@ -165,7 +166,7 @@ class SubUrlFilterUtils {
         else
         {
             //跳转界面
-            view.loadUrl ( url, titleView, null, application );
+            view.loadUrl ( url, titleView, null, application, swipeRefreshLayout );
             return false;
         }
         return false;
