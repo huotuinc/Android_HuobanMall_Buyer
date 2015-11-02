@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -68,6 +69,7 @@ import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 import com.huotu.partnermall.widgets.PhotoSelectView;
 import com.huotu.partnermall.widgets.PopTimeView;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
+import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import com.huotu.partnermall.widgets.UserInfoView;
 
@@ -166,6 +168,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     public
     ProgressPopupWindow progress;
 
+    //private ScrollSwipeRefreshLayout swipeRefreshLayout;
+
     public
     AssetManager am;
 
@@ -205,7 +209,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
         titleLeftImage.setOnClickListener ( this );
         //titleLeftImage.setClickable ( false );
-        titleLeftImage.setVisibility ( View.GONE );
+        titleLeftImage.setVisibility(View.GONE);
+        //web下拉组件刷新
+        //swipeRefreshLayout = (ScrollSwipeRefreshLayout) this.findViewById(R.id.pageLoadView);
         //构建标题右侧图标，点击事件
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
         //titleRightImage.setClickable ( false );
@@ -292,7 +298,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         homeTitle.setBackgroundColor ( SystemTools.obtainColor ( application.obtainMainColor ( ) ) );
         //设置左侧图标
         Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
-        SystemTools.loadBackground ( titleLeftImage, leftDraw );
+        SystemTools.loadBackground(titleLeftImage, leftDraw);
         //设置右侧图标
         Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
         SystemTools.loadBackground ( titleRightImage, rightDraw );
@@ -380,15 +386,23 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         //动态加载侧滑菜单
         UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am );
-        ui.loadMenus ( );
+        ui.loadMenus();
         //加载底部菜单
         //ui.loadMainMenu ( null, bottomMenuLayout );
         //加载页面
         //页面集成，title无需展示
         //titleText.setText ( "买家版" );
+        //swipeRefreshLayout.setViewGroup(viewPage);
+        /*swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
-        loadPage ( );
-        loadMainMenu ( );
+            @Override
+            public void onRefresh() {
+                viewPage.reload();
+            }
+        });*/
+
+        loadPage();
+        loadMainMenu();
     }
 
     private
@@ -409,33 +423,30 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
                                                        }
                                                    });
-        menuView.setWebViewClient (
-                new WebViewClient ( ) {
+        menuView.setWebViewClient(
+                new WebViewClient() {
 
                     //重写此方法，浏览器内部跳转
-                    public
-                    boolean shouldOverrideUrlLoading (
+                    public boolean shouldOverrideUrlLoading(
                             WebView view, String
                             url
-                                                     ) {
-                        viewPage.loadUrl ( url, titleText, mHandler, application );
+                    ) {
+                        viewPage.loadUrl(url, titleText, mHandler, application);
                         return true;
                     }
 
                     @Override
-                    public
-                    void onPageStarted ( WebView view, String url, Bitmap favicon ) {
+                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
-                        super.onPageStarted ( view, url, favicon );
+                        super.onPageStarted(view, url, favicon);
                     }
 
                     @Override
-                    public
-                    void onPageFinished ( WebView view, String url ) {
-                        super.onPageFinished ( view, url );
+                    public void onPageFinished(WebView view, String url) {
+                        super.onPageFinished(view, url);
                     }
                 }
-                                  );
+        );
     }
 
     private
@@ -506,6 +517,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onPageFinished ( WebView view, String url ) {
                         //页面加载完成后,读取菜单项
+                       // swipeRefreshLayout.setRefreshing(false);
                         super.onPageFinished ( view, url );
                         if ( url.contains ( "&back" ) || url.contains ( "?back" ) ) {
                             //application.titleStack.clear ();
@@ -567,7 +579,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                             openFileChooser ( uploadMsg );
 
                                         }
-                                    }));
+
+                                        /*@Override
+                                        public void onProgressChanged(WebView view, int newProgress) {
+
+                                            if (newProgress == 100) {
+                                                //隐藏进度条
+                                                swipeRefreshLayout.setRefreshing(false);
+                                            }
+                                            super.onProgressChanged(view, newProgress);
+                                        }*/
+        }));
     }
 
     @Override
@@ -627,7 +649,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 viewPage.goBack ( titleText, mHandler, application );
             }
-            else {
+            else
+            {
                 if ( ( System.currentTimeMillis ( ) - exitTime ) > 2000 ) {
                     ToastUtils.showLongToast ( getApplicationContext ( ), "再按一次退出程序" );
                     exitTime = System.currentTimeMillis ( );

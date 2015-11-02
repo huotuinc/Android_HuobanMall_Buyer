@@ -73,7 +73,7 @@ class KJWebView extends RelativeLayout {
         mWebView = new KJSubWebView(context);
         this.addView(mWebView, LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 
-        mWebView.setWebChromeClient (
+        /*mWebView.setWebChromeClient (
                 new WebChromeClient ( ) {
 
                     @Override
@@ -81,7 +81,7 @@ class KJWebView extends RelativeLayout {
                     void onProgressChanged ( WebView view, int newProgress ) {
                         // TODO Auto-generated method stub
                         super.onProgressChanged ( view, newProgress );
-                        /*if ( newProgress == 100 ) {
+                        *//*if ( newProgress == 100 ) {
                             progressBar_circle.setVisibility ( View.GONE );
                         }
                         else {
@@ -101,7 +101,7 @@ class KJWebView extends RelativeLayout {
                                 isAdd = true;
                             }
                             progressBar_circle.setVisibility ( View.VISIBLE );
-                        }*/
+                        }*//*
                     }
 
                     @Override
@@ -132,7 +132,7 @@ class KJWebView extends RelativeLayout {
 
 
                 }
-                                    );
+                                    );*/
     }
 
     public String StringstringByEvaluatingJavaScriptFromString(String script)

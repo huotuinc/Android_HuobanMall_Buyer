@@ -19,6 +19,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.ui.pay.PayFunc;
+import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WindowUtils;
 
 /**
@@ -62,17 +63,31 @@ class PayPopWindow extends PopupWindow {
                     @Override
                     public
                     void onClick ( View v ) {
-                        progress.showProgress ( "正在加载支付信息" );
-                        progress.showAtLocation (
-                                aty.findViewById (R.id.titleText ),
-                                Gravity.CENTER, 0, 0
-                                                );
-                        payModel.setAttach ( payModel.getCustomId ( ) + "_0" );
-                        //添加微信回调路径
-                        payModel.setNotifyurl ( application.obtainMerchantUrl ( ) + application.readWeixinNotify ( ) );
-                                              PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, progress );
-                                              payFunc.wxPay ( );
-                                              dismissView ( );
+                        if(!application.scanWx ())
+                        {
+                            //缺少支付信息
+                            dismissView ( );
+                            NoticePopWindow noticePop = new NoticePopWindow ( context, aty, aty.getWindowManager (), "缺少支付信息" );
+                            noticePop.showNotice ();
+                            noticePop.showAtLocation (
+                                    aty.findViewById ( R.id.titleText ),
+                                    Gravity.CENTER, 0, 0
+                                                     );
+                        }
+                        else
+                        {
+                            progress.showProgress ( "正在加载支付信息" );
+                            progress.showAtLocation (
+                                    aty.findViewById (R.id.titleText ),
+                                    Gravity.CENTER, 0, 0
+                                                    );
+                            payModel.setAttach ( payModel.getCustomId ( ) + "_0" );
+                            //添加微信回调路径
+                            payModel.setNotifyurl ( application.obtainMerchantUrl ( ) + application.readWeixinNotify ( ) );
+                            PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, progress );
+                            payFunc.wxPay ( );
+                            dismissView ( );
+                        }
                                           }
                                       } );
         alipayBtn.setOnClickListener ( new View.OnClickListener ( ) {
