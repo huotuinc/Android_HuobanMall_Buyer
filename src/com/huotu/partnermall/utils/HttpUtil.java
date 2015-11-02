@@ -745,7 +745,7 @@ public class HttpUtil
                         else
                         {
                             payModel.setAmount ( ( int ) ( 100 * format2Decimal ( order.getFinal_Amount ( ) ) ) );
-                            payModel.setDetail ( order.getTostr ( ) );
+                            payModel.setDetail ( order.getToStr ( ) );
 
 
                             if ( null != order ) {

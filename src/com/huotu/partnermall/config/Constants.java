@@ -357,7 +357,7 @@ public class Constants {
 	/**
 	 * 操作平台码
 	 */
-	public static final String OPERATION_CODE = "BUYER_2015DC";
+	public static final String OPERATION_CODE = "BUYER_ANDROID_2015DC";
 
 	public static final String APPKEY = "b73ca64567fb49ee963477263283a1bf";
 

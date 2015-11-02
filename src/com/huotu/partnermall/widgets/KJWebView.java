@@ -2,7 +2,9 @@ package com.huotu.partnermall.widgets;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -11,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -59,146 +62,20 @@ class KJWebView extends RelativeLayout {
         super(context, attrs);
         // TODO Auto-generated constructor stub
         this.context = context;
-        init ( );
+        init();
     }
 
     public KJWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         // TODO Auto-generated constructor stub
         this.context = context;
-        init ( );
+        init();
     }
 
     private void init(){
 
         mWebView = new KJSubWebView(context);
         this.addView(mWebView, LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-
-        /*mWebView.setWebChromeClient (
-                new WebChromeClient ( ) {
-
-                    @Override
-                    public
-                    void onProgressChanged ( WebView view, int newProgress ) {
-                        // TODO Auto-generated method stub
-                        super.onProgressChanged ( view, newProgress );
-                        *//*if ( newProgress == 100 ) {
-                            progressBar_circle.setVisibility ( View.GONE );
-                        }
-                        else {
-                            if ( ! isAdd ) {
-                                progressBar_circle = ( RelativeLayout ) LayoutInflater.from (
-                                        context
-                                                                                            )
-                                                                                      .inflate (
-                                                                                              R
-                                                                                              .layout.progress_circle, null
-                                                                                               );
-                                KJWebView.this.addView (
-                                        progressBar_circle, LayoutParams
-                                                .FILL_PARENT, LayoutParams
-                                                .FILL_PARENT
-                                                       );
-                                isAdd = true;
-                            }
-                            progressBar_circle.setVisibility ( View.VISIBLE );
-                        }*//*
-                    }
-
-                    @Override
-                    public
-                    boolean onJsAlert (
-                            WebView view, String url, String message, JsResult result
-                                      ) {
-                        return super.onJsAlert ( view, url, message, result );
-                    }
-
-                    @Override
-                    public
-                    boolean onJsConfirm (
-                            WebView view, String url, String message, JsResult
-                            result
-                                        ) {
-                        return super.onJsConfirm ( view, url, message, result );
-                    }
-
-                    @Override
-                    public
-                    boolean onJsPrompt (
-                            WebView view, String url, String message, String
-                            defaultValue, JsPromptResult result
-                                       ) {
-                        return super.onJsPrompt ( view, url, message, defaultValue, result );
-                    }
-
-
-                }
-                                    );*/
-    }
-
-    public String StringstringByEvaluatingJavaScriptFromString(String script)
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            try{
-                Field mp = WebView.class.getDeclaredField("mProvider");
-                mp.setAccessible(true);
-                Object webViewObject = mp.get(this);
-                Field wc = webViewObject.getClass().getDeclaredField("mWebViewCore");
-                wc.setAccessible(true);
-                Object webViewCore = wc.get(webViewObject);
-                Field bf = webViewCore.getClass().getDeclaredField("mBrowserFrame");
-                bf.setAccessible(true);
-                Object browserFrame = bf.get(webViewCore);
-                Method stringByEvaluatingJavaScriptFromString = browserFrame.getClass().getDeclaredMethod ( "stringByEvaluatingJavaScriptFromString", String.class );
-                stringByEvaluatingJavaScriptFromString.setAccessible(true);
-                Object obj_value = stringByEvaluatingJavaScriptFromString.invoke(browserFrame, script);
-                return String.valueOf(obj_value);
-
-            }catch(Exception e) {
-
-                KJLoger.e ( e.getMessage () );
-            }
-            return null;
-
-        }else{
-
-            try{
-
-                Field[]fields= WebView.class.getDeclaredFields();
-                //由webview取到webviewcore
-                Field field_webviewcore = WebView.class.getDeclaredField("mWebViewCore");
-                field_webviewcore.setAccessible(true);
-                Object obj_webviewcore = field_webviewcore.get(this);
-                //由webviewcore取到BrowserFrame
-                Field field_BrowserFrame = obj_webviewcore.getClass().getDeclaredField("mBrowserFrame");
-                field_BrowserFrame.setAccessible(true);
-                Object obj_frame = field_BrowserFrame.get(obj_webviewcore);
-                //获取BrowserFrame对象的stringByEvaluatingJavaScriptFromString方法
-                Method method_stringByEvaluatingJavaScriptFromString = obj_frame.getClass().getMethod ( "stringByEvaluatingJavaScriptFromString", String.class );
-                //执行stringByEvaluatingJavaScriptFromString方法
-                Object obj_value = method_stringByEvaluatingJavaScriptFromString.invoke( obj_frame, script);
-                //返回执行结果
-                return String.valueOf(obj_value);
-            }catch(Exception e) {
-
-                KJLoger.e ( e.getMessage () );
-            }
-            return null;
-        }
-    }
-
-    public void setPageTitle(final TextView titleView)
-    {
-        mWebView.setWebChromeClient (
-                new WebChromeClient ( ) {
-                    @Override
-                    public
-                    void onReceivedTitle ( WebView view, String title ) {
-                        super.onReceivedTitle ( view, title );
-                        titleView.setText ( title );
-                    }
-                }
-                                    );
     }
 
     public void setBarHeight(int height){
@@ -206,7 +83,7 @@ class KJWebView extends RelativeLayout {
     }
 
     public void setClickable(boolean value){
-        mWebView.setClickable ( value );
+        mWebView.setClickable(value);
     }
 
     public void setUseWideViewPort(boolean value){
@@ -254,7 +131,7 @@ class KJWebView extends RelativeLayout {
     }
     public void setSupportMultipleWindows(boolean flag)
     {
-        mWebView.getSettings ().setSupportMultipleWindows ( flag );
+        mWebView.getSettings ().setSupportMultipleWindows(flag);
     }
     public void setAppCacheEnabled(boolean flag)
     {
@@ -277,7 +154,7 @@ class KJWebView extends RelativeLayout {
         mWebView.setWebViewClient(value);
     }
 
-    public void loadUrl( final String url, final TextView titleView, final Handler mHandler, final BaseApplication application){
+    public void loadUrl( final Activity aty, final String url, final TextView titleView, final Handler mHandler, final BaseApplication application, final ScrollSwipeRefreshLayout swipeRefreshLayout){
         mWebView.loadUrl(url);
         if(null != titleView && !"".equals ( titleView ))
         {
@@ -319,6 +196,38 @@ class KJWebView extends RelativeLayout {
                                                                Constants.CURRENT_URL, url );
                                 KJLoger.i ( url );
                             }
+                        }
+
+                        @Override
+                        public void onProgressChanged(WebView view, int newProgress) {
+
+                            if (newProgress == 100) {
+                                //隐藏进度条
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                            super.onProgressChanged(view, newProgress);
+                        }
+
+                        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                            if(null != aty)
+                            {
+                                HomeActivity.mUploadMessage = uploadMsg;
+                                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                                i.addCategory(Intent.CATEGORY_OPENABLE);
+                                i.setType("*/*");
+                                aty.startActivityForResult(Intent.createChooser(i, "File Chooser"), HomeActivity.FILECHOOSER_RESULTCODE);
+                            }
+                        }
+
+                        public void openFileChooser( ValueCallback uploadMsg, String acceptType ) {
+                            openFileChooser(uploadMsg);
+                        }
+
+                        //For Android 4.1
+                        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture){
+
+                            openFileChooser(uploadMsg);
+
                         }
                     }
                                         );

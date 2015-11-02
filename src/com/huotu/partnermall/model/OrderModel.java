@@ -43,27 +43,23 @@ class OrderModel {
     public class OrderData
     {
         private double Final_Amount;
-        private String Tostr;
+        private String ToStr;
 
         public
         void setFinal_Amount ( double final_Amount ) {
             Final_Amount = final_Amount;
         }
-
-        public
-        String getTostr ( ) {
-            return Tostr;
-        }
-
-        public
-        void setTostr ( String tostr ) {
-            Tostr = tostr;
-        }
-
         public
         double getFinal_Amount ( ) {
             return Final_Amount;
         }
 
+        public String getToStr() {
+            return ToStr;
+        }
+
+        public void setToStr(String toStr) {
+            ToStr = toStr;
+        }
     }
 }
