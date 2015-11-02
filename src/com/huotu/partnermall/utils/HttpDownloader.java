@@ -20,6 +20,10 @@ class HttpDownloader extends AsyncTask<String, Void, Integer> {
 
 
     private URL url = null;
+    public HttpDownloader()
+    {
+
+    }
 
     /**
      * 根据URL得到输入流
@@ -43,6 +47,7 @@ class HttpDownloader extends AsyncTask<String, Void, Integer> {
             FileUtils fileUtils = new FileUtils();
 
             fileUtils.isFileExist("buyer" + File.separator + "update.zip");
+            fileUtils.isFileExist("buyer" + File.separator + "icon");
             inputStream = getInputStreamFromUrl(params[0]);
             File resultFile = fileUtils.writeToSDFromInput("buyer","update.zip", inputStream);
             if (resultFile == null) {

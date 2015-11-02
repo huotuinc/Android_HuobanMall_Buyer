@@ -172,7 +172,7 @@ public class SplashActivity extends BaseActivity {
                                                    String packageVersion = application.readPackageVersion ();
                                                    if( TextUtils.isEmpty ( packageVersion ))
                                                    {
-                                                       packageVersion = "1.0.0";
+                                                       packageVersion = "0.0.1";
                                                        application.writePackageVersion ( packageVersion );
                                                    }
                                                    packageUrl += "?customerId="+application.readMerchantId () + "&dataPacketVersion="+ packageVersion;
