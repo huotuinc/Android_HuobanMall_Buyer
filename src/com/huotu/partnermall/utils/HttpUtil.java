@@ -128,7 +128,7 @@ public class HttpUtil
             // 准备数据
             String data = this.potParams(params);
             byte[] data_bytes = data.getBytes();
-            
+
             conn.setRequestProperty("Content-Type",
                     "application/x-www-form-urlencoded;");
             conn.setRequestProperty("Content-Length", data_bytes.length + "");
@@ -213,8 +213,8 @@ public class HttpUtil
             if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 KJLoger.i (
                         "httpGet fail, status code = " + resp.getStatusLine ( )
-                                                             .getStatusCode ( )
-                          );
+                                .getStatusCode ( )
+                );
                 return null;
             }
 
@@ -251,7 +251,7 @@ public class HttpUtil
     }
 
     /**
-     * 
+     *
      * @方法描述：get请求
      * @方法名：getByHttpConnection
      * @参数：@param url
@@ -267,7 +267,7 @@ public class HttpUtil
         String jsonStr = null;
         URL get_url;
         try
-        {                   
+        {
             get_url = new URL(url);
             conn = (HttpURLConnection) get_url.openConnection();
             conn.setRequestMethod("GET");
@@ -280,7 +280,7 @@ public class HttpUtil
                 inStream = conn.getInputStream();
                 byte[] dataByte = SystemTools.readInputStream(inStream);
                 jsonStr = new String(dataByte);
-                
+
                 //Log.i("HttpUtil",url);
                 //Log.i("HttpUtil", jsonStr);
             } else
@@ -288,7 +288,7 @@ public class HttpUtil
                 // 获取数据失败
                 jsonStr = "{\"resultCode\":50601,\"systemResultCode\":1}";
             }
-        }catch( ConnectTimeoutException ctimeoutex){            
+        }catch( ConnectTimeoutException ctimeoutex){
             jsonStr = "{\"resultCode\":50001,\"resultDescription\":\"网络请求超时，请稍后重试\",\"systemResultCode\":1}";
         }catch (SocketTimeoutException stimeoutex) {
             jsonStr = "{\"resultCode\":50001,\"resultDescription\":\"网络请求超时，请稍后重试\",\"systemResultCode\":1}";
@@ -338,17 +338,17 @@ public class HttpUtil
 //            buffer.append("&" + entry.getKey() + "=" + entry.getValue());
             try
             {
-               String eee = URLEncoder.encode(entry.getValue().toString() , "UTF-8");
+                String eee = URLEncoder.encode(entry.getValue().toString() , "UTF-8");
                 buffer.append("&" + entry.getKey() +"=" + eee );
-                
+
                 //Log.i("dedd", eee);
-                
+
             } catch (UnsupportedEncodingException e)
             {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            
+
         }
         return buffer.toString().substring(1, buffer.length());
     }
@@ -379,7 +379,7 @@ public class HttpUtil
                         application.writePackageVersion ( dataPackageData.getVersion ( ) );
                         //直接下载文件，并更新version
                         //下载数据
-                        new HttpDownloader().execute ( dataPackageData.getDownloadUrl () );
+                        //new HttpDownloader().execute ( dataPackageData.getDownloadUrl () );
                     }
                 }
             }
@@ -412,7 +412,7 @@ public class HttpUtil
                 mSite = jsonUtil.toBean(response.toString (), mSite);
                 if(null != mSite) {
                     MSiteModel.MSiteData mSiteData = mSite.getData ();
-                    if ( null != mSiteData.getMsiteUrl ( ) ) {
+                    if ( null != mSiteData.getMsiteUrl () ) {
                         String domain = mSiteData.getMsiteUrl ( );
                         application.writeDomain ( domain );
                     }
@@ -543,7 +543,7 @@ public class HttpUtil
                                 account.getAccountName ( ), account.getAccountId ( ),
                                 account.getAccountIcon ( ), account.getAccountToken ( ),
                                 account.getAccountUnionId ( )
-                                                    );
+                        );
                         application.writeMemberLevel ( mall.getLevelName () );
 
                         //设置侧滑栏菜单
@@ -639,7 +639,7 @@ public class HttpUtil
                         userPop.showAtLocation (
                                 view,
                                 Gravity.CENTER, 0, 0
-                                               );
+                        );
                         userPop.setOnDismissListener ( new PoponDismissListener ( aty ) );
                     }
                     else if((null != userList) && (!userList.isEmpty ()) && (userList.size () == 1))
@@ -652,7 +652,7 @@ public class HttpUtil
                         noticePop.showAtLocation (
                                 view,
                                 Gravity.CENTER, 0, 0
-                                                 );
+                        );
                     }
                 } else
                 {
@@ -664,7 +664,7 @@ public class HttpUtil
                     noticePop.showAtLocation (
                             view,
                             Gravity.CENTER, 0, 0
-                                             );
+                    );
                 }
             }
         }, new Response.ErrorListener() {
@@ -731,13 +731,9 @@ public class HttpUtil
                 if(200 == orderInfo.getCode ()) {
                     if ( null != orderInfo ) {
                         OrderModel.OrderData order = orderInfo.getData ( );
-<<<<<<< HEAD
-                        if(null == order)
-=======
                         if ( null == order)
->>>>>>> dev
                         {
-
+                            
                         }
                         else
                         {
@@ -751,7 +747,7 @@ public class HttpUtil
                                 payPopWindow.showAtLocation (
                                         titleView,
                                         Gravity.BOTTOM, 0, 0
-                                                            );
+                                );
                                 //支付
                         /*if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))
                         {
@@ -771,11 +767,6 @@ public class HttpUtil
                             payFunc.wxPay ( );
 
                         }*/
-<<<<<<< HEAD
-                        }
-
-                        }
-=======
                             }
 
                         }
@@ -788,30 +779,8 @@ public class HttpUtil
                         noticePop.showAtLocation (
                                 titleView,
                                 Gravity.CENTER, 0, 0
-                                                 );
->>>>>>> dev
+                        );
                     }
-                    else
-                    {
-                        payProgress.dismissView ( );
-                        NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "获取订单信息失败。");
-                        noticePop.showNotice ();
-                        noticePop.showAtLocation (
-                                titleView,
-                                Gravity.CENTER, 0, 0
-                                                 );
-                    }
-                }
-                else
-                {
-                    //支付信息获取错误
-                    payProgress.dismissView ( );
-                    NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "获取订单信息失败。");
-                    noticePop.showNotice ();
-                    noticePop.showAtLocation (
-                            titleView,
-                            Gravity.CENTER, 0, 0
-                                             );
                 }
                 else
                 {
@@ -822,7 +791,7 @@ public class HttpUtil
                     noticePop.showAtLocation (
                             titleView,
                             Gravity.CENTER, 0, 0
-                                             );
+                    );
                 }
 
             }
