@@ -733,7 +733,14 @@ public class HttpUtil
                         OrderModel.OrderData order = orderInfo.getData ( );
                         if ( null == order)
                         {
-
+                            //支付信息获取错误
+                            payProgress.dismissView ( );
+                            NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "获取订单信息失败。");
+                            noticePop.showNotice ( );
+                            noticePop.showAtLocation (
+                                    titleView,
+                                    Gravity.CENTER, 0, 0
+                            );
                         }
                         else
                         {
