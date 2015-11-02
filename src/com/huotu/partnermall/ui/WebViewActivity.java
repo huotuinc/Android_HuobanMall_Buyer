@@ -141,33 +141,32 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
 
     private void loadPage()
     {
-        viewPage.setScrollBarStyle ( View.SCROLLBARS_OUTSIDE_OVERLAY );
-        viewPage.setVerticalScrollBarEnabled ( false );
-        viewPage.setBarHeight ( 8 );
-        viewPage.setClickable ( true );
-        viewPage.setUseWideViewPort ( true );
+        viewPage.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        viewPage.setVerticalScrollBarEnabled(false);
+        viewPage.setBarHeight(8);
+        viewPage.setClickable(true);
+        viewPage.setUseWideViewPort(true);
         //是否需要避免页面放大缩小操作
 
         viewPage.setSupportZoom ( true );
-        viewPage.setBuiltInZoomControls ( true );
-        viewPage.setJavaScriptEnabled ( true );
-        viewPage.setCacheMode ( WebSettings.LOAD_DEFAULT );
-        viewPage.setSaveFormData ( true );
-        viewPage.setAllowFileAccess ( true );
-        viewPage.setLoadWithOverviewMode ( false );
-        viewPage.setSavePassword ( true );
-        viewPage.setLoadsImagesAutomatically ( true );
-        viewPage.loadUrl ( url, titleText, null, application );
-        viewPage.setOnCustomScroolChangeListener (
-                new KJSubWebView.ScrollInterface ( ) {
+        viewPage.setBuiltInZoomControls(true);
+        viewPage.setJavaScriptEnabled(true);
+        viewPage.setCacheMode(WebSettings.LOAD_DEFAULT);
+        viewPage.setSaveFormData(true);
+        viewPage.setAllowFileAccess(true);
+        viewPage.setLoadWithOverviewMode(false);
+        viewPage.setSavePassword(true);
+        viewPage.setLoadsImagesAutomatically(true);
+        viewPage.loadUrl(url, titleText, null, application);
+        viewPage.setOnCustomScroolChangeListener(
+                new KJSubWebView.ScrollInterface() {
 
                     @Override
-                    public
-                    void onSChanged ( int l, int t, int oldl, int oldt ) {
+                    public void onSChanged(int l, int t, int oldl, int oldt) {
 
                     }
                 }
-                                                 );
+        );
         viewPage.setWebViewClient (
                 new WebViewClient ( ) {
 
@@ -352,6 +351,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                 {
                     application.titleStack.pop ();
                 }
+
                 //关闭当前页
                 closeSelf ( WebViewActivity.this );
             }
