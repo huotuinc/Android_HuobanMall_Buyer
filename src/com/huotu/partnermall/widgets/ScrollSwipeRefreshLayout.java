@@ -27,27 +27,4 @@ public class ScrollSwipeRefreshLayout extends SwipeRefreshLayout {
     public void setViewGroup(ViewGroup viewGroup) {
         this.viewGroup = viewGroup;
     }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        if(null!=viewGroup){
-            if(viewGroup instanceof KJWebView)
-            {
-
-                if(((KJWebView)viewGroup).getWebScrollY() == 0){
-
-                    return super.onTouchEvent(ev);
-                }else{
-                    //直接截断时间传播
-                    return true;
-                }
-            }
-            else
-            {
-                return super.onTouchEvent(ev);
-            }
-
-        }
-        return super.onTouchEvent(ev);
-    }
 }

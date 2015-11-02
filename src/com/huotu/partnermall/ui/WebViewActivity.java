@@ -1,15 +1,20 @@
 package com.huotu.partnermall.ui;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -28,6 +33,7 @@ import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.ui.web.SubUrlFilterUtils;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AliPayUtil;
@@ -35,6 +41,7 @@ import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJSubWebView;
 import com.huotu.partnermall.widgets.KJWebView;
+import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 
 import java.util.HashMap;
@@ -79,6 +86,8 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
 
     private MyBroadcastReceiver myBroadcastReceiver;
 
+    private ScrollSwipeRefreshLayout swipeRefreshLayout;
+
     @Override
 
     protected
@@ -103,6 +112,8 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
     void findViewById ( ) {
 
         homeTitle = ( RelativeLayout ) this.findViewById ( R.id.newtitleLayout );
+        //web下拉组件刷新
+        swipeRefreshLayout = (ScrollSwipeRefreshLayout) this.findViewById(R.id.pageLoadView);
         titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
         titleLeftImage.setOnClickListener ( this );
        // titleLeftImage.setClickable ( false );
@@ -136,6 +147,13 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         Drawable rightLeftDraw = resources.getDrawable ( R.drawable.home_title_right_share );
         SystemTools.loadBackground ( titleRightLeftImage, rightLeftDraw );
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                viewPage.reload();
+            }
+        });
         loadPage ( );
     }
 
@@ -163,60 +181,62 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
 
                     @Override
                     public void onSChanged(int l, int t, int oldl, int oldt) {
-
+                        if (viewPage.getWebScrollY() == 0) {
+                            swipeRefreshLayout.setEnabled(true);
+                        } else {
+                            swipeRefreshLayout.setEnabled(false);
+                        }
                     }
                 }
         );
-        viewPage.setWebViewClient (
-                new WebViewClient ( ) {
+        viewPage.setWebViewClient(
+                new WebViewClient() {
 
                     //重写此方法，浏览器内部跳转
-                    public
-                    boolean shouldOverrideUrlLoading (
+                    public boolean shouldOverrideUrlLoading(
                             WebView view, String
                             url
-                                                     ) {
-                        SubUrlFilterUtils filter = new SubUrlFilterUtils ( WebViewActivity.this,
-                                                                           WebViewActivity.this,
-                                                                           titleText, mHandler,
-                                                                           application );
-                        return filter.shouldOverrideUrlBySFriend ( viewPage, url );
+                    ) {
+                        SubUrlFilterUtils filter = new SubUrlFilterUtils(WebViewActivity.this,
+                                WebViewActivity.this,
+                                titleText, mHandler,
+                                application);
+                        return filter.shouldOverrideUrlBySFriend(viewPage, url);
                     }
 
                     @Override
-                    public
-                    void onPageStarted ( WebView view, String url, Bitmap favicon ) {
-                        super.onPageStarted ( view, url, favicon );
+                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                        super.onPageStarted(view, url, favicon);
 
                     }
 
                     @Override
-                    public
-                    void onPageFinished ( WebView view, String url ) {
-                        super.onPageFinished ( view, url );
+                    public void onPageFinished(WebView view, String url) {
+                        super.onPageFinished(view, url);
+                        swipeRefreshLayout.setRefreshing(false);
                         //页面加载完成后,读取菜单项
                         // titleRightLeftImage.setClickable ( true );
-                        titleLeftImage.setVisibility ( View.VISIBLE );
-                        titleRightImage.setVisibility ( View.VISIBLE );
-                        titleRightLeftImage.setVisibility ( View.VISIBLE );
+                        titleLeftImage.setVisibility(View.VISIBLE);
+                        titleRightImage.setVisibility(View.GONE);
+                        titleRightLeftImage.setVisibility(View.VISIBLE);
                         /*titleLeftImage.setClickable ( true );
                         titleRightImage.setClickable ( true );
                         titleRightLeftImage.setClickable ( true );*/
-                        titleText.setText ( view.getTitle ( ) );
+                        titleText.setText(view.getTitle());
                         //切换背景
-                        titleRightImage.clearAnimation ( );
-                        Drawable rightDraw = resources.getDrawable ( R.drawable
-                                                                             .main_title_left_refresh );
-                        SystemTools.loadBackground ( titleRightImage, rightDraw );
+                        titleRightImage.clearAnimation();
+                        Drawable rightDraw = resources.getDrawable(R.drawable
+                                .main_title_left_refresh);
+                        SystemTools.loadBackground(titleRightImage, rightDraw);
                     }
 
+
                     @Override
-                    public
-                    void onReceivedError (
+                    public void onReceivedError(
                             WebView view, int errorCode, String description,
                             String failingUrl
-                                         ) {
-                        super.onReceivedError ( view, errorCode, description, failingUrl );
+                    ) {
+                        super.onReceivedError(view, errorCode, description, failingUrl);
                         //错误页面处理
                         //隐藏菜单栏
                         //bottomMenuLayout.setVisibility ( View.GONE  );
@@ -225,7 +245,22 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                     }
 
                 }
-                                  );
+
+
+        );
+
+        viewPage.setWebChromeClient(new KJWebChromeClient(new WebChromeClient() {
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+
+                if (newProgress == 100) {
+                    //隐藏进度条
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                super.onProgressChanged(view, newProgress);
+            }
+        }));
 
     }
 
@@ -244,7 +279,11 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                 else
                 {
                     //清空消息
-                    application.titleStack.pop ();
+                    if(0 < application.titleStack.size())
+                    {
+                        application.titleStack.pop ();
+                    }
+
                     //关闭界面
                     WebViewActivity.this.finish ();
                 }

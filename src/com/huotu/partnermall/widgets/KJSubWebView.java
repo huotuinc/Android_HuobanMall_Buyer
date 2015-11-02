@@ -3,6 +3,7 @@ package com.huotu.partnermall.widgets;
 import android.content.Context;
 import android.renderscript.ScriptIntrinsic;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.webkit.WebView;
 
 /**

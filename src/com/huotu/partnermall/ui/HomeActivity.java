@@ -168,7 +168,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     public
     ProgressPopupWindow progress;
 
-    //private ScrollSwipeRefreshLayout swipeRefreshLayout;
+    private ScrollSwipeRefreshLayout swipeRefreshLayout;
 
     public
     AssetManager am;
@@ -211,7 +211,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //titleLeftImage.setClickable ( false );
         titleLeftImage.setVisibility(View.GONE);
         //web下拉组件刷新
-        //swipeRefreshLayout = (ScrollSwipeRefreshLayout) this.findViewById(R.id.pageLoadView);
+        swipeRefreshLayout = (ScrollSwipeRefreshLayout) this.findViewById(R.id.pageLoadView);
         //构建标题右侧图标，点击事件
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
         //titleRightImage.setClickable ( false );
@@ -392,14 +392,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         //加载页面
         //页面集成，title无需展示
         //titleText.setText ( "买家版" );
-        //swipeRefreshLayout.setViewGroup(viewPage);
-        /*swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
             public void onRefresh() {
                 viewPage.reload();
             }
-        });*/
+        });
 
         loadPage();
         loadMainMenu();
@@ -481,6 +480,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onSChanged ( int l, int t, int oldl, int oldt ) {
                         // TODO Auto-generated method stub
+                        if(viewPage.getWebScrollY() == 0)
+                        {
+                            swipeRefreshLayout.setEnabled(true);
+                        }
+                        else
+                        {
+                            swipeRefreshLayout.setEnabled(false);
+                        }
                     }
                 }
                                                  );
@@ -517,7 +524,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     public
                     void onPageFinished ( WebView view, String url ) {
                         //页面加载完成后,读取菜单项
-                       // swipeRefreshLayout.setRefreshing(false);
+                        swipeRefreshLayout.setRefreshing(false);
                         super.onPageFinished ( view, url );
                         if ( url.contains ( "&back" ) || url.contains ( "?back" ) ) {
                             //application.titleStack.clear ();
@@ -529,7 +536,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                         //titleRightImage.setClickable ( true );
                         //titleRightLeftImage.setClickable ( true );
                         titleLeftImage.setVisibility ( View.VISIBLE );
-                        titleRightImage.setVisibility ( View.VISIBLE );
+                        titleRightImage.setVisibility ( View.GONE );
                         titleRightLeftImage.setVisibility ( View.VISIBLE );
                         titleText.setText ( view.getTitle ( ) );
                         //切换背景
@@ -580,7 +587,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
                                         }
 
-                                        /*@Override
+                                        @Override
                                         public void onProgressChanged(WebView view, int newProgress) {
 
                                             if (newProgress == 100) {
@@ -588,7 +595,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                                 swipeRefreshLayout.setRefreshing(false);
                                             }
                                             super.onProgressChanged(view, newProgress);
-                                        }*/
+                                        }
         }));
     }
 

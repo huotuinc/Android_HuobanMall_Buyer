@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
@@ -209,39 +210,39 @@ class KJWebView extends RelativeLayout {
     }
 
     public void setUseWideViewPort(boolean value){
-        mWebView.getSettings().setUseWideViewPort ( value );
+        mWebView.getSettings().setUseWideViewPort(value);
     }
 
     public void setSupportZoom(boolean value){
-        mWebView.getSettings().setSupportZoom ( value );
+        mWebView.getSettings().setSupportZoom(value);
     }
 
     public void setBuiltInZoomControls(boolean value){
-        mWebView.getSettings().setBuiltInZoomControls ( value );
+        mWebView.getSettings().setBuiltInZoomControls(value);
     }
 
     public void setJavaScriptEnabled(boolean value){
-        mWebView.getSettings().setJavaScriptEnabled ( value );
+        mWebView.getSettings().setJavaScriptEnabled(value);
     }
     public void setAllowFileAccess(boolean flag)
     {
-        mWebView.getSettings ().setAllowFileAccess ( flag );
+        mWebView.getSettings ().setAllowFileAccess(flag);
     }
     public void setLoadsImagesAutomatically(boolean flag)
     {
-        mWebView.getSettings ().setLoadsImagesAutomatically ( flag );
+        mWebView.getSettings ().setLoadsImagesAutomatically(flag);
     }
     public void setLoadWithOverviewMode(boolean flag)
     {
-        mWebView.getSettings ().setLoadWithOverviewMode ( flag );
+        mWebView.getSettings ().setLoadWithOverviewMode(flag);
     }
     public void setSaveFormData(boolean flag)
     {
-        mWebView.getSettings ().setSaveFormData ( flag );
+        mWebView.getSettings ().setSaveFormData(flag);
     }
     public void setSavePassword(boolean flag)
     {
-        mWebView.getSettings ().setSavePassword ( flag );
+        mWebView.getSettings ().setSavePassword(flag);
     }
     public void setPluginState(WebSettings.PluginState pluginState)
     {
@@ -257,27 +258,27 @@ class KJWebView extends RelativeLayout {
     }
     public void setAppCacheEnabled(boolean flag)
     {
-        mWebView.getSettings ().setAppCacheEnabled ( flag );
+        mWebView.getSettings ().setAppCacheEnabled(flag);
     }
     public void setDatabaseEnabled(boolean flag)
     {
-        mWebView.getSettings ().setDatabaseEnabled ( flag );
+        mWebView.getSettings ().setDatabaseEnabled(flag);
     }
     public void setDomStorageEnabled(boolean flag)
     {
-        mWebView.getSettings ().setDomStorageEnabled ( flag );
+        mWebView.getSettings ().setDomStorageEnabled(flag);
     }
 
     public void setCacheMode(int value){
-        mWebView.getSettings().setCacheMode ( value );
+        mWebView.getSettings().setCacheMode(value);
     }
 
     public void setWebViewClient(WebViewClient value){
-        mWebView.setWebViewClient ( value );
+        mWebView.setWebViewClient(value);
     }
 
     public void loadUrl( final String url, final TextView titleView, final Handler mHandler, final BaseApplication application){
-        mWebView.loadUrl ( url );
+        mWebView.loadUrl(url);
         if(null != titleView && !"".equals ( titleView ))
         {
             mWebView.setWebChromeClient (
@@ -327,7 +328,7 @@ class KJWebView extends RelativeLayout {
 
     public void goBack(final TextView titleView, Handler mHandler, BaseApplication application)
     {
-        mWebView.goBack ( );
+        mWebView.goBack();
         /*if(null != titleView && !"".equals ( titleView ))
         {
             //先移除栈顶标题
@@ -379,7 +380,7 @@ class KJWebView extends RelativeLayout {
 
     public void addJavascriptInterface(HomeActivity.JSModel jsModel, String jsFunc)
     {
-        mWebView.addJavascriptInterface ( jsModel, jsFunc );
+        mWebView.addJavascriptInterface(jsModel, jsFunc);
     }
 
     /**
@@ -387,7 +388,7 @@ class KJWebView extends RelativeLayout {
      */
     public void reload()
     {
-        mWebView.reload ( );
+        mWebView.reload();
     }
 
 
@@ -398,17 +399,17 @@ class KJWebView extends RelativeLayout {
 
     public float getScale()
     {
-        return mWebView.getScale ( );
+        return mWebView.getScale();
     }
 
     public int getWebHeight()
     {
-        return mWebView.getHeight ( );
+        return mWebView.getHeight();
     }
 
     public int getWebScrollY()
     {
-        return mWebView.getScrollY ( );
+        return mWebView.getScrollY();
     }
 
     //检测web界面滑动界面
@@ -427,4 +428,5 @@ class KJWebView extends RelativeLayout {
     {
         return mWebView.getScaleY ();
     }
+
 }
