@@ -255,7 +255,9 @@ public class BaseApplication extends Application {
         //商户ID
         String merchantId = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID );
         //商户支付宝key信息
-        String merchantAlipayKey = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY );
+        String merchantAlipayKey = PreferenceHelper.readString ( getApplicationContext ( ),
+                                                                 Constants.MERCHANT_INFO,
+                                                                 Constants.MERCHANT_INFO_ALIPAY_KEY );
         //商户微信支付KEY信息
         String merchantWeixinKey = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_WEIXIN_KEY );
         //商户菜单
@@ -275,6 +277,30 @@ public class BaseApplication extends Application {
         else
         {
             return true;
+        }
+    }
+
+    public boolean scanWx()
+    {
+        String parentId = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
+        String appid =  PreferenceHelper.readString ( getApplicationContext ( ), Constants
+                                                              .MERCHANT_INFO, Constants
+                                                              .MERCHANT_WEIXIN_ID );
+        String appKey = PreferenceHelper.readString (
+                getApplicationContext ( ), Constants.MERCHANT_INFO,
+                Constants.WEIXIN_KEY
+                                                    );
+        String notify = PreferenceHelper.readString (
+                getApplicationContext ( ), Constants.MERCHANT_INFO,
+                Constants.WEIXIN_NOTIFY );
+
+        if(!TextUtils.isEmpty ( parentId ) && !TextUtils.isEmpty ( appid ) && !TextUtils.isEmpty ( appKey ) && !TextUtils.isEmpty ( notify ))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

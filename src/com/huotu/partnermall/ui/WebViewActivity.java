@@ -348,7 +348,10 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
             }
             else {
                 //清空消息
-                application.titleStack.pop ();
+                if(0 < application.titleStack.size())
+                {
+                    application.titleStack.pop ();
+                }
                 //关闭当前页
                 closeSelf ( WebViewActivity.this );
             }

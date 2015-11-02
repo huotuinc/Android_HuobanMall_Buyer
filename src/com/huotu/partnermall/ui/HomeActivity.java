@@ -625,7 +625,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 viewPage.goBack ( titleText, mHandler, application );
             }
-            else {
+            else
+            {
                 if ( ( System.currentTimeMillis ( ) - exitTime ) > 2000 ) {
                     ToastUtils.showLongToast ( getApplicationContext ( ), "再按一次退出程序" );
                     exitTime = System.currentTimeMillis ( );
