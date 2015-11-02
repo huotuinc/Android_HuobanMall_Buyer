@@ -2,7 +2,9 @@ package com.huotu.partnermall.widgets;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -11,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -59,14 +62,14 @@ class KJWebView extends RelativeLayout {
         super(context, attrs);
         // TODO Auto-generated constructor stub
         this.context = context;
-        init ( );
+        init();
     }
 
     public KJWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         // TODO Auto-generated constructor stub
         this.context = context;
-        init ( );
+        init();
     }
 
     private void init(){
@@ -80,7 +83,7 @@ class KJWebView extends RelativeLayout {
     }
 
     public void setClickable(boolean value){
-        mWebView.setClickable ( value );
+        mWebView.setClickable(value);
     }
 
     public void setUseWideViewPort(boolean value){
@@ -128,7 +131,7 @@ class KJWebView extends RelativeLayout {
     }
     public void setSupportMultipleWindows(boolean flag)
     {
-        mWebView.getSettings ().setSupportMultipleWindows ( flag );
+        mWebView.getSettings ().setSupportMultipleWindows(flag);
     }
     public void setAppCacheEnabled(boolean flag)
     {
@@ -151,7 +154,7 @@ class KJWebView extends RelativeLayout {
         mWebView.setWebViewClient(value);
     }
 
-    public void loadUrl( final String url, final TextView titleView, final Handler mHandler, final BaseApplication application, final ScrollSwipeRefreshLayout swipeRefreshLayout){
+    public void loadUrl( final Activity aty, final String url, final TextView titleView, final Handler mHandler, final BaseApplication application, final ScrollSwipeRefreshLayout swipeRefreshLayout){
         mWebView.loadUrl(url);
         if(null != titleView && !"".equals ( titleView ))
         {
@@ -203,6 +206,28 @@ class KJWebView extends RelativeLayout {
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                             super.onProgressChanged(view, newProgress);
+                        }
+
+                        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                            if(null != aty)
+                            {
+                                HomeActivity.mUploadMessage = uploadMsg;
+                                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                                i.addCategory(Intent.CATEGORY_OPENABLE);
+                                i.setType("*/*");
+                                aty.startActivityForResult(Intent.createChooser(i, "File Chooser"), HomeActivity.FILECHOOSER_RESULTCODE);
+                            }
+                        }
+
+                        public void openFileChooser( ValueCallback uploadMsg, String acceptType ) {
+                            openFileChooser(uploadMsg);
+                        }
+
+                        //For Android 4.1
+                        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture){
+
+                            openFileChooser(uploadMsg);
+
                         }
                     }
                                         );

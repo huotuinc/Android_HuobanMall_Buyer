@@ -175,7 +175,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         viewPage.setLoadWithOverviewMode(false);
         viewPage.setSavePassword(true);
         viewPage.setLoadsImagesAutomatically(true);
-        viewPage.loadUrl( url, titleText, null, application, swipeRefreshLayout);
+        viewPage.loadUrl( null, url, titleText, null, application, swipeRefreshLayout);
         viewPage.setOnCustomScroolChangeListener(
                 new KJSubWebView.ScrollInterface() {
 
@@ -483,7 +483,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
             {
                 PayModel payModel = ( PayModel ) msg.obj;
                 //调用JS
-                viewPage.loadUrl ( "javascript:utils.Go2Payment("+payModel.getCustomId ()+","+ payModel.getTradeNo ()+","+ payModel.getPaymentType ()+", "
+                viewPage.loadUrl ( null, "javascript:utils.Go2Payment("+payModel.getCustomId ()+","+ payModel.getTradeNo ()+","+ payModel.getPaymentType ()+", "
                                    + "false);\n", titleText, null, application, swipeRefreshLayout );
             }
             default:

@@ -199,7 +199,7 @@ class UrlFilterUtils {
             bundle.putString ( Constants.INTENT_URL, url );
             ActivityUtils.getInstance ().showActivity ( aty,  WebViewActivity.class, bundle);
             return true;*/
-            view.loadUrl ( url, titleView, mHandler, application, swipeRefreshLayout );
+            view.loadUrl ( aty, url, titleView, mHandler, application, swipeRefreshLayout );
             return false;
         }
         return false;

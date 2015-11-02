@@ -173,8 +173,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     public
     AssetManager am;
 
-    private ValueCallback< Uri > mUploadMessage;
-    private final static int FILECHOOSER_RESULTCODE = 1;
+    public static ValueCallback< Uri > mUploadMessage;
+    public static final int FILECHOOSER_RESULTCODE = 1;
 
     @Override
     protected
@@ -412,7 +412,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         //首页默认为商户站点 + index
         String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
-        menuView.loadUrl ( menuUrl, null, null, null, swipeRefreshLayout );
+        menuView.loadUrl ( null, menuUrl, null, null, null, swipeRefreshLayout );
         menuView.setOnCustomScroolChangeListener ( new KJSubWebView.ScrollInterface ( ){
 
                                                        @Override
@@ -429,7 +429,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                     ) {
-                        viewPage.loadUrl( url, titleText, mHandler, application, swipeRefreshLayout);
+                        viewPage.loadUrl( HomeActivity.this, url, titleText, mHandler, application, swipeRefreshLayout);
                         return true;
                     }
 
@@ -471,7 +471,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         String url = paramUtils.obtainUrl ();
         //首页默认为商户站点 + index
-        viewPage.loadUrl( url, titleText, null, application, swipeRefreshLayout);
+        viewPage.loadUrl( HomeActivity.this, url, titleText, null, application, swipeRefreshLayout);
 
         viewPage.setOnCustomScroolChangeListener(
                 new KJSubWebView.ScrollInterface() {
@@ -856,14 +856,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //加载菜单页面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url, titleText, mHandler, application, swipeRefreshLayout );
+                viewPage.loadUrl ( HomeActivity.this, url, titleText, mHandler, application, swipeRefreshLayout );
             }
             break;
             case Constants.FRESHEN_PAGE_MESSAGE_TAG:
             {
                 //刷新界面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url, titleText, null, null, swipeRefreshLayout );
+                viewPage.loadUrl ( HomeActivity.this, url, titleText, null, null, swipeRefreshLayout );
             }
             break;
             //分享

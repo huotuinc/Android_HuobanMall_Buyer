@@ -166,7 +166,7 @@ class SubUrlFilterUtils {
         else
         {
             //跳转界面
-            view.loadUrl ( url, titleView, null, application, swipeRefreshLayout );
+            view.loadUrl ( null, url, titleView, null, application, swipeRefreshLayout );
             return false;
         }
         return false;
