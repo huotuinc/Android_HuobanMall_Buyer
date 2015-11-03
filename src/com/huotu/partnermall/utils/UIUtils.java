@@ -123,8 +123,21 @@ class UIUtils {
                 //从sd卡上获取图标
                 /*int iconId = resources.getIdentifier ( menu.getMenuIcon (), "drawable", application.readSysInfo () );
                 Drawable menuIconDraw = resources.getDrawable ( iconId );*/
-                Drawable menuIconDraw = new BitmapDrawable ( SystemTools.readBitmapFromSD ( menu.getMenuIcon () ) );
-                SystemTools.loadBackground ( menuIcon,  menuIconDraw);
+                Bitmap map = SystemTools.readBitmapFromSD ( menu.getMenuIcon () );
+                if(null != map)
+                {
+                    Drawable menuIconDraw = new BitmapDrawable ( context.getResources(), map );
+                    SystemTools.loadBackground ( menuIcon,  menuIconDraw);
+                }
+                else
+                {
+                    int iconId = resources.getIdentifier ( "menu_default", "drawable", application.readSysInfo () );
+                    Drawable menuIconDraw = resources.getDrawable ( iconId );
+                    SystemTools.loadBackground ( menuIcon,  menuIconDraw);
+                }
+
+
+
                 //设置文本
                 TextView menuText = ( TextView ) menuLayout.findViewById ( R.id.menuText );
                 SystemTools.setFontStyle ( menuText, application );
