@@ -119,4 +119,7 @@
     <string-array name="guide_icon">
         <item>newfeature_0</item>
     </string-array>
+    <string name="Phone">输入手机号</string>
+    <string name="UseName">真实姓名</string>
+    <string name="Code">输入验证码</string>
 </resources>
