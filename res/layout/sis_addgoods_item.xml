@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/sis_addgoods_item_main"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+    <com.huotu.partnermall.widgets.NetworkImageViewCircle
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginLeft="5dp"
+        android:id="@+id/sis_addgoods_item_pic"
+        android:layout_gravity="center"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/sis_addgoods_item_name"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:text="阿是打发阿是打发受到发反对搞活东方财富公司股份锁定豆腐干山东分公司的风格山东分公司的风格速度"/>
+
+        <RelativeLayout
+            android:id="@+id/sis_addgoods_item_ll"
+            android:layout_below="@id/sis_addgoods_item_name"
+            android:layout_alignLeft="@id/sis_addgoods_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/sis_addgoods_item_des"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="销售价:345 库存:344件"/>
+        <TextView
+            android:id="@+id/sis_addgoods_item_label"
+            android:layout_below="@id/sis_addgoods_item_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/sis_addgoods_item_des"
+            android:text="佣金："/>
+        <TextView
+            android:id="@+id/sis_addgoods_item_commission"
+            android:layout_width="wrap_content"
+            android:text="￥154.21"
+            android:layout_toRightOf="@id/sis_addgoods_item_label"
+            android:layout_alignTop="@id/sis_addgoods_item_label"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/sis_addgoods_item_operate"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/sis_addgoods_item_commission"
+            android:text="上架"
+            android:layout_marginRight="10dp"
+            android:background="@color/aliceblue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_below="@id/sis_addgoods_item_name"
+            android:id="@+id/sis_addgoods_items_invalidate"
+            android:layout_alignLeft="@id/sis_addgoods_item_name"
+            android:text="失效"
+            android:visibility="gone"
+            android:padding="2dp"
+            android:textColor="@color/white"
+            android:background="@color/gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

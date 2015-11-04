@@ -92,4 +92,7 @@
     <dimen name="loginBtnWidth">150dp</dimen>
     <!--登录按钮宽度-->
     <dimen name="loginBtnHeight">60dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
 </resources>
