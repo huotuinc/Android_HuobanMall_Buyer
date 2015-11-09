@@ -110,7 +110,7 @@ public class BaseApplication extends Application {
         VolleyUtil.init ( this );
         // 极光初始化
         // JPushInterface.setDebugMode(true);// 日志，生产环境关闭
-        JPushInterface.init ( this );
+        //JPushInterface.init ( this );
         //初始化shareSDK参数
         ShareSDK.initSDK ( getApplicationContext ( ) );
         solveAsyncTaskOnPostExecuteBug ( );

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:id="@+id/title_login"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal" >
+        <include layout="@layout/layout_header" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_login" >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!-- 店铺logo -->
+
+            <LinearLayout
+                android:id="@+id/imgLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:onClick="onClick"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/info_menu"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="店铺头像"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+
+
+                    <com.android.volley.toolbox.NetworkImageView
+                        android:id="@+id/logo"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+
+
+                        />
+                    <ImageView
+                        android:id="@+id/img"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/sis_user_logo_bg"
+                        >
+                    </ImageView>
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/info_arrow_width"
+                    android:layout_height="@dimen/info_arrow_height"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/hsjt"
+                    />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@drawable/line_gray_shape" />
+            <!-- 店铺logo -->
+
+            <!-- 店铺名称 -->
+            <LinearLayout
+                android:id="@+id/shopNameLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:onClick="onClick"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/info_menu"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="店铺名称"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <TextView
+                    android:id="@+id/shopName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="小店"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <ImageView
+                    android:layout_width="@dimen/info_arrow_width"
+                    android:layout_height="@dimen/info_arrow_height"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/hsjt"
+                    />
+            </LinearLayout>
+
+            <!-- 店铺名称end -->
+            <!-- 店铺模块选择-->
+
+            <LinearLayout
+                android:id="@+id/shopdescriptionLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:onClick="onClick"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="13dp"
+                android:background="@drawable/info_menu"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="模块选择"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <TextView
+                    android:id="@+id/Shopdescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <ImageView
+                    android:layout_width="@dimen/info_arrow_width"
+                    android:layout_height="@dimen/info_arrow_height"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/hsjt"
+                    />
+            </LinearLayout>
+
+            <!-- 店铺模块选择end -->
+</LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
