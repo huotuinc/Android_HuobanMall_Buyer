@@ -80,7 +80,7 @@ public class SplashActivity extends BaseActivity {
 //        mHandler = new Handler ( getMainLooper ( ) );
 //        findViewById ( );
 //        initView ( );
-        Intent intent =new Intent(this, GoodManageActivity.class);
+        Intent intent =new Intent(this, SisLoginActivity.class);
         startActivity(intent);
         finish();
 
