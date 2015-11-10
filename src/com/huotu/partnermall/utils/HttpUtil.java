@@ -361,7 +361,7 @@ public class HttpUtil
      */
     public void doVolleyPackage( final Context context, final BaseApplication application, String url )
     {
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -402,7 +402,7 @@ public class HttpUtil
      */
     public void doVolleySite( Context context, final BaseApplication application, String url )
     {
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -437,7 +437,7 @@ public class HttpUtil
      */
     public void doVolleyLogo(Context context, final BaseApplication application, String url)
     {
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -481,7 +481,7 @@ public class HttpUtil
      * @param url
      */
     public void doVolley(Context context, final BaseApplication application, String url ){
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -609,12 +609,12 @@ public class HttpUtil
 
 
         });
-        Volley.newRequestQueue ( context ).add( re );
+        Volley.newRequestQueue(context).add( re );
     }
 
     public void doVolleyObtainUser(final Activity aty, final Context context, final BaseApplication application, String url, final View view, final WindowManager wManager, final Handler mHandler)
     {
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -678,7 +678,7 @@ public class HttpUtil
         Volley.newRequestQueue ( context ).add( re);
     }
     public void doVolleyName(Context context, final BaseApplication application, String url, final TextView userType ){
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -719,7 +719,7 @@ public class HttpUtil
     }
 
     public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress, final TextView titleView, final WindowManager wManager ){
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override

@@ -1,6 +1,11 @@
 package com.huotu.partnermall.ui.login;
 
 import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.PaintDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -75,6 +80,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
 
     public
     BaseApplication application;
+    public Resources res;
 
     @Override
     protected
@@ -82,6 +88,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
         super.onCreate ( savedInstanceState );
         mHandler = new Handler ( this );
         am = this.getAssets ();
+        res = this.getResources();
         setContentView ( R.layout.login_ui );
         application = ( BaseApplication ) this.getApplication ();
         findViewById ( );
@@ -102,13 +109,17 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     @Override
     protected
     void initView ( ) {
-        SystemTools.setFontStyle ( loginText, application );
-        loginL.setBackgroundColor (
-                SystemTools.obtainColor (
-                        application.obtainMainColor (
-                                                    )
-                                        )
-                                  );
+        SystemTools.setFontStyle(loginText, application);
+        Drawable[] drawables = new Drawable[2];
+        drawables[0] = new PaintDrawable(res.getColor(R.color.theme_color));
+        drawables[1] = new PaintDrawable(SystemTools.obtainColor(
+                application.obtainMainColor(
+                )
+        ));
+        LayerDrawable ld = new LayerDrawable(drawables);
+        ld.setLayerInset(0, 0, 0, 0, 0);
+        ld.setLayerInset(1, 0, 2, 0, 0);
+        SystemTools.loadBackground(loginL, ld);
     }
 
     @Override
