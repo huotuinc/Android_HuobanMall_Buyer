@@ -52,11 +52,28 @@
             android:layout_height="wrap_content"/>
     </RelativeLayout>
     <!-- 商品分类1 -->
-    <HorizontalScrollView
-        android:id="@+id/sis_addgoods_scrollView"
+    <RelativeLayout
+        android:id="@+id/sis_addgoods_class1_rl"
         android:layout_below="@id/sis_addgoods_searchBar"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_alignParentRight="true"
+            android:id="@+id/sis_addgoods_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingRight="8dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="8dp"
+            android:textSize="18sp"
+            android:text="∨"/>
+        <HorizontalScrollView
+        android:id="@+id/sis_addgoods_scrollView"
+        android:layout_width="match_parent"
         android:scrollbars="none"
+        android:layout_toLeftOf="@id/sis_addgoods_select"
         android:background="@color/white"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -67,10 +84,11 @@
 
         </LinearLayout>
     </HorizontalScrollView>
+    </RelativeLayout>
     <!-- 商品分类2 -->
     <GridView
         android:id="@+id/sis_addgoods_class2"
-        android:layout_below="@id/sis_addgoods_scrollView"
+        android:layout_below="@id/sis_addgoods_class1_rl"
         android:layout_width="match_parent"
         android:background="@color/gray"
         android:horizontalSpacing="1dp"
@@ -81,6 +99,7 @@
         android:paddingRight="0dp"
         android:paddingLeft="0dp"
         android:layout_margin="0dp"
+        android:visibility="gone"
         android:layout_height="wrap_content"/>
 
     <TextView

@@ -1,6 +1,11 @@
 package com.huotu.partnermall.ui.login;
 
 import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.PaintDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
@@ -72,13 +78,19 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     public
     AssetManager    am;
 
+    public
+    BaseApplication application;
+    public Resources res;
+
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
         mHandler = new Handler ( this );
         am = this.getAssets ();
+        res = this.getResources();
         setContentView ( R.layout.login_ui );
+        application = ( BaseApplication ) this.getApplication ();
         findViewById ( );
         initView ( );
         wManager = this.getWindowManager ( );
@@ -97,13 +109,17 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     @Override
     protected
     void initView ( ) {
-        SystemTools.setFontStyle ( loginText, application );
-        loginL.setBackgroundColor (
-                SystemTools.obtainColor (
-                        application.obtainMainColor (
-                                                    )
-                                        )
-                                  );
+        SystemTools.setFontStyle(loginText, application);
+        Drawable[] drawables = new Drawable[2];
+        drawables[0] = new PaintDrawable(res.getColor(R.color.theme_color));
+        drawables[1] = new PaintDrawable(SystemTools.obtainColor(
+                application.obtainMainColor(
+                )
+        ));
+        LayerDrawable ld = new LayerDrawable(drawables);
+        ld.setLayerInset(0, 0, 0, 0, 0);
+        ld.setLayerInset(1, 0, 2, 0, 0);
+        SystemTools.loadBackground(loginL, ld);
     }
 
     @Override
@@ -139,7 +155,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                                         );
                 //微信授权登录
                 Platform wechat = ShareSDK.getPlatform ( LoginActivity.this, Wechat.NAME );
-                login = new AutnLogin ( LoginActivity.this, mHandler, loginL );
+                login = new AutnLogin ( LoginActivity.this, mHandler, loginL, application );
                 login.authorize ( new Wechat ( LoginActivity.this ) );
                 loginL.setClickable ( false );
                 //ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity
@@ -170,6 +186,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
             {
                 loginL.setClickable ( true );
                 progress.dismissView ( );
+                successProgress.dismissView ();
                 //提示授权失败
                 String notice = ( String ) msg.obj;
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, notice);
@@ -216,7 +233,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 //提示取消授权
                 progress.dismissView ();
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权被取消");
-                noticePop.showNotice ();
+                noticePop.showNotice ( );
                 noticePop.showAtLocation (
                         findViewById ( R.id.loginL ),
                         Gravity.CENTER, 0, 0
@@ -240,12 +257,14 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 //登录后更新界面
                 AccountModel account = ( AccountModel ) msg.obj;
                 //和商家授权
-                AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "" );
+                AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "", LoginActivity.this );
                 final Map param = paramUtils.obtainParams ( account );
                 String authUrl = Constants.INTERFACE_PREFIX + "weixin/LoginAuthorize";
                 //String authUrl = "http://192.168.1.56:8032/weixin/LoginAuthorize";
-                HttpUtil.getInstance ().doVolley ( LoginActivity.this, LoginActivity.this,
-                                                   mHandler, application, authUrl, param, account );
+                HttpUtil.getInstance ().doVolley (
+                        LoginActivity.this, LoginActivity.this,
+                        mHandler, application, authUrl, param, account
+                                                 );
             }
             break;
             case Constants.MSG_USERID_NO_FOUND:
@@ -253,6 +272,18 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
                 progress.dismissView ();
                 //提示授权成功
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "获取用户信息失败");
+                noticePop.showNotice ();
+                noticePop.showAtLocation (
+                        findViewById ( R.id.loginL ),
+                        Gravity.CENTER, 0, 0
+                                         );
+            }
+            break;
+            case Constants.INIT_MENU_ERROR:
+            {
+                progress.dismissView ();
+                //提示初始化菜单失败
+                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "初始化菜单失败");
                 noticePop.showNotice ();
                 noticePop.showAtLocation (
                         findViewById ( R.id.loginL ),

@@ -7,10 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -18,6 +20,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -50,6 +54,7 @@ import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.sis.SisHomeActivity;
+import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
@@ -65,6 +70,7 @@ import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 import com.huotu.partnermall.widgets.PhotoSelectView;
 import com.huotu.partnermall.widgets.PopTimeView;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
+import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import com.huotu.partnermall.widgets.UserInfoView;
 
@@ -163,8 +169,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     public
     ProgressPopupWindow progress;
 
+    private ScrollSwipeRefreshLayout swipeRefreshLayout;
+
     public
     AssetManager am;
+
+    public static ValueCallback< Uri > mUploadMessage;
+    public static final int FILECHOOSER_RESULTCODE = 1;
 
     @Override
     protected
@@ -199,7 +210,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
         titleLeftImage.setOnClickListener ( this );
         //titleLeftImage.setClickable ( false );
-        titleLeftImage.setVisibility ( View.GONE );
+        titleLeftImage.setVisibility(View.GONE);
+        //web下拉组件刷新
+        swipeRefreshLayout = (ScrollSwipeRefreshLayout) this.findViewById(R.id.pageLoadView);
         //构建标题右侧图标，点击事件
         titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
         //titleRightImage.setClickable ( false );
@@ -279,14 +292,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             int statusBarHeight = getStatusBarHeight ( HomeActivity.this );
             loginLayout.setPadding ( 0, statusBarHeight, 0, 0 );
         }
-
         //初始化侧滑菜单面板
         application.layDrag = ( DrawerLayout ) this.findViewById ( R.id.layDrag );
         //设置title背景
         homeTitle.setBackgroundColor ( SystemTools.obtainColor ( application.obtainMainColor ( ) ) );
         //设置左侧图标
         Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
-        SystemTools.loadBackground ( titleLeftImage, leftDraw );
+        SystemTools.loadBackground(titleLeftImage, leftDraw);
         //设置右侧图标
         Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
         SystemTools.loadBackground ( titleRightImage, rightDraw );
@@ -360,7 +372,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             builder.append ( "?customerId="+application.readMerchantId ( ) );
             builder.append ( "&unionId="+application.readUserUnionId ( ) );
             builder.append ( "&userId=" + application.readMemberId() );
-            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString () );
+            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), HomeActivity.this );
             String nameUrl = param.obtainUrlName ();
             HttpUtil.getInstance ( ).doVolleyName ( HomeActivity.this, application, nameUrl, userType );
         }
@@ -374,15 +386,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         //动态加载侧滑菜单
         UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am );
-        ui.loadMenus ( );
+        ui.loadMenus();
         //加载底部菜单
         //ui.loadMainMenu ( null, bottomMenuLayout );
         //加载页面
         //页面集成，title无需展示
         //titleText.setText ( "买家版" );
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
-        loadPage ( );
-        loadMainMenu ( );
+            @Override
+            public void onRefresh() {
+                viewPage.reload();
+            }
+        });
+
+        loadPage();
+        loadMainMenu();
     }
 
     private
@@ -394,7 +413,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         //首页默认为商户站点 + index
         String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
-        menuView.loadUrl ( menuUrl, null, null, null);
+        menuView.loadUrl ( null, menuUrl, null, null, null, swipeRefreshLayout );
         menuView.setOnCustomScroolChangeListener ( new KJSubWebView.ScrollInterface ( ){
 
                                                        @Override
@@ -403,33 +422,30 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
                                                        }
                                                    });
-        menuView.setWebViewClient (
-                new WebViewClient ( ) {
+        menuView.setWebViewClient(
+                new WebViewClient() {
 
                     //重写此方法，浏览器内部跳转
-                    public
-                    boolean shouldOverrideUrlLoading (
+                    public boolean shouldOverrideUrlLoading(
                             WebView view, String
                             url
-                                                     ) {
-                        viewPage.loadUrl ( url, titleText, mHandler, application );
+                    ) {
+                        viewPage.loadUrl( HomeActivity.this, url, titleText, mHandler, application, swipeRefreshLayout);
                         return true;
                     }
 
                     @Override
-                    public
-                    void onPageStarted ( WebView view, String url, Bitmap favicon ) {
+                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
-                        super.onPageStarted ( view, url, favicon );
+                        super.onPageStarted(view, url, favicon);
                     }
 
                     @Override
-                    public
-                    void onPageFinished ( WebView view, String url ) {
-                        super.onPageFinished ( view, url );
+                    public void onPageFinished(WebView view, String url) {
+                        super.onPageFinished(view, url);
                     }
                 }
-                                  );
+        );
     }
 
     private
@@ -453,74 +469,81 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         viewPage.setLoadsImagesAutomatically ( true );
         viewPage.setDomStorageEnabled(true);
         //首页鉴权
-        AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ) );
+        AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         String url = paramUtils.obtainUrl ();
         //首页默认为商户站点 + index
-        viewPage.loadUrl ( url, titleText, null, application );
+        viewPage.loadUrl( HomeActivity.this, url, titleText, null, application, swipeRefreshLayout);
 
-        viewPage.setOnCustomScroolChangeListener ( new KJSubWebView.ScrollInterface ( ) {
-                                                       @Override
-                                                       public
-                                                       void onSChanged ( int l, int t, int oldl, int oldt ) {
-                                                           // TODO Auto-generated method stub
-                                                       }
-                                                   } );
+        viewPage.setOnCustomScroolChangeListener(
+                new KJSubWebView.ScrollInterface() {
+                    @Override
+                    public void onSChanged(int l, int t, int oldl, int oldt) {
+                        // TODO Auto-generated method stub
+                        if (viewPage.getWebScrollY() == 0) {
+                            swipeRefreshLayout.setEnabled(true);
+                        } else {
+                            swipeRefreshLayout.setEnabled(false);
+                        }
+                    }
+                }
+        );
 
-        viewPage.setWebViewClient (
-                new WebViewClient ( ) {
+        viewPage.setWebViewClient(
+                new WebViewClient() {
 
                     //重写此方法，浏览器内部跳转
-                    public
-                    boolean shouldOverrideUrlLoading (
+                    public boolean shouldOverrideUrlLoading(
                             WebView view, String
                             url
-                                                     ) {
-                        UrlFilterUtils filter = new UrlFilterUtils (
+                    ) {
+                        UrlFilterUtils filter = new UrlFilterUtils(
                                 HomeActivity.this,
                                 HomeActivity.this,
                                 titleText, mHandler,
                                 application,
                                 wManager
                         );
-                        return filter.shouldOverrideUrlBySFriend ( viewPage, url );
+                        return filter.shouldOverrideUrlBySFriend( viewPage, url, swipeRefreshLayout);
                     }
 
                     @Override
-                    public
-                    void onPageStarted ( WebView view, String url, Bitmap favicon ) {
-                        super.onPageStarted ( view, url, favicon );
+                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                        super.onPageStarted(view, url, favicon);
                         /*titleLeftImage.setClickable ( false );
                         titleRightImage.setClickable ( false );
                         titleRightLeftImage.setClickable ( false );*/
                     }
 
                     @Override
-                    public
-                    void onPageFinished ( WebView view, String url ) {
+                    public void onPageFinished(WebView view, String url) {
                         //页面加载完成后,读取菜单项
-                        super.onPageFinished ( view, url );
+                        super.onPageFinished(view, url);
+                        if (url.contains("&back") || url.contains("?back")) {
+                            //application.titleStack.clear ();
+                            mHandler.sendEmptyMessage(Constants.LEFT_IMG_SIDE);
+                        }
                         //titleRightLeftImage.setClickable ( true );
-                       // titleLeftImage.setVisibility ( View.VISIBLE );
+                        // titleLeftImage.setVisibility ( View.VISIBLE );
                         //titleLeftImage.setClickable ( true );
                         //titleRightImage.setClickable ( true );
                         //titleRightLeftImage.setClickable ( true );
-                        titleLeftImage.setVisibility ( View.VISIBLE );
-                        titleRightImage.setVisibility ( View.VISIBLE );
-                        titleRightLeftImage.setVisibility ( View.VISIBLE );
-                        titleText.setText ( view.getTitle ( ) );
+                        titleLeftImage.setVisibility(View.VISIBLE);
+                        titleRightImage.setVisibility(View.GONE);
+                        titleRightLeftImage.setVisibility(View.VISIBLE);
+                        titleText.setText(view.getTitle());
                         //切换背景
-                        titleRightImage.clearAnimation ( );
-                        Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
-                        SystemTools.loadBackground ( titleRightImage, rightDraw );
+                        titleRightImage.clearAnimation();
+                        Drawable rightDraw = resources.getDrawable(R.drawable
+                                .main_title_left_refresh);
+                        SystemTools.loadBackground(titleRightImage, rightDraw);
                     }
 
                     @Override
-                    public
-                    void onReceivedError (
+                    public void onReceivedError(
                             WebView view, int errorCode, String description,
                             String failingUrl
-                                         ) {
-                        super.onReceivedError ( view, errorCode, description, failingUrl );
+                    ) {
+                        super.onReceivedError(view, errorCode, description, failingUrl);
                         //错误页面处理
                         //隐藏菜单栏
                         //bottomMenuLayout.setVisibility ( View.GONE  );
@@ -532,7 +555,19 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     }
 
                 }
-                                  );
+        );
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (null == mUploadMessage)
+                return;
+            Uri result = intent == null || resultCode != RESULT_OK ? null : intent.getData();
+            mUploadMessage.onReceiveValue(result);
+            mUploadMessage = null;
+        }
     }
 
     @Override
@@ -576,11 +611,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         if (event.getKeyCode () == KeyEvent.KEYCODE_BACK
             && event.getAction() == KeyEvent.ACTION_DOWN)
         {
+
             if(viewPage.canGoBack ())
             {
                 viewPage.goBack ( titleText, mHandler, application );
             }
-            else {
+            else
+            {
                 if ( ( System.currentTimeMillis ( ) - exitTime ) > 2000 ) {
                     ToastUtils.showLongToast ( getApplicationContext ( ), "再按一次退出程序" );
                     exitTime = System.currentTimeMillis ( );
@@ -611,6 +648,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         {
             case R.id.titleLeftImage:
             {
+                //----test
+                openSis();
+                //-------
+
                 if(application.isLeftImg)
                 {
                     //切换出侧滑界面
@@ -640,7 +681,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //切换用户
                 String url = Constants.INTERFACE_PREFIX + "weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
-                AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url );
+                AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url, HomeActivity.this );
                 final String rootUrls = paramUtil.obtainUrls ( );
                 HttpUtil.getInstance ().doVolleyObtainUser (
                         HomeActivity.this, HomeActivity.this, application,
@@ -821,10 +862,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //加载菜单页面
                 String url = msg.obj.toString ();
 
+
                 if( url.toLowerCase().contains("sis=666666") ){
                     openSis();
                 }else {
-                    viewPage.loadUrl(url, titleText, mHandler, application);
+                    viewPage.loadUrl(HomeActivity.this, url, titleText, mHandler, application, swipeRefreshLayout);
                 }
             }
             break;
@@ -832,7 +874,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //刷新界面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( url, titleText, null, null );
+                viewPage.loadUrl ( HomeActivity.this, url, titleText, null, null, swipeRefreshLayout );
             }
             break;
             //分享

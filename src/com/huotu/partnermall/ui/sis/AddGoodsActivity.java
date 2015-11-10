@@ -51,6 +51,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
     ArrayAdapter<String> keysAdapter=null;
     RelativeLayout rlSearchBar;
     RelativeLayout rlHeader;
+    TextView tvSelect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,8 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
         rlSearchBar =(RelativeLayout)findViewById(R.id.sis_addgoods_searchBar);
         rlHeader = (RelativeLayout)findViewById(R.id.sis_addgoods_header);
+        tvSelect =(TextView)findViewById(R.id.sis_addgoods_select);
+        tvSelect.setOnClickListener(this);
         tvCancel = (TextView)findViewById(R.id.sis_addgoods_cancel);
         tvCancel.setOnClickListener(this);
         ivQuery = (ImageView)findViewById(R.id.sis_addgoods_query);
@@ -138,6 +141,14 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             rlHeader.setVisibility(View.GONE);
             rlSearchBar.setVisibility(View.VISIBLE);
             etSearchBar.requestFocus();
+        }else if( v.getId()== R.id.sis_addgoods_select){
+            if( ((TextView)v).getText().equals("∨")){
+                ((TextView) v).setText("∧");
+                llClass2.setVisibility(View.VISIBLE);
+            }else{
+                ((TextView) v).setText("∨");
+                llClass2.setVisibility(View.GONE);
+            }
         }
     }
 

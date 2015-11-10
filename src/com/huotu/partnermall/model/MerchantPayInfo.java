@@ -51,6 +51,17 @@ class MerchantPayInfo {
         private String appId;
         private String appKey;
         private String notify;
+        private boolean webPagePay;
+
+        public
+        boolean isWebPagePay ( ) {
+            return webPagePay;
+        }
+
+        public
+        void setWebPagePay ( boolean webPagePay ) {
+            this.webPagePay = webPagePay;
+        }
 
         public
         int getPayType ( ) {

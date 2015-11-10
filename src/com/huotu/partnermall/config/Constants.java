@@ -250,6 +250,8 @@ public class Constants {
 
 	//鉴权失效
 	public static final int LOGIN_AUTH_ERROR = 2131;
+	//网页支付
+	public static final int PAY_NET = 2222;
 
 	//是否测试环境
 	public static final boolean IS_TEST = true;
@@ -293,6 +295,11 @@ public class Constants {
 	 * tile栏刷新页面
 	 */
 	public static final int FRESHEN_PAGE_MESSAGE_TAG = 4380;
+
+	/**
+	 * 初始化菜单失败
+	 */
+	public static final int INIT_MENU_ERROR = 6361;
 
 	/**
 	 * 切换用户
@@ -350,12 +357,9 @@ public class Constants {
 	/**
 	 * 操作平台码
 	 */
-	public static final String OPERATION_CODE = "FM2015AD";
+	public static final String OPERATION_CODE = "BUYER_ANDROID_2015DC";
 
 	public static final String APPKEY = "b73ca64567fb49ee963477263283a1bf";
-
-	// 平台安全码
-	public static final String APP_SECRET = "483686ad1fe2bd8a02bbdca24e109953a4a96c";
 
 	/**
 	 * capCode
@@ -381,14 +385,35 @@ public class Constants {
 	public static final String CUSTOMER_ID = "customerid={}";
 	public static final String USER_ID     = "userid={}";
 
+	//测试
 	public static final String APP_ID = "huotu686ad1fe2bd8a02bb";
+	//正式
+	//public static final String APP_ID = "huotuacf89c9231848c9f49";
 
 	//接口连接前缀
+	//测试
 	public static final String INTERFACE_PREFIX = "http://mallapi.huobanj.cn/";
+	//正式
+	//public static final String INTERFACE_PREFIX = "http://mallapi.huobanmall.com/";
+	//接口连接前缀
+	//public static final String INTERFACE_PREFIX = "http://192.168.1.56:8089/";
+
+	// 平台安全码
+	//测试
+	public static final String APP_SECRET = "483686ad1fe2bd8a02bbdca24e109953a4a96c";
+	//正式
+	//public static final String APP_SECRET = "0ad8abe244331aacf89c9231848c9f49";
+
 
 	public static final String ALIPAY_NOTIFY = "alipay_notify";
 	public static final String WEIXIN_NOTIFY = "weixin_notify";
+	public static final String IS_WEB_WEIXINPAY = "is_web_weixinpay";
+	public static final String IS_WEB_ALIPAY = "is_web_alipay";
 
 	public static final String COMMON_SHARE_LOGO = "http://1804.img.pp.sohu.com.cn/images/2013/1/14/16/2/6205e011f029437o_13cfbf362e6g85.jpg";
 
+	//数据包版本号
+	public static final String DATA_INIT            = "data_init";
+	//会员信息
+	public static final String PACKAGE_VERSION              = "package_version";
 }

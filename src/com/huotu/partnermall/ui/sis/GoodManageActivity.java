@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.ShareModel;
@@ -24,6 +25,7 @@ import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.ViewHolderUtil;
+import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -197,6 +199,9 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_goodmanage_item, null);
             }
+            NetworkImageViewCircle iv = (NetworkImageViewCircle)ViewHolderUtil.get(convertView,R.id.goods_item_picture);
+            BitmapLoader.create().displayUrl( mContext , iv , "asdfasfsa" ,R.drawable.sis_pic , R.drawable.sis_pic);
+
             TextView txtName = ViewHolderUtil.get(convertView, R.id.goods_item_goodsName);
             txtName.setText( datas.get(position) );
             TextView txtamount = ViewHolderUtil.get(convertView, R.id.goods_item_amount);

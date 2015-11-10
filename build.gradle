@@ -80,7 +80,7 @@ android {
     //打包渠道
     productFlavors {
         yaoshengji{
-            applicationId 'cy.com.morefan'
+            applicationId 'com.huotu.mall.yingyan'
         }
     }
 
@@ -99,6 +99,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.huotu.android.library:libcropper:1.0'
+    compile 'com.android.support:support-v4:22.1.1'
     compile 'com.handmark.library:pulltorefresh:1.0'
     compile ('com.huotu.android.library:libCoverFlow:1.1'){
         exclude module: 'support-v4'

@@ -6,6 +6,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.model.AccountModel;
 
@@ -26,17 +27,21 @@ class AutnLogin {
     private
     Handler mHandler;
     private View view;
+    private
+    BaseApplication application;
 
     public
-    AutnLogin ( Context context, Handler mHandler, View view ) {
+    AutnLogin ( Context context, Handler mHandler, View view, BaseApplication application ) {
         this.context = context;
         this.mHandler = mHandler;
         this.view = view;
+        this.application = application;
     }
 
     public
     void authorize ( Platform plat ) {
         if ( plat.isValid ( ) ) {
+            application.plat = plat;
             String userId = plat.getDb ( ).getUserId ( );
             if ( ! TextUtils.isEmpty ( userId ) ) {
                 mHandler.sendEmptyMessage ( Constants.MSG_USERID_FOUND );
