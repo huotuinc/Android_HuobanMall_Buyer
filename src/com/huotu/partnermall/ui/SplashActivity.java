@@ -29,6 +29,9 @@ import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.guide.GuideActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.ui.sis.SisHomeActivity;
+import com.huotu.partnermall.ui.sis.GoodManageActivity;
+import com.huotu.partnermall.ui.sis.InfoActivity;
+import com.huotu.partnermall.ui.sis.SisLoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
@@ -69,9 +72,19 @@ public class SplashActivity extends BaseActivity {
         application = ( BaseApplication ) SplashActivity.this.getApplication ( );
         setContentView ( R.layout.activity_splash );
 
+        DisplayMetrics metrics = new DisplayMetrics ( );
+        getWindowManager ( ).getDefaultDisplay ( ).getMetrics ( metrics );
+        Constants.SCREEN_DENSITY = metrics.density;
+        Constants.SCREEN_HEIGHT = metrics.heightPixels;
+        Constants.SCREEN_WIDTH = metrics.widthPixels;
 
-        this.startActivity(new Intent(this, SisHomeActivity.class));
-        return;
+        mHandler = new Handler ( getMainLooper ( ) );
+        findViewById ( );
+        initView ( );
+
+
+//        this.startActivity(new Intent(this, SisHomeActivity.class));
+//        return;
 
 
 
@@ -84,6 +97,7 @@ public class SplashActivity extends BaseActivity {
 //        mHandler = new Handler ( getMainLooper ( ) );
 //        findViewById ( );
 //        initView ( );
+
     }
 
     @Override

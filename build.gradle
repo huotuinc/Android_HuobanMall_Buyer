@@ -103,5 +103,7 @@ dependencies {
     compile ('com.huotu.android.library:libCoverFlow:1.1'){
         exclude module: 'support-v4'
     }
+    compile 'com.github.mikephil.charting:MPAndroidChart:1.1'
+
 }
 

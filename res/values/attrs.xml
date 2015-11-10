@@ -24,6 +24,7 @@
 
         <!-- Style of the circle indicator. -->
         <attr name="vpiCirclePageIndicatorStyle" format="reference" />
+
     </declare-styleable>
 
     <attr name="centered" format="boolean" />
@@ -52,6 +53,7 @@
         <!-- View background -->
         <attr name="android:background" />
     </declare-styleable>
+
 
     <declare-styleable name="KJEditText">
         <attr name="edit_style">

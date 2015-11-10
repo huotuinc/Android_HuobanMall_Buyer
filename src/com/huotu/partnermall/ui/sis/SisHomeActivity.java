@@ -22,14 +22,24 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.image.BitmapLoader;
+import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.listener.PoponDismissListener;
+import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.utils.WindowUtils;
+import com.huotu.partnermall.widgets.CircleImageView;
+import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,14 +61,16 @@ public class SisHomeActivity extends Activity implements View.OnClickListener , 
     RelativeLayout menu3;
     LinearLayout menu4;
     RelativeLayout rlStatData;
+    CircleImageView logo;
+    RelativeLayout header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.sis_activity_sis_home);
 
@@ -67,6 +79,12 @@ public class SisHomeActivity extends Activity implements View.OnClickListener , 
         barcodeW = screenW * 80/100;
         barcodeH = screenH * 80/100;
         if( barcodeW<barcodeH) {barcodeH = barcodeW;}
+
+        header = (RelativeLayout)findViewById(R.id.sis_header);
+        header.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) SisHomeActivity.this.getApplication()).obtainMainColor()));
+
+        logo = (CircleImageView)findViewById(R.id.sis_logo);
+        loadLogo();
 
         ivBarcode = (ImageView)findViewById(R.id.sis_barcode);
         ivBarcode.setOnClickListener(this);
@@ -94,13 +112,15 @@ public class SisHomeActivity extends Activity implements View.OnClickListener , 
                 showBarCode();
             }
         }else if(v.getId()==R.id.sis_menu1){
-            SisHomeActivity.this.startActivity(new Intent(SisHomeActivity.this,AddGoodsActivity.class));
+            SisHomeActivity.this.startActivity(new Intent(SisHomeActivity.this,GoodManageActivity.class));
         }else if(v.getId()==R.id.sis_menu2){
             SisHomeActivity.this.startActivity(new Intent(SisHomeActivity.this,GoodsDetailActivity.class).putExtra("url","http://www.sina.com.cn"));
         }else if(v.getId()==R.id.sis_menu3){
-            SisHomeActivity.this.startActivity(new Intent(SisHomeActivity.this, SelectTempleteActivity.class));
+            SisHomeActivity.this.startActivity(new Intent(SisHomeActivity.this, InfoActivity.class));
         }else if(v.getId()==R.id.sis_menu4){
-
+            Intent intent = new Intent();
+            intent.setClass(this,SaleActivity.class);
+            this.startActivity(intent);
         }else if( v.getId()==R.id.sis_data){
 
         }
@@ -130,6 +150,34 @@ public class SisHomeActivity extends Activity implements View.OnClickListener , 
     }
 
 
+    /**
+    * 方法描述：加载店中店 logo
+    * 方法名称：
+    * 参数：
+    * 返回值：
+    * 创建时间: 2015/11/9
+    * 作者:jxd
+    */
+    private void loadLogo(){
+        String logoUrl = "http://news.xinhuanet.com/photo/2015-10/29/128371793_14460865923871n.jpg";
+
+        VolleyUtil.getImageLoader(SisHomeActivity.this)
+                .get(logoUrl, new ImageLoader.ImageListener() {
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                        if (imageContainer != null && imageContainer.getBitmap() != null) {
+                            logo.setImageBitmap(imageContainer.getBitmap());
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        ToastUtils.showShortToast(SisHomeActivity.this, "加载Logo失败");
+                    }
+                });
+    }
+
+
     protected void showBarCode() {
         if (popWin == null) {
             popWin = new PopupWindow();
@@ -137,6 +185,7 @@ public class SisHomeActivity extends Activity implements View.OnClickListener , 
             LayoutInflater inflater = LayoutInflater.from(SisHomeActivity.this);
             View rootView = inflater.inflate(R.layout.sis_barcode,null);
             popWin.setContentView(rootView);
+            popWin.setOnDismissListener(new PoponDismissListener( SisHomeActivity.this));
 
             ImageView iv = (ImageView)rootView.findViewById(R.id.sis_barcode_pic);
 
@@ -170,6 +219,7 @@ public class SisHomeActivity extends Activity implements View.OnClickListener , 
             iv.setImageBitmap( barCode );
         }
         if( popWin.isShowing()==false ) {
+            WindowUtils.backgroundAlpha( SisHomeActivity.this, 0.7f);
             popWin.showAtLocation(ivBarcode, Gravity.CENTER, 0, 0);
         }
     }

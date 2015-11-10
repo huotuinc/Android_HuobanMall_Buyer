@@ -9,10 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ViewHolderUtil;
 import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 
@@ -28,11 +31,15 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
     List<TemplateModel> data;
     TextView back;
     TextView operate;
+    RelativeLayout header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sis_activity_select_templete);
+
+        header  =(RelativeLayout)findViewById(R.id.sis_selecttemplate_header);
+        header.setBackgroundColor(SystemTools.obtainColor( ((BaseApplication)SelectTempleteActivity.this.getApplication()).obtainMainColor() ));
 
         back=(TextView)findViewById(R.id.sis_selecttemplate_back);
         back.setOnClickListener(this);

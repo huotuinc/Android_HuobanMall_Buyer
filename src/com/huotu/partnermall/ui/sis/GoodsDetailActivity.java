@@ -12,7 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.utils.SystemTools;
 
 public class GoodsDetailActivity extends Activity implements View.OnClickListener {
     WebView webview;
@@ -20,11 +22,18 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
     String url ="";
     TextView back;
     RelativeLayout rlOn;
+    RelativeLayout header;
+    RelativeLayout botton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sis_activity_goods_detail);
+
+        header = (RelativeLayout)findViewById(R.id.sis_goodsdetail_header);
+        header.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) GoodsDetailActivity.this.getApplication()).obtainMainColor()));
+        botton =(RelativeLayout)findViewById(R.id.sis_goodsdetail_botton);
+        header.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) GoodsDetailActivity.this.getApplication()).obtainMainColor()));
 
         back = (TextView)findViewById(R.id.sis_goodsdetail_back);
         back.setOnClickListener(this);
