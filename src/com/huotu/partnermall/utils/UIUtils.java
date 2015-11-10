@@ -3,6 +3,8 @@ package com.huotu.partnermall.utils;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
@@ -118,9 +120,24 @@ class UIUtils {
                 menuLayout.setId ( i );
                 //设置图标
                 ImageView menuIcon = ( ImageView ) menuLayout.findViewById ( R.id.menuIcon );
-                int iconId = resources.getIdentifier ( menu.getMenuIcon (), "drawable", application.readSysInfo () );
-                Drawable menuIconDraw = resources.getDrawable ( iconId );
-                SystemTools.loadBackground ( menuIcon,  menuIconDraw);
+                //从sd卡上获取图标
+                /*int iconId = resources.getIdentifier ( menu.getMenuIcon (), "drawable", application.readSysInfo () );
+                Drawable menuIconDraw = resources.getDrawable ( iconId );*/
+                Bitmap map = SystemTools.readBitmapFromSD ( menu.getMenuIcon () );
+                if(null != map)
+                {
+                    Drawable menuIconDraw = new BitmapDrawable ( context.getResources(), map );
+                    SystemTools.loadBackground ( menuIcon,  menuIconDraw);
+                }
+                else
+                {
+                    int iconId = resources.getIdentifier ( "menu_default", "drawable", application.readSysInfo () );
+                    Drawable menuIconDraw = resources.getDrawable ( iconId );
+                    SystemTools.loadBackground ( menuIcon,  menuIconDraw);
+                }
+
+
+
                 //设置文本
                 TextView menuText = ( TextView ) menuLayout.findViewById ( R.id.menuText );
                 SystemTools.setFontStyle ( menuText, application );
@@ -132,22 +149,48 @@ class UIUtils {
                             public
                             void onClick ( View v ) {
 
-                                String url = menu.getMenuUrl ();
-                                if(url.contains ( Constants.CUSTOMER_ID ))
-                                {
-                                    url = url.replace ( Constants.CUSTOMER_ID, "customerid=" +
-                                                                               application
-                                                                                       .readMerchantId ( ) );
+                                String url = menu.getMenuUrl ( );
+                                if ( url.contains ( Constants.CUSTOMER_ID ) ) {
+                                    url = url.replace (
+                                            Constants.CUSTOMER_ID, "customerid=" +
+                                                                   application
+                                                                           .readMerchantId ( )
+                                                      );
                                 }
-                                if(url.contains ( Constants.USER_ID ))
-                                {
-                                    url = url.replace ( Constants.USER_ID, "userid=" + application.readUserId ( ) );
+                                if ( url.contains ( Constants.USER_ID ) ) {
+                                    url = url.replace (
+                                            Constants.USER_ID, "userid=" +
+                                                               application.readUserId
+                                                                       ( )
+                                                      );
                                 }
-                                AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), url );
-                                url = paramUtils.obtainUrl ();
-                                //加载具体的页面
-                                Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, application.obtainMerchantUrl () + url );
-                                mHandler.sendMessage ( msg );
+                                if ( "/".equals ( url ) ) {
+                                    url = application.obtainMerchantUrl ( );
+                                    AuthParamUtils paramUtils = new AuthParamUtils (
+                                            application,
+                                            System.currentTimeMillis ( ), url, context
+                                    );
+                                    url = paramUtils.obtainUrl ( );
+                                    //加载具体的页面
+                                    Message msg = mHandler.obtainMessage (
+                                            Constants
+                                                    .LOAD_PAGE_MESSAGE_TAG, url
+                                                                         );
+                                    mHandler.sendMessage ( msg );
+                                }
+                                else {
+                                    AuthParamUtils paramUtils = new AuthParamUtils (
+                                            application,
+                                            System.currentTimeMillis ( ), url, context
+                                    );
+                                    url = paramUtils.obtainUrl ( );
+                                    //加载具体的页面
+                                    Message msg = mHandler.obtainMessage (
+                                            Constants
+                                                    .LOAD_PAGE_MESSAGE_TAG, application.obtainMerchantUrl ( ) + url
+                                                                         );
+                                    mHandler.sendMessage ( msg );
+                                }
 
                                 //隐藏侧滑菜单
                                 application.layDrag.closeDrawer ( Gravity.LEFT );

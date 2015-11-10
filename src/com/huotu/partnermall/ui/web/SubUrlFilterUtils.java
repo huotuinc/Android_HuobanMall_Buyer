@@ -22,7 +22,9 @@ import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJWebView;
+import com.huotu.partnermall.widgets.PayPopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
+import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
 
 import java.util.regex.Pattern;
 
@@ -65,7 +67,7 @@ class SubUrlFilterUtils {
      * @return
      */
     public
-    boolean shouldOverrideUrlBySFriend ( KJWebView view, String url ) {
+    boolean shouldOverrideUrlBySFriend ( KJWebView view, String url, ScrollSwipeRefreshLayout swipeRefreshLayout ) {
         if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
 
             String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
@@ -101,7 +103,7 @@ class SubUrlFilterUtils {
         } else if(url.contains ( Constants.WEB_PAY ) )
         {
             //支付进度
-            payProgress.showProgress ( "正在加载支付信息" );
+            payProgress.showProgress ( "正在启用支付模块" );
             payProgress.showAtLocation (
                     titleView,
                     Gravity.CENTER, 0, 0
@@ -146,9 +148,9 @@ class SubUrlFilterUtils {
             StringBuilder builder = new StringBuilder (  );
             builder.append ( Constants.INTERFACE_PREFIX + "order/GetOrderInfo" );
             builder.append ( "?orderid="+tradeNo );
-            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString () );
+            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress );
+            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress, titleView, wManager );
             return true;
 
         }
@@ -164,7 +166,7 @@ class SubUrlFilterUtils {
         else
         {
             //跳转界面
-            view.loadUrl ( url, titleView, null, application );
+            view.loadUrl ( null, url, titleView, null, application, swipeRefreshLayout );
             return false;
         }
         return false;

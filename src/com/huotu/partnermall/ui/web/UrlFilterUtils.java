@@ -28,6 +28,7 @@ import com.huotu.partnermall.widgets.KJWebView;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.PayPopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
+import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
 
 /**
  * 拦截页面操作类
@@ -69,7 +70,7 @@ class UrlFilterUtils {
      * @return
      */
     public
-    boolean shouldOverrideUrlBySFriend ( KJWebView view, String url ) {
+    boolean shouldOverrideUrlBySFriend ( KJWebView view, String url, ScrollSwipeRefreshLayout swipeRefreshLayout ) {
         if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
             /*String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
             view.loadUrl ( urlStr, titleView, null, null );
@@ -177,9 +178,9 @@ class UrlFilterUtils {
             StringBuilder builder = new StringBuilder (  );
             builder.append ( Constants.INTERFACE_PREFIX + "order/GetOrderInfo" );
             builder.append ( "?orderid="+tradeNo );
-            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString () );
+            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress );
+            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress, titleView, wManager );
             return true;
 
         }
@@ -198,7 +199,7 @@ class UrlFilterUtils {
             bundle.putString ( Constants.INTENT_URL, url );
             ActivityUtils.getInstance ().showActivity ( aty,  WebViewActivity.class, bundle);
             return true;*/
-            view.loadUrl ( url, titleView, mHandler, application );
+            view.loadUrl ( aty, url, titleView, mHandler, application, swipeRefreshLayout );
             return false;
         }
         return false;

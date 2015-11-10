@@ -1,6 +1,7 @@
 package com.huotu.partnermall.utils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -12,9 +13,12 @@ import java.util.TimeZone;
 
 import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -205,8 +209,31 @@ public class SystemTools
         }
         else
         {
-            //其他界面
-            return  url + "?" + param;
+            if(url.contains ( "?" ))
+            {
+                //其他界面
+                return  url + "&" + param;
+            }
+            else
+            {
+                //其他界面
+                return  url + "?" + param;
+            }
+
         }
+    }
+
+    public static
+    Bitmap readBitmapFromSD(String iconName)
+    {
+        String dir = Environment.getExternalStorageDirectory ( ) + File.separator + "buyer" + File.separator + "icon" + File.separator;
+        String iconPath = dir + iconName + ".png";
+        File iconFile = new File ( iconPath );
+        //若该文件存在
+        if (iconFile.exists()) {
+            Bitmap bitmap= BitmapFactory.decodeFile ( iconPath );
+            return bitmap;
+        }
+        return null;
     }
 }

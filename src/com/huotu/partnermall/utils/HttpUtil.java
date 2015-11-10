@@ -1,7 +1,10 @@
 package com.huotu.partnermall.utils;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -22,8 +25,10 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.AuthMallModel;
+import com.huotu.partnermall.model.MDataPackageModel;
 import com.huotu.partnermall.model.MSiteModel;
 import com.huotu.partnermall.model.MemberModel;
+import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantInfoModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
 import com.huotu.partnermall.model.OrderModel;
@@ -32,6 +37,7 @@ import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.widgets.NoticePopWindow;
+import com.huotu.partnermall.widgets.PayPopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.mob.tools.network.SSLSocketFactoryEx;
 
@@ -122,7 +128,7 @@ public class HttpUtil
             // 准备数据
             String data = this.potParams(params);
             byte[] data_bytes = data.getBytes();
-            
+
             conn.setRequestProperty("Content-Type",
                     "application/x-www-form-urlencoded;");
             conn.setRequestProperty("Content-Length", data_bytes.length + "");
@@ -207,8 +213,8 @@ public class HttpUtil
             if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 KJLoger.i (
                         "httpGet fail, status code = " + resp.getStatusLine ( )
-                                                             .getStatusCode ( )
-                          );
+                                .getStatusCode()
+                );
                 return null;
             }
 
@@ -245,7 +251,7 @@ public class HttpUtil
     }
 
     /**
-     * 
+     *
      * @方法描述：get请求
      * @方法名：getByHttpConnection
      * @参数：@param url
@@ -261,7 +267,7 @@ public class HttpUtil
         String jsonStr = null;
         URL get_url;
         try
-        {                   
+        {
             get_url = new URL(url);
             conn = (HttpURLConnection) get_url.openConnection();
             conn.setRequestMethod("GET");
@@ -274,7 +280,7 @@ public class HttpUtil
                 inStream = conn.getInputStream();
                 byte[] dataByte = SystemTools.readInputStream(inStream);
                 jsonStr = new String(dataByte);
-                
+
                 //Log.i("HttpUtil",url);
                 //Log.i("HttpUtil", jsonStr);
             } else
@@ -282,7 +288,7 @@ public class HttpUtil
                 // 获取数据失败
                 jsonStr = "{\"resultCode\":50601,\"systemResultCode\":1}";
             }
-        }catch( ConnectTimeoutException ctimeoutex){            
+        }catch( ConnectTimeoutException ctimeoutex){
             jsonStr = "{\"resultCode\":50001,\"resultDescription\":\"网络请求超时，请稍后重试\",\"systemResultCode\":1}";
         }catch (SocketTimeoutException stimeoutex) {
             jsonStr = "{\"resultCode\":50001,\"resultDescription\":\"网络请求超时，请稍后重试\",\"systemResultCode\":1}";
@@ -332,19 +338,60 @@ public class HttpUtil
 //            buffer.append("&" + entry.getKey() + "=" + entry.getValue());
             try
             {
-               String eee = URLEncoder.encode(entry.getValue().toString() , "UTF-8");
+                String eee = URLEncoder.encode(entry.getValue().toString() , "UTF-8");
                 buffer.append("&" + entry.getKey() +"=" + eee );
-                
+
                 //Log.i("dedd", eee);
-                
+
             } catch (UnsupportedEncodingException e)
             {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            
+
         }
         return buffer.toString().substring(1, buffer.length());
+    }
+
+    /**
+     * 获取数据包版本信息
+     * @param context
+     * @param application
+     * @param url
+     */
+    public void doVolleyPackage( final Context context, final BaseApplication application, String url )
+    {
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+
+
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONUtil<MDataPackageModel > jsonUtil = new JSONUtil<MDataPackageModel>();
+                MDataPackageModel packageModel = new MDataPackageModel();
+                packageModel = jsonUtil.toBean(response.toString (), packageModel);
+                if(null != packageModel) {
+                    MDataPackageModel.MDataPackageData dataPackageData = packageModel.getData ();
+                    if ( 0 == dataPackageData.getUpdateData () ) {
+                        //没有更新，直接执行以下步骤
+                    }
+                    else
+                    {
+                        application.writePackageVersion ( dataPackageData.getVersion ( ) );
+                        //直接下载文件，并更新version
+                        //下载数据
+                        //new HttpDownloader().execute ( dataPackageData.getDownloadUrl () );
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+
+
+        });
+        Volley.newRequestQueue ( context ).add( re);
     }
 
     /**
@@ -355,7 +402,7 @@ public class HttpUtil
      */
     public void doVolleySite( Context context, final BaseApplication application, String url )
     {
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -390,7 +437,7 @@ public class HttpUtil
      */
     public void doVolleyLogo(Context context, final BaseApplication application, String url)
     {
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -434,7 +481,7 @@ public class HttpUtil
      * @param url
      */
     public void doVolley(Context context, final BaseApplication application, String url ){
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -450,12 +497,12 @@ public class HttpUtil
                             if(400 == merchantPay.getPayType ())
                             {
                                 //支付宝信息
-                                application.writeAlipay( merchantPay.getPartnerId (),  merchantPay.getAppKey (), merchantPay.getNotify () );
+                                application.writeAlipay( merchantPay.getPartnerId (),  merchantPay.getAppKey (), merchantPay.getNotify (), merchantPay.isWebPagePay () );
                             }
                             else if(300 == merchantPay.getPayType ())
                             {
                                 //微信支付
-                                application.writeWx( merchantPay.getPartnerId (), merchantPay.getAppId ( ),  merchantPay.getAppKey ( ), merchantPay.getNotify ( ) );
+                                application.writeWx( merchantPay.getPartnerId (), merchantPay.getAppId ( ),  merchantPay.getAppKey ( ), merchantPay.getNotify ( ), merchantPay.isWebPagePay ( ) );
                             }
                         }
                     }
@@ -496,10 +543,32 @@ public class HttpUtil
                                 account.getAccountName ( ), account.getAccountId ( ),
                                 account.getAccountIcon ( ), account.getAccountToken ( ),
                                 account.getAccountUnionId ( )
-                                                    );
+                        );
                         application.writeMemberLevel ( mall.getLevelName () );
-                        //跳转到首页
-                        ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
+
+                        //设置侧滑栏菜单
+                        List<MenuBean > menus = new ArrayList< MenuBean > (  );
+                        MenuBean menu = null;
+                        List<AuthMallModel.MenuModel > home_menus = mall.getHome_menus ();
+                        for(AuthMallModel.MenuModel home_menu:home_menus)
+                        {
+                            menu = new MenuBean ();
+                            menu.setMenuGroup ( String.valueOf ( home_menu.getMenu_group () ) );
+                            menu.setMenuIcon ( home_menu.getMenu_icon ( ) );
+                            menu.setMenuName ( home_menu.getMenu_name ( ) );
+                            menu.setMenuUrl ( home_menu.getMenu_url ( ) );
+                            menus.add ( menu );
+                        }
+                        if(null != menus && !menus.isEmpty ())
+                        {
+                            application.writeMenus ( menus );
+                            //跳转到首页
+                            ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
+                        }
+                        else
+                        {
+                            mHandler.sendEmptyMessage ( Constants.INIT_MENU_ERROR );
+                        }
                     }
                     else
                     {
@@ -540,12 +609,12 @@ public class HttpUtil
 
 
         });
-        Volley.newRequestQueue ( context ).add( re );
+        Volley.newRequestQueue(context).add( re );
     }
 
     public void doVolleyObtainUser(final Activity aty, final Context context, final BaseApplication application, String url, final View view, final WindowManager wManager, final Handler mHandler)
     {
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -570,7 +639,7 @@ public class HttpUtil
                         userPop.showAtLocation (
                                 view,
                                 Gravity.CENTER, 0, 0
-                                               );
+                        );
                         userPop.setOnDismissListener ( new PoponDismissListener ( aty ) );
                     }
                     else if((null != userList) && (!userList.isEmpty ()) && (userList.size () == 1))
@@ -583,7 +652,7 @@ public class HttpUtil
                         noticePop.showAtLocation (
                                 view,
                                 Gravity.CENTER, 0, 0
-                                                 );
+                        );
                     }
                 } else
                 {
@@ -595,7 +664,7 @@ public class HttpUtil
                     noticePop.showAtLocation (
                             view,
                             Gravity.CENTER, 0, 0
-                                             );
+                    );
                 }
             }
         }, new Response.ErrorListener() {
@@ -609,7 +678,7 @@ public class HttpUtil
         Volley.newRequestQueue ( context ).add( re);
     }
     public void doVolleyName(Context context, final BaseApplication application, String url, final TextView userType ){
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -649,8 +718,8 @@ public class HttpUtil
         Volley.newRequestQueue ( context ).add( re);
     }
 
-    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress ){
-        final JsonObjectRequest re = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress, final TextView titleView, final WindowManager wManager ){
+        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
             @Override
@@ -659,15 +728,35 @@ public class HttpUtil
                 JSONUtil<OrderModel > jsonUtil = new JSONUtil<OrderModel>();
                 OrderModel orderInfo = new OrderModel();
                 orderInfo = jsonUtil.toBean(response.toString (), orderInfo);
-                if(null != orderInfo) {
-                    OrderModel.OrderData order = orderInfo.getData ();
-                    payModel.setAmount ( (int)(100 * format2Decimal ( order.getFinal_Amount () )) );
-                    payModel.setDetail ( order.getTostr () );
+                if(200 == orderInfo.getCode ()) {
+                    if ( null != orderInfo ) {
+                        OrderModel.OrderData order = orderInfo.getData ( );
+                        if ( null == order)
+                        {
+                            //支付信息获取错误
+                            payProgress.dismissView ( );
+                            NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "获取订单信息失败。");
+                            noticePop.showNotice ( );
+                            noticePop.showAtLocation (
+                                    titleView,
+                                    Gravity.CENTER, 0, 0
+                            );
+                        }
+                        else
+                        {
+                            payModel.setAmount ( ( int ) ( 100 * format2Decimal ( order.getFinal_Amount ( ) ) ) );
+                            payModel.setDetail ( order.getToStr ( ) );
 
 
-                    if ( null != order ) {
-                        //支付
-                        if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))
+                            if ( null != order ) {
+                                payProgress.dismissView ( );
+                                PayPopWindow payPopWindow = new PayPopWindow ( aty, context, mHandler, application, payModel );
+                                payPopWindow.showAtLocation (
+                                        titleView,
+                                        Gravity.BOTTOM, 0, 0
+                                );
+                                //支付
+                        /*if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))
                         {
                             //添加支付宝回调路径
                             payModel.setNotifyurl ( application.obtainMerchantUrl () + application.readAlipayNotify ( ) );
@@ -684,15 +773,39 @@ public class HttpUtil
                             PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, payProgress );
                             payFunc.wxPay ( );
 
+                        }*/
+                            }
+
                         }
                     }
+                    else
+                    {
+                        payProgress.dismissView ( );
+                        NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "获取订单信息失败。");
+                        noticePop.showNotice ();
+                        noticePop.showAtLocation (
+                                titleView,
+                                Gravity.CENTER, 0, 0
+                        );
+                    }
+                }
+                else
+                {
+                    //支付信息获取错误
+                    payProgress.dismissView ( );
+                    NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "获取订单信息失败。");
+                    noticePop.showNotice ( );
+                    noticePop.showAtLocation (
+                            titleView,
+                            Gravity.CENTER, 0, 0
+                    );
                 }
 
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                payProgress.dismissView ();
+                payProgress.dismissView ( );
             }
 
 

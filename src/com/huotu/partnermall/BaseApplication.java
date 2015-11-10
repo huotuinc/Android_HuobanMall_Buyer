@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Stack;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 
 /**
@@ -76,6 +77,8 @@ public class BaseApplication extends Application {
     AssetManager am;
     public Typeface font;
 
+    public Platform plat;
+
 
     /**
      * 是否是左划或者返回
@@ -102,7 +105,7 @@ public class BaseApplication extends Application {
         mLocationClient.registerLocationListener ( mMyLocationListener );
         mGeofenceClient = new GeofenceClient ( getApplicationContext ( ) );
         am = this.getAssets ( );
-        font = Typeface.createFromAsset ( am, "fonts/font.TTF");
+        font = Typeface.createFromAsset ( am, "fonts/font.TTF" );
         // 初始化Volley实例
         VolleyUtil.init ( this );
         // 极光初始化
@@ -252,7 +255,9 @@ public class BaseApplication extends Application {
         //商户ID
         String merchantId = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID );
         //商户支付宝key信息
-        String merchantAlipayKey = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY );
+        String merchantAlipayKey = PreferenceHelper.readString ( getApplicationContext ( ),
+                                                                 Constants.MERCHANT_INFO,
+                                                                 Constants.MERCHANT_INFO_ALIPAY_KEY );
         //商户微信支付KEY信息
         String merchantWeixinKey = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_WEIXIN_KEY );
         //商户菜单
@@ -272,6 +277,30 @@ public class BaseApplication extends Application {
         else
         {
             return true;
+        }
+    }
+
+    public boolean scanWx()
+    {
+        String parentId = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
+        String appid =  PreferenceHelper.readString ( getApplicationContext ( ), Constants
+                                                              .MERCHANT_INFO, Constants
+                                                              .MERCHANT_WEIXIN_ID );
+        String appKey = PreferenceHelper.readString (
+                getApplicationContext ( ), Constants.MERCHANT_INFO,
+                Constants.WEIXIN_KEY
+                                                    );
+        String notify = PreferenceHelper.readString (
+                getApplicationContext ( ), Constants.MERCHANT_INFO,
+                Constants.WEIXIN_NOTIFY );
+
+        if(!TextUtils.isEmpty ( parentId ) && !TextUtils.isEmpty ( appid ) && !TextUtils.isEmpty ( appKey ) && !TextUtils.isEmpty ( notify ))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -462,6 +491,11 @@ public class BaseApplication extends Application {
     //登出
     public void logout()
     {
+        //取消授权
+        if(null != plat)
+        {
+            plat.removeAccount ();
+        }
         PreferenceHelper.clean ( getApplicationContext (), Constants.MEMBER_INFO );
     }
 
@@ -648,11 +682,13 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID );
     }
 
-    public void writeAlipay(String parentId, String appKey, String notify)
+    public void writeAlipay(String parentId, String appKey, String notify, boolean isWebPay)
     {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY, appKey );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, parentId );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_NOTIFY, notify );
+        PreferenceHelper.writeBoolean ( getApplicationContext ( ), Constants.MERCHANT_INFO,
+                                        Constants.IS_WEB_ALIPAY, isWebPay );
     }
 
     public String readAlipayAppKey()
@@ -668,7 +704,7 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID );
     }
 
-    public void writeWx(String parentId, String appId, String appKey, String notify)
+    public void writeWx(String parentId, String appId, String appKey, String notify, boolean isWebPay)
     {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID,  parentId);
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID, appId );
@@ -680,6 +716,10 @@ public class BaseApplication extends Application {
                 getApplicationContext ( ), Constants.MERCHANT_INFO,
                 Constants.WEIXIN_NOTIFY, notify
                                      );
+        PreferenceHelper.writeBoolean (
+                getApplicationContext ( ), Constants.MERCHANT_INFO,
+                Constants.IS_WEB_WEIXINPAY, isWebPay
+                                      );
     }
 
     public String readAlipayNotify()
@@ -708,4 +748,15 @@ public class BaseApplication extends Application {
                                       Constants.WEIXIN_KEY );
     }
 
+    //写入数据包版本号
+    public void writePackageVersion(String packageVersion)
+    {
+        PreferenceHelper.writeString ( getApplicationContext (), Constants.DATA_INIT, Constants.PACKAGE_VERSION, packageVersion );
+    }
+
+    //读取数据包版本号
+    public String readPackageVersion()
+    {
+        return PreferenceHelper.readString ( getApplicationContext (), Constants.DATA_INIT, Constants.PACKAGE_VERSION );
+    }
 }

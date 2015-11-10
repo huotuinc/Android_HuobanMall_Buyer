@@ -1,5 +1,6 @@
 package com.huotu.partnermall.utils;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
@@ -32,13 +33,16 @@ class AuthParamUtils {
     private String url;
 
     private long timestamp;
+    private
+    Context context;
 
     public
-    AuthParamUtils(BaseApplication application, long timestamp, String url)
+    AuthParamUtils(BaseApplication application, long timestamp, String url, Context context)
     {
         this.application = application;
         this.timestamp = timestamp;
         this.url = url;
+        this.context = context;
     }
 
     public String obtainUrl()
@@ -65,9 +69,12 @@ class AuthParamUtils {
                 }
 
                 //添加额外固定参数
+                paramMap.put ( "version", application.getAppVersion ( context ) );
+                paramMap.put ( "operation", Constants.OPERATION_CODE );
                 paramMap.put ( "buserId", application.readUserId ( ) );
                 //1、timestamp
-                paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
+                paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ),
+                                                                "UTF-8" ) );
                 //appid
                 paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
                 //unionid
@@ -77,14 +84,18 @@ class AuthParamUtils {
                 paramMap.put ( "sign", getSign ( paramMap ) );
 
                 builder.append ( url );
-                builder.append ( "&timestamp="+paramMap.get ( "timestamp" ) );
+                builder.append ( "&timestamp=" + paramMap.get ( "timestamp" ) );
                 builder.append ( "&appid="+paramMap.get ( "appid" ) );
                 builder.append ( "&unionid="+paramMap.get ( "unionid" ) );
                 builder.append ( "&sign="+paramMap.get ( "sign" ) );
-                builder.append ( "&buserId="+application.readUserId () );
+                builder.append ( "&buserId="+application.readUserId ( ) );
+                builder.append ( "&version=" + application.getAppVersion ( context ) );
+                builder.append ( "&operation=" + Constants.OPERATION_CODE );
             }
             else
             {
+                paramMap.put ( "version", application.getAppVersion ( context ) );
+                paramMap.put ( "operation", Constants.OPERATION_CODE );
                 paramMap.put ( "buserId", application.readUserId() );
                 paramMap.put ( "customerid", application.readMerchantId ( ) );
                 //添加额外固定参数
@@ -101,12 +112,14 @@ class AuthParamUtils {
                 paramMap.put ( "sign", getSign ( paramMap ) );
 
                 builder.append ( url );
-                builder.append ( "?timestamp="+paramMap.get ( "timestamp" ) );
+                builder.append ( "?timestamp=" + paramMap.get ( "timestamp" ) );
                 builder.append ( "&customerid="+application.readMerchantId ( ) );
                 builder.append ( "&appid="+paramMap.get ( "appid" ) );
                 builder.append ( "&unionid="+paramMap.get ( "unionid" ) );
                 builder.append ( "&sign="+paramMap.get ( "sign" ) );
-                builder.append ( "&buserId="+application.readUserId () );
+                builder.append ( "&buserId="+application.readUserId ( ) );
+                builder.append ( "&version=" + application.getAppVersion ( context ) );
+                builder.append ( "&operation=" + Constants.OPERATION_CODE );
             }
 
             return builder.toString ();
@@ -139,6 +152,8 @@ class AuthParamUtils {
             paramMap.put ( "unionid", account.getAccountUnionId ( ) );
             paramMap.put ( "timestamp", String.valueOf ( timestamp ) );
             paramMap.put ( "appid", Constants.APP_ID );
+            paramMap.put ( "version", application.getAppVersion ( context ) );
+            paramMap.put ( "operation", Constants.OPERATION_CODE );
             paramMap.put ( "sign", getSign ( paramMap ) );
             //去掉null值
             paramMap = removeNull(paramMap);
@@ -185,6 +200,8 @@ class AuthParamUtils {
                 }
 
                 //添加额外固定参数
+                paramMap.put ( "version", application.getAppVersion ( context ) );
+                paramMap.put ( "operation", Constants.OPERATION_CODE );
                 //1、timestamp
                 paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
                 //appid
@@ -193,9 +210,11 @@ class AuthParamUtils {
                 paramMap.put ( "sign", getSign ( paramMap ) );
 
                 builder.append ( url );
-                builder.append ( "&timestamp="+paramMap.get ( "timestamp" ) );
+                builder.append ( "&timestamp=" + paramMap.get ( "timestamp" ) );
                 builder.append ( "&appid="+paramMap.get ( "appid" ) );
                 builder.append ( "&sign="+paramMap.get ( "sign" ) );
+                builder.append ( "&version=" + application.getAppVersion ( context ) );
+                builder.append ( "&operation=" + Constants.OPERATION_CODE );
 
             return builder.toString ();
         }
@@ -230,6 +249,8 @@ class AuthParamUtils {
             }
 
             //添加额外固定参数
+            paramMap.put ( "version", application.getAppVersion ( context ) );
+            paramMap.put ( "operation", Constants.OPERATION_CODE );
             //1、timestamp
             paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
             //appid
@@ -238,9 +259,11 @@ class AuthParamUtils {
             paramMap.put ( "sign", getSign ( paramMap ) );
 
             builder.append ( url );
-            builder.append ( "&timestamp="+paramMap.get ( "timestamp" ) );
+            builder.append ( "&timestamp=" + paramMap.get ( "timestamp" ) );
             builder.append ( "&appid="+paramMap.get ( "appid" ) );
             builder.append ( "&sign="+paramMap.get ( "sign" ) );
+            builder.append ( "&version=" + application.getAppVersion ( context ) );
+            builder.append ( "&operation=" + Constants.OPERATION_CODE );
 
             return builder.toString ();
         }
@@ -275,6 +298,8 @@ class AuthParamUtils {
             }
 
             //添加额外固定参数
+            paramMap.put ( "version", application.getAppVersion ( context ) );
+            paramMap.put ( "operation", Constants.OPERATION_CODE );
             //1、timestamp
             paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
             //appid
@@ -283,9 +308,11 @@ class AuthParamUtils {
             paramMap.put ( "sign", getSign ( paramMap ) );
 
             builder.append ( url );
-            builder.append ( "&timestamp="+paramMap.get ( "timestamp" ) );
+            builder.append ( "&timestamp=" + paramMap.get ( "timestamp" ) );
             builder.append ( "&appid="+paramMap.get ( "appid" ) );
             builder.append ( "&sign="+paramMap.get ( "sign" ) );
+            builder.append ( "&version=" + application.getAppVersion ( context ) );
+            builder.append ( "&operation=" + Constants.OPERATION_CODE );
 
             return builder.toString ();
         }

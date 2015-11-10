@@ -1,11 +1,14 @@
 package com.huotu.partnermall.ui;
 
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -57,6 +60,7 @@ public class SplashActivity extends BaseActivity {
     private boolean isConnection = false;// 假定无网络连接
     private
     MsgPopWindow popWindow;
+    public DownloadManager downloadManager;
 
     @Override
     protected
@@ -89,9 +93,9 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected
     void initView ( ) {
-        AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
-        anima.setDuration(Constants.ANIMATION_COUNT);// 设置动画显示时间
-        mSplashItem_iv.setAnimation(anima);
+        AlphaAnimation anima = new AlphaAnimation ( 0.0f, 1.0f );
+        anima.setDuration ( Constants.ANIMATION_COUNT );// 设置动画显示时间
+        mSplashItem_iv.setAnimation ( anima );
         anima.setAnimationListener (
                 new AnimationListener ( ) {
 
@@ -102,9 +106,11 @@ public class SplashActivity extends BaseActivity {
                         isConnection = application.checkNet ( SplashActivity.this );
                         if ( ! isConnection ) {
                             application.isConn = false;
-                                                   //无网络日志
-                                                   popWindow = new MsgPopWindow ( SplashActivity.this,  new SettingNetwork(), new CancelNetwork(),  "网络连接错误", "请打开你的网络连接！", false);
-                                                   popWindow.showAtLocation ( SplashActivity.this.findViewById ( R.id.welcomeTips ), Gravity.CENTER, 0,0 );
+                            //无网络日志
+                            popWindow = new MsgPopWindow ( SplashActivity.this, new
+                                    SettingNetwork ( ), new CancelNetwork ( ), "网络连接错误",
+                                                           "请打开你的网络连接！", false );
+                            popWindow.showAtLocation ( SplashActivity.this.findViewById ( R.id.welcomeTips ), Gravity.CENTER, 0,0 );
                                                    popWindow.setOnDismissListener ( new PoponDismissListener (SplashActivity.this) );
                                                }
                                                else
@@ -130,7 +136,7 @@ public class SplashActivity extends BaseActivity {
                                                            KJLoger.e ( "载入商户信息失败。" );
                                                        }
                                                    }
-                                                   if(!application.checkMenuInfo ())
+                                                   /*if(!application.checkMenuInfo ())
                                                    {
                                                        //设置菜单
                                                        List<MenuBean> menus = XMLParserUtils.getInstance ().readMenuInfo ( SplashActivity.this );
@@ -143,7 +149,7 @@ public class SplashActivity extends BaseActivity {
                                                        {
                                                            KJLoger.e ( "载入主菜单失败。" );
                                                        }
-                                                   }
+                                                   }*/
                                                    //设置
                                                    //加载颜色配置信息
                                                    if(!application.checkColorInfo ()) {
@@ -168,17 +174,30 @@ public class SplashActivity extends BaseActivity {
                                                        SysModel sysModel = XMLParserUtils.getInstance ( ).readSys ( SplashActivity.this );
                                                        application.writeSysInfo(sysModel);
                                                    }
+                                                   //获取数据包更新信息
+                                                   String packageUrl = Constants.INTERFACE_PREFIX + "mall/CheckDataPacket";
+                                                   String packageVersion = application.readPackageVersion ();
+                                                   if( TextUtils.isEmpty ( packageVersion ))
+                                                   {
+                                                       packageVersion = "0.0.1";
+                                                       application.writePackageVersion ( packageVersion );
+                                                   }
+                                                   packageUrl += "?customerId="+application.readMerchantId () + "&dataPacketVersion="+ packageVersion;
+                                                   AuthParamUtils paramPackage = new AuthParamUtils ( application, System.currentTimeMillis (), packageUrl, SplashActivity.this );
+                                                   final String packageUrls = paramPackage.obtainUrls ( );
+                                                   HttpUtil.getInstance ( ).doVolleyPackage(SplashActivity.this, application, packageUrls );
+
                                                    //获取商家域名
                                                    //获取商户站点
                                                    String rootUrl = Constants.INTERFACE_PREFIX + "mall/getmsiteurl";
                                                    rootUrl += "?customerId="+application.readMerchantId ();
-                                                   AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), rootUrl );
+                                                   AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), rootUrl, SplashActivity.this );
                                                    final String rootUrls = paramUtil.obtainUrls ( );
                                                    HttpUtil.getInstance ( ).doVolleySite(SplashActivity.this, application, rootUrls );
                                                    //获取商户logo信息
                                                    String logoUrl = Constants.INTERFACE_PREFIX + "mall/getConfig";
                                                    logoUrl += "?customerId="+application.readMerchantId ();
-                                                   AuthParamUtils paramLogo = new AuthParamUtils ( application, System.currentTimeMillis (), logoUrl );
+                                                   AuthParamUtils paramLogo = new AuthParamUtils ( application, System.currentTimeMillis (), logoUrl, SplashActivity.this );
                                                    final String logoUrls = paramLogo.obtainUrls ( );
                                                    HttpUtil.getInstance ( ).doVolleyLogo (
                                                            SplashActivity.this, application,
@@ -186,7 +205,7 @@ public class SplashActivity extends BaseActivity {
                                                    //获取商户支付信息
                                                    String targetUrl = Constants.INTERFACE_PREFIX + "PayConfig?customerid=";
                                                    targetUrl += application.readMerchantId ();//动态获取商户编号，现在暂时使用3447////application.readMerchantId ();
-                                                   AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), targetUrl );
+                                                   AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), targetUrl, SplashActivity.this );
                                                    final String url = paramUtils.obtainUrls ( );
                                                    HttpUtil.getInstance ().doVolley(SplashActivity.this, application, url);
                                                }
