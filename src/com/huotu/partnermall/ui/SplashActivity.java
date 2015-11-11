@@ -44,7 +44,6 @@ import com.huotu.partnermall.widgets.MsgPopWindow;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -73,20 +72,20 @@ public class SplashActivity extends BaseActivity {
     void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
         application = ( BaseApplication ) SplashActivity.this.getApplication ( );
-//        setContentView ( R.layout.activity_splash );
-//
-//        DisplayMetrics metrics = new DisplayMetrics ( );
-//        getWindowManager ( ).getDefaultDisplay ( ).getMetrics ( metrics );
-//        Constants.SCREEN_DENSITY = metrics.density;
-//        Constants.SCREEN_HEIGHT = metrics.heightPixels;
-//        Constants.SCREEN_WIDTH = metrics.widthPixels;
-//
-//        mHandler = new Handler ( getMainLooper ( ) );
-//        findViewById ( );
-//        initView ( );
-        Intent intent =new Intent(this, SisLoginActivity.class);
-        startActivity(intent);
-        finish();
+        setContentView ( R.layout.activity_splash );
+
+        DisplayMetrics metrics = new DisplayMetrics ( );
+        getWindowManager ( ).getDefaultDisplay ( ).getMetrics ( metrics );
+        Constants.SCREEN_DENSITY = metrics.density;
+        Constants.SCREEN_HEIGHT = metrics.heightPixels;
+        Constants.SCREEN_WIDTH = metrics.widthPixels;
+
+        mHandler = new Handler ( getMainLooper ( ) );
+        findViewById ( );
+        initView ( );
+//        Intent intent =new Intent(this, SisLoginActivity.class);
+//        startActivity(intent);
+//        finish();
 
     }
 
@@ -251,7 +250,7 @@ public class SplashActivity extends BaseActivity {
     protected
     void onResume ( ) {
         super.onResume ( );
-        JPushInterface.onResume ( SplashActivity.this );
+        JPushInterface.onResume(SplashActivity.this);
     }
 
     @Override
