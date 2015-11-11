@@ -200,14 +200,14 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
-                <data android:scheme="tencent1104945838"></data>
+                <data android:scheme="tencent1101260450"></data>
                 <action android:name="android.intent.action.VIEW"></action>
                 <category android:name="android.intent.category.BROWSABLE"></category>
                 <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
         </activity>
         <!--微信分享回调-->
-        <activity android:name="com.huotu.mall.yingyan.wxapi.WXEntryActivity"
+        <activity android:name="cy.com.morefan.wxapi.WXEntryActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
@@ -231,7 +231,7 @@
 
         <!--微信支付回调-->
         <activity
-            android:name="com.huotu.mall.yingyan.wxapi.WXPayEntryActivity"
+            android:name="cy.com.morefan.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"/>
         <receiver
