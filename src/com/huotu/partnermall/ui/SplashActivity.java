@@ -1,10 +1,7 @@
 package com.huotu.partnermall.ui;
 
-import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,8 +12,6 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.huotu.partnermall.BaseApplication;
@@ -24,17 +19,12 @@ import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.ColorBean;
-import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.model.SysModel;
 import com.huotu.partnermall.service.LocationService;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.guide.GuideActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
-import com.huotu.partnermall.ui.sis.SisHomeActivity;
-import com.huotu.partnermall.ui.sis.GoodManageActivity;
-import com.huotu.partnermall.ui.sis.InfoActivity;
-import com.huotu.partnermall.ui.sis.SisLoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
@@ -63,8 +53,7 @@ public class SplashActivity extends BaseActivity {
     public DownloadManager downloadManager;
 
     @Override
-    protected
-    void findViewById ( ) {
+    protected void findViewById() {
         mSplashItem_iv = ( RelativeLayout ) findViewById ( R.id.welcomeTips );
     }
 

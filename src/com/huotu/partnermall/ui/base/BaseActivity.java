@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import com.huotu.partnermall.AppManager;
 import com.huotu.partnermall.BaseApplication;

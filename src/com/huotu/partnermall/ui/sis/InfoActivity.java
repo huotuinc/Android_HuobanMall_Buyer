@@ -85,7 +85,8 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
             }
             break;
             case R.id.shopNameLabel:{
-                ToastUtils.showShortToast(this,"111");
+                Intent intent =new Intent(this,EditSetActivity.class);
+                this.startActivity(intent);
             }
             break;
             case R.id.shopdescriptionLabel:{
