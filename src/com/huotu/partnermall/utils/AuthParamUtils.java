@@ -53,9 +53,16 @@ class AuthParamUtils {
             if(!application.obtainMerchantUrl ().equals ( url ))
             {
                 //获取url中的参数
-                String params = url.substring ( url.indexOf ( ".aspx?" ) + 6, url.length ( ) );
-                String[] str = params.split ( "&" );
-                if ( str.length > 0 ) {
+                //String params = url.substring ( url.indexOf ( ".aspx?" ) + 6, url.length ( ) );
+                String params  = "";
+                if( url.contains("?") ){
+                    params = url.substring( url.indexOf("?")+1 , url.length() );
+                }
+                String[] str = null;
+                if( !TextUtils.isEmpty( params )) {
+                    str = params.split("&");
+                }
+                if ( null != str && str.length > 0 ) {
                     for ( String map : str ) {
                         //获取参数
                         String[] values = map.split ( "=" );

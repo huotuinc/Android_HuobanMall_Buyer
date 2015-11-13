@@ -30,7 +30,7 @@ public class SisLoginActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sis_login);
+        setContentView(R.layout.sis_activity_sis_login);
         findViewById();
         initView();
     }

@@ -26,5 +26,4 @@ class NetworkImageViewCircle extends NetworkImageView {
         super ( context, attrs, defStyle );
     }
 
-
 }

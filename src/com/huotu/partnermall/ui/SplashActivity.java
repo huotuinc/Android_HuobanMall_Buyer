@@ -31,6 +31,7 @@ import com.huotu.partnermall.service.LocationService;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.guide.GuideActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
+import com.huotu.partnermall.ui.sis.SisHomeActivity;
 import com.huotu.partnermall.ui.sis.GoodManageActivity;
 import com.huotu.partnermall.ui.sis.InfoActivity;
 import com.huotu.partnermall.ui.sis.SisLoginActivity;
@@ -83,10 +84,6 @@ public class SplashActivity extends BaseActivity {
         mHandler = new Handler ( getMainLooper ( ) );
         findViewById ( );
         initView ( );
-//        Intent intent =new Intent(this, SisLoginActivity.class);
-//        startActivity(intent);
-//        finish();
-
     }
 
     @Override

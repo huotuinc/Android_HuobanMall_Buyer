@@ -28,13 +28,13 @@ android {
         }
     }
 
-    compileSdkVersion 19
+    compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
     defaultConfig{
         applicationId "com.huotu.partnermall.inner"
         minSdkVersion 8
-        targetSdkVersion 19
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         signingConfig signingConfigs.huotu
@@ -101,5 +101,10 @@ dependencies {
     compile 'com.huotu.android.library:libcropper:1.0'
     compile 'com.android.support:support-v4:22.1.1'
     compile 'com.handmark.library:pulltorefresh:1.0'
+    compile ('com.huotu.android.library:libCoverFlow:1.1'){
+        exclude module: 'support-v4'
+    }
+    compile 'com.github.mikephil.charting:MPAndroidChart:1.1'
+
 }
 

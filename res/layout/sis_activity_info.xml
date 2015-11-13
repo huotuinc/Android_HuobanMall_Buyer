@@ -54,18 +54,13 @@
 
 
 
-                    <com.android.volley.toolbox.NetworkImageView
+                    <com.huotu.partnermall.widgets.CircleImageView
                         android:id="@+id/logo"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
+                        android:src="@drawable/sis_pic"
                         />
-                    <ImageView
-                        android:id="@+id/img"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@drawable/sis_user_logo_bg"
-                        >
-                    </ImageView>
+
                 </RelativeLayout>
 
                 <ImageView
