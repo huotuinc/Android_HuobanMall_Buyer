@@ -80,7 +80,7 @@ android {
     //打包渠道
     productFlavors {
         yaoshengji{
-            applicationId 'com.huotu.mall.yingyan'
+            applicationId 'cy.com.morefan'
         }
     }
 

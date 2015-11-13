@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.huotu.partnermall.adapter.ViewPagerAdapter;
 import com.huotu.partnermall.inner.R;
@@ -38,7 +41,6 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
     private
     Resources resources;
     public Handler mHandler;
-    private long exitTime = 0l;
 
     //引导图片资源
     private String[] pics;
@@ -82,11 +84,35 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
 
             //初始化引导图片列表
             for(int i=0; i<pics.length; i++) {
-                ImageView iv = new ImageView(this);
+                RelativeLayout iv = ( RelativeLayout ) LayoutInflater.from(GuideActivity.this).inflate ( R.layout.guid_item, null );
+                TextView skipText = (TextView) iv.findViewById(R.id.skipText);
                 iv.setLayoutParams ( mParams );
                 int iconId = resources.getIdentifier ( pics[i], "drawable", application.readSysInfo () );
                 Drawable menuIconDraw = resources.getDrawable ( iconId );
-                SystemTools.loadBackground ( iv, menuIconDraw );
+                SystemTools.loadBackground(iv, menuIconDraw);
+                skipText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //延时2秒后跳入新界面
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                //判断是否登录
+                                if (application.isLogin()) {
+                                    ActivityUtils.getInstance().skipActivity(GuideActivity.this, HomeActivity.class);
+
+                                } else {
+                                    ActivityUtils.getInstance()
+                                            .skipActivity(
+                                                    GuideActivity
+                                                            .this,
+                                                    LoginActivity.class);
+                                }
+                            }
+                        }, 1000);
+                    }
+                });
                 views.add(iv);
             }
         } catch (IOException e) {
@@ -129,38 +155,7 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
     @Override
     public
     void onPageScrollStateChanged ( int arg0 ) {
-        if(arg0 == 0){
-            if(lastValue == pics.length-1){
-                if ( ( System.currentTimeMillis ( ) - exitTime ) > 2000 ) {
-                    ToastUtils.showLongToast ( getApplicationContext ( ), "再滑一次进入登录界面" );
-                    exitTime = System.currentTimeMillis ( );
-                }
-                else {
-                    //延时2秒后跳入新界面
-                    mHandler.postDelayed ( new Runnable ( ) {
-                                               @Override
-                                               public
-                                               void run ( ) {
 
-                                                   //判断是否登录
-                                                   if ( application.isLogin ( ) ) {
-                                                       ActivityUtils.getInstance ( ).skipActivity ( GuideActivity.this, HomeActivity.class );
-
-                                                   }
-                                                   else {
-                                                       ActivityUtils.getInstance ( )
-                                                                    .skipActivity (
-                                                                            GuideActivity
-                                                                                    .this,
-                                                                            LoginActivity.class );
-                                                   }
-                                               }
-                                           }, 2000 );
-                }
-
-
-            }
-        }
     }
 
     @Override
