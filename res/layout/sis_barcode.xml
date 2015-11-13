@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+                android:gravity="center"
+    >
+    <LinearLayout
+        android:id="@+id/sis_barcode_ll"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/sis_barcode_logo"
+        android:background="@drawable/ic_launcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/sis_barcode_pic"
+        android:layout_below="@id/sis_barcode_ll"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/sis_barcode_desc"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:textSize="17sp"
+        android:layout_below="@id/sis_barcode_pic"
+        android:text="扫一扫上面的二维码图案,有惊喜"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

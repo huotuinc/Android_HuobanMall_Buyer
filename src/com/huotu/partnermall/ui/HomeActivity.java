@@ -53,6 +53,7 @@ import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
+import com.huotu.partnermall.ui.sis.SisHomeActivity;
 import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
@@ -647,10 +648,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         {
             case R.id.titleLeftImage:
             {
+                //----test
+                openSis();
+                //-------
+
                 if(application.isLeftImg)
                 {
                     //切换出侧滑界面
-                    application.layDrag.openDrawer ( Gravity.LEFT );
+                    application.layDrag.openDrawer(Gravity.LEFT);
                 } else
                 {
                     viewPage .goBack ( titleText, mHandler, application );
@@ -686,7 +691,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //隐藏侧滑菜单
                 application.layDrag.closeDrawer ( Gravity.LEFT );
                 //切换进度条
-                progress.showProgress ( "正在获取用户数据" );
+                progress.showProgress("正在获取用户数据");
                 progress.showAtLocation (
                         findViewById ( R.id.titleLeftImage ),
                         Gravity.CENTER, 0, 0
@@ -856,7 +861,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //加载菜单页面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( HomeActivity.this, url, titleText, mHandler, application, swipeRefreshLayout );
+
+
+                if( url.toLowerCase().contains("sis=666666") ){
+                    openSis();
+                }else {
+                    viewPage.loadUrl(HomeActivity.this, url, titleText, mHandler, application, swipeRefreshLayout);
+                }
             }
             break;
             case Constants.FRESHEN_PAGE_MESSAGE_TAG:
@@ -997,5 +1008,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             application.isMenuHide = Boolean.parseBoolean ( status );
         }
     }
+
+
+    private void openSis(){
+        HomeActivity.this.startActivity( new Intent(HomeActivity.this, SisHomeActivity.class));
+    }
+
 }
 

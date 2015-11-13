@@ -54,7 +54,7 @@
         <menu_name>店中店</menu_name>
         <menu_tag>sis</menu_tag>
         <menu_icon>sideslip_menu_icon_07</menu_icon>
-        <menu_url>feedback</menu_url>
+        <menu_url>/sis=666666</menu_url>
         <menu_group>3</menu_group>
     </home_menu>
 </home_menus>

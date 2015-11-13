@@ -13,10 +13,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.Util;
 import com.huotu.partnermall.widgets.CropperView;
@@ -35,18 +38,20 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
     private LinearLayout shopdescriptionLabel;
     private PhotoSelectView pop;
     private CropperView cropperView;
+    private RelativeLayout header;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info);
+        setContentView(R.layout.sis_activity_info);
         findViewById();
         initView();
     }
 
     @Override
     protected void findViewById() {
+        header = (RelativeLayout)findViewById(R.id.sis_header);
         header_back= (Button) findViewById(R.id.header_back);
         header_title= (TextView) findViewById(R.id.header_title);
         imgLabel= (LinearLayout) findViewById(R.id.imgLabel);
@@ -57,6 +62,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
 
     @Override
     protected void initView() {
+        header.setBackgroundColor( SystemTools.obtainColor(((BaseApplication) InfoActivity.this.getApplication()).obtainMainColor()) );
         header_title.setText("小店设置");
         header_back.setOnClickListener(this);
         imgLabel.setOnClickListener(this);
@@ -83,8 +89,10 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
             }
             break;
             case R.id.shopdescriptionLabel:{
-                ToastUtils.showShortToast(this,"111");
+                Intent intent =new Intent(this,SelectTempleteActivity.class);
+                this.startActivity(intent);
             }
+            break;
         }
 
     }

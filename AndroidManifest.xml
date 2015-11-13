@@ -243,11 +243,22 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name="com.huotu.partnermall.ui.sis.SisHomeActivity" >
+        </activity>
+        <activity android:name="com.huotu.partnermall.ui.sis.AddGoodsActivity" >
+        </activity>
+        <activity android:name="com.huotu.partnermall.ui.sis.GoodsDetailActivity" >
+        </activity>
+        <activity android:name="com.huotu.partnermall.ui.sis.SelectTempleteActivity" />
         <activity android:name="com.huotu.partnermall.ui.sis.SisLoginActivity" >
         </activity>
         <activity android:name="com.huotu.partnermall.ui.sis.InfoActivity" >
         </activity>
         <activity android:name="com.huotu.partnermall.ui.sis.GoodManageActivity" >
+        </activity>
+        <activity android:name="com.huotu.partnermall.ui.sis.SaleActivity" >
+        </activity>
+        <activity android:name="com.huotu.partnermall.ui.sis.SalesDetailActivity" >
         </activity>
     </application>
 

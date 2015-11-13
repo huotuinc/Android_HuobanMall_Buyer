@@ -6,10 +6,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.widgets.KJEditText;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class SisLoginActivity extends BaseActivity implements View.OnClickListener {
@@ -26,7 +30,7 @@ public class SisLoginActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sis_login);
+        setContentView(R.layout.sis_activity_sis_login);
         findViewById();
         initView();
     }
@@ -64,9 +68,32 @@ public class SisLoginActivity extends BaseActivity implements View.OnClickListen
             }
             break;
             case R.id.btnLogin:{
-                ActivityUtils.getInstance().skipActivity(SisLoginActivity.this, GoodManageActivity.class);
+               // ActivityUtils.getInstance().skipActivity(SisLoginActivity.this, GoodManageActivity.class);
             }
             break;
         }
     }
+//    private void sendSMS() {
+//        if( false == canConnect()){
+//            return;
+//        }
+//
+//        String url = Constant.GET_VD_INTERFACE;
+//        HttpParaUtils httpParaUtils = new HttpParaUtils();
+//        Map<String, String> map = new HashMap<>();
+//        map.put("phone", edtPhone.getText().toString());
+//        map.put("type", Constant.GET_VD_TYPE_FORGET);
+//        map.put("codeType", btnGet.getTag().toString());
+//        url = httpParaUtils.getHttpGetUrl(url, map);
+//
+//        GsonRequest<MJSendSMSModel> sendSMSRequest = new GsonRequest<MJSendSMSModel>(Request.Method.GET,
+//                url,
+//                MJSendSMSModel.class,
+//                null,
+//                sendSMSListener,
+//                new MJErrorListener(this)
+//        );
+//
+//        VolleyRequestManager.AddRequest(sendSMSRequest);
+//    }
 }

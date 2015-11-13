@@ -11,12 +11,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
+    <com.huotu.partnermall.widgets.NetworkImageViewCircle
         android:id="@+id/goods_item_picture"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginLeft="15dp"
-        android:background="@color/olive"/>
+        android:layout_marginLeft="15dp"/>
 
     <RelativeLayout
         android:id="@+id/goods_item_goods"
