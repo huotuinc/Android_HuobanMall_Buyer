@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -20,7 +21,9 @@ import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.WindowUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
@@ -35,7 +38,7 @@ import cn.sharesdk.wechat.moments.WechatMoments;
  * 分享弹出框
  */
 public
-class SharePopupWindow extends PopupWindow {
+class SharePopupWindow extends PopupWindow implements View.OnClickListener {
 
     private Context                context;
     private PlatformActionListener platformActionListener;
@@ -45,6 +48,7 @@ class SharePopupWindow extends PopupWindow {
     AssetManager am;
     private
     BaseApplication application;
+
 
     public
     SharePopupWindow ( Context cx, Activity aty, BaseApplication application ) {
@@ -71,9 +75,8 @@ class SharePopupWindow extends PopupWindow {
                 R.layout.share_layout,
                 null
                                                             );
-        GridView     gridView = ( GridView ) view.findViewById ( R.id.share_gridview );
-        ShareAdapter adapter  = new ShareAdapter ( context, application );
-        gridView.setAdapter ( adapter );
+        LinearLayout shareItems = ( LinearLayout ) view.findViewById ( R.id.shareItem );
+        initShareItems(shareItems);
 
         Button btn_cancel = ( Button ) view.findViewById ( R.id.btn_cancel );
         SystemTools.setFontStyle ( btn_cancel, application );
@@ -106,27 +109,52 @@ class SharePopupWindow extends PopupWindow {
         //ColorDrawable dw = new ColorDrawable(0xb0000000);
         // 设置SelectPicPopupWindow弹出窗体的背景
         //this.setBackgroundDrawable(dw);
-        this.setBackgroundDrawable ( context.getResources ( ).getDrawable ( R.drawable
-                                                                                    .share_window_bg ) );
-
-        gridView.setOnItemClickListener(new ShareItemClickListener(this));
+        this.setBackgroundDrawable(context.getResources().getDrawable(R.drawable
+                .share_window_bg));
 
     }
 
-    private class ShareItemClickListener implements AdapterView.OnItemClickListener {
-        private PopupWindow pop;
+    private void initShareItems(LinearLayout shareItems) {
 
-        public ShareItemClickListener(PopupWindow pop) {
-            this.pop = pop;
+        List<ShareItem> items = new ArrayList<ShareItem>();
+        //微信好友
+        ShareItem wechat = new ShareItem(1, "微信好友", R.drawable.logo_wechat);
+        items.add(wechat);
+        //微信朋友圈
+        ShareItem wechatmoments = new ShareItem(2, "微信朋友圈", R.drawable.logo_wechatmoments);
+        items.add(wechatmoments);
+        //QQ空间分享
+        ShareItem Qzone = new ShareItem(3, "QQ空间", R.drawable.logo_qzone);
+        items.add(Qzone);
+        //sina微博
+        ShareItem sinaweibo = new ShareItem(4, "sina微博", R.drawable.logo_sinaweibo);
+        items.add(sinaweibo);
+
+        //构建ui
+        for(ShareItem item:items)
+        {
+            View view = LayoutInflater.from ( context ).inflate (
+                    R.layout.share_item,
+                    null);
+            view.setOnClickListener(this);
+            view.setId(item.getId());
+            ImageView img = (ImageView) view
+                    .findViewById(R.id.share_icon);
+            img.setImageResource(item.getShareIcon());
+            TextView txt = (TextView) view
+                    .findViewById(R.id.share_title);
+            txt.setText(item.getShareName());
+            shareItems.addView(view);
         }
 
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-            share(position);
-            pop.dismiss();
 
-        }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        share(v.getId());
+        this.dismiss();
     }
 
     /**
@@ -136,18 +164,37 @@ class SharePopupWindow extends PopupWindow {
      */
     private void share(int position) {
 
-       if(position==2){
+       if(3 == position){
             //qq控件分享
             qzone ( );
-        }else{
+        }
+       else if(4 == position)
+       {
+           //sina
+           sinaWeibo();
+       }
+       else if(2 == position)
+       {
+           //微信朋友圈
             Platform plat = null;
-            plat = ShareSDK.getPlatform ( context, getPlatform ( position ) );
+            plat = ShareSDK.getPlatform ( context, WechatMoments.NAME );
             if (platformActionListener != null) {
                 plat.setPlatformActionListener ( platformActionListener );
             }
 
             plat.share(shareParams);
         }
+        else if(1 == position)
+       {
+           //微信好友
+           Platform plat = null;
+           plat = ShareSDK.getPlatform ( context, Wechat.NAME );
+           if (platformActionListener != null) {
+               plat.setPlatformActionListener ( platformActionListener );
+           }
+
+           plat.share(shareParams);
+       }
     }
 
 
@@ -161,7 +208,7 @@ class SharePopupWindow extends PopupWindow {
         if (shareModel != null) {
             Platform.ShareParams sp = new Platform.ShareParams ();
             sp.setShareType(Platform.SHARE_WEBPAGE);
-            sp.setTitle ( shareModel.getText ( ) );
+            sp.setTitle(shareModel.getText());
             sp.setText(shareModel.getText());
             sp.setUrl(shareModel.getUrl());
             sp.setImageUrl(shareModel.getImageUrl());
@@ -215,15 +262,53 @@ class SharePopupWindow extends PopupWindow {
     private void sinaWeibo()
     {
         Platform.ShareParams sp = new Platform.ShareParams ( );
-        sp.setTitle ( shareParams.getTitle ( ) );
-        sp.setTitleUrl ( shareParams.getUrl ( ) ); // 标题的超链接
-        sp.setText ( shareParams.getText ( ) );
-        sp.setImageUrl ( shareParams.getImageUrl ( ) );
-        sp.setSite ( shareParams.getTitle ( ) );
-        sp.setSiteUrl ( shareParams.getUrl ( ) );
+        sp.setShareType(Platform.SHARE_WEBPAGE);
+        sp.setText(shareParams.getText() + shareParams.getUrl ( ));
+        sp.setImageUrl(shareParams.getImageUrl());
         Platform sinaWeibo = ShareSDK.getPlatform ( context, SinaWeibo.NAME );
         sinaWeibo.setPlatformActionListener ( platformActionListener );
         //执行分享
         sinaWeibo.share ( sp );
+    }
+
+    /**
+     * 分享单元实体
+     */
+    public class ShareItem
+    {
+        private String shareName;
+        private int shareIcon;
+        private int id;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public ShareItem(int id, String shareName, int shareIcon)
+        {
+            this.id = id;
+            this.shareIcon = shareIcon;
+            this.shareName = shareName;
+        }
+
+        public String getShareName() {
+            return shareName;
+        }
+
+        public void setShareName(String shareName) {
+            this.shareName = shareName;
+        }
+
+        public int getShareIcon() {
+            return shareIcon;
+        }
+
+        public void setShareIcon(int shareIcon) {
+            this.shareIcon = shareIcon;
+        }
     }
 }
