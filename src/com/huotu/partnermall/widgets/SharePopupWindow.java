@@ -127,7 +127,7 @@ class SharePopupWindow extends PopupWindow implements View.OnClickListener {
         ShareItem Qzone = new ShareItem(3, "QQ空间", R.drawable.logo_qzone);
         items.add(Qzone);
         //sina微博
-        ShareItem sinaweibo = new ShareItem(4, "sina微博", R.drawable.logo_sinaweibo);
+        ShareItem sinaweibo = new ShareItem(4, "新浪微博", R.drawable.logo_sinaweibo);
         items.add(sinaweibo);
 
         //构建ui
