@@ -2,19 +2,84 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/goodmange_cd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orangered">
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/goodmange_header"
+        android:layout_below="@id/goodmange_cd"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <include layout="@layout/layout_header"></include>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/sis_shop"
+        android:layout_below="@id/goodmange_header"
+        android:layout_width="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:background="@color/home_title_bg"
+        android:layout_height="70dp">
+        <com.huotu.partnermall.widgets.CircleImageView
+            android:id="@+id/sis_logo"
+            android:src="@drawable/sis_pic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            />
+        <ImageView
+            android:id="@+id/sis_barcode"
+            android:layout_alignParentRight="true"
+            android:layout_width="50dp"
+            android:scaleType="fitXY"
+            android:background="@drawable/sis_barcode"
+            android:layout_centerVertical="true"
+            android:layout_height="50dp"/>
+        <TextView
+            android:id="@+id/sis_shopname"
+            android:text="店中店3345342xdf"
+            android:layout_toRightOf="@id/sis_logo"
+            android:layout_toLeftOf="@id/sis_barcode"
+            android:layout_alignTop="@id/sis_logo"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:singleLine="true"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/sis_shopmanager"
+            android:text="店铺管理"
+            android:layout_alignLeft="@id/sis_shopname"
+            android:layout_below="@id/sis_shopname"
+            android:singleLine="true"
+            android:layout_marginTop="5dp"
+            android:textSize="11sp"
+            android:padding="2dp"
+            android:textColor="@color/home_title_bg"
+            android:background="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+
+
     <LinearLayout
         android:id="@+id/goodmange_salestatus"
-        android:layout_below="@+id/goodmange_header"
+        android:layout_below="@+id/sis_shop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -60,27 +125,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/goodmange_line"
-        android:layout_above="@+id/goodsedit_bottom"
         />
-    <RelativeLayout
-        android:id="@+id/goodsedit_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-        <Button
-            android:id="@+id/addgood_btn"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_width="150dp"
-            android:clickable="true"
-            android:layout_marginBottom="10dp"
-            android:onClick="onClickButton"
-            android:text="添加商品"
-            android:background="@color/home_title_bg"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:layout_height="40dp"/>
-</RelativeLayout>
+
 </RelativeLayout>

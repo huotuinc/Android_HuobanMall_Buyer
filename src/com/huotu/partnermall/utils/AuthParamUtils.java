@@ -380,4 +380,19 @@ class AuthParamUtils {
         return suffix;
     }
 
+    public Map obtainParams(Map map){
+        Map< String, Object > paramMap = new HashMap< String, Object > ( );
+        if( map !=null ){
+            paramMap.putAll(map);
+        }
+        paramMap.put ( "timestamp", String.valueOf ( timestamp ) );
+        paramMap.put ( "appid", Constants.APP_ID );
+        paramMap.put ( "version", application.getAppVersion ( context ) );
+        paramMap.put ( "operation", Constants.OPERATION_CODE );
+        paramMap.put ( "sign", getSign ( paramMap ) );
+        //去掉null值
+        paramMap = removeNull(paramMap);
+
+        return paramMap;
+    }
 }

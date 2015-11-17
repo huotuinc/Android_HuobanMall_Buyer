@@ -47,8 +47,14 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
         operate.setOnClickListener(this);
 
         flow = (FeatureCoverFlow)findViewById(R.id.sis_selecttemplate_show);
+//        int screenWidth = getWindowManager().getDefaultDisplay().getWidth();
+//        int screenHeight=getWindowManager().getDefaultDisplay().getHeight();
+//        int wid = screenWidth*80/100;
+//        int hei = screenHeight*70/100;
+//        flow.setCoverWidth(wid);
+//        flow.setCoverHeight(hei);
+//        flow.invalidate();
         adapter =new CoverFlowAdapter(this);
-
         data=new ArrayList<>();
         TemplateModel model = new TemplateModel();
         model.setUrl("http://file27.mafengwo.net/M00/C3/AE/wKgB6lQOj0WAV9CnAADdQ7JRe5c84.jpeg");

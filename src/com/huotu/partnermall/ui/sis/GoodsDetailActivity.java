@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -24,11 +26,15 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
     RelativeLayout rlOn;
     RelativeLayout header;
     RelativeLayout botton;
+    RelativeLayout rlcd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sis_activity_goods_detail);
+
+        rlcd = (RelativeLayout)findViewById(R.id.sis_goodsdetail_cd);
+        rlcd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) GoodsDetailActivity.this.getApplication()).obtainMainColor()));
 
         header = (RelativeLayout)findViewById(R.id.sis_goodsdetail_header);
         header.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) GoodsDetailActivity.this.getApplication()).obtainMainColor()));
@@ -52,6 +58,25 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
             url = getIntent().getStringExtra("url");
             if(!TextUtils.isEmpty( url )) {
                 webview.loadUrl(url);
+            }
+        }
+
+        setImmerseLayout();
+    }
+
+    public void setImmerseLayout(){
+        if ( ((BaseApplication)this.getApplication()).isKITKAT ()) {
+            Window window = getWindow();
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+            int statusBarHeight;
+            int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen","android");
+            if (resourceId > 0) {
+                statusBarHeight = this.getResources().getDimensionPixelSize(resourceId);
+                rlcd.setPadding(0,statusBarHeight,0,0);
+                rlcd.getLayoutParams().height+=statusBarHeight;
+                rlcd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) this.getApplication()).obtainMainColor()) );
             }
         }
     }

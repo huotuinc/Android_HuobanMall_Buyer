@@ -5,9 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.huotu.partnermall.ui.sis.GoodsDetailActivity">
+
+    <RelativeLayout
+        android:id="@+id/sis_goodsdetail_cd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orangered">
+    </RelativeLayout>
     <!-- 页头 -->
     <RelativeLayout
         android:id="@+id/sis_goodsdetail_header"
+        android:layout_below="@id/sis_goodsdetail_cd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/orangered"
@@ -54,7 +62,6 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:progressDrawable="@drawable/progress_bar_states"
             android:layout_height="1dp"/>
-
 
     <RelativeLayout
         android:id="@+id/sis_goodsdetail_botton"

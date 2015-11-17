@@ -10,29 +10,47 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.image.BitmapLoader;
+import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.GsonRequest;
+import com.huotu.partnermall.utils.HttpUtil;
+import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
+import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.ViewHolderUtil;
 import com.huotu.partnermall.widgets.KJEditText;
 import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AddGoodsActivity extends Activity implements View.OnClickListener{
     LinearLayout llClass1;
@@ -51,15 +69,23 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
     ArrayAdapter<String> keysAdapter=null;
     RelativeLayout rlSearchBar;
     RelativeLayout rlHeader;
+    RelativeLayout rlcd;
     TextView tvSelect;
+    HorizontalScrollView scrollView;
+    BaseApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sis_activity_add_goods);
 
+        app = (BaseApplication)this.getApplication();
+        rlcd = (RelativeLayout)findViewById(R.id.sis_addgoods_cd);
+        rlcd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) this.getApplication()).obtainMainColor()));
         rlSearchBar =(RelativeLayout)findViewById(R.id.sis_addgoods_searchBar);
         rlHeader = (RelativeLayout)findViewById(R.id.sis_addgoods_header);
+        rlHeader.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) this.getApplication()).obtainMainColor()));
+        scrollView =(HorizontalScrollView)findViewById(R.id.sis_addgoods_scrollView);
         tvSelect =(TextView)findViewById(R.id.sis_addgoods_select);
         tvSelect.setOnClickListener(this);
         tvCancel = (TextView)findViewById(R.id.sis_addgoods_cancel);
@@ -78,19 +104,19 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                     } else {
                         String key = etSearchBar.getText().toString();
                         key = key.trim();
-                        key = key.replace(",","");
-                        key = key.replace("，","");
-                        if( searchKeysList !=null && !searchKeysList.contains(key) ){
+                        key = key.replace(",", "");
+                        key = key.replace("，", "");
+                        if (searchKeysList != null && !searchKeysList.contains(key)) {
                             String temp = "";
-                            for(String item : searchKeysList){
-                                if( !TextUtils.isEmpty( temp )) temp+=",";
+                            for (String item : searchKeysList) {
+                                if (!TextUtils.isEmpty(temp)) temp += ",";
                                 temp += item;
                             }
-                            if( temp != "" ) temp =","+temp;
-                            temp = key+ temp;
-                            AddGoodsActivity.this.searchKeysList.add(0, key );
+                            if (temp != "") temp = "," + temp;
+                            temp = key + temp;
+                            AddGoodsActivity.this.searchKeysList.add(0, key);
                             keysAdapter.notifyDataSetChanged();
-                            PreferenceHelper.writeString(AddGoodsActivity.this, PRE_SEARCHKEY_FILE, PRE_SEARCHKEY_NAME, temp );
+                            PreferenceHelper.writeString(AddGoodsActivity.this, PRE_SEARCHKEY_FILE, PRE_SEARCHKEY_NAME, temp);
                         }
                     }
                     return true;
@@ -119,7 +145,26 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             }
         });
 
-        loadClass1();
+        setImmerseLayout();
+
+        getClassData();
+    }
+
+    public void setImmerseLayout(){
+        if ( ((BaseApplication)this.getApplication()).isKITKAT ()) {
+            Window window = getWindow();
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+            int statusBarHeight;
+            int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen","android");
+            if (resourceId > 0) {
+                statusBarHeight = this.getResources().getDimensionPixelSize(resourceId);
+                rlcd.setPadding(0,statusBarHeight,0,0);
+                rlcd.getLayoutParams().height+=statusBarHeight;
+                rlcd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) this.getApplication()).obtainMainColor()) );
+            }
+        }
     }
 
     @Override
@@ -175,12 +220,31 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         etSearchBar.setDropDownWidth(350);
     }
 
-    protected void loadClass1(){
+    protected void getClassData(){
+        String url = SisConstant.INTERFACE_getCategoryList;
+        String userid = app.plat.getDb().getUserId();
+        url += "?userId="+ userid;
+        AuthParamUtils paramUtils =new AuthParamUtils( app , System.currentTimeMillis() , url , this);
+        url = paramUtils.obtainUrlName();
+
+        GsonRequest<AppSisSortModel> request =
+                new GsonRequest<>(
+                        Request.Method.GET ,
+                        url,
+                        AppSisSortModel.class,
+                        null,
+                        new MyListener(AddGoodsActivity.this),
+                        new MyErrorListener(AddGoodsActivity.this)
+                        );
+        VolleyUtil.getRequestQueue().add(request);
+    }
+
+    protected void loadClass1( List<SisSortModel> data ){
         llClass1.removeAllViews();
-        List<String> classes = new ArrayList<String>();
+        if( data ==null )return;
+        //List<String> classes = new ArrayList<String>();
         LayoutInflater inflater = LayoutInflater.from(this);
-        for(int i=0;i<10;i++){
-            classes.add("class" + i);
+        for(SisSortModel item : data ){
             View v = inflater.inflate(R.layout.sis_goods_class,null);
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -192,54 +256,138 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
                     v.findViewById(R.id.sis_goods_class_footline).setBackgroundColor(Color.BLUE);
                     ((TextView)v.findViewById(R.id.sis_goods_class_name)).setTextColor(Color.BLUE);
-                    loadClass2(v.getTag().toString());
+                    loadClass2( (SisSortModel)v.getTag());
+
+                    int scrollX = scrollView.getScrollX();
+                    System.out.println("scrollX----->"+scrollX);
+                    int helfwid = (getWindowManager().getDefaultDisplay().getWidth()- tvSelect.getWidth()) /2;
+                    int left = v.getLeft();
+                    int leftScreen = left-scrollX;
+                    scrollView.smoothScrollBy((leftScreen - helfwid ), 0);
+
                 }
             });
             TextView tvClass = (TextView)v.findViewById(R.id.sis_goods_class_name);
-            tvClass.setText("class" + i);
-            v.setTag( "class"+i );
+            tvClass.setText( item.getName() );
+            v.setTag( item );
             llClass1.addView(v);
         }
-        if( classes.size()>0 ){
+        if( data!=null && data.size()>0 ){
             llClass1.getChildAt(0).findViewById(R.id.sis_goods_class_footline).setBackgroundColor(Color.BLUE);
             ((TextView)llClass1.getChildAt(0).findViewById(R.id.sis_goods_class_name)).setTextColor(Color.BLUE);
-            loadClass2(llClass1.getChildAt(0).getTag().toString());
-
+            loadClass2( (SisSortModel) llClass1.getChildAt(0).getTag() );
         }
     }
 
-    protected void loadClass2(String classId){
-        List<String> classes=new ArrayList<String>();
-        for(int i=0;i<8;i++){
-            classes.add(classId + "subclass" + i);
-        }
-        adapter=new ClassAdapter(classes,this);
+    protected void loadClass2(SisSortModel model ){
+        //List<String> classes=new ArrayList<String>();
+        //for(int i=0;i<8;i++){
+        //    classes.add(classId + "subclass" + i);
+        //}
+        adapter=new ClassAdapter( model.getList() ,this);
         llClass2.setAdapter(adapter);
 
-        loadGoods( classId , classes.get(0) );
+        //loadGoods( classId , classes.get(0) , 0);
     }
 
-    protected void loadGoods(String classOne , String classTwo){
-        goodsList.clear();
-        for(int i=0;i<40;i++){
-            GoodsModel item=new GoodsModel();
-            item.setName( classOne +" "+ classTwo + " 商品" + i);
-            item.setUrl("http://www.baidu.com");
-            item.setValidate(true);
-            if( i%4==0)item.setValidate(false);
-            goodsList.add(item);
+    protected void loadGoods( long classid ,String key , int pageNo ){
+//        goodsList.clear();
+//        for(int i=0;i<40;i++){
+//            GoodsModel item=new GoodsModel();
+//            item.setName( classOne +" "+ classTwo + " 商品" + i);
+//            item.setUrl("http://www.baidu.com");
+//            item.setValidate(true);
+//            if( i%4==0)item.setValidate(false);
+//            goodsList.add(item);
+//        }
+//        goodsAdapter =new GoodsAdapter(AddGoodsActivity.this,goodsList);
+//        goodListView.getRefreshableView().setAdapter(goodsAdapter);
+
+        String url = SisConstant.INTERFACE_searchGoodsList;
+        url ="?userId="+ app.readMemberId();
+        url +="&categoryId="+ classid;
+        url +="&key="+ key;
+        url +="&pageNo=" + pageNo;
+        AuthParamUtils authParamUtils = new AuthParamUtils(app , System.currentTimeMillis() , url , AddGoodsActivity.this );
+
+        String urlstr = authParamUtils.obtainUrlName();
+
+        GsonRequest<AppSisGoodsModel> request = new GsonRequest<AppSisGoodsModel>(
+                Request.Method.GET,
+                urlstr ,
+                AppSisGoodsModel.class,
+                null,
+                new MyGoodsListener(AddGoodsActivity.this),
+                new MyGoodsErrorListener(AddGoodsActivity.this)
+        );
+        VolleyUtil.getRequestQueue().add(request);
+    }
+
+    static class MyGoodsListener implements Response.Listener<AppSisGoodsModel>{
+        WeakReference<Activity> ref;
+        public MyGoodsListener(Activity act){
+            ref = new WeakReference<>(act);
         }
-        goodsAdapter =new GoodsAdapter(AddGoodsActivity.this,goodsList);
-        goodListView.getRefreshableView().setAdapter(goodsAdapter);
-        //goodsAdapter.notifyDataSetChanged();
+
+        @Override
+        public void onResponse(AppSisGoodsModel appSisGoodsModel) {
+            if( ref.get() ==null) return;
+
+
+        }
+    }
+
+    static class MyGoodsErrorListener implements Response.ErrorListener{
+        WeakReference<Activity> ref;
+        public MyGoodsErrorListener(Activity act){
+            ref = new WeakReference<>(act);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            if( ref.get() ==null ) return;
+            ToastUtils.showLongToast( ref.get() , "error" );
+        }
+    }
+
+    static class MyListener implements Response.Listener<AppSisSortModel>{
+        WeakReference<AddGoodsActivity> ref;
+
+        public MyListener(AddGoodsActivity act){
+            ref =new WeakReference<AddGoodsActivity>(act);
+        }
+
+
+        @Override
+        public void onResponse(AppSisSortModel appSisSortModel) {
+            if( ref.get()==null)return;
+
+        }
+    }
+
+    static class MyErrorListener implements Response.ErrorListener{
+        WeakReference<Activity> ref;
+
+        public MyErrorListener(Activity act){
+            ref = new WeakReference<Activity>(act);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            if( ref.get() ==null ) return;
+            ToastUtils.showLongToast( ref.get() , "error" );
+        }
     }
 
     class ClassAdapter extends BaseAdapter{
-        List<String> list;
-        LayoutInflater inflater ;
-        public ClassAdapter( List<String> list,Context context){
+        List<SisSortModel> list;
+        LayoutInflater inflater;
+        SisSortModel selectedClass;
+
+        public ClassAdapter( List<SisSortModel> list,Context context){
             this.list=list;
             this.inflater =LayoutInflater.from(context);
+            selectedClass = null;
         }
         @Override
         public int getCount() {
@@ -258,6 +406,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            SisSortModel model = list.get(position);
             HolderView holder;
             if( convertView ==null ) {
                 holder = new HolderView();
@@ -265,21 +414,30 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
                 TextView tvName = (TextView) convertView.findViewById(R.id.sis_goods_class2_name);
 
+
                 holder.tvName=tvName;
                 convertView.setTag(holder);
             }else{
                 holder=(HolderView)convertView.getTag();
             }
-            holder.tvName.setText(list.get(position));
-            holder.tvName.setTag(list.get(position));
+            holder.tvName.setText( model.getName());
+            holder.tvName.setTag(model );
 
             holder.tvName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String t = v.getTag().toString();
-                    loadGoods( "d" ,t );
+                    SisSortModel data = (SisSortModel)v.getTag();
+                    selectedClass = data;
+                    ((TextView)v).setTextColor(Color.BLUE);
+                    //loadGoods( data.getId() );
                 }
             });
+
+            if( selectedClass.equals( list.get(position) ) ){
+                holder.tvName.setTextColor(Color.BLUE);
+            }else{
+                holder.tvName.setTextColor(Color.BLACK);
+            }
 
             return convertView;
         }
@@ -326,6 +484,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             TextView tvDes= ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_des);
             TextView tvCommsion = ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_commission);
             TextView tvOperate= ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_operate);
+            tvOperate.setTag( list.get(position) );
             RelativeLayout rl = ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_ll);
             TextView tvValidate = ViewHolderUtil.get(convertView,R.id.sis_addgoods_items_invalidate);
             LinearLayout main= ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_main);
@@ -351,12 +510,32 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             tvOperate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.showLongToast(context,"online");
+                    ToastUtils.showLongToast(context, "online");
+                    GoodsModel model =(GoodsModel) v.getTag();
+
                 }
             });
 
             return convertView;
         }
+
+        protected void online( SisGoodsModel model){
+            String url = SisConstant.INTERFACE_operGoods;
+            AuthParamUtils authParamUtils =new AuthParamUtils( app ,
+                    System.currentTimeMillis() , url , context );
+            Map para = new HashMap();
+            para.put("userId", app.readMemberId());
+            para.put("goodsId", model.getId());
+            para.put("operation", 1);
+
+            Map maps = authParamUtils.obtainParams( para );
+
+//            GsonRequest<BaseModel> request = new GsonRequest<BaseModel>(
+//                    Request.Method.POST, url , null , maps , );
+//            VolleyUtil.getRequestQueue().add(request);
+        }
+
+
     }
 
     class GoodsModel{
@@ -397,4 +576,5 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             this.commision = commision;
         }
     }
+
 }

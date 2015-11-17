@@ -252,22 +252,22 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name="com.huotu.partnermall.ui.sis.SisHomeActivity" >
+        <activity android:name="com.huotu.partnermall.ui.sis.SisHomeActivity" android:theme="@style/AppTheme" android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.huotu.partnermall.ui.sis.AddGoodsActivity" >
+        <activity android:name="com.huotu.partnermall.ui.sis.AddGoodsActivity" android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.huotu.partnermall.ui.sis.GoodsDetailActivity" >
+        <activity android:name="com.huotu.partnermall.ui.sis.GoodsDetailActivity" android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.huotu.partnermall.ui.sis.SelectTempleteActivity" />
-        <activity android:name="com.huotu.partnermall.ui.sis.SisLoginActivity" >
+        <activity android:name="com.huotu.partnermall.ui.sis.SelectTempleteActivity" android:screenOrientation="portrait"/>
+        <activity android:name="com.huotu.partnermall.ui.sis.SisLoginActivity" android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.huotu.partnermall.ui.sis.InfoActivity" >
+        <activity android:name="com.huotu.partnermall.ui.sis.InfoActivity" android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.huotu.partnermall.ui.sis.GoodManageActivity" >
+        <activity android:name="com.huotu.partnermall.ui.sis.GoodManageActivity" android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.huotu.partnermall.ui.sis.SaleActivity" >
+        <activity android:name="com.huotu.partnermall.ui.sis.SaleActivity" android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.huotu.partnermall.ui.sis.SalesDetailActivity" >
+        <activity android:name="com.huotu.partnermall.ui.sis.SalesDetailActivity" android:screenOrientation="portrait" >
         </activity>
     </application>
 
