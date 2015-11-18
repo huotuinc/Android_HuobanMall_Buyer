@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.Util;
@@ -39,6 +40,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
     private PhotoSelectView pop;
     private CropperView cropperView;
     private RelativeLayout header;
+    private TextView shopName;
 
 
     @Override
@@ -51,6 +53,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
 
     @Override
     protected void findViewById() {
+        shopName= (TextView) findViewById(R.id.shopName);
         header = (RelativeLayout)findViewById(R.id.sis_header);
         header_back= (Button) findViewById(R.id.header_back);
         header_title= (TextView) findViewById(R.id.header_title);
@@ -85,8 +88,10 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
             }
             break;
             case R.id.shopNameLabel:{
-                Intent intent =new Intent(this,EditSetActivity.class);
-                this.startActivity(intent);
+                Bundle bd = new Bundle();
+                bd.putInt("type", EditSetTypeEnum.SHOPNAME.getIndex() );
+                bd.putString("text", shopName.getText().toString());
+                ActivityUtils.getInstance().showActivity(InfoActivity.this, EditSetActivity.class, bd);
             }
             break;
             case R.id.shopdescriptionLabel:{

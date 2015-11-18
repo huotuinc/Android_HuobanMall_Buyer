@@ -2,12 +2,26 @@ package com.huotu.partnermall.ui.sis;
 
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.utils.ActivityUtils;
+import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.GsonRequest;
+import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.KJEditText;
+import com.huotu.partnermall.widgets.ProgressPopupWindow;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class EditSetActivity extends BaseActivity implements View.OnClickListener {
@@ -18,6 +32,10 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
 
     public Button header_back;
 
+    public EditSetTypeEnum typeEnum;
+    public
+    ProgressPopupWindow progress;
+    WindowManager wManager;
 
 
     @Override
@@ -33,19 +51,20 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
         ET= (KJEditText) findViewById(R.id.ET);
         header_title= (TextView) findViewById(R.id.header_title);
         header_back= (Button) findViewById(R.id.header_back);
-
+        wManager = this.getWindowManager ( );
+        progress = new ProgressPopupWindow ( EditSetActivity.this, EditSetActivity.this, wManager );
 
     }
     @Override
     protected void initView() {
         header_title.setText("修改");
-//
 
-        //int temp = getIntent().getIntExtra("type", 1);
-        //String tempName = EditSetTypeEnum.getName(temp);
+
+        int temp = getIntent().getIntExtra("type", 1);
+        String tempName = EditSetTypeEnum.getName(temp);
         header_back.setOnClickListener(this);
-        //String context = getIntent().getExtras().getString("text");
-       // ET.setText(context);
+        String context = getIntent().getExtras().getString("text");
+        ET.setText(context);
     }
 
 
@@ -53,60 +72,61 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
 
 
 
-//    protected void commit() {
-//        if (ET.getText().toString().trim() == "") {
-//            return;
-//        }
-//        String context = ET.getText().toString().trim();
-//        String url = Constant.UPDATEPROFILE_INTERFACE;
-//        Map<String, String> paras = new HashMap<>();
-//        paras.put("profileType", String.valueOf(typeEnum.getIndex()));
-//        paras.put("profileData", context);
-//
-//        HttpParaUtils httpParaUtils = new HttpParaUtils();
-//        Map<String, String> maps = httpParaUtils.getHttpPost(paras);
-//        GsonRequest<HTMerchantModel> updateRequest = new GsonRequest<>(
-//                Request.Method.POST,
-//                url,
-//                HTMerchantModel.class,
-//                null,
-//                maps,
-//                updateListener,
-//                new MJErrorListener(this)
-//        );
-//
-//        this.showProgressDialog("", "正在更新数据，请稍等...");
-//
-//        VolleyRequestManager.getRequestQueue().add(updateRequest);
-//    }
-//
-//    Response.Listener<HTMerchantModel> updateListener = new Response.Listener<HTMerchantModel>() {
-//        @Override
-//        public void onResponse(HTMerchantModel htMerchantModel) {
-//            EditSetActivity.this.closeProgressDialog();
-//            if (null == htMerchantModel) {
-//                DialogUtils.showDialog(EditSetActivity.this, EditSetActivity.this.getSupportFragmentManager(), "错误信息", "更新失败", "关闭");
-//                return;
-//            }
-//            if (htMerchantModel.getSystemResultCode() != 1) {
-//                DialogUtils.showDialog(EditSetActivity.this, EditSetActivity.this.getSupportFragmentManager(), "错误信息", htMerchantModel.getSystemResultDescription(), "关闭");
-//                return;
-//            }
-//            if (htMerchantModel.getResultCode() == Constant.TOKEN_OVERDUE) {
-//                ActivityUtils.getInstance().skipActivity(EditSetActivity.this, LoginActivity.class);
-//                return;
-//            }
-//            if (htMerchantModel.getResultCode() != 1) {
-//                DialogUtils.showDialog(EditSetActivity.this, EditSetActivity.this.getSupportFragmentManager(), "错误信息", htMerchantModel.getResultDescription(), "关闭");
-//                return;
-//            }
-//
-//            SellerApplication.getInstance().writeMerchantInfo(htMerchantModel.getResultData().getUser());
-//            //刷新界面数据
-//            EventBus.getDefault().post(new RefreshSettingEvent());
-//            EditSetActivity.this.finish();
-//        }
-//    };
+    protected void commit() {
+        if (ET.getText().toString().trim() == "") {
+            return;
+        }
+        String context = ET.getText().toString().trim();
+        String url = SisConstant.INTERFACE_updateSisProfile;
+        Map<String, String> paras = new HashMap<>();
+        paras.put("profileType", String.valueOf(typeEnum.getIndex()));
+        paras.put("profileData", context);
+
+        AuthParamUtils authParamUtils = new AuthParamUtils(application,System.currentTimeMillis(), url,this);
+        Map<String, String> maps = authParamUtils.obtainParams(paras);
+        GsonRequest<BaseModel> updateRequest = new GsonRequest<>(
+                Request.Method.POST,
+                url,
+                BaseModel.class,
+                null,
+                maps,
+                updateListener,
+                new ErrorListener(this,null)
+        );
+
+        progress.showProgress("正在更新数据，请稍等...");
+        progress.showAtLocation (
+                findViewById ( R.id.editRL ),
+                Gravity.CENTER, 0, 0
+        );
+
+        VolleyUtil.getRequestQueue().add(updateRequest);
+    }
+
+    Response.Listener<BaseModel> updateListener = new Response.Listener<BaseModel>() {
+        @Override
+        public void onResponse(BaseModel baseModel) {
+            progress.dismissView();
+            if (null == baseModel) {
+                ToastUtils.showLongToast( EditSetActivity.this, "出错");
+                return;
+            }
+            if (baseModel.getSystemResultCode() != 1) {
+                ToastUtils.showLongToast(EditSetActivity.this, "出错");
+                return;
+            }
+
+            if (baseModel.getResultCode() != 1) {
+                ToastUtils.showLongToast(EditSetActivity.this, "出错");
+                return;
+            }
+
+           // SellerApplication.getInstance().writeMerchantInfo(baseModel.getResultData().getUser());
+            //刷新界面数据
+           // EventBus.getDefault().post(new RefreshSettingEvent());
+            EditSetActivity.this.finish();
+        }
+    };
 
     public void onClick(View v) {
         switch (v.getId()) {
