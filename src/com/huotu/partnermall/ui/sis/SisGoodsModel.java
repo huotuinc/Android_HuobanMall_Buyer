@@ -11,6 +11,15 @@ public class SisGoodsModel {
     private double price;//销售价
     private java.lang.Integer stock;//库存量
     private double profit;
+    private boolean validate;
+
+    public boolean isValidate() {
+        return validate;
+    }
+
+    public void setValidate(boolean validate) {
+        this.validate = validate;
+    }
 
     public double getProfit() {
         return profit;

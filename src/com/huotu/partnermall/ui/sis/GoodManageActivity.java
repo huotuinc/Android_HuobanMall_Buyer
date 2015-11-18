@@ -56,6 +56,7 @@ import com.huotu.partnermall.utils.Util;
 import com.huotu.partnermall.utils.ViewHolderUtil;
 import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.CircleImageView;
+import com.huotu.partnermall.widgets.MsgPopWindow;
 import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import java.io.File;
@@ -759,4 +760,19 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         }
 
     }
+
+    protected void showOpenShopWindow(){
+        MsgPopWindow msgPopWindow = new MsgPopWindow(GoodManageActivity.this, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GoodManageActivity.this.finish();
+            }
+        },"提示","你是否开通店中店功能?",true);
+    }
+
 }

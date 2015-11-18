@@ -8,14 +8,25 @@ import java.util.List;
 
 
 public class AppSisSortModel extends BaseModel {
-    public SisSortModel getResultData() {
+    public InnerClass getResultData() {
         return resultData;
     }
 
-    public void setResultData(SisSortModel resultData) {
+    public void setResultData(InnerClass resultData) {
         this.resultData = resultData;
     }
 
-    private SisSortModel resultData;
+    private InnerClass resultData;
 
+    public class InnerClass{
+        public List<SisSortModel> getList() {
+            return list;
+        }
+
+        public void setList(List<SisSortModel> list) {
+            this.list = list;
+        }
+
+        List<SisSortModel> list;
+    }
 }
