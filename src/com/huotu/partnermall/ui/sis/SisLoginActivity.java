@@ -6,14 +6,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.ui.base.BaseActivity;
-import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.widgets.KJEditText;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class SisLoginActivity extends BaseActivity implements View.OnClickListener {

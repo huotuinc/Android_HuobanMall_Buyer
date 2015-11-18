@@ -2,50 +2,29 @@ package com.huotu.partnermall.ui.login;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.PaintDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.huotu.partnermall.BaseApplication;
-import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
-import com.huotu.partnermall.model.MerchantPayInfo;
-import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
-import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
-import com.huotu.partnermall.utils.JSONUtil;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
-import com.huotu.partnermall.utils.ToastUtils;
-import com.huotu.partnermall.utils.VolleyHttpUtil;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
-import org.json.JSONObject;
-
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import cn.sharesdk.framework.Platform;
@@ -99,8 +78,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     }
 
     @Override
-    protected
-    void findViewById ( ) {
+    protected void findViewById() {
         loginL = ( RelativeLayout ) this.findViewById ( R.id.loginL );
         loginL.setOnClickListener ( this );
         loginText = ( TextView ) this.findViewById ( R.id.loginText );

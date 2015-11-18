@@ -65,8 +65,7 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
     }
 
     @Override
-    protected
-    void findViewById ( ) {
+    protected void findViewById() {
     }
 
     @Override
