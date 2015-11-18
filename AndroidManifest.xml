@@ -10,11 +10,6 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
 
-    <permission
-        android:name="com.huotu.partnermall.inner.permission.JPUSH_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="com.huotu.partnermall.inner.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -192,13 +187,9 @@
         </receiver>
 
         <!-- Required  . Enable it you can get statistics data with channel -->
-        <meta-data
-            android:name="JPUSH_CHANNEL"
-            android:value="developer-default" />
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="5e22cb7984ccaf138f7458b0" />
-        <!-- </>值来自开发者平台取得的AppKey -->
+        <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
+        <meta-data android:name="JPUSH_APPKEY" android:value="c58dcb2f6afd3ba39f33ea00" />
+        <!--  </>值来自开发者平台取得的AppKey-->
         <!-- 激光推送 -->
         <!-- ShareSDK分享 -->
         <activity
