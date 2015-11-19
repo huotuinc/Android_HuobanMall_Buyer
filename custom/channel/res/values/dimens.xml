@@ -92,4 +92,6 @@
     <dimen name="loginBtnWidth">150dp</dimen>
     <!--登录按钮宽度-->
     <dimen name="loginBtnHeight">60dp</dimen>
+    <!--分享图标大小-->
+    <dimen name="shareIconSize">58dp</dimen>
 </resources>
