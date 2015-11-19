@@ -409,7 +409,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         final int bw = barcodeW;
         final int bh=barcodeH;
 
-        final Bitmap logobmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+        final Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
         final String filePath = getFileRoot(this) + File.separator + "qr_" + System.currentTimeMillis() + ".jpg";
         //二维码图片较大时，生成图片、保存文件的时间可能较长，因此放在新线程中
         new Thread(){
