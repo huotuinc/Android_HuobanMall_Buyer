@@ -5,7 +5,10 @@ package com.huotu.partnermall.ui.sis;
  */
 public enum EditSetTypeEnum {
     SHOPNAME("店铺名称",0),
-    LOGO("店铺LOGO",1);
+    LOGO("店铺LOGO",1),
+    SHARETITLE("分享标题",2),
+    SHAREDESCRIPTION("分享描述",3),
+    SHOPDESCRIPTION("店铺描述",4);
 
 
     private EditSetTypeEnum(String name , int index){
@@ -19,6 +22,12 @@ public enum EditSetTypeEnum {
                 return EditSetTypeEnum.SHOPNAME;
             case 1:
                 return EditSetTypeEnum.LOGO;
+            case 2:
+                return EditSetTypeEnum.SHARETITLE;
+            case 3:
+                return EditSetTypeEnum.SHAREDESCRIPTION;
+            case 4:
+                return EditSetTypeEnum.SHOPDESCRIPTION;
             default:
                 return EditSetTypeEnum.SHOPNAME;
         }

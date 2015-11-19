@@ -260,6 +260,8 @@
         </activity>
         <activity android:name="com.huotu.partnermall.ui.sis.SalesDetailActivity" android:screenOrientation="portrait" >
         </activity>
+        <activity android:name="com.huotu.partnermall.ui.sis.EditSetActivity" android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

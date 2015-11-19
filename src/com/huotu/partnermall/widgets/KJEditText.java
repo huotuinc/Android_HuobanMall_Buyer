@@ -167,7 +167,7 @@ class KJEditText extends AutoCompleteTextView implements Handler.Callback {
     void handleClearButton() {
         String content = this.getText().toString();
         //设置光标
-        Selection.setSelection ( this.getText ( ), content.length ( ) );
+        //Selection.setSelection ( this.getText ( ), content.length ( ) );
         if (content.equals("")) {
             //remove clear button
             mHandler.sendEmptyMessageDelayed(1, 100);

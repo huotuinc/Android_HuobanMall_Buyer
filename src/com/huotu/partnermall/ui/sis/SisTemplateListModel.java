@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2015/11/13.
  */
-public class SisTemplateListModel extends BaseModel{
+public class SisTemplateListModel {
     Long id;
     String pictureUrl;
 

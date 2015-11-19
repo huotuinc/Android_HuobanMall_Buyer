@@ -19,7 +19,7 @@ public class AppSisGoodsModel extends BaseModel{
 
     public class InnerClass{
         private List<SisGoodsModel> list;
-        private Integer rPageNo;
+        private int rpageno;
 
         public List<SisGoodsModel> getList() {
             return list;
@@ -29,12 +29,12 @@ public class AppSisGoodsModel extends BaseModel{
             this.list = list;
         }
 
-        public Integer getrPageNo() {
-            return rPageNo;
+        public int getRpageno() {
+            return rpageno;
         }
 
-        public void setrPageNo(Integer rPageNo) {
-            this.rPageNo = rPageNo;
+        public void setRpageno(int rpageno) {
+            this.rpageno = rpageno;
         }
     }
 

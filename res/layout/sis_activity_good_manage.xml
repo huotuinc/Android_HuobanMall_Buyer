@@ -45,7 +45,7 @@
             android:layout_height="50dp"/>
         <TextView
             android:id="@+id/sis_shopname"
-            android:text="店中店3345342xdf"
+            android:text="店中店"
             android:layout_toRightOf="@id/sis_logo"
             android:layout_toLeftOf="@id/sis_barcode"
             android:layout_alignTop="@id/sis_logo"

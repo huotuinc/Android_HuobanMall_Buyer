@@ -40,6 +40,7 @@ import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
+import com.huotu.partnermall.ui.sis.GoodManageActivity;
 import com.huotu.partnermall.ui.sis.SisHomeActivity;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
@@ -991,7 +992,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
 
     private void openSis(){
-        HomeActivity.this.startActivity( new Intent(HomeActivity.this, SisHomeActivity.class));
+        HomeActivity.this.startActivity( new Intent(HomeActivity.this, GoodManageActivity.class));
     }
 
 }

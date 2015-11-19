@@ -5,13 +5,23 @@ package com.huotu.partnermall.ui.sis;
  */
 public class SisGoodsModel {
 
-    private java.lang.Integer id;//商品ID
+    private java.lang.Long id;//商品ID
     private java.lang.String imgUrl;//商品图片
     private java.lang.String name;//商品名称
     private double price;//销售价
     private java.lang.Integer stock;//库存量
     private double profit;
-    private boolean validate;
+    private boolean validate=true;
+
+    public boolean isOnSale() {
+        return isOnSale;
+    }
+
+    public void setIsOnSale(boolean isOnSale) {
+        this.isOnSale = isOnSale;
+    }
+
+    private boolean isOnSale=false;
 
     public boolean isValidate() {
         return validate;
@@ -31,11 +41,11 @@ public class SisGoodsModel {
 
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -13,6 +13,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
 import java.lang.ref.WeakReference;
 
@@ -23,9 +24,12 @@ import java.lang.ref.WeakReference;
 class ErrorListener implements Response.ErrorListener{
     PullToRefreshBase _pullToRefreshBase =null;
         WeakReference<Activity> ref;
-        public ErrorListener(Activity act,PullToRefreshBase pullToRefreshBase){
+        ProgressPopupWindow progressPopupWindow;
+
+        public ErrorListener(Activity act,PullToRefreshBase pullToRefreshBase , ProgressPopupWindow progressPopupWindow){
             _pullToRefreshBase= pullToRefreshBase;
             ref = new WeakReference<Activity>(act);
+            this.progressPopupWindow = progressPopupWindow;
         }
 
         @Override
@@ -33,7 +37,9 @@ class ErrorListener implements Response.ErrorListener{
             if( ref.get() ==null )return;
 
             if( ref.get().isFinishing() ) return;
-
+            if( progressPopupWindow !=null){
+                progressPopupWindow.dismissView();
+            }
 
             if( _pullToRefreshBase!=null ){
                 _pullToRefreshBase.onRefreshComplete();

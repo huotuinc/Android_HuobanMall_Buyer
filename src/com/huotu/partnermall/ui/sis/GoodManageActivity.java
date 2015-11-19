@@ -2,6 +2,7 @@ package com.huotu.partnermall.ui.sis;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,7 +14,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.volley.Request;
@@ -58,17 +62,26 @@ import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.CircleImageView;
 import com.huotu.partnermall.widgets.MsgPopWindow;
 import com.huotu.partnermall.widgets.NetworkImageViewCircle;
+import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
+import java.net.URLEncoder;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.tencent.qzone.QZone;
+import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.wechat.moments.WechatMoments;
 
 
 public class GoodManageActivity extends BaseActivity implements View.OnClickListener {
@@ -84,10 +97,12 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
     private RelativeLayout search_bar;
     private Button search_cancel;
     private PopupWindow popWin;
+    private PopupWindow barcodePopWin;
     private SharePopupWindow sharePopWin;
     private RelativeLayout rlcd;
     private RelativeLayout rlshop;
     private TextView shopmanger;
+    private TextView shopName;
     private CircleImageView logo;
     private ImageView ivBarcode;
     private Bitmap barCode;
@@ -101,6 +116,9 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
     private List<SisGoodsModel> list1;
     private List<SisGoodsModel> list2;
     private boolean isRefresh=true;
+    private ProgressPopupWindow progressPopupWindow;
+    private MsgPopWindow msgPopWindow;
+    private ProgressDialog progressdlg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +182,8 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         ivBarcode = (ImageView)findViewById(R.id.sis_barcode);
 
         listview = (PullToRefreshListView)findViewById(R.id.goodmanage_listview);
+
+        shopName = (TextView)findViewById(R.id.sis_shopname);
     }
 
     public void setImmerseLayout(){
@@ -186,7 +206,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void initView() {
         handler = new Handler(getMainLooper());
-        goodmanage_header.setText("小店商品");
+        goodmanage_header.setText("");
         header_back.setOnClickListener(this);
         salestatus_sale.setOnClickListener(this);
         salestatus_remove.setOnClickListener(this);
@@ -194,13 +214,12 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         header_operate.setOnClickListener(this);
         search_cancel.setOnClickListener(this);
         ivBarcode.setOnClickListener(this);
+        shopmanger.setOnClickListener(this);
 
-        loadLogo();
+        //loadLogo();
 
-        int barcodeW = Constants.SCREEN_WIDTH * 80/100;
-        int barcodeH = Constants.SCREEN_HEIGHT * 80/100;
-        if( barcodeW<barcodeH) {barcodeH = barcodeW;}
-        showBarCode("http://m.cnblogs.com", ivBarcode, barcodeW, barcodeH);
+
+        //showBarCode("http://m.cnblogs.com", ivBarcode);
 
         listview.setMode(PullToRefreshBase.Mode.BOTH);
         listview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -208,33 +227,62 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 pageno1 = 0;
                 pageno2 = 0;
-                isRefresh=true;
+                isRefresh = true;
                 getGoods(salestate, 0);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                    isRefresh=false;
-                    getGoods(salestate, salestate ? pageno1 : pageno2 );
+                isRefresh = false;
+                getGoods(salestate, salestate ? pageno1 : pageno2);
             }
         });
 
         list1 = new ArrayList<>();
-        adapter1 = new Goodmanageadapter(this, list1);
+        adapter1 = new Goodmanageadapter(this, list1 , 0 );
         listview.setAdapter(adapter1);
 
         list2 = new ArrayList<>();
-        adapter2 = new Goodmanageadapter(this,list2);
+        adapter2 = new Goodmanageadapter(this,list2 , 1 );
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if( GoodManageActivity.this.isFinishing() )return;
-                isRefresh=true;
-                salestate = true;
-                listview.setRefreshing(true);
-            }
-        },800);
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (GoodManageActivity.this.isFinishing()) return;
+//                isRefresh = true;
+//                salestate = true;
+//                listview.setRefreshing(true);
+//            }
+//        }, 800);
+
+        getShopInfo();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if( resultCode == RESULT_OK && requestCode == SisConstant.REFRESHGOODS_CODE ){
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (GoodManageActivity.this.isFinishing()) return;
+                    isRefresh = true;
+                    salestate = true;
+                    listview.setRefreshing(true);
+                }
+            }, 500);
+
+        }
+
+        if( resultCode ==RESULT_OK && requestCode == SisConstant.REFRESHSHOPINFO_CODE ){
+            //刷新店铺信息
+            if( SisConstant.SHOPINFO==null)return;
+            shopName.setText( SisConstant.SHOPINFO.getTitle());
+            loadLogo(SisConstant.SHOPINFO.getImgUrl());
+            //showBarCode( SisConstant.SHOPINFO.getIndexUrl() , ivBarcode );
+        }
 
     }
 
@@ -245,16 +293,26 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 salestate = true;
                 salestatus_saleline.setBackgroundColor(getResources().getColor(R.color.home_title_bg));
                 salestatus_removeline.setBackgroundColor(getResources().getColor(R.color.white));
+                isRefresh=true;
+                pageno1 = 0;
+                list1.clear();
+                adapter1.notifyDataSetChanged();
+                listview.setRefreshing(true);
             }
             break;
             case R.id.salestatus_remove:{
                 salestate =false;
                 salestatus_saleline.setBackgroundColor(getResources().getColor(R.color.white));
                 salestatus_removeline.setBackgroundColor(getResources().getColor(R.color.home_title_bg));
+                isRefresh=true;
+                pageno2 = 0;
+                list2.clear();
+                adapter2.notifyDataSetChanged();
+                listview.setRefreshing(true);
             }
             break;
             case R.id.header_operate:{
-                GoodManageActivity.this.startActivity(new Intent(GoodManageActivity.this,AddGoodsActivity.class));
+                GoodManageActivity.this.startActivityForResult(new Intent(GoodManageActivity.this, AddGoodsActivity.class), SisConstant.REFRESHGOODS_CODE );
             }
             break;
             case R.id.header_back:{
@@ -267,6 +325,10 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 }else {
                     showBarCode();
                 }
+            }
+            break;
+            case R.id.sis_shopmanager:{
+                GoodManageActivity.this.startActivityForResult(new Intent(GoodManageActivity.this, InfoActivity.class), SisConstant.REFRESHSHOPINFO_CODE);
             }
             break;
 //            case R.id.header_operate:{
@@ -283,6 +345,26 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
 
     }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if( keyCode == KeyEvent.KEYCODE_BACK &&
+                event.getAction() == KeyEvent.ACTION_DOWN){
+            this.finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+//        if( hasFocus ){
+//            getShopInfo();
+//        }
+    }
+
     /**
      * 方法描述：加载店中店 logo
      * 方法名称：
@@ -291,39 +373,50 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
      * 创建时间: 2015/11/9
      * 作者:jxd
      */
-    private void loadLogo(){
-        String logoUrl = "http://news.xinhuanet.com/photo/2015-10/29/128371793_14460865923871n.jpg";
-
+    private void loadLogo( String logoUrl){
+        //String logoUrl = "http://news.xinhuanet.com/photo/2015-10/29/128371793_14460865923871n.jpg";
+        if(TextUtils.isEmpty( logoUrl )) return;
         VolleyUtil.getImageLoader(this)
                 .get(logoUrl, new ImageLoader.ImageListener() {
                     @Override
                     public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
                         if (imageContainer != null && imageContainer.getBitmap() != null) {
                             logo.setImageBitmap(imageContainer.getBitmap());
+                            showBarCode(SisConstant.SHOPINFO.getIndexUrl(), ivBarcode);
                         }
                     }
 
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        ToastUtils.showShortToast( GoodManageActivity.this, "加载Logo失败");
+                        ToastUtils.showShortToast(GoodManageActivity.this, "加载Logo失败");
                     }
                 });
     }
 
-    protected  void showBarCode(final String context , ImageView iv , final int width , final int height) {
+    protected  void showBarCode(final String context , ImageView iv ) {
+        if( context==null ){
+            ToastUtils.showLongToast(GoodManageActivity.this,"内容空");
+            return;
+        }
         if( barCode!=null ) {
             iv.setImageBitmap(barCode);
             return;
         }
 
-        final Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+        int barcodeW = Constants.SCREEN_WIDTH * 80/100;
+        int barcodeH = Constants.SCREEN_HEIGHT * 80/100;
+        if( barcodeW<barcodeH) {barcodeH = barcodeW;}
+        final int bw = barcodeW;
+        final int bh=barcodeH;
+
+        final Bitmap logobmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
         final String filePath = getFileRoot(this) + File.separator + "qr_" + System.currentTimeMillis() + ".jpg";
         //二维码图片较大时，生成图片、保存文件的时间可能较长，因此放在新线程中
         new Thread(){
             @Override
             public void run() {
                 try {
-                    barCode = encodeAsBitmap(context, BarcodeFormat.QR_CODE, width, height , logo , filePath );
+                    barCode = encodeAsBitmap(context, BarcodeFormat.QR_CODE, bw, bh , logo , filePath );
                     if( barCode  == null){
                         Message msg= handler.obtainMessage(7000);
                         handler.sendMessage(msg);
@@ -339,13 +432,13 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
     }
 
     protected void showBarCode() {
-        if (popWin == null) {
-            popWin = new PopupWindow();
+        if (barcodePopWin == null) {
+            barcodePopWin = new PopupWindow();
 
             LayoutInflater inflater = LayoutInflater.from(this);
             View rootView = inflater.inflate(R.layout.sis_barcode,null);
-            popWin.setContentView(rootView);
-            popWin.setOnDismissListener(new PoponDismissListener( this));
+            barcodePopWin.setContentView(rootView);
+            barcodePopWin.setOnDismissListener(new PoponDismissListener( this));
 
             ImageView iv = (ImageView)rootView.findViewById(R.id.sis_barcode_pic);
 
@@ -353,7 +446,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popWin.dismiss();
+                    barcodePopWin.dismiss();
                 }
             });
 
@@ -367,21 +460,123 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             if( sw>sh) h =sh;
             //h = h +;
 
-            popWin.setWidth(sw );
-            popWin.setHeight( sh );
+            barcodePopWin.setWidth(sw );
+            barcodePopWin.setHeight( sh );
 
-            popWin.setOutsideTouchable(true);
-            popWin.setFocusable(true);
+            barcodePopWin.setOutsideTouchable(true);
+            barcodePopWin.setFocusable(true);
             ColorDrawable dw = new ColorDrawable(0x00000000);
-            popWin.setBackgroundDrawable(dw);
+            barcodePopWin.setBackgroundDrawable(dw);
 
-            //showBarCode("http://www.baidu.com", iv, barcodeW, barcodeH);
             iv.setImageBitmap( barCode );
+
+            barcodePopWin.getContentView().findViewById(R.id.sis_barcode_share_wx).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShareModel model =new ShareModel();
+                    model.setTitle( SisConstant.SHOPINFO.getShareTitle() );
+                    model.setText(SisConstant.SHOPINFO.getShareTitle());
+                    model.setImageUrl(SisConstant.SHOPINFO.getImgUrl());
+                    model.setUrl( SisConstant.SHOPINFO.getIndexUrl() );
+                    wx(GoodManageActivity.this, model , ShareSDK.getPlatform( Wechat.NAME ));
+                }
+            });
+            barcodePopWin.getContentView().findViewById(R.id.sis_barcode_share_wxpyq).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShareModel model =new ShareModel();
+                    model.setTitle( SisConstant.SHOPINFO.getShareTitle() );
+                    model.setText(SisConstant.SHOPINFO.getShareTitle());
+                    model.setImageUrl(SisConstant.SHOPINFO.getImgUrl());
+                    model.setUrl( SisConstant.SHOPINFO.getIndexUrl() );
+                    wx(GoodManageActivity.this , model , ShareSDK.getPlatform(WechatMoments.NAME) );
+                }
+            });
+            barcodePopWin.getContentView().findViewById(R.id.sis_barcode_share_qqzone).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShareModel model =new ShareModel();
+                    model.setTitle( SisConstant.SHOPINFO.getShareTitle() );
+                    model.setText(SisConstant.SHOPINFO.getShareTitle());
+                    model.setImageUrl(SisConstant.SHOPINFO.getImgUrl());
+                    model.setUrl( SisConstant.SHOPINFO.getIndexUrl() );
+                    qqzone(GoodManageActivity.this, model);
+                }
+            });
+
         }
-        if( popWin.isShowing()==false ) {
+        if( barcodePopWin.isShowing()==false ) {
             WindowUtils.backgroundAlpha(this, 0.7f);
-            popWin.showAtLocation(ivBarcode, Gravity.CENTER, 0, 0);
+            barcodePopWin.showAtLocation(ivBarcode, Gravity.CENTER, 0, 0);
         }
+    }
+
+    protected void qqzone( final Context context , ShareModel model ){
+        Platform.ShareParams sp = new Platform.ShareParams ();
+        sp.setTitle ( model.getTitle() );
+        sp.setTitleUrl(model.getUrl()); // 标题的超链接
+        sp.setText(model.getText());
+        sp.setImageUrl ( model.getImageUrl ( ) );
+        Platform qzone = ShareSDK.getPlatform(context, QZone.NAME);
+        qzone.setPlatformActionListener(new PlatformActionListener() {
+            @Override
+            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+                ToastUtils.showShortToast(context , "QQ空间分享成功");
+            }
+
+            @Override
+            public void onError(Platform platform, int i, Throwable throwable) {
+                ToastUtils.showShortToast(context , "QQ空间分享失败");
+            }
+
+            @Override
+            public void onCancel(Platform platform, int i) {
+                ToastUtils.showShortToast(context , "取消QQ空间分享");
+            }
+        }); // 设置分享事件回调 //
+        // 执行图文分享
+        qzone.share(sp);
+    }
+
+    protected void wx(final  Context context , ShareModel model , Platform platform){
+        //Platform wx = ShareSDK.getPlatform( Wechat.NAME );
+        Platform.ShareParams sp = new Platform.ShareParams ();
+        sp.setShareType(Platform.SHARE_WEBPAGE);
+        sp.setTitle(model.getText());
+        sp.setText(model.getText());
+        sp.setUrl(model.getUrl());
+        sp.setImageUrl(model.getImageUrl());
+        platform.setPlatformActionListener(new PlatformActionListener() {
+            @Override
+            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+                String msg = "";
+                if( platform.getName().equals(Wechat.NAME) ) {
+                    ToastUtils.showShortToast(context, "微信分享成功");
+                }else if( platform.getName().equals(WechatMoments.NAME)){
+                    ToastUtils.showShortToast(context, "微信朋友圈分享成功");
+                }
+            }
+
+            @Override
+            public void onError(Platform platform, int i, Throwable throwable) {
+                if( platform.getName().equals(Wechat.NAME)) {
+                    ToastUtils.showShortToast(context, "微信分享失败");
+                }else if( platform.getName().equals(WechatMoments.NAME)){
+                    ToastUtils.showShortToast(context, "微信朋友圈分享失败");
+                }
+            }
+
+            @Override
+            public void onCancel(Platform platform, int i) {
+                if( platform.getName().equals(Wechat.NAME) ) {
+                    ToastUtils.showShortToast(context, "取消微信分享");
+                }else if( platform.getName().equals(WechatMoments.NAME)){
+                    ToastUtils.showShortToast(context, "取消微信朋友圈分享");
+                }
+            }
+        });
+        platform.share(sp);
+
     }
 
     /**
@@ -515,16 +710,17 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         return bitmap;
     }
 
-
     public class Goodmanageadapter extends BaseAdapter {
         private Context mContext;
         private List<SisGoodsModel> datas;
         private boolean[] tags;
+        private int tabtype =0;//0:代表 出售中，1：代表 已下架
 
-        public Goodmanageadapter(Context mContext, List<SisGoodsModel> datas) {
+        public Goodmanageadapter(Context mContext, List<SisGoodsModel> datas , int tabtype ) {
             this.mContext = mContext;
             this.datas = datas;
             tags = new boolean[datas.size()];
+            this.tabtype = tabtype;
         }
 
         @Override
@@ -552,22 +748,39 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             NetworkImageViewCircle iv = (NetworkImageViewCircle)ViewHolderUtil.get(convertView,R.id.goods_item_picture);
             BitmapLoader.create().displayUrl(mContext, iv, datas.get(position).getImgUrl(), R.drawable.sis_pic, R.drawable.sis_pic);
 
+            RelativeLayout llmain = ViewHolderUtil.get(convertView,R.id.goodmange_item_ll);
+            llmain.setTag( datas.get( position ) );
+
+            llmain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //ToastUtils.showLongToast(mContext , "goods");
+                    SisGoodsModel model = (SisGoodsModel)v.getTag();
+                    Intent intent =new Intent();
+                    intent.setClass(mContext, GoodsDetailActivity.class);
+                    intent.putExtra("url", "http://www.sina.com.cn");
+                    intent.putExtra("goodsid", model.getId() );
+                    intent.putExtra("state", tabtype );
+                    mContext.startActivity(intent);
+                }
+            });
+
             TextView txtName = ViewHolderUtil.get(convertView, R.id.goods_item_goodsName);
-            txtName.setText( datas.get(position).getName() );
+            txtName.setText(datas.get(position).getName());
             TextView txtamount = ViewHolderUtil.get(convertView, R.id.goods_item_amount);
-            txtamount.setText( datas.get(position).getStock() );
+            txtamount.setText( "销售量:" + String.valueOf(datas.get(position).getStock()));
             TextView txtprofit = ViewHolderUtil.get(convertView, R.id.goods_item_profit);
-            txtprofit.setText( String.valueOf(  datas.get(position).getProfit() ));
+            txtprofit.setText("利润:￥"+String.valueOf(datas.get(position).getProfit()));
             final Button goods_item_btn = ViewHolderUtil.get(convertView, R.id.goods_item_btn);
-            goods_item_btn.setTag( datas.get(position) );
+            goods_item_btn.setTag(datas.get(position));
 
             goods_item_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if( popWin ==null ){
+                    if (popWin == null) {
                         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
                         View prView = layoutInflater.inflate(R.layout.layout_good_manage_popwindow, null);//自定义的布局文件
-                        popWin  =new PopupWindow(prView,200,300);
+                        popWin = new PopupWindow(prView, 200, 300);
                         ColorDrawable cd = new ColorDrawable(0x00000000);
                         popWin.setBackgroundDrawable(cd);
                         //popWin.setFocusable(true); //设置PopupWindow可获得焦点
@@ -575,34 +788,41 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                         popWin.setOutsideTouchable(true);
                     }
 
+                    TextView tvCvText = (TextView) popWin.getContentView().findViewById(R.id.sis_goods_menu_updown_text);
+                    tvCvText.setText( tabtype ==0 ? "下架":"上架" );
+
                     popWin.getContentView()
                             .findViewById(R.id.sis_goods_menu_share)
                             .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            popWin.dismiss();
-                            String goods =  (String)goods_item_btn.getTag();
-                            ToastUtils.showLongToast(GoodManageActivity.this , goods);
-                            share(goods, goods, "http://www.baidu.com", "http://www.baidu.com");
-                        }
-                    });
+                                @Override
+                                public void onClick(View v) {
+                                    popWin.dismiss();
+                                    SisGoodsModel model = (SisGoodsModel) goods_item_btn.getTag();
+                                    ToastUtils.showLongToast(GoodManageActivity.this, model.getName());
+                                    share(model.getName(), model.getName(), model.getImgUrl(), model.getImgUrl());//todo
+                                }
+                            });
 
                     popWin.getContentView().findViewById(R.id.sis_goods_menu_delete).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            SisGoodsModel model = (SisGoodsModel) goods_item_btn.getTag();
+                            operateGoods(model, 3);
                         }
                     });
                     popWin.getContentView().findViewById(R.id.sis_goods_menu_top).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            SisGoodsModel model = (SisGoodsModel) goods_item_btn.getTag();
+                            operateGoods(model, 2);
                         }
                     });
                     popWin.getContentView().findViewById(R.id.sis_goods_menu_updown).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            SisGoodsModel model = (SisGoodsModel) goods_item_btn.getTag();
+                            int state = tabtype == 0 ? 0: 1; //0:代表 下架 ，1代表 上架
+                            operateGoods(model, state );
                         }
                     });
                     popWin.showAsDropDown(v, -200, 10);
@@ -626,24 +846,86 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             sharePopWin.setPlatformActionListener(new PlatformActionListener() {
                 @Override
                 public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-
+                    if( platform.getName().equals(Wechat.NAME) ) {
+                        ToastUtils.showShortToast(application, "微信分享成功");
+                    }else if( platform.getName().equals(WechatMoments.NAME)){
+                        ToastUtils.showShortToast(application, "微信朋友圈分享成功");
+                    }else if( platform.getName().equals(QZone.NAME)){
+                        ToastUtils.showShortToast(application, "QQ空间分享成功");
+                    }
                 }
 
                 @Override
                 public void onError(Platform platform, int i, Throwable throwable) {
-
+                    ToastUtils.showShortToast(application, "分享失败");
                 }
 
                 @Override
                 public void onCancel(Platform platform, int i) {
-
+                    ToastUtils.showLongToast(application,"取消分享");
                 }
             });
             sharePopWin.setOnDismissListener(new PoponDismissListener(GoodManageActivity.this));
-            sharePopWin.showAtLocation( GoodManageActivity.this.getWindow().getDecorView() , Gravity.BOTTOM| Gravity.CENTER_HORIZONTAL ,0,0 );
+            sharePopWin.showAtLocation(GoodManageActivity.this.getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
         }
 
+        protected void operateGoods(SisGoodsModel model , int operate){
+            popWin.dismiss();
+
+            if( progressPopupWindow==null){
+                progressPopupWindow= new ProgressPopupWindow(application , (GoodManageActivity) mContext , getWindowManager() );
+            }
+            progressPopupWindow.showProgress("请稍等...");
+            progressPopupWindow.showAtLocation( getWindow().getDecorView() , Gravity.CENTER , 0 ,0 );
+
+            String url = SisConstant.INTERFACE_operGoods;
+            AuthParamUtils authParamUtils =new AuthParamUtils( (BaseApplication)mContext.getApplicationContext() ,
+                    System.currentTimeMillis() , url , mContext );
+            Map para = new HashMap();
+            para.put("userid", ((BaseApplication) mContext.getApplicationContext()).readMemberId());
+            para.put("goodsid", model.getId());
+            para.put("opertype", operate);
+
+            Map maps = authParamUtils.obtainParams( para );
+
+            GsonRequest<BaseModel> request = new GsonRequest<BaseModel>(
+                    Request.Method.POST, url , BaseModel.class , null , maps ,
+                    new MyOperateListener ( (GoodManageActivity) mContext , model ,  operate ),
+                    new MyGoodsErrorListener( (GoodManageActivity) mContext  )
+            );
+            VolleyUtil.getRequestQueue().add(request);
+        }
+    }
+
+    static class MyOperateListener implements Response.Listener<BaseModel>{
+        WeakReference<GoodManageActivity> ref;
+        SisGoodsModel model;
+        int operate;
+        public MyOperateListener( GoodManageActivity act , SisGoodsModel model , int operate){
+            this.ref = new WeakReference<GoodManageActivity>(act);
+            this.model = model;
+            this.operate = operate;
+        }
+
+        @Override
+        public void onResponse(BaseModel baseModel) {
+            if( ref.get()==null) return;
+            if( ref.get().progressPopupWindow!=null ){
+                ref.get().progressPopupWindow.dismissView();
+            }
+
+            if( !validateData( ref.get() , baseModel ) ){
+                return;
+            }
+
+            ref.get().handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    ref.get().listview.setRefreshing(true);
+                }
+            });
+        }
     }
 
     protected void getGoods(boolean selected , int pageno){
@@ -655,7 +937,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         }
 
         String url = SisConstant.INTERFACE_searchSisGoodsList;
-        url += "?userid=" + application.readMemberId();
+        url += "?userid=" +  application.readMemberId();
         url +="&selected="+selected;
         url +="&key=";
         url +="&pageno="+ String.valueOf( pageno );
@@ -681,6 +963,11 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             if( ref.get()==null)return;
+
+            if( ref.get().progressPopupWindow!=null ){
+                ref.get().progressPopupWindow.dismissView();
+            }
+
             ref.get().listview.onRefreshComplete();
             ToastUtils.showLongToast(ref.get(),"error");
         }
@@ -698,32 +985,44 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             if( ref.get()==null) return;
             ref.get().listview.onRefreshComplete();
 
-           if(!validateData(appSisGoodsModel)){
+           if(!validateData( ref.get() , appSisGoodsModel)){
                return;
            }
 
             if(ref.get().salestate && ref.get().isRefresh ){
-                ref.get().pageno1 = appSisGoodsModel.getResultData().getrPageNo();
+                ref.get().pageno1 = appSisGoodsModel.getResultData().getRpageno();
                 ref.get().list1.clear();
                 if( appSisGoodsModel.getResultData().getList()!=null ) {
                     ref.get().list1.addAll(appSisGoodsModel.getResultData().getList());
                 }
                 ref.get().listview.setAdapter(ref.get().adapter1);
             }else if( ref.get().salestate && !ref.get().isRefresh ){
-                ref.get().pageno1 = appSisGoodsModel.getResultData().getrPageNo();
+                if( appSisGoodsModel.getResultData().getList() ==null ||
+                        appSisGoodsModel.getResultData().getList().size()==0){
+                    ToastUtils.showShortToast(ref.get(),"已经没有数据了。");
+                    return;
+                }
+
+                ref.get().pageno1 = appSisGoodsModel.getResultData().getRpageno();
                 if( appSisGoodsModel.getResultData().getList() !=null ){
                     ref.get().list1.addAll( appSisGoodsModel.getResultData().getList());
                 }
                 ref.get().adapter1.notifyDataSetChanged();
             }else if( !ref.get().salestate && ref.get().isRefresh ){
-                ref.get().pageno2 = appSisGoodsModel.getResultData().getrPageNo();
+                ref.get().pageno2 = appSisGoodsModel.getResultData().getRpageno();
                 ref.get().list2.clear();
                 if( appSisGoodsModel.getResultData().getList()!=null ) {
                     ref.get().list2.addAll(appSisGoodsModel.getResultData().getList());
                 }
                 ref.get().listview.setAdapter(ref.get().adapter2);
             }else if( !ref.get().salestate && !ref.get().isRefresh ){
-                ref.get().pageno2 = appSisGoodsModel.getResultData().getrPageNo();
+                if( appSisGoodsModel.getResultData().getList() ==null ||
+                        appSisGoodsModel.getResultData().getList().size()==0){
+                    ToastUtils.showShortToast(ref.get(),"已经没有数据了。");
+                    return;
+                }
+
+                ref.get().pageno2 = appSisGoodsModel.getResultData().getRpageno();
                 if( appSisGoodsModel.getResultData().getList() !=null ){
                     ref.get().list2.addAll( appSisGoodsModel.getResultData().getList());
                 }
@@ -733,7 +1032,159 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             String txt =  "出售中("+ String.valueOf( ref.get().list1.size() ) +")";
             ref.get().salestatus_sale.setText( txt );
             txt = "已下架("+ String.valueOf( ref.get().list2.size() ) + ")";
-            ref.get().salestatus_remove.setText( txt );
+            ref.get().salestatus_remove.setText(txt);
+        }
+
+
+    }
+
+    /**
+     * 方法描述：
+     * 方法名称：
+     * 参数：
+     * 返回值：
+     * 创建时间: 2015/10/15
+     * 作者: Administrator
+     */
+    protected static boolean validateData( Context context , BaseModel data){
+
+        if(null == data){
+            ToastUtils.showLongToast( context ,"请求失败");
+            return false;
+        }else if(data.getSystemResultCode()!=1){
+            ToastUtils.showLongToast( context , data.getSystemResultDescription());
+            return false;
+        }else if( data.getResultCode() != 1){
+            ToastUtils.showLongToast( context , data.getResultDescription());
+            return false;
+        }
+        return true;
+    }
+
+
+    protected void showOpenShopWindow(){
+        if( msgPopWindow==null ) {
+            msgPopWindow = new MsgPopWindow(GoodManageActivity.this, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openShop();
+                }
+            }, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GoodManageActivity.this.finish();
+                }
+            }, "提示", "你是否开通店中店功能?", true);
+        }
+        msgPopWindow.showAtLocation( getWindow().getDecorView() , Gravity.CENTER ,0,0 );
+    }
+
+    protected void loadGoods(){
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (GoodManageActivity.this.isFinishing()) return;
+                isRefresh = true;
+                salestate = true;
+                listview.setRefreshing(true);
+            }
+        }, 800);
+    }
+
+    protected void getShopInfo(){
+        if( SisConstant.SHOPINFO !=null ){
+            shopName.setText(SisConstant.SHOPINFO.getTitle());
+            loadLogo(SisConstant.SHOPINFO.getImgUrl());
+            //showBarCode(SisConstant.SHOPINFO.getIndexUrl(), ivBarcode);
+
+            loadGoods();
+            return;
+        }
+
+        String url = SisConstant.INTERFACE_getSisInfo;
+        url += "?userid=" + application.readMemberId();
+        AuthParamUtils authParamUtils = new AuthParamUtils(application , System.currentTimeMillis(), url , GoodManageActivity.this);
+        url = authParamUtils.obtainUrlName();
+        GsonRequest<AppSisBaseinfoModel> request=new GsonRequest<AppSisBaseinfoModel>(
+                Request.Method.GET ,
+                url ,
+                AppSisBaseinfoModel.class,
+                null,
+                new MySisInfoListener(this),
+                new MySisInfoErrorListener(this)
+        );
+
+//        if( progressPopupWindow ==null){
+//            progressPopupWindow= new ProgressPopupWindow(application, GoodManageActivity.this, getWindowManager());
+//        }
+//        progressPopupWindow.showProgress("正在获取店铺信息,请稍等...");
+//        progressPopupWindow.showAtLocation( getWindow().getDecorView() , Gravity.CENTER , 0 , 0);
+
+        if( progressdlg ==null){
+            progressdlg = new ProgressDialog(this);
+            progressdlg.setCanceledOnTouchOutside(false);
+        }
+        progressdlg.setMessage("正在获取店铺信息,请稍等...");
+        progressdlg.show();
+
+        VolleyUtil.getRequestQueue().add(request);
+    }
+
+    static class MySisInfoErrorListener implements Response.ErrorListener{
+        WeakReference<GoodManageActivity> ref;
+        public MySisInfoErrorListener(GoodManageActivity act){
+            ref = new WeakReference<>(act);
+        }
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            if( ref.get()==null)return;
+
+            if(ref.get().progressPopupWindow!=null){
+                ref.get().progressPopupWindow.dismissView();
+            }
+
+            if( ref.get().progressdlg!=null){
+                ref.get().progressdlg.dismiss();
+            }
+
+            ToastUtils.showLongToast(ref.get(),"error");
+        }
+    }
+
+    static class  MySisInfoListener implements Response.Listener<AppSisBaseinfoModel>{
+        WeakReference<GoodManageActivity> ref;
+
+        public MySisInfoListener(GoodManageActivity act){
+            ref=new WeakReference<GoodManageActivity>(act);
+        }
+
+        @Override
+        public void onResponse(AppSisBaseinfoModel appSisBaseinfoModel) {
+
+
+            if( ref.get()==null) return;
+            if(ref.get().progressPopupWindow!=null){
+                ref.get().progressPopupWindow.dismissView();
+            }
+
+            if( ref.get().progressdlg!=null){
+                ref.get().progressdlg.dismiss();
+            }
+
+            if(!validateData(appSisBaseinfoModel)){
+                return;
+            }
+
+            if( appSisBaseinfoModel.getResultData().getData().isEnableSis() ==false ){
+                ref.get().showOpenShopWindow();
+                return;
+            }
+
+            SisConstant.SHOPINFO = appSisBaseinfoModel.getResultData().getData();
+            ref.get().shopName.setText(SisConstant.SHOPINFO.getTitle());
+            ref.get().loadLogo(SisConstant.SHOPINFO.getImgUrl());
+            //ref.get().showBarCode(SisConstant.SHOPINFO.getIndexUrl(), ref.get().ivBarcode);
+            ref.get().loadGoods();
         }
 
         /**
@@ -745,7 +1196,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
          * 作者: Administrator
          */
         protected boolean validateData(BaseModel data){
-
             if(null == data){
                 ToastUtils.showLongToast( ref.get() ,"请求失败");
                 return false;
@@ -761,18 +1211,39 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
 
     }
 
-    protected void showOpenShopWindow(){
-        MsgPopWindow msgPopWindow = new MsgPopWindow(GoodManageActivity.this, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    /**
+    * 方法描述：
+    * 方法名称：
+    * 参数：
+    * 返回值：
+    * 创建时间: 2015/11/18
+    * 作者:
+    */
+    protected void openShop(){
+        if( msgPopWindow!=null ){
+            msgPopWindow.dismiss();
+        }
 
-            }
-        }, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GoodManageActivity.this.finish();
-            }
-        },"提示","你是否开通店中店功能?",true);
+        if( progressPopupWindow==null){
+            progressPopupWindow=new ProgressPopupWindow(application, GoodManageActivity.this,getWindowManager());
+        }
+        progressPopupWindow.showProgress("正在开启,请稍等...");
+        progressPopupWindow.showAtLocation(getWindow().getDecorView(),Gravity.CENTER,0,0);
+
+        String url = SisConstant.INTERFACE_open;
+        url += "?userid=" + application.readMemberId();
+        AuthParamUtils authParamUtils = new AuthParamUtils(application , System.currentTimeMillis(), url , GoodManageActivity.this);
+        url = authParamUtils.obtainUrlName();
+        GsonRequest<AppSisBaseinfoModel> request=new GsonRequest<AppSisBaseinfoModel>(
+                Request.Method.GET ,
+                url ,
+                AppSisBaseinfoModel.class,
+                null,
+                new MySisInfoListener(this),
+                new MySisInfoErrorListener(this)
+        );
+        VolleyUtil.getRequestQueue().add(request);
     }
+
 
 }

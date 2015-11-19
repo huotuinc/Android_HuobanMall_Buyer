@@ -1,6 +1,7 @@
 package com.huotu.partnermall.ui.sis;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -86,15 +87,16 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
     boolean isRefreshing=true;
     Handler handler;
     ProgressPopupWindow progress;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sis_activity_add_goods);
 
-        progress = new ProgressPopupWindow(this, this, getWindowManager());
-        handler = new Handler(getMainLooper());
         app = (BaseApplication)this.getApplication();
+        //progress = new ProgressPopupWindow(app, this, getWindowManager());
+        handler = new Handler(getMainLooper());
         rlcd = (RelativeLayout)findViewById(R.id.sis_addgoods_cd);
         rlcd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) this.getApplication()).obtainMainColor()));
         rlSearchBar =(RelativeLayout)findViewById(R.id.sis_addgoods_searchBar);
@@ -134,7 +136,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                             PreferenceHelper.writeString(AddGoodsActivity.this, PRE_SEARCHKEY_FILE, PRE_SEARCHKEY_NAME, temp);
 
                             pageno = 0;
-                            isRefreshing =true;
+                            isRefreshing = true;
                             goodListView.setRefreshing(true);
                         }
                     }
@@ -148,22 +150,24 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         loadSearchKeys();
 
         goodsList=new ArrayList<>();
+        goodsAdapter =new GoodsAdapter(AddGoodsActivity.this, goodsList);
         llClass1=(LinearLayout)findViewById(R.id.sis_addgoods_class1);
         llClass2=(GridView)findViewById(R.id.sis_addgoods_class2);
         goodListView= (PullToRefreshListView)findViewById(R.id.sis_addgoods_listview);
         goodListView.setMode(PullToRefreshBase.Mode.BOTH);
+        goodListView.setAdapter(goodsAdapter);
         goodListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 pageno = 0;
                 isRefreshing = true;
-                loadGoods( classid , key , pageno );
+                loadGoods(classid, key, pageno);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isRefreshing = false;
-                loadGoods( classid , key , pageno );
+                loadGoods(classid, key, pageno);
             }
         });
 
@@ -243,16 +247,33 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         etSearchBar.setDropDownWidth(350);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        KJLoger.debug( "onWindowFocusChanged" );
+
+    }
+
     protected void getClassData(){
+        if( SisConstant.CATEGORY !=null ){
+            loadClass1(SisConstant.CATEGORY);
+            return;
+        }
+
         if(!Util.isConnect(this)){
             ToastUtils.showLongToast(this,"无网络");
             return;
         }
-        progress.showProgress("正在获取数据，请稍等...");
-        progress.showAtLocation(getWindow().getDecorView() , Gravity.CENTER , 0 , 0);
+        if( progressDialog ==null){
+            progressDialog=new ProgressDialog(AddGoodsActivity.this);
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.setMessage("正在获取数据，请稍等...");
+        progressDialog.show();
 
         String url = SisConstant.INTERFACE_getCategoryList;
-        String userid = app.readMerchantId();
+        String userid = app.readMemberId();
         url += "?userid="+ userid;
         AuthParamUtils paramUtils =new AuthParamUtils( app , System.currentTimeMillis() , url , this);
         url = paramUtils.obtainUrlName();
@@ -268,6 +289,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                         );
         VolleyUtil.getRequestQueue().add(request);
     }
+
 
     protected void loadClass1( List<SisSortModel> data ){
         llClass1.removeAllViews();
@@ -286,7 +308,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
                     v.findViewById(R.id.sis_goods_class_footline).setBackgroundColor(Color.BLUE);
                     ((TextView)v.findViewById(R.id.sis_goods_class_name)).setTextColor(Color.BLUE);
-                    loadClass2( (SisSortModel)v.getTag());
+                    loadClass2((SisSortModel) v.getTag());
 
                     int scrollX = scrollView.getScrollX();
                     System.out.println("scrollX----->"+scrollX);
@@ -295,10 +317,14 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                     int leftScreen = left-scrollX;
                     scrollView.smoothScrollBy((leftScreen - helfwid ), 0);
 
+                    SisSortModel model = (SisSortModel)v.getTag();
+                    classid = model.getSisId();
+                    goodListView.setRefreshing(true);
+                    //loadGoods( model.getId() , key , pageno );
                 }
             });
             TextView tvClass = (TextView)v.findViewById(R.id.sis_goods_class_name);
-            tvClass.setText( item.getName() );
+            tvClass.setText( item.getSisName() );
             v.setTag( item );
             llClass1.addView(v);
         }
@@ -317,7 +343,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
     protected void loadGoods( long classid ,String key , int pageNo ){
 
         String url = SisConstant.INTERFACE_searchGoodsList;
-        url ="?userid="+ app.readMemberId();
+        url +="?userid="+ app.readMemberId();
         url +="&categoryid="+ classid;
         url +="&key="+ key;
         url +="&pageno=" + pageNo;
@@ -350,15 +376,17 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
             if( ref.get().isRefreshing){
                 ref.get().goodsList.clear();
+                ref.get().pageno = appSisGoodsModel.getResultData().getRpageno();
                 if( appSisGoodsModel.getResultData().getList()!=null ) {
                     ref.get().goodsList.addAll(appSisGoodsModel.getResultData().getList());
                 }
-                ref.get().adapter.notifyDataSetChanged();
+                ref.get().goodsAdapter.notifyDataSetChanged();
             }else{
+                ref.get().pageno = appSisGoodsModel.getResultData().getRpageno();
                 if( appSisGoodsModel.getResultData().getList()!=null ) {
                     ref.get().goodsList.addAll(appSisGoodsModel.getResultData().getList());
                 }
-                ref.get().adapter.notifyDataSetChanged();
+                ref.get().goodsAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -391,6 +419,9 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             if( ref.get().progress !=null){
                 ref.get().progress.dismissView();
             }
+            if( ref.get().progressDialog !=null){
+                ref.get().progressDialog.dismiss();
+            }
 
             if( ref.get().categorys==null ){
                 ref.get().categorys=new ArrayList<>();
@@ -401,7 +432,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             SisConstant.CATEGORY = appSisSortModel.getResultData().getList();
             ref.get().loadClass1(ref.get().categorys);
 
-            ref.get().classid = appSisSortModel.getResultData().getList().get(0).getId();
+            ref.get().classid = appSisSortModel.getResultData().getList().get(0).getSisId();
             ref.get().pageno=0;
             //ref.get().loadGoods( ref.get().classid , ref.get().key , ref.get().pageno );
             ref.get().handler.postDelayed(new Runnable() {
@@ -426,6 +457,9 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
             if( ref.get().progress !=null){
                 ref.get().progress.dismissView();
+            }
+            if( ref.get().progressDialog!=null){
+                ref.get().progressDialog.dismiss();
             }
             ToastUtils.showLongToast( ref.get() , "error" );
         }
@@ -552,11 +586,13 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             tvOperate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.showLongToast(context, "online");
+                    //ToastUtils.showLongToast(context, "online");
                     SisGoodsModel model =(SisGoodsModel) v.getTag();
                     online( model );
                 }
             });
+
+            tvOperate.setVisibility( list.get(position).isOnSale() ? View.GONE : View.VISIBLE );
 
             return convertView;
         }
@@ -566,17 +602,19 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             AuthParamUtils authParamUtils =new AuthParamUtils( app ,
                     System.currentTimeMillis() , url , context );
             Map para = new HashMap();
-            para.put("userId", app.readMemberId());
-            para.put("goodsId", model.getId());
-            para.put("operation", 1);
+            para.put("userid", app.readMemberId());
+            para.put("goodsid", model.getId());
+            para.put("opertype", 1);
 
             Map maps = authParamUtils.obtainParams( para );
 
-//            GsonRequest<BaseModel> request = new GsonRequest<BaseModel>(
-//                    Request.Method.POST, url , null , maps , );
-//            VolleyUtil.getRequestQueue().add(request);
+            GsonRequest<BaseModel> request = new GsonRequest<BaseModel>(
+                    Request.Method.POST, url , BaseModel.class , null , maps ,
+                    new MyOnSaleListener(model , this , (AddGoodsActivity) context),
+                    new MyOnSaleErrorListener( (AddGoodsActivity)context )
+            );
+            VolleyUtil.getRequestQueue().add(request);
         }
-
     }
 
     protected boolean validateData(BaseModel data){
@@ -594,4 +632,38 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         return true;
     }
 
+    static class MyOnSaleListener implements Response.Listener<BaseModel>{
+        SisGoodsModel model;
+        BaseAdapter adapter;
+        WeakReference<AddGoodsActivity> ref;
+
+        public MyOnSaleListener(SisGoodsModel model , BaseAdapter adapter , AddGoodsActivity act){
+            this.model = model;
+            this.adapter=adapter;
+            ref=new WeakReference<>(act);
+        }
+        @Override
+        public void onResponse(BaseModel baseModel) {
+            if( ref.get()==null )return;
+
+            ToastUtils.showLongToast( ref.get() , "onsale success");
+            this.model.setIsOnSale(true);
+            this.adapter.notifyDataSetChanged();
+            ref.get().setResult( RESULT_OK );
+        }
+    }
+
+    static class MyOnSaleErrorListener implements Response.ErrorListener{
+        WeakReference<AddGoodsActivity> ref;
+        public MyOnSaleErrorListener(AddGoodsActivity act){
+            ref = new WeakReference<AddGoodsActivity>(act);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            if( ref.get()==null)return;
+
+            ToastUtils.showLongToast(ref.get() , "error");
+        }
+    }
 }

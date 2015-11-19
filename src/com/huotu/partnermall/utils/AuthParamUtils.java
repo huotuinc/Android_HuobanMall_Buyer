@@ -250,7 +250,7 @@ class AuthParamUtils {
                         paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
                     }
                     else if ( 1 == values.length ) {
-                        paramMap.put ( values[ 0 ], null );
+                        paramMap.put ( values[ 0 ], "" );
                     }
                 }
             }
