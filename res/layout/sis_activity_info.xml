@@ -108,7 +108,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="小店"
+                    android:text=""
                     android:textSize="16sp"
                     android:textColor="@color/black"
                     />
@@ -122,10 +122,9 @@
             </LinearLayout>
 
             <!-- 店铺名称end -->
-            <!-- 店铺模块选择-->
-
+            <!-- 店铺描述 -->
             <LinearLayout
-                android:id="@+id/shopdescriptionLabel"
+                android:id="@+id/shopDescriptionLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -136,7 +135,156 @@
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:layout_marginTop="13dp"
+                android:background="@drawable/info_menu"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="店铺描述"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <TextView
+                    android:id="@+id/shopDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <ImageView
+                    android:layout_width="@dimen/info_arrow_width"
+                    android:layout_height="@dimen/info_arrow_height"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/hsjt"
+                    />
+            </LinearLayout>
+            <!-- 店铺描述end -->
+
+            <!-- 分享标题 -->
+            <LinearLayout
+                android:id="@+id/shareTitleLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:onClick="onClick"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/info_menu"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="分享标题"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <TextView
+                    android:id="@+id/shareTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <ImageView
+                    android:layout_width="@dimen/info_arrow_width"
+                    android:layout_height="@dimen/info_arrow_height"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/hsjt"
+                    />
+            </LinearLayout>
+            <!-- 分享标题end -->
+            <!-- 分享描述 -->
+            <LinearLayout
+                android:id="@+id/shareDescriptionLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:onClick="onClick"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/info_menu"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="分享描述"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <TextView
+                    android:id="@+id/shareDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <ImageView
+                    android:layout_width="@dimen/info_arrow_width"
+                    android:layout_height="@dimen/info_arrow_height"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/hsjt"
+                    />
+            </LinearLayout>
+            <!-- 分享描述end -->
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@drawable/line_gray_shape" />
+
+            <!-- 店铺模块选择-->
+
+            <LinearLayout
+                android:id="@+id/shopTemplateLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:onClick="onClick"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="0dp"
                 android:background="@drawable/info_menu"
                 >
 
@@ -169,6 +317,11 @@
             </LinearLayout>
 
             <!-- 店铺模块选择end -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@drawable/line_gray_shape" />
+
 </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>

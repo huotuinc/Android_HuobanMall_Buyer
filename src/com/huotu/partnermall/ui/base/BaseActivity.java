@@ -10,15 +10,19 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import com.huotu.partnermall.AppManager;
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.utils.Util;
 
 public abstract class BaseActivity extends Activity {
 
     public
     BaseApplication application;
     protected Handler mHandler = null;
+    protected static final String NULL_NETWORK = "无网络或当前网络不可用!";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,31 +64,39 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
-        super.onPause ( );
+        super.onPause();
     }
 
     @Override
     protected void onRestart() {
         // TODO Auto-generated method stub
-        super.onRestart ( );
+        super.onRestart();
     }
 
     @Override
     protected void onResume() {
         // TODO Auto-generated method stub
-        super.onResume ( );
+        super.onResume();
     }
 
     @Override
     protected void onStart() {
         // TODO Auto-generated method stub
-        super.onStart ( );
+        super.onStart();
     }
 
     @Override
     protected void onStop() {
         // TODO Auto-generated method stub
-        super.onStop ( );
+        super.onStop();
+    }
+    protected boolean canConnect(){
+        //网络访问前先检测网络是否可用
+        if(!Util.isConnect(BaseActivity.this)){
+            ToastUtils.showLongToast(this, NULL_NETWORK);
+            return false;
+        }
+        return true;
     }
 
     /**

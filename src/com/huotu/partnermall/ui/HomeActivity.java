@@ -5,7 +5,6 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,45 +15,33 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
 import com.huotu.partnermall.AppManager;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
-import com.huotu.partnermall.model.AccountModel;
-import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
+import com.huotu.partnermall.ui.sis.GoodManageActivity;
 import com.huotu.partnermall.ui.sis.SisHomeActivity;
-import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
@@ -66,7 +53,6 @@ import com.huotu.partnermall.widgets.CircleImageDrawable;
 import com.huotu.partnermall.widgets.CropperView;
 import com.huotu.partnermall.widgets.KJSubWebView;
 import com.huotu.partnermall.widgets.KJWebView;
-import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 import com.huotu.partnermall.widgets.PhotoSelectView;
 import com.huotu.partnermall.widgets.PopTimeView;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
@@ -74,15 +60,11 @@ import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import com.huotu.partnermall.widgets.UserInfoView;
 
-import org.json.JSONObject;
-
 import java.util.Calendar;
 import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.wechat.friends.Wechat;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                                           Handler.Callback,
@@ -202,8 +184,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    protected
-    void findViewById ( ) {
+    protected void findViewById() {
         //标题栏对象
         homeTitle = ( RelativeLayout ) this.findViewById ( R.id.titleLayout );
         //构建标题左侧图标，点击事件
@@ -1011,7 +992,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
 
     private void openSis(){
-        HomeActivity.this.startActivity( new Intent(HomeActivity.this, SisHomeActivity.class));
+        HomeActivity.this.startActivity( new Intent(HomeActivity.this, GoodManageActivity.class));
     }
 
 }

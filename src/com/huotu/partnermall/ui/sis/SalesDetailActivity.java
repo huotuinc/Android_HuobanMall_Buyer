@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -45,6 +47,7 @@ import java.util.Map;
  * 销售明细 界面
  */
 public class SalesDetailActivity extends FragmentActivity implements CompoundButton.OnCheckedChangeListener, AdapterView.OnItemClickListener,View.OnClickListener {
+    RelativeLayout rlCd;
 
     RelativeLayout header_bar;
 
@@ -74,6 +77,9 @@ public class SalesDetailActivity extends FragmentActivity implements CompoundBut
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sis_activity_sales_detail);
+
+        rlCd =(RelativeLayout)findViewById(R.id.sis_saledetail_cd);
+        rlCd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) SalesDetailActivity.this.getApplication()).obtainMainColor()));
 
         header_bar=(RelativeLayout)findViewById(R.id.sis_saledetail_header);
         header_bar.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) SalesDetailActivity.this.getApplication()).obtainMainColor()));
@@ -127,6 +133,25 @@ public class SalesDetailActivity extends FragmentActivity implements CompoundBut
         });
 
         firstSaleGoodData();
+
+        setImmerseLayout();
+    }
+
+    public void setImmerseLayout(){
+        if ( ((BaseApplication)this.getApplication()).isKITKAT ()) {
+            Window window = getWindow();
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+            int statusBarHeight;
+            int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen","android");
+            if (resourceId > 0) {
+                statusBarHeight = this.getResources().getDimensionPixelSize(resourceId);
+                rlCd.setPadding(0,statusBarHeight,0,0);
+                rlCd.getLayoutParams().height+=statusBarHeight;
+                rlCd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) this.getApplication()).obtainMainColor()) );
+            }
+        }
     }
 
     protected void getData_MX( OperateTypeEnum type  ){

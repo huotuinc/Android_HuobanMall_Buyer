@@ -1,10 +1,8 @@
 package com.huotu.partnermall.ui;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,13 +11,10 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,15 +22,12 @@ import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
-import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.model.PayGoodBean;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
-import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.ui.web.SubUrlFilterUtils;
-import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AliPayUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
@@ -108,8 +100,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
     }
 
     @Override
-    protected
-    void findViewById ( ) {
+    protected void findViewById() {
 
         homeTitle = ( RelativeLayout ) this.findViewById ( R.id.newtitleLayout );
         //web下拉组件刷新

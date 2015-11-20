@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,7 +22,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-
+import android.widget.TextView;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.zxing.BarcodeFormat;
@@ -30,23 +33,32 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.huotu.android.library.libcropper.MainActivity;
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
+import com.huotu.partnermall.ui.login.LoginActivity;
+import com.huotu.partnermall.utils.ActivityUtils;
+import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.CircleImageView;
 import com.huotu.partnermall.widgets.NetworkImageViewCircle;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
-public class SisHomeActivity extends Activity implements View.OnClickListener , Handler.Callback {
+public class SisHomeActivity extends Activity
+        implements View.OnClickListener , Handler.Callback , SwipeRefreshLayout.OnRefreshListener {
 
     Bitmap barCode;
     int screenW;
@@ -63,14 +75,17 @@ public class SisHomeActivity extends Activity implements View.OnClickListener , 
     RelativeLayout rlStatData;
     CircleImageView logo;
     RelativeLayout header;
+    RelativeLayout rlMain;
+    RelativeLayout rlCd;
+    BaseApplication app;
+    TextView tvShopName;
+    SwipeRefreshLayout swipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        app = (BaseApplication)this.getApplication();
 
         setContentView(R.layout.sis_activity_sis_home);
 
@@ -80,8 +95,19 @@ public class SisHomeActivity extends Activity implements View.OnClickListener , 
         barcodeH = screenH * 80/100;
         if( barcodeW<barcodeH) {barcodeH = barcodeW;}
 
+        swipeRefresh = (SwipeRefreshLayout)findViewById(R.id.sis_main_refresh);
+        //swipeRefresh.setProgressBackgroundColorSchemeResource( R.color.transparent );
+        swipeRefresh.setColorSchemeColors(getResources().getColor(R.color.green),
+                getResources().getColor(R.color.red),
+                getResources().getColor(R.color.orange),
+                getResources().getColor(R.color.blue));
+
+        swipeRefresh.setOnRefreshListener(this);
+        tvShopName=(TextView)findViewById(R.id.sis_shopname);
+        rlCd = (RelativeLayout)findViewById(R.id.sis_cd);
+        rlMain = (RelativeLayout)findViewById(R.id.sis_home_main);
         header = (RelativeLayout)findViewById(R.id.sis_header);
-        header.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) SisHomeActivity.this.getApplication()).obtainMainColor()));
+        header.setBackgroundColor(SystemTools.obtainColor(app.obtainMainColor()));
 
         logo = (CircleImageView)findViewById(R.id.sis_logo);
         loadLogo();
@@ -101,6 +127,114 @@ public class SisHomeActivity extends Activity implements View.OnClickListener , 
         menu4.setOnClickListener(this);
         rlStatData = (RelativeLayout)findViewById(R.id.sis_data);
         rlStatData.setOnClickListener(this);
+
+        setImmerseLayout();
+
+        //initData();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if( SisHomeActivity.this.isFinishing() ) return;
+                swipeRefresh.setRefreshing(true);
+                SisHomeActivity.this.onRefresh();
+            }
+        },800);
+    }
+
+    protected void getData(){
+        String url = SisConstant.INTERFACE_open;
+
+        AuthParamUtils paramUtils = new AuthParamUtils(app, System.currentTimeMillis() ,url , this);
+        Map map = new HashMap();
+        //map.put("userId", app.readMemberId());
+        map.put("userId", 213);
+        Map<String,String> paramMap =  paramUtils.obtainParams(map);
+
+        GsonRequest<BaseModel> request =new GsonRequest<>(
+                Request.Method.POST,
+                url ,
+                BaseModel.class,
+                null,
+                paramMap,
+                new MyListener(this),
+                new MyErrorListener(this)
+        );
+        VolleyUtil.getRequestQueue().add(request);
+    }
+
+    static class MyListener implements Response.Listener<BaseModel>{
+        WeakReference<SisHomeActivity> ref;
+        public MyListener(SisHomeActivity act){
+            ref =new WeakReference<>(act);
+        }
+        @Override
+        public void onResponse(BaseModel baseModel) {
+            if( ref.get()==null) return;
+            ref.get().swipeRefresh.setRefreshing(false);
+        }
+    }
+    static class MyErrorListener implements Response.ErrorListener{
+        WeakReference<SisHomeActivity> ref;
+        public MyErrorListener(SisHomeActivity act){
+            ref =new WeakReference<>(act);
+        }
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            if( ref.get()==null )return;
+            ref.get().swipeRefresh.setRefreshing(false);
+            ToastUtils.showLongToast(  ref.get() , "error");
+        }
+    }
+
+    private void initData(){
+        if( app.isLogin() ==false ){
+            ToastUtils.showShortToast(this, "请授权微信登录");
+            ActivityUtils.getInstance().skipActivity(this, LoginActivity.class);
+            return;
+        }
+        String logourl = app.getUserLogo();
+        String username = app.getUserName();
+        tvShopName.setText( username+ "的小店" );
+
+        VolleyUtil.getImageLoader(this).get(logourl, new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                if( imageContainer!=null && imageContainer.getBitmap()!=null){
+                    logo.setImageBitmap( imageContainer.getBitmap() );
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                ToastUtils.showShortToast(SisHomeActivity.this,"获取微信头像失败");
+            }
+        });
+    }
+
+    /**
+    * 方法描述：沉浸效果
+    * 方法名称：
+    * 参数：
+    * 返回值：
+    * 创建时间: 2015/11/16
+    * 作者:
+    */
+    public void setImmerseLayout(){
+        if ( ((BaseApplication)this.getApplication()).isKITKAT ()) {
+            Window window = getWindow();
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+            int statusBarHeight;
+            int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen","android");
+            if (resourceId > 0) {
+                statusBarHeight = this.getResources().getDimensionPixelSize(resourceId);
+                rlCd.setPadding(0,statusBarHeight,0,0);
+                rlCd.getLayoutParams().height+=statusBarHeight;
+                rlCd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) SisHomeActivity.this.getApplication()).obtainMainColor()) );
+            }
+        }
     }
 
     @Override
@@ -149,6 +283,10 @@ public class SisHomeActivity extends Activity implements View.OnClickListener , 
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    public void onRefresh() {
+        getData();
+    }
 
     /**
     * 方法描述：加载店中店 logo
@@ -383,10 +521,4 @@ public class SisHomeActivity extends Activity implements View.OnClickListener , 
         return context.getFilesDir().getAbsolutePath();
     }
 
-    protected void getData(){
-//        GsonRequest<String> request =new GsonRequest<String>(Request.Method.GET,
-//                String.class ,
-//                 );
-//        VolleyUtil.getRequestQueue().add(request);
-    }
 }

@@ -24,10 +24,9 @@
     <TextView
         android:visibility="gone"
         android:id="@+id/header_operate"
-        android:layout_width="30dp"
+        android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/ss"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         />

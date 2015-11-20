@@ -15,7 +15,8 @@
         android:text="sdfsdfs"
         android:singleLine="true"
         android:ellipsize="end"
-        android:padding="5dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
