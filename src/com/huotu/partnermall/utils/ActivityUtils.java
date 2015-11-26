@@ -43,8 +43,8 @@ public class ActivityUtils
     public void skipActivity(Activity aty, Class clazz)
     {
         Intent i = new Intent(aty, clazz);
-        aty.startActivity ( i );
-        aty.finish ( );
+        aty.startActivity(i);
+        aty.finish();
     }    
     
     public void skipActivity( Activity aty , Class clazz , String key , Serializable serialize ){
@@ -56,7 +56,7 @@ public class ActivityUtils
 
     public void showActivity(Activity aty, Intent i)
     {
-        aty.startActivity ( i );
+        aty.startActivity(i);
     }
 
     public void showActivity(Activity aty, String action)
@@ -68,13 +68,17 @@ public class ActivityUtils
     public void showActivityForResult(Activity aty, int requestCode , Class clazz)
     {
         Intent i = new Intent(aty,clazz);
-        aty.startActivityForResult ( i, requestCode );
+        aty.startActivityForResult(i, requestCode);
     }
     
     public void showActivityForResult(Activity aty  ,int requestCode, Class clazz , Bundle bundle){
         Intent i = new Intent(aty,clazz);
         i.putExtras(bundle);
         aty.startActivityForResult(i, requestCode);
+    }
+
+    public void showActivityForResult(Activity aty  ,int requestCode, Intent intent ){
+        aty.startActivityForResult(intent , requestCode);
     }
     
     public void showActivity(Activity aty, Class clazz, Bundle bundle)

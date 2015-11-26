@@ -6,25 +6,24 @@ import java.util.List;
  * Created by Administrator on 2015/11/13.
  */
 public class SisTemplateListModel {
-    Long id;
+    Long tid;
     String pictureUrl;
+    //boolean selected;
 
-    public List<String> getList() {
-        return list;
+//    public boolean isSelected() {
+//        return selected;
+//    }
+
+//    public void setSelected(boolean selected) {
+//        this.selected = selected;
+//    }
+
+    public Long getTid() {
+        return tid;
     }
 
-    public void setList(List<String> list) {
-        this.list = list;
-    }
-
-    List<String> list;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setTid(Long tid) {
+        this.tid = tid;
     }
 
     public String getPictureUrl() {

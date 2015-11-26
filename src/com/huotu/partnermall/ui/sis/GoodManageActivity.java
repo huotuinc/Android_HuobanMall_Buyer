@@ -27,7 +27,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.volley.Request;
@@ -50,7 +49,6 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.ui.base.BaseActivity;
-import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
@@ -68,21 +66,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
-import java.net.URLEncoder;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
-
 
 public class GoodManageActivity extends BaseActivity implements View.OnClickListener {
     private RelativeLayout header_container;
@@ -119,6 +113,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
     private ProgressPopupWindow progressPopupWindow;
     private MsgPopWindow msgPopWindow;
     private ProgressDialog progressdlg;
+    private BaseApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,34 +125,17 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         setImmerseLayout();
     }
 
-    /**
-    * 方法描述：
-    * 方法名称：
-    * 参数：
-    * 返回值：
-    * 创建时间: 2015/11/9
-    * 作者: 
-    */
-//    private void setStyle(){
-//        StateListDrawable stateListDrawable =new StateListDrawable();
-//        stateListDrawable.addState( new int[]{ android.R.attr.state_pressed} , new ColorDrawable( getResources().getColor( R.color.lightgray )) );
-//        stateListDrawable.addState(new int[]{android.R.attr.state_hovered}, new ColorDrawable( SystemTools.obtainColor(((BaseApplication) GoodManageActivity.this.getApplication()).obtainMainColor() )));
-//        //正常状态
-//        stateListDrawable.addState(new int[]{}, new ColorDrawable(SystemTools.obtainColor(((BaseApplication) GoodManageActivity.this.getApplication()).obtainMainColor())));
-//
-//        //addgood_btn.setBackground( stateListDrawable );
-//        SystemTools.loadBackground( addgood_btn , stateListDrawable);
-//    }
-
     @Override
     protected void findViewById() {
+        app = (BaseApplication)this.getApplication();
         rlcd = (RelativeLayout)findViewById(R.id.goodmange_cd);
-        rlcd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) this.getApplication()).obtainMainColor()));
+        rlcd.setBackgroundColor(SystemTools.obtainColor(app.obtainMainColor()));
 
         header_container = (RelativeLayout)findViewById(R.id.sis_header);
-        header_container.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) GoodManageActivity.this.getApplication()).obtainMainColor()));
+        header_container.setBackgroundColor(SystemTools.obtainColor(app.obtainMainColor()));
+
         rlshop = (RelativeLayout)findViewById(R.id.sis_shop);
-        rlshop.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) GoodManageActivity.this.getApplication()).obtainMainColor()));
+        rlshop.setBackgroundColor(SystemTools.obtainColor(app.obtainMainColor()));
 
         goodmanage_header= (TextView) findViewById(R.id.header_title);
         header_back= (Button) findViewById(R.id.header_back);
@@ -169,20 +147,17 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         header_operate= (TextView) findViewById(R.id.header_operate);
         header_operate.setText("添加商品");
         header_operate.setTextColor(Color.WHITE);
-        //header_operate.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
         search_bar= (RelativeLayout) findViewById(R.id.search_bar);
         header_bar= (RelativeLayout) findViewById(R.id.header_bar);
         search_cancel= (Button) findViewById(R.id.search_cancel);
 
         shopmanger = (TextView)findViewById(R.id.sis_shopmanager);
         shopmanger.setBackgroundColor(Color.WHITE);
-        shopmanger.setTextColor(SystemTools.obtainColor(((BaseApplication) GoodManageActivity.this.getApplication()).obtainMainColor()));
+        shopmanger.setTextColor(SystemTools.obtainColor(app.obtainMainColor()));
 
         logo = (CircleImageView)findViewById(R.id.sis_logo);
         ivBarcode = (ImageView)findViewById(R.id.sis_barcode);
-
         listview = (PullToRefreshListView)findViewById(R.id.goodmanage_listview);
-
         shopName = (TextView)findViewById(R.id.sis_shopname);
     }
 
@@ -205,7 +180,17 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected void initView() {
-        handler = new Handler(getMainLooper());
+        handler = new Handler(getMainLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if( msg.what == 7001 ){
+                    ivBarcode.setImageBitmap( barCode );
+                }else if( msg.what == 7000){
+                    ToastUtils.showShortToast(app,"生成二维码失败");
+                }
+            }
+        };
         goodmanage_header.setText("");
         header_back.setOnClickListener(this);
         salestatus_sale.setOnClickListener(this);
@@ -215,11 +200,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         search_cancel.setOnClickListener(this);
         ivBarcode.setOnClickListener(this);
         shopmanger.setOnClickListener(this);
-
-        //loadLogo();
-
-
-        //showBarCode("http://m.cnblogs.com", ivBarcode);
 
         listview.setMode(PullToRefreshBase.Mode.BOTH);
         listview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -245,16 +225,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         list2 = new ArrayList<>();
         adapter2 = new Goodmanageadapter(this,list2 , 1 );
 
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (GoodManageActivity.this.isFinishing()) return;
-//                isRefresh = true;
-//                salestate = true;
-//                listview.setRefreshing(true);
-//            }
-//        }, 800);
-
         getShopInfo();
     }
 
@@ -263,7 +233,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
 
         if( resultCode == RESULT_OK && requestCode == SisConstant.REFRESHGOODS_CODE ){
-
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -273,17 +242,17 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                     listview.setRefreshing(true);
                 }
             }, 500);
-
         }
 
         if( resultCode ==RESULT_OK && requestCode == SisConstant.REFRESHSHOPINFO_CODE ){
             //刷新店铺信息
             if( SisConstant.SHOPINFO==null)return;
+            if( barCode!=null) barCode.recycle();
+            barCode=null;
             shopName.setText( SisConstant.SHOPINFO.getTitle());
             loadLogo(SisConstant.SHOPINFO.getImgUrl());
             //showBarCode( SisConstant.SHOPINFO.getIndexUrl() , ivBarcode );
         }
-
     }
 
     @Override
@@ -297,6 +266,8 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 pageno1 = 0;
                 list1.clear();
                 adapter1.notifyDataSetChanged();
+                list2.clear();
+                adapter2.notifyDataSetChanged();
                 listview.setRefreshing(true);
             }
             break;
@@ -306,6 +277,8 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 salestatus_removeline.setBackgroundColor(getResources().getColor(R.color.home_title_bg));
                 isRefresh=true;
                 pageno2 = 0;
+                list1.clear();
+                adapter1.notifyDataSetChanged();
                 list2.clear();
                 adapter2.notifyDataSetChanged();
                 listview.setRefreshing(true);
@@ -345,7 +318,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
 
     }
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if( keyCode == KeyEvent.KEYCODE_BACK &&
@@ -354,15 +326,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-//        if( hasFocus ){
-//            getShopInfo();
-//        }
     }
 
     /**
@@ -374,13 +337,13 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
      * 作者:jxd
      */
     private void loadLogo( String logoUrl){
-        //String logoUrl = "http://news.xinhuanet.com/photo/2015-10/29/128371793_14460865923871n.jpg";
         if(TextUtils.isEmpty( logoUrl )) return;
         VolleyUtil.getImageLoader(this)
                 .get(logoUrl, new ImageLoader.ImageListener() {
                     @Override
                     public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
                         if (imageContainer != null && imageContainer.getBitmap() != null) {
+                            logo.setDrawingCacheEnabled(true);
                             logo.setImageBitmap(imageContainer.getBitmap());
                             showBarCode(SisConstant.SHOPINFO.getIndexUrl(), ivBarcode);
                         }
@@ -395,7 +358,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
 
     protected  void showBarCode(final String context , ImageView iv ) {
         if( context==null ){
-            ToastUtils.showLongToast(GoodManageActivity.this,"内容空");
+            ToastUtils.showShortToast(GoodManageActivity.this, "内容空,无法生成二维码");
             return;
         }
         if( barCode!=null ) {
@@ -409,14 +372,15 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         final int bw = barcodeW;
         final int bh=barcodeH;
 
-        final Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+        final Bitmap logobm = logo.getDrawingCache(); //BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+        //logo.setDrawingCacheEnabled(false);
         final String filePath = getFileRoot(this) + File.separator + "qr_" + System.currentTimeMillis() + ".jpg";
         //二维码图片较大时，生成图片、保存文件的时间可能较长，因此放在新线程中
         new Thread(){
             @Override
             public void run() {
                 try {
-                    barCode = encodeAsBitmap(context, BarcodeFormat.QR_CODE, bw, bh , logo , filePath );
+                    barCode = encodeAsBitmap(context, BarcodeFormat.QR_CODE, bw, bh , logobm , filePath );
                     if( barCode  == null){
                         Message msg= handler.obtainMessage(7000);
                         handler.sendMessage(msg);
@@ -434,15 +398,11 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
     protected void showBarCode() {
         if (barcodePopWin == null) {
             barcodePopWin = new PopupWindow();
-
             LayoutInflater inflater = LayoutInflater.from(this);
             View rootView = inflater.inflate(R.layout.sis_barcode,null);
             barcodePopWin.setContentView(rootView);
             barcodePopWin.setOnDismissListener(new PoponDismissListener( this));
 
-            ImageView iv = (ImageView)rootView.findViewById(R.id.sis_barcode_pic);
-
-            //iv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -468,14 +428,12 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             ColorDrawable dw = new ColorDrawable(0x00000000);
             barcodePopWin.setBackgroundDrawable(dw);
 
-            iv.setImageBitmap( barCode );
-
             barcodePopWin.getContentView().findViewById(R.id.sis_barcode_share_wx).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ShareModel model =new ShareModel();
                     model.setTitle( SisConstant.SHOPINFO.getShareTitle() );
-                    model.setText(SisConstant.SHOPINFO.getShareTitle());
+                    model.setText(SisConstant.SHOPINFO.getShareDescription());
                     model.setImageUrl(SisConstant.SHOPINFO.getImgUrl());
                     model.setUrl( SisConstant.SHOPINFO.getIndexUrl() );
                     wx(GoodManageActivity.this, model , ShareSDK.getPlatform( Wechat.NAME ));
@@ -486,7 +444,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 public void onClick(View v) {
                     ShareModel model =new ShareModel();
                     model.setTitle( SisConstant.SHOPINFO.getShareTitle() );
-                    model.setText(SisConstant.SHOPINFO.getShareTitle());
+                    model.setText(SisConstant.SHOPINFO.getShareDescription());
                     model.setImageUrl(SisConstant.SHOPINFO.getImgUrl());
                     model.setUrl( SisConstant.SHOPINFO.getIndexUrl() );
                     wx(GoodManageActivity.this , model , ShareSDK.getPlatform(WechatMoments.NAME) );
@@ -497,15 +455,19 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 public void onClick(View v) {
                     ShareModel model =new ShareModel();
                     model.setTitle( SisConstant.SHOPINFO.getShareTitle() );
-                    model.setText(SisConstant.SHOPINFO.getShareTitle());
+                    model.setText(SisConstant.SHOPINFO.getShareDescription());
                     model.setImageUrl(SisConstant.SHOPINFO.getImgUrl());
                     model.setUrl( SisConstant.SHOPINFO.getIndexUrl() );
                     qqzone(GoodManageActivity.this, model);
                 }
             });
-
         }
+
         if( barcodePopWin.isShowing()==false ) {
+
+            ImageView iv =(ImageView) barcodePopWin.getContentView().findViewById(R.id.sis_barcode_pic);
+            iv.setImageBitmap(barCode);
+
             WindowUtils.backgroundAlpha(this, 0.7f);
             barcodePopWin.showAtLocation(ivBarcode, Gravity.CENTER, 0, 0);
         }
@@ -517,6 +479,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         sp.setTitleUrl(model.getUrl()); // 标题的超链接
         sp.setText(model.getText());
         sp.setImageUrl ( model.getImageUrl ( ) );
+        sp.setSiteUrl( model.getUrl() );
         Platform qzone = ShareSDK.getPlatform(context, QZone.NAME);
         qzone.setPlatformActionListener(new PlatformActionListener() {
             @Override
@@ -539,10 +502,9 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
     }
 
     protected void wx(final  Context context , ShareModel model , Platform platform){
-        //Platform wx = ShareSDK.getPlatform( Wechat.NAME );
         Platform.ShareParams sp = new Platform.ShareParams ();
         sp.setShareType(Platform.SHARE_WEBPAGE);
-        sp.setTitle(model.getText());
+        sp.setTitle(model.getTitle());
         sp.setText(model.getText());
         sp.setUrl(model.getUrl());
         sp.setImageUrl(model.getImageUrl());
@@ -749,28 +711,26 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             BitmapLoader.create().displayUrl(mContext, iv, datas.get(position).getImgUrl(), R.drawable.sis_pic, R.drawable.sis_pic);
 
             RelativeLayout llmain = ViewHolderUtil.get(convertView,R.id.goodmange_item_ll);
-            llmain.setTag( datas.get( position ) );
+            llmain.setTag(datas.get(position));
 
             llmain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //ToastUtils.showLongToast(mContext , "goods");
-                    SisGoodsModel model = (SisGoodsModel)v.getTag();
-                    Intent intent =new Intent();
+                    SisGoodsModel model = (SisGoodsModel) v.getTag();
+                    Intent intent = new Intent();
                     intent.setClass(mContext, GoodsDetailActivity.class);
-                    intent.putExtra("url", "http://www.sina.com.cn");
-                    intent.putExtra("goodsid", model.getId() );
-                    intent.putExtra("state", tabtype );
-                    mContext.startActivity(intent);
+                    intent.putExtra("goodsid", model.getGoodsId());
+                    intent.putExtra("state", tabtype);
+                    ActivityUtils.getInstance().showActivityForResult( (Activity)mContext , SisConstant.REFRESHGOODS_CODE , intent );
                 }
             });
 
             TextView txtName = ViewHolderUtil.get(convertView, R.id.goods_item_goodsName);
-            txtName.setText(datas.get(position).getName());
+            txtName.setText(datas.get(position).getGoodsName());
             TextView txtamount = ViewHolderUtil.get(convertView, R.id.goods_item_amount);
-            txtamount.setText( "销售量:" + String.valueOf(datas.get(position).getStock()));
+            txtamount.setText("销售量:" + String.valueOf(datas.get(position).getStock()));
             TextView txtprofit = ViewHolderUtil.get(convertView, R.id.goods_item_profit);
-            txtprofit.setText("利润:￥"+String.valueOf(datas.get(position).getProfit()));
+            txtprofit.setText("利润:￥" + String.valueOf(datas.get(position).getProfit()));
             final Button goods_item_btn = ViewHolderUtil.get(convertView, R.id.goods_item_btn);
             goods_item_btn.setTag(datas.get(position));
 
@@ -789,7 +749,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                     }
 
                     TextView tvCvText = (TextView) popWin.getContentView().findViewById(R.id.sis_goods_menu_updown_text);
-                    tvCvText.setText( tabtype ==0 ? "下架":"上架" );
+                    tvCvText.setText(tabtype == 0 ? "下架" : "上架");
 
                     popWin.getContentView()
                             .findViewById(R.id.sis_goods_menu_share)
@@ -798,8 +758,9 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                                 public void onClick(View v) {
                                     popWin.dismiss();
                                     SisGoodsModel model = (SisGoodsModel) goods_item_btn.getTag();
-                                    ToastUtils.showLongToast(GoodManageActivity.this, model.getName());
-                                    share(model.getName(), model.getName(), model.getImgUrl(), model.getImgUrl());//todo
+                                    //ToastUtils.showLongToast(GoodManageActivity.this, model.getGoodsName());
+                                    String goodurl = SisConstant.INTERFACE_getGoodDetails + "?goodsId="+ String.valueOf( model.getGoodsId() );
+                                    share(model.getGoodsName(), model.getGoodsName(), model.getImgUrl(), goodurl );
                                 }
                             });
 
@@ -821,8 +782,8 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                         @Override
                         public void onClick(View v) {
                             SisGoodsModel model = (SisGoodsModel) goods_item_btn.getTag();
-                            int state = tabtype == 0 ? 0: 1; //0:代表 下架 ，1代表 上架
-                            operateGoods(model, state );
+                            int state = tabtype == 0 ? 0 : 1; //0:代表 下架 ，1代表 上架
+                            operateGoods(model, state);
                         }
                     });
                     popWin.showAsDropDown(v, -200, 10);
@@ -831,11 +792,11 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             return convertView;
         }
 
-        protected void share(String title , String text , String imageUrl , String goodsUrl){
-           if( sharePopWin ==null ){
-               sharePopWin = new SharePopupWindow( GoodManageActivity.this , GoodManageActivity.this , GoodManageActivity.this.application );
-           }
-            ShareModel shareModel =new ShareModel();
+        protected void share(String title , String text , String imageUrl , String goodsUrl) {
+            if (sharePopWin == null) {
+                sharePopWin = new SharePopupWindow(GoodManageActivity.this, GoodManageActivity.this, GoodManageActivity.this.application);
+            }
+            ShareModel shareModel = new ShareModel();
             shareModel.setUrl(goodsUrl);
             shareModel.setImageUrl(imageUrl);
             shareModel.setText(text);
@@ -846,11 +807,11 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             sharePopWin.setPlatformActionListener(new PlatformActionListener() {
                 @Override
                 public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-                    if( platform.getName().equals(Wechat.NAME) ) {
+                    if (platform.getName().equals(Wechat.NAME)) {
                         ToastUtils.showShortToast(application, "微信分享成功");
-                    }else if( platform.getName().equals(WechatMoments.NAME)){
+                    } else if (platform.getName().equals(WechatMoments.NAME)) {
                         ToastUtils.showShortToast(application, "微信朋友圈分享成功");
-                    }else if( platform.getName().equals(QZone.NAME)){
+                    } else if (platform.getName().equals(QZone.NAME)) {
                         ToastUtils.showShortToast(application, "QQ空间分享成功");
                     }
                 }
@@ -862,7 +823,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
 
                 @Override
                 public void onCancel(Platform platform, int i) {
-                    ToastUtils.showLongToast(application,"取消分享");
+                    ToastUtils.showLongToast(application, "取消分享");
                 }
             });
             sharePopWin.setOnDismissListener(new PoponDismissListener(GoodManageActivity.this));
@@ -871,8 +832,9 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         }
 
         protected void operateGoods(SisGoodsModel model , int operate){
-            popWin.dismiss();
-
+            if( popWin !=null && popWin.isShowing()) {
+                popWin.dismiss();
+            }
             if( progressPopupWindow==null){
                 progressPopupWindow= new ProgressPopupWindow(application , (GoodManageActivity) mContext , getWindowManager() );
             }
@@ -884,7 +846,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                     System.currentTimeMillis() , url , mContext );
             Map para = new HashMap();
             para.put("userid", ((BaseApplication) mContext.getApplicationContext()).readMemberId());
-            para.put("goodsid", model.getId());
+            para.put("goodsid", model.getGoodsId());
             para.put("opertype", operate);
 
             Map maps = authParamUtils.obtainParams( para );
@@ -973,69 +935,67 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    static class  MyGoodsDataListener implements Response.Listener<AppSisGoodsModel>{
+    static class  MyGoodsDataListener implements Response.Listener<AppSisGoodsModel> {
         WeakReference<GoodManageActivity> ref;
 
-        public MyGoodsDataListener(GoodManageActivity act){
-            ref=new WeakReference<GoodManageActivity>(act);
+        public MyGoodsDataListener(GoodManageActivity act) {
+            ref = new WeakReference<>(act);
         }
 
         @Override
         public void onResponse(AppSisGoodsModel appSisGoodsModel) {
-            if( ref.get()==null) return;
+            if (ref.get() == null) return;
             ref.get().listview.onRefreshComplete();
 
-           if(!validateData( ref.get() , appSisGoodsModel)){
-               return;
-           }
+            if (!validateData(ref.get(), appSisGoodsModel)) {
+                return;
+            }
 
-            if(ref.get().salestate && ref.get().isRefresh ){
+            if (ref.get().salestate && ref.get().isRefresh) {
                 ref.get().pageno1 = appSisGoodsModel.getResultData().getRpageno();
                 ref.get().list1.clear();
-                if( appSisGoodsModel.getResultData().getList()!=null ) {
+                if (appSisGoodsModel.getResultData().getList() != null) {
                     ref.get().list1.addAll(appSisGoodsModel.getResultData().getList());
                 }
                 ref.get().listview.setAdapter(ref.get().adapter1);
-            }else if( ref.get().salestate && !ref.get().isRefresh ){
-                if( appSisGoodsModel.getResultData().getList() ==null ||
-                        appSisGoodsModel.getResultData().getList().size()==0){
-                    ToastUtils.showShortToast(ref.get(),"已经没有数据了。");
+            } else if (ref.get().salestate && !ref.get().isRefresh) {
+                if (appSisGoodsModel.getResultData().getList() == null ||
+                        appSisGoodsModel.getResultData().getList().size() == 0) {
+                    ToastUtils.showShortToast(ref.get(), "已经没有数据了。");
                     return;
                 }
 
                 ref.get().pageno1 = appSisGoodsModel.getResultData().getRpageno();
-                if( appSisGoodsModel.getResultData().getList() !=null ){
-                    ref.get().list1.addAll( appSisGoodsModel.getResultData().getList());
+                if (appSisGoodsModel.getResultData().getList() != null) {
+                    ref.get().list1.addAll(appSisGoodsModel.getResultData().getList());
                 }
                 ref.get().adapter1.notifyDataSetChanged();
-            }else if( !ref.get().salestate && ref.get().isRefresh ){
+            } else if (!ref.get().salestate && ref.get().isRefresh) {
                 ref.get().pageno2 = appSisGoodsModel.getResultData().getRpageno();
                 ref.get().list2.clear();
-                if( appSisGoodsModel.getResultData().getList()!=null ) {
+                if (appSisGoodsModel.getResultData().getList() != null) {
                     ref.get().list2.addAll(appSisGoodsModel.getResultData().getList());
                 }
                 ref.get().listview.setAdapter(ref.get().adapter2);
-            }else if( !ref.get().salestate && !ref.get().isRefresh ){
-                if( appSisGoodsModel.getResultData().getList() ==null ||
-                        appSisGoodsModel.getResultData().getList().size()==0){
-                    ToastUtils.showShortToast(ref.get(),"已经没有数据了。");
+            } else if (!ref.get().salestate && !ref.get().isRefresh) {
+                if (appSisGoodsModel.getResultData().getList() == null ||
+                        appSisGoodsModel.getResultData().getList().size() == 0) {
+                    ToastUtils.showShortToast(ref.get(), "已经没有数据了。");
                     return;
                 }
 
                 ref.get().pageno2 = appSisGoodsModel.getResultData().getRpageno();
-                if( appSisGoodsModel.getResultData().getList() !=null ){
-                    ref.get().list2.addAll( appSisGoodsModel.getResultData().getList());
+                if (appSisGoodsModel.getResultData().getList() != null) {
+                    ref.get().list2.addAll(appSisGoodsModel.getResultData().getList());
                 }
                 ref.get().adapter2.notifyDataSetChanged();
             }
 
-            String txt =  "出售中("+ String.valueOf( ref.get().list1.size() ) +")";
-            ref.get().salestatus_sale.setText( txt );
-            txt = "已下架("+ String.valueOf( ref.get().list2.size() ) + ")";
+            String txt = "出售中(" + String.valueOf( appSisGoodsModel.getResultData().getSisuptotal() ) + ")";
+            ref.get().salestatus_sale.setText(txt);
+            txt = "已下架(" + String.valueOf( appSisGoodsModel.getResultData().getSisouttotal() ) + ")";
             ref.get().salestatus_remove.setText(txt);
         }
-
-
     }
 
     /**
@@ -1047,7 +1007,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
      * 作者: Administrator
      */
     protected static boolean validateData( Context context , BaseModel data){
-
         if(null == data){
             ToastUtils.showLongToast( context ,"请求失败");
             return false;
@@ -1060,7 +1019,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         }
         return true;
     }
-
 
     protected void showOpenShopWindow(){
         if( msgPopWindow==null ) {
@@ -1088,15 +1046,18 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 salestate = true;
                 listview.setRefreshing(true);
             }
-        }, 800);
+        }, 500);
     }
 
     protected void getShopInfo(){
+        if (false == Util.isConnect(this)) {
+            ToastUtils.showLongToast(this,"无网络");
+            return;
+        }
+
         if( SisConstant.SHOPINFO !=null ){
             shopName.setText(SisConstant.SHOPINFO.getTitle());
             loadLogo(SisConstant.SHOPINFO.getImgUrl());
-            //showBarCode(SisConstant.SHOPINFO.getIndexUrl(), ivBarcode);
-
             loadGoods();
             return;
         }
@@ -1113,12 +1074,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 new MySisInfoListener(this),
                 new MySisInfoErrorListener(this)
         );
-
-//        if( progressPopupWindow ==null){
-//            progressPopupWindow= new ProgressPopupWindow(application, GoodManageActivity.this, getWindowManager());
-//        }
-//        progressPopupWindow.showProgress("正在获取店铺信息,请稍等...");
-//        progressPopupWindow.showAtLocation( getWindow().getDecorView() , Gravity.CENTER , 0 , 0);
 
         if( progressdlg ==null){
             progressdlg = new ProgressDialog(this);
@@ -1155,13 +1110,11 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         WeakReference<GoodManageActivity> ref;
 
         public MySisInfoListener(GoodManageActivity act){
-            ref=new WeakReference<GoodManageActivity>(act);
+            ref=new WeakReference<>(act);
         }
 
         @Override
         public void onResponse(AppSisBaseinfoModel appSisBaseinfoModel) {
-
-
             if( ref.get()==null) return;
             if(ref.get().progressPopupWindow!=null){
                 ref.get().progressPopupWindow.dismissView();
@@ -1183,7 +1136,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             SisConstant.SHOPINFO = appSisBaseinfoModel.getResultData().getData();
             ref.get().shopName.setText(SisConstant.SHOPINFO.getTitle());
             ref.get().loadLogo(SisConstant.SHOPINFO.getImgUrl());
-            //ref.get().showBarCode(SisConstant.SHOPINFO.getIndexUrl(), ref.get().ivBarcode);
             ref.get().loadGoods();
         }
 
@@ -1208,7 +1160,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             }
             return true;
         }
-
     }
 
     /**
@@ -1223,7 +1174,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         if( msgPopWindow!=null ){
             msgPopWindow.dismiss();
         }
-
         if( progressPopupWindow==null){
             progressPopupWindow=new ProgressPopupWindow(application, GoodManageActivity.this,getWindowManager());
         }
@@ -1244,6 +1194,4 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         );
         VolleyUtil.getRequestQueue().add(request);
     }
-
-
 }

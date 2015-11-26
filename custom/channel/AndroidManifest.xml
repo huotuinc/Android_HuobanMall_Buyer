@@ -85,16 +85,16 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="CxUiCiiNRm93ySziitas08Tl" />
 
-		<activity
-            android:name="com.huotu.partnermall.ui.SplashActivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+		<!--<activity-->
+            <!--android:name="com.huotu.partnermall.ui.SplashActivity"-->
+            <!--android:theme="@style/SplashTheme"-->
+            <!--android:screenOrientation="portrait">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
         <activity
             android:name="com.huotu.partnermall.ui.guide.GuideActivity"
             android:theme="@style/SplashTheme"

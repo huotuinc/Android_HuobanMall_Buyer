@@ -25,7 +25,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp"
+        android:paddingTop="8dp"
         android:background="@color/home_title_bg"
         android:layout_height="70dp">
         <com.huotu.partnermall.widgets.CircleImageView
@@ -38,18 +38,18 @@
         <ImageView
             android:id="@+id/sis_barcode"
             android:layout_alignParentRight="true"
-            android:layout_width="50dp"
+            android:layout_width="45dp"
             android:scaleType="fitXY"
             android:background="@drawable/sis_barcode"
             android:layout_centerVertical="true"
-            android:layout_height="50dp"/>
+            android:layout_height="45dp"/>
         <TextView
             android:id="@+id/sis_shopname"
             android:text="店中店"
             android:layout_toRightOf="@id/sis_logo"
             android:layout_toLeftOf="@id/sis_barcode"
             android:layout_alignTop="@id/sis_logo"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="1dp"
             android:layout_marginLeft="5dp"
             android:singleLine="true"
             android:textSize="16sp"
@@ -65,7 +65,7 @@
             android:layout_below="@id/sis_shopname"
             android:singleLine="true"
             android:layout_marginTop="5dp"
-            android:textSize="11sp"
+            android:textSize="14sp"
             android:padding="2dp"
             android:textColor="@color/home_title_bg"
             android:background="@color/white"
@@ -74,8 +74,6 @@
             android:layout_height="wrap_content"/>
 
     </RelativeLayout>
-
-
 
     <LinearLayout
         android:id="@+id/goodmange_salestatus"

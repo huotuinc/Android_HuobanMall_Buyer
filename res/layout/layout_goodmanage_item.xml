@@ -47,6 +47,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textSize="15sp"
+            android:textColor="@color/gray"
             android:text="销售量:999件"
              />
         <TextView
@@ -56,6 +57,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textSize="14sp"
+            android:textColor="@color/gray"
             android:text="利润:￥42.00/件"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
@@ -68,6 +70,7 @@
             android:id="@+id/goods_item_commissionname"
             android:layout_marginTop="5dp"
             android:text="佣金:"
+            android:textColor="@color/gray"
             android:textSize="14sp"
             android:layout_below="@id/goods_item_amount"
             android:layout_alignLeft="@id/goods_item_goodsName"

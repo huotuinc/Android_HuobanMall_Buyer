@@ -13,6 +13,7 @@
     <TextView
         android:id="@+id/sis_goods_class2_name"
         android:text="sdfsdfs"
+        android:textColor="@color/gray"
         android:singleLine="true"
         android:ellipsize="end"
         android:paddingTop="8dp"

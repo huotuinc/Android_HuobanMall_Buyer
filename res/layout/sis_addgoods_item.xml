@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/sis_addgoods_item_main"
               android:orientation="horizontal"
+              android:background="@color/white"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
     <com.huotu.partnermall.widgets.NetworkImageViewCircle
@@ -34,7 +35,7 @@
 
         <TextView
             android:id="@+id/sis_addgoods_item_des"
-
+            android:textColor="@color/gray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="销售价:345 库存:344件"/>
@@ -43,24 +44,48 @@
             android:layout_below="@id/sis_addgoods_item_des"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/gray"
             android:layout_alignLeft="@id/sis_addgoods_item_des"
             android:text="佣金："/>
         <TextView
             android:id="@+id/sis_addgoods_item_commission"
             android:layout_width="wrap_content"
             android:text="￥154.21"
+            android:textColor="@color/orangered"
             android:layout_toRightOf="@id/sis_addgoods_item_label"
             android:layout_alignTop="@id/sis_addgoods_item_label"
             android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:id="@+id/sis_addgoods_item_ll_operate"
+                android:layout_alignBottom="@id/sis_addgoods_item_commission"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:padding="1dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="2dp"
+                android:background="@color/orangered"
+                android:layout_height="wrap_content">
         <TextView
             android:id="@+id/sis_addgoods_item_operate"
-            android:layout_alignParentRight="true"
-            android:layout_alignBottom="@id/sis_addgoods_item_commission"
             android:text="上架"
-            android:layout_marginRight="10dp"
-            android:background="@color/aliceblue"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/orangered"
+            android:background="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/sis_addgoods_item_pgbar"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@id/sis_addgoods_item_commission"
+                android:layout_width="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_height="30dp"/>
         </RelativeLayout>
 
         <TextView

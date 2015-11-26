@@ -5,23 +5,56 @@ package com.huotu.partnermall.ui.sis;
  */
 public class SisGoodsModel {
 
-    private java.lang.Long id;//商品ID
+    private java.lang.Long goodsId;//商品ID
     private java.lang.String imgUrl;//商品图片
-    private java.lang.String name;//商品名称
+    private java.lang.String goodsName;//商品名称
     private double price;//销售价
     private java.lang.Integer stock;//库存量
-    private double profit;
-    private boolean validate=true;
+    private double profit;//佣金
+    private boolean goodSelected;//是否上架
+    private boolean validate=true;//是否有效
+    //private boolean isOnSale=false;//
+    private boolean isProcessing=false;//是否正在处理....
 
-    public boolean isOnSale() {
-        return isOnSale;
+    public boolean isGoodSelected() {
+        return goodSelected;
     }
 
-    public void setIsOnSale(boolean isOnSale) {
-        this.isOnSale = isOnSale;
+    public void setGoodSelected(boolean goodSelected) {
+        this.goodSelected = goodSelected;
     }
 
-    private boolean isOnSale=false;
+    public boolean isProcessing() {
+        return isProcessing;
+    }
+
+    public void setIsProcessing(boolean isProcessing) {
+        this.isProcessing = isProcessing;
+    }
+
+    public Long getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(Long goodsId) {
+        this.goodsId = goodsId;
+    }
+
+    public String getGoodsName() {
+        return goodsName;
+    }
+
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
+    }
+
+//    public boolean isOnSale() {
+//        return isOnSale;
+//    }
+
+//    public void setIsOnSale(boolean isOnSale) {
+//        this.isOnSale = isOnSale;
+//    }
 
     public boolean isValidate() {
         return validate;
@@ -39,30 +72,12 @@ public class SisGoodsModel {
         this.profit = profit;
     }
 
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getImgUrl() {
         return imgUrl;
     }
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public double getPrice() {
