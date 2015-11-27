@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -94,6 +95,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
     void onCreate ( Bundle savedInstanceState ) {
 
         super.onCreate ( savedInstanceState );
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE|WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         application = ( BaseApplication ) this.getApplication ( );
         resources = this.getResources ( );
         this.setContentView ( R.layout.new_load_page );
