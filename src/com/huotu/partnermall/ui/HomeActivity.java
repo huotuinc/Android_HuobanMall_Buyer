@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -134,7 +135,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         //设置沉浸模式
-        setImmerseLayout(findViewById(R.id.titleLayout));
+        setImmerseLayout(homeTitle);
         initView();
         progress = new ProgressPopupWindow ( HomeActivity.this, HomeActivity.this, wManager );
     }
@@ -259,7 +260,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                             WebView view, String
                             url
                     ) {
-                        pageWeb.loadUrl( url );
+                        doLoadUrl(url);
                         return true;
                     }
 
@@ -300,7 +301,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         String url = paramUtils.obtainUrl ();
         //首页默认为商户站点 + index
-        pageWeb.loadUrl(url);
+        doLoadUrl(url);
 
         pageWeb.setWebViewClient(
                 new WebViewClient() {
@@ -317,7 +318,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                                 application,
                                 wManager
                         );
-                        return filter.shouldOverrideUrlBySFriend( pageWeb, url );
+                        return filter.shouldOverrideUrlBySFriend(pageWeb, url);
                     }
 
                     @Override
@@ -345,8 +346,64 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 }
         );
 
+        pageWeb.setWebChromeClient(new WebChromeClient()
+        {
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                titleText.setText(title);
+            }
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                if(100 == newProgress)
+                {
+                    refreshWebView.onRefreshComplete();
+                }
+                super.onProgressChanged(view, newProgress);
+            }
+
+            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                    HomeActivity.mUploadMessage = uploadMsg;
+                    Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                    i.addCategory(Intent.CATEGORY_OPENABLE);
+                    i.setType("*/*");
+                    HomeActivity.this.startActivityForResult(Intent.createChooser(i, "File Chooser"), HomeActivity.FILECHOOSER_RESULTCODE);
+            }
+
+            public void openFileChooser( ValueCallback uploadMsg, String acceptType ) {
+                openFileChooser(uploadMsg);
+            }
+
+            //For Android 4.1
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture){
+
+                openFileChooser(uploadMsg);
+
+            }
+        });
+
     }
 
+    void doLoadUrl(String url)
+    {
+        if(url.contains ( "&back" ) || url.contains ( "?back" ))
+        {
+            pageWeb.loadUrl(url);
+            mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+        }
+        else {
+
+            if ( pageWeb.canGoBack() ) {
+                pageWeb.loadUrl(url);
+                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+            }
+            else {
+                pageWeb.loadUrl(url);
+                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+            }
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == FILECHOOSER_RESULTCODE) {
@@ -512,14 +569,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             {
                 //加载菜单页面
                 String url = msg.obj.toString ();
-                pageWeb.loadUrl ( url );
+                doLoadUrl(url);
             }
             break;
             case Constants.FRESHEN_PAGE_MESSAGE_TAG:
             {
                 //刷新界面
                 String url = msg.obj.toString ();
-                pageWeb.loadUrl ( url );
+                doLoadUrl ( url );
             }
             break;
             //分享

@@ -184,7 +184,22 @@ class UrlFilterUtils {
             bundle.putString ( Constants.INTENT_URL, url );
             ActivityUtils.getInstance ().showActivity ( aty,  WebViewActivity.class, bundle);
             return true;*/
-            view.loadUrl ( url );
+            if(url.contains ( "&back" ) || url.contains ( "?back" ))
+            {
+                view.loadUrl(url);
+                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+            }
+            else {
+
+                if ( view.canGoBack() ) {
+                    view.loadUrl(url);
+                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+                }
+                else {
+                    view.loadUrl(url);
+                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                }
+            }
             return false;
         }
         return false;

@@ -1,8 +1,10 @@
 package com.huotu.partnermall.ui;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +13,8 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -89,7 +93,7 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
         resources = this.getResources ( );
         this.setContentView(R.layout.new_load_page);
         ButterKnife.bind(this);
-        setImmerseLayout(findViewById(R.id.newtitleLayout));
+        setImmerseLayout(homeTitle);
         mHandler = new Handler ( this );
         share = new SharePopupWindow ( WebViewActivity.this, WebViewActivity.this, application );
         myBroadcastReceiver = new MyBroadcastReceiver(WebViewActivity.this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
@@ -180,6 +184,42 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
 
 
         );
+
+        viewPage.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                titleText.setText(title);
+            }
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                if(100 == newProgress)
+                {
+                    refreshWebView.onRefreshComplete();
+                }
+                super.onProgressChanged(view, newProgress);
+            }
+
+            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                HomeActivity.mUploadMessage = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                WebViewActivity.this.startActivityForResult(Intent.createChooser(i, "File Chooser"), HomeActivity.FILECHOOSER_RESULTCODE);
+            }
+
+            public void openFileChooser(ValueCallback uploadMsg, String acceptType) {
+                openFileChooser(uploadMsg);
+            }
+
+            //For Android 4.1
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+
+                openFileChooser(uploadMsg);
+
+            }
+        });
 
     }
 
