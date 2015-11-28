@@ -48,6 +48,9 @@ import org.json.JSONObject;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
@@ -56,9 +59,9 @@ import cn.sharesdk.wechat.friends.Wechat;
  * 登录界面
  */
 public
-class LoginActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
+class LoginActivity extends BaseActivity implements Handler.Callback {
 
-    private
+    @Bind(R.id.loginL)
     RelativeLayout loginL;
     private
     AutnLogin      login;
@@ -73,7 +76,7 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
 
     public
     NoticePopWindow noticePop;
-    private
+    @Bind(R.id.loginText)
     TextView        loginText;
     public
     AssetManager    am;
@@ -87,23 +90,15 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
         mHandler = new Handler ( this );
-        am = this.getAssets ();
+        am = this.getAssets();
         res = this.getResources();
         setContentView ( R.layout.login_ui );
+        ButterKnife.bind(this);
         application = ( BaseApplication ) this.getApplication ();
-        findViewById ( );
         initView ( );
         wManager = this.getWindowManager ( );
         progress = new ProgressPopupWindow ( LoginActivity.this, LoginActivity.this, wManager );
         successProgress = new ProgressPopupWindow ( LoginActivity.this, LoginActivity.this, wManager );
-    }
-
-    @Override
-    protected
-    void findViewById ( ) {
-        loginL = ( RelativeLayout ) this.findViewById ( R.id.loginL );
-        loginL.setOnClickListener ( this );
-        loginText = ( TextView ) this.findViewById ( R.id.loginText );
     }
 
     @Override
@@ -126,47 +121,42 @@ class LoginActivity extends BaseActivity implements View.OnClickListener, Handle
     protected
     void onDestroy ( ) {
         super.onDestroy ( );
-        progress.dismissView ( );
-        successProgress.dismissView ();
+        ButterKnife.unbind(this);
+        progress.dismissView();
+        successProgress.dismissView();
     }
 
     @Override
     protected
     void onResume ( ) {
-        super.onResume ( );
+        super.onResume();
         if(null != progress)
         {
             progress.dismissView ( );
         }
 
-        loginL.setClickable ( true );
+        loginL.setClickable(true);
     }
 
-    @Override
-    public
-    void onClick ( View v ) {
-        switch ( v.getId ( ) ) {
-            case R.id.loginL: {
-                //
-                progress.showProgress ( null );
-                progress.showAtLocation (
-                        findViewById ( R.id.loginL ),
-                        Gravity.CENTER, 0, 0
-                                        );
-                //微信授权登录
-                Platform wechat = ShareSDK.getPlatform ( LoginActivity.this, Wechat.NAME );
-                login = new AutnLogin ( LoginActivity.this, mHandler, loginL, application );
-                login.authorize ( new Wechat ( LoginActivity.this ) );
-                loginL.setClickable ( false );
-                //ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity
-                // .class );
-            }
-            break;
-            default:
-                break;
-        }
-    }
+    @OnClick(R.id.loginL)
+    void doLogin()
+    {
 
+        //
+        progress.showProgress ( null );
+        progress.showAtLocation (
+                findViewById ( R.id.loginL ),
+                Gravity.CENTER, 0, 0
+        );
+        //微信授权登录
+        Platform wechat = ShareSDK.getPlatform ( LoginActivity.this, Wechat.NAME );
+        login = new AutnLogin ( LoginActivity.this, mHandler, loginL, application );
+        login.authorize ( new Wechat ( LoginActivity.this ) );
+        loginL.setClickable ( false );
+        //ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity
+        // .class );
+    }
+    
     @Override
     public
     boolean handleMessage ( Message msg ) {

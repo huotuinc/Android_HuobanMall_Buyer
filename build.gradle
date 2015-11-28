@@ -101,5 +101,6 @@ dependencies {
     compile 'com.huotu.android.library:libcropper:1.0'
     compile 'com.android.support:support-v4:22.1.1'
     compile 'com.loopeer.android.thirdparty.pulltorefresh:Android-PullToRefresh:2.1.1'
+    compile 'com.jakewharton:butterknife:7.0.1'
 }
 

@@ -6,27 +6,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.model.PayBodyModel;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.ui.WebViewActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
-import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.KJLoger;
-import com.huotu.partnermall.utils.ToastUtils;
-import com.huotu.partnermall.widgets.KJWebView;
-import com.huotu.partnermall.widgets.PayPopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
-import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
-
-import java.util.regex.Pattern;
 
 /**
  * 过滤UI类
@@ -67,7 +59,7 @@ class SubUrlFilterUtils {
      * @return
      */
     public
-    boolean shouldOverrideUrlBySFriend ( KJWebView view, String url, ScrollSwipeRefreshLayout swipeRefreshLayout ) {
+    boolean shouldOverrideUrlBySFriend ( WebView view, String url ) {
         if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
 
             String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
@@ -98,7 +90,7 @@ class SubUrlFilterUtils {
             return true;
         }else if(url.contains(Constants.WEB_TAG_FINISH)){
             if(view.canGoBack())
-                view.goBack(null, null, null);
+                view.goBack();
 
         } else if(url.contains ( Constants.WEB_PAY ) )
         {
@@ -166,7 +158,7 @@ class SubUrlFilterUtils {
         else
         {
             //跳转界面
-            view.loadUrl ( null, url, titleView, null, application, swipeRefreshLayout );
+            view.loadUrl ( url );
             return false;
         }
         return false;

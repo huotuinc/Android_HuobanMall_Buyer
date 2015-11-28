@@ -1,52 +1,45 @@
 package com.huotu.partnermall.ui;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshWebView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
-import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.model.PayGoodBean;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
-import com.huotu.partnermall.ui.web.KJWebChromeClient;
 import com.huotu.partnermall.ui.web.SubUrlFilterUtils;
-import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AliPayUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
-import com.huotu.partnermall.widgets.KJSubWebView;
-import com.huotu.partnermall.widgets.KJWebView;
-import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 
 import java.util.HashMap;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 
@@ -54,7 +47,7 @@ import cn.sharesdk.framework.PlatformActionListener;
  * 单张展示web页面
  */
 public
-class WebViewActivity extends BaseActivity implements View.OnClickListener, Handler.Callback, MyBroadcastReceiver.BroadcastListener {
+class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadcastReceiver.BroadcastListener {
 
     //获取资源文件对象
     private
@@ -64,73 +57,45 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
     //application
     private
     BaseApplication application;
-    //title
-    //tilte组件
-    private RelativeLayout homeTitle;
-    //title左边图标
-    //标题栏左侧图标
-    private
-    ImageView titleLeftImage;
-    //标题栏标题文字
-    private
-    TextView  titleText;
-    //标题栏右侧图标
-    private ImageView titleRightImage;
     //web视图
     private
-    KJWebView viewPage;
+    WebView viewPage;
     private String url;
-
-    private ImageView titleRightLeftImage;
-
     private SharePopupWindow share;
-
     private MyBroadcastReceiver myBroadcastReceiver;
 
-    private ScrollSwipeRefreshLayout swipeRefreshLayout;
+    //tilte组件
+    @Bind(R.id.homeTitle)
+    RelativeLayout homeTitle;
+    //标题栏左侧图标
+    @Bind(R.id.titleLeftImage)
+    ImageView titleLeftImage;
+    //标题栏标题文字
+    @Bind(R.id.titleText)
+    TextView  titleText;
+    //标题栏右侧图标
+    @Bind(R.id.titleRightImage)
+    ImageView titleRightImage;
+    @Bind(R.id.viewPage)
+    PullToRefreshWebView refreshWebView;
 
     @Override
-
     protected
     void onCreate ( Bundle savedInstanceState ) {
 
-        super.onCreate ( savedInstanceState );
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE|WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         application = ( BaseApplication ) this.getApplication ( );
         resources = this.getResources ( );
-        this.setContentView ( R.layout.new_load_page );
-        setImmerseLayout ( findViewById ( R.id.newtitleLayout ) );
+        this.setContentView(R.layout.new_load_page);
+        ButterKnife.bind(this);
+        setImmerseLayout(findViewById(R.id.newtitleLayout));
         mHandler = new Handler ( this );
         share = new SharePopupWindow ( WebViewActivity.this, WebViewActivity.this, application );
         myBroadcastReceiver = new MyBroadcastReceiver(WebViewActivity.this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
         Bundle bundle = this.getIntent ( ).getExtras ( );
         url = bundle.getString ( Constants.INTENT_URL );
-        findViewById ( );
-        initView ( );
-    }
-
-    @Override
-    protected
-    void findViewById ( ) {
-
-        homeTitle = ( RelativeLayout ) this.findViewById ( R.id.newtitleLayout );
-        //web下拉组件刷新
-        swipeRefreshLayout = (ScrollSwipeRefreshLayout) this.findViewById(R.id.pageLoadView);
-        titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
-        titleLeftImage.setOnClickListener ( this );
-       // titleLeftImage.setClickable ( false );
-        titleLeftImage.setVisibility ( View.GONE );
-        titleText = ( TextView ) this.findViewById ( R.id.titleText );
-        SystemTools.setFontStyle ( titleText, application );
-        titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
-        //titleRightImage.setClickable ( false );
-        titleRightImage.setVisibility ( View.GONE );
-        titleRightImage.setOnClickListener ( this );
-        viewPage = ( KJWebView ) this.findViewById ( R.id.viewPage );
-        titleRightLeftImage = ( ImageView ) this.findViewById ( R.id.titleRightLeftImage );
-        //titleRightLeftImage.setClickable ( false );
-        titleRightLeftImage.setVisibility ( View.GONE );
-        titleRightLeftImage.setOnClickListener ( this );
+        initView();
     }
 
     @Override
@@ -138,59 +103,43 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
     void initView ( ) {
 
         //设置title背景
-        homeTitle.setBackgroundColor ( SystemTools.obtainColor ( application.obtainMainColor ( ) ) );
+        homeTitle.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         //设置左侧图标
         Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_back );
-        SystemTools.loadBackground ( titleLeftImage, leftDraw );
+        SystemTools.loadBackground(titleLeftImage, leftDraw);
         //设置右侧图标
-        Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
-        SystemTools.loadBackground ( titleRightImage, rightDraw );
-        //设置分享图片
-        Drawable rightLeftDraw = resources.getDrawable ( R.drawable.home_title_right_share );
-        SystemTools.loadBackground ( titleRightLeftImage, rightLeftDraw );
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
+        Drawable rightDraw = resources.getDrawable ( R.drawable.home_title_right_share );
+        SystemTools.loadBackground(titleRightImage, rightDraw);
+        viewPage = refreshWebView.getRefreshableView();
+        refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
             @Override
-            public void onRefresh() {
+            public void onRefresh(PullToRefreshBase<WebView> pullToRefreshBase) {
+
                 viewPage.reload();
             }
         });
-        loadPage ( );
+        loadPage();
     }
 
     private void loadPage()
     {
         viewPage.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         viewPage.setVerticalScrollBarEnabled(false);
-        viewPage.setBarHeight(8);
         viewPage.setClickable(true);
-        viewPage.setUseWideViewPort(true);
+        viewPage.getSettings().setUseWideViewPort(true);
         //是否需要避免页面放大缩小操作
 
-        viewPage.setSupportZoom(true);
-        viewPage.setBuiltInZoomControls(true);
-        viewPage.setJavaScriptEnabled(true);
-        viewPage.setCacheMode(WebSettings.LOAD_DEFAULT);
-        viewPage.setSaveFormData(true);
-        viewPage.setAllowFileAccess(true);
-        viewPage.setLoadWithOverviewMode(false);
-        viewPage.setSavePassword(true);
-        viewPage.setLoadsImagesAutomatically(true);
-        viewPage.loadUrl( null, url, titleText, null, application, swipeRefreshLayout);
-        viewPage.setOnCustomScroolChangeListener(
-                new KJSubWebView.ScrollInterface() {
+        viewPage.getSettings().setSupportZoom(true);
+        viewPage.getSettings().setBuiltInZoomControls(true);
+        viewPage.getSettings().setJavaScriptEnabled(true);
+        viewPage.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        viewPage.getSettings().setSaveFormData(true);
+        viewPage.getSettings().setAllowFileAccess(true);
+        viewPage.getSettings().setLoadWithOverviewMode(false);
+        viewPage.getSettings().setSavePassword(true);
+        viewPage.getSettings().setLoadsImagesAutomatically(true);
+        viewPage.loadUrl(url);
 
-                    @Override
-                    public void onSChanged(int l, int t, int oldl, int oldt) {
-                        if (viewPage.getWebScrollY() == 0) {
-                            swipeRefreshLayout.setEnabled(true);
-                        } else {
-                            swipeRefreshLayout.setEnabled(false);
-                        }
-                    }
-                }
-        );
         viewPage.setWebViewClient(
                 new WebViewClient() {
 
@@ -203,7 +152,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                                 WebViewActivity.this,
                                 titleText, mHandler,
                                 application);
-                        return filter.shouldOverrideUrlBySFriend(viewPage, url, swipeRefreshLayout);
+                        return filter.shouldOverrideUrlBySFriend(viewPage, url);
                     }
 
                     @Override
@@ -219,7 +168,6 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
                         // titleRightLeftImage.setClickable ( true );
                         titleLeftImage.setVisibility(View.VISIBLE);
                         titleRightImage.setVisibility(View.GONE);
-                        titleRightLeftImage.setVisibility(View.VISIBLE);
                         /*titleLeftImage.setClickable ( true );
                         titleRightImage.setClickable ( true );
                         titleRightLeftImage.setClickable ( true );*/
@@ -252,113 +200,94 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
 
     }
 
-    @Override
-    public
-    void onClick ( View v ) {
-
-        switch ( v.getId () )
+    @OnClick(R.id.titleLeftImage)
+    void doBack()
+    {
+        if(viewPage.canGoBack ())
         {
-            case R.id.titleLeftImage:
+            viewPage.goBack ( );
+        }
+        else
+        {
+            //清空消息
+            if(0 < application.titleStack.size())
             {
-                if(viewPage.canGoBack ())
-                {
-                    viewPage.goBack ( titleText, null, application);
-                }
-                else
-                {
-                    //清空消息
-                    if(0 < application.titleStack.size())
-                    {
-                        application.titleStack.pop ();
+                application.titleStack.pop ();
+            }
+
+            //关闭界面
+            WebViewActivity.this.finish ();
+        }
+    }
+
+    @OnClick(R.id.titleRightImage)
+    void doShare()
+    {
+        String text = application.obtainMerchantName ()+"分享";
+        String imageurl = application.obtainMerchantLogo ();
+        if(!imageurl.contains ( "http://" ))
+        {
+            //加上域名
+            imageurl = application.obtainMerchantUrl () + imageurl;
+        }
+        else if( TextUtils.isEmpty ( imageurl ))
+        {
+            imageurl = Constants.COMMON_SHARE_LOGO;
+        }
+        String title = application.obtainMerchantName ()+"分享";
+        String url = null;
+        if(0 == application.titleStack.size ()) {
+            url = application.obtainMerchantUrl ();
+        }
+        else
+        {
+            url = application.titleStack.peek ().getPageUrl ();
+            url = SystemTools.shareUrl ( application, url );
+        }
+        ShareModel msgModel = new ShareModel ();
+        msgModel.setImageUrl ( imageurl);
+        msgModel.setText ( text );
+        msgModel.setTitle ( title );
+        msgModel.setUrl ( url );
+        share.initShareParams ( msgModel );
+        share.showShareWindow ( );
+        share.showAtLocation (
+                titleRightImage,
+                Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0
+        );
+        share.setPlatformActionListener (
+                new PlatformActionListener ( ) {
+                    @Override
+                    public
+                    void onComplete (
+                            Platform platform, int i, HashMap< String, Object > hashMap
+                    ) {
+                        Message msg = Message.obtain ();
+                        msg.what = Constants.SHARE_SUCCESS;
+                        msg.obj = platform;
+                        mHandler.sendMessage ( msg );
                     }
 
-                    //关闭界面
-                    WebViewActivity.this.finish ();
-                }
-            }
-            break;
-            case R.id.titleRightImage:
-            {
-                Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh_loding );
-                SystemTools.loadBackground ( titleRightImage, rightDraw );
-                SystemTools.setRotateAnimation(titleRightImage);
-                /*PageInfoModel pageInfo = application.titleStack.peek ( );
-                viewPage.loadUrl ( pageInfo.getPageUrl (), titleText, null, null );*/
-                viewPage.reload ();
-            }
-            break;
-            case R.id.titleRightLeftImage:
-            {
-                String text = application.obtainMerchantName ()+"分享";
-                String imageurl = application.obtainMerchantLogo ();
-                if(!imageurl.contains ( "http://" ))
-                {
-                    //加上域名
-                    imageurl = application.obtainMerchantUrl () + imageurl;
-                }
-                else if( TextUtils.isEmpty ( imageurl ))
-                {
-                    imageurl = Constants.COMMON_SHARE_LOGO;
-                }
-                String title = application.obtainMerchantName ()+"分享";
-                String url = null;
-                if(0 == application.titleStack.size ()) {
-                    url = application.obtainMerchantUrl ();
-                }
-                else
-                {
-                    url = application.titleStack.peek ().getPageUrl ();
-                    url = SystemTools.shareUrl ( application, url );
-                }
-                ShareModel msgModel = new ShareModel ();
-                msgModel.setImageUrl ( imageurl);
-                msgModel.setText ( text );
-                msgModel.setTitle ( title );
-                msgModel.setUrl ( url );
-                share.initShareParams ( msgModel );
-                share.showShareWindow ( );
-                share.showAtLocation (
-                        findViewById ( R.id.titleRightLeftImage ),
-                        Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0
-                                     );
-                share.setPlatformActionListener (
-                        new PlatformActionListener ( ) {
-                            @Override
-                            public
-                            void onComplete (
-                                    Platform platform, int i, HashMap< String, Object > hashMap
-                                            ) {
-                                Message msg = Message.obtain ();
-                                msg.what = Constants.SHARE_SUCCESS;
-                                msg.obj = platform;
-                                mHandler.sendMessage ( msg );
-                            }
+                    @Override
+                    public
+                    void onError ( Platform platform, int i, Throwable throwable ) {
+                        Message msg = Message.obtain ();
+                        msg.what = Constants.SHARE_ERROR;
+                        msg.obj = platform;
+                        mHandler.sendMessage ( msg );
+                    }
 
-                            @Override
-                            public
-                            void onError ( Platform platform, int i, Throwable throwable ) {
-                                Message msg = Message.obtain ();
-                                msg.what = Constants.SHARE_ERROR;
-                                msg.obj = platform;
-                                mHandler.sendMessage ( msg );
-                            }
-
-                            @Override
-                            public
-                            void onCancel ( Platform platform, int i ) {
-                                Message msg = Message.obtain ();
-                                msg.what = Constants.SHARE_CANCEL;
-                                msg.obj = platform;
-                                mHandler.sendMessage ( msg );
-                            }
-                        }
-                                                );
-                share.setOnDismissListener ( new PoponDismissListener ( WebViewActivity.this ) );
-            }
-            break;
-            default:
-                break;
-        }
+                    @Override
+                    public
+                    void onCancel ( Platform platform, int i ) {
+                        Message msg = Message.obtain ();
+                        msg.what = Constants.SHARE_CANCEL;
+                        msg.obj = platform;
+                        mHandler.sendMessage ( msg );
+                    }
+                }
+        );
+        share.setOnDismissListener ( new PoponDismissListener ( WebViewActivity.this ) );
     }
 
     @Override
@@ -370,7 +299,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
         {
             if(viewPage.canGoBack ())
             {
-                viewPage.goBack ( titleText, mHandler, application );
+                viewPage.goBack ( );
             }
             else {
                 //清空消息
@@ -485,8 +414,8 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
             {
                 PayModel payModel = ( PayModel ) msg.obj;
                 //调用JS
-                viewPage.loadUrl ( null, "javascript:utils.Go2Payment("+payModel.getCustomId ()+","+ payModel.getTradeNo ()+","+ payModel.getPaymentType ()+", "
-                                   + "false);\n", titleText, null, application, swipeRefreshLayout );
+                viewPage.loadUrl ( "javascript:utils.Go2Payment("+payModel.getCustomId ()+","+ payModel.getTradeNo ()+","+ payModel.getPaymentType ()+", "
+                                   + "false);\n" );
             }
             default:
                 break;
@@ -499,6 +428,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
     protected
     void onDestroy ( ) {
         super.onDestroy ( );
+        ButterKnife.unbind(this);
         if( null != myBroadcastReceiver)
         {
             myBroadcastReceiver.unregisterReceiver();
@@ -510,7 +440,7 @@ class WebViewActivity extends BaseActivity implements View.OnClickListener, Hand
     void onFinishReceiver ( MyBroadcastReceiver.ReceiverType type, Object msg ) {
         if(type == MyBroadcastReceiver.ReceiverType.wxPaySuccess)
         {
-            viewPage.goBack ( titleText, null, application);
+            viewPage.goBack ( );
         }
     }
 

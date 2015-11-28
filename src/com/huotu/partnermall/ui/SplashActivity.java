@@ -43,6 +43,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import cn.jpush.android.api.JPushInterface;
 
 
@@ -50,7 +52,8 @@ public class SplashActivity extends BaseActivity {
 
     public static final String TAG = SplashActivity.class.getSimpleName ( );
 
-    private RelativeLayout mSplashItem_iv = null;
+    @Bind(R.id.welcomeTips)
+    RelativeLayout mSplashItem_iv;
     private
     BaseApplication application;
     private Intent  locationI    = null;
@@ -61,16 +64,11 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected
-    void findViewById ( ) {
-        mSplashItem_iv = ( RelativeLayout ) findViewById ( R.id.welcomeTips );
-    }
-
-    @Override
-    protected
     void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
         application = ( BaseApplication ) SplashActivity.this.getApplication ( );
-        setContentView ( R.layout.activity_splash );
+        setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
         downloadManager = ( DownloadManager ) this.getSystemService ( Context.DOWNLOAD_SERVICE );
         DisplayMetrics metrics = new DisplayMetrics ( );
         getWindowManager ( ).getDefaultDisplay ( ).getMetrics ( metrics );
@@ -79,7 +77,6 @@ public class SplashActivity extends BaseActivity {
         Constants.SCREEN_WIDTH = metrics.widthPixels;
 
         mHandler = new Handler ( getMainLooper ( ) );
-        findViewById ( );
         initView ( );
     }
 
@@ -258,6 +255,7 @@ public class SplashActivity extends BaseActivity {
     protected
     void onDestroy ( ) {
         super.onDestroy ( );
+        ButterKnife.unbind(this);
         if (null != locationI)
         {
             stopService(locationI);
