@@ -323,9 +323,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
                         super.onPageStarted(view, url, favicon);
-                        /*titleLeftImage.setClickable ( false );
-                        titleRightImage.setClickable ( false );
-                        titleRightLeftImage.setClickable ( false );*/
                     }
 
                     @Override
@@ -333,22 +330,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                         //页面加载完成后,读取菜单项
                         super.onPageFinished(view, url);
                         if (url.contains("&back") || url.contains("?back")) {
-                            //application.titleStack.clear ();
                             mHandler.sendEmptyMessage(Constants.LEFT_IMG_SIDE);
                         }
-                        //titleRightLeftImage.setClickable ( true );
-                        // titleLeftImage.setVisibility ( View.VISIBLE );
-                        //titleLeftImage.setClickable ( true );
-                        //titleRightImage.setClickable ( true );
-                        //titleRightLeftImage.setClickable ( true );
-                        titleLeftImage.setVisibility(View.VISIBLE);
-                        titleRightImage.setVisibility(View.GONE);
-                        titleText.setText(view.getTitle());
-                        //切换背景
-                        titleRightImage.clearAnimation();
-                        Drawable rightDraw = resources.getDrawable(R.drawable
-                                .main_title_left_refresh);
-                        SystemTools.loadBackground(titleRightImage, rightDraw);
                     }
 
                     @Override

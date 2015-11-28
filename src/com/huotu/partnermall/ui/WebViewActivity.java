@@ -164,19 +164,6 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
-                        //页面加载完成后,读取菜单项
-                        // titleRightLeftImage.setClickable ( true );
-                        titleLeftImage.setVisibility(View.VISIBLE);
-                        titleRightImage.setVisibility(View.GONE);
-                        /*titleLeftImage.setClickable ( true );
-                        titleRightImage.setClickable ( true );
-                        titleRightLeftImage.setClickable ( true );*/
-                        titleText.setText(view.getTitle());
-                        //切换背景
-                        titleRightImage.clearAnimation();
-                        Drawable rightDraw = resources.getDrawable(R.drawable
-                                .main_title_left_refresh);
-                        SystemTools.loadBackground(titleRightImage, rightDraw);
                     }
 
 
@@ -186,10 +173,6 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
                             String failingUrl
                     ) {
                         super.onReceivedError(view, errorCode, description, failingUrl);
-                        //错误页面处理
-                        //隐藏菜单栏
-                        //bottomMenuLayout.setVisibility ( View.GONE  );
-                        /*viewPage.loadUrl ( "file:///android_asset/maintenance.html", titleText, mHandler, application );*/
 
                     }
 
