@@ -54,7 +54,6 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
         initView();
     }
 
-    @Override
     protected void  findViewById() {
         ET= (KJEditText) findViewById(R.id.ET);
         header_title= (TextView) findViewById(R.id.header_title);

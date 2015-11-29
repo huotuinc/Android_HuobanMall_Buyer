@@ -79,7 +79,6 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
         initView();
     }
 
-    @Override
     protected void findViewById() {
         app = (BaseApplication) this.getApplication();
         shopName = (TextView) findViewById(R.id.shopName);

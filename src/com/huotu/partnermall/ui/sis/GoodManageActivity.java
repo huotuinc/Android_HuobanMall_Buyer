@@ -125,7 +125,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         setImmerseLayout();
     }
 
-    @Override
     protected void findViewById() {
         app = (BaseApplication)this.getApplication();
         rlcd = (RelativeLayout)findViewById(R.id.goodmange_cd);

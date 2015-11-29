@@ -13,22 +13,15 @@ import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.ui.WebViewActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
-import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.KJLoger;
-import com.huotu.partnermall.utils.ToastUtils;
-import com.huotu.partnermall.widgets.KJWebView;
 import com.huotu.partnermall.widgets.NoticePopWindow;
-import com.huotu.partnermall.widgets.PayPopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
-import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
 
 /**
  * 拦截页面操作类
@@ -70,11 +63,8 @@ class UrlFilterUtils {
      * @return
      */
     public
-    boolean shouldOverrideUrlBySFriend ( KJWebView view, String url, ScrollSwipeRefreshLayout swipeRefreshLayout ) {
+    boolean shouldOverrideUrlBySFriend ( WebView view, String url ) {
         if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
-            /*String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
-            view.loadUrl ( urlStr, titleView, null, null );
-            return false;*/
             String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
             Bundle bundle = new Bundle ( );
             bundle.putString ( Constants.INTENT_URL, urlStr );
@@ -107,18 +97,12 @@ class UrlFilterUtils {
         else if(url.contains(Constants.WEB_TAG_USERINFO)){
             //修改用户信息
             //判断修改信息的类型
-            String type = url.substring(url.indexOf("=", 1)+1, url.indexOf("&", 1));
-            if(Constants.MODIFY_PSW.equals ( type ))
-            {
-                //弹出修改密码框
-            }
             return true;
         }else if(url.contains(Constants.WEB_TAG_LOGOUT)){
             //处理登出操作
             //鉴权失效
             //清除登录信息
             application.logout ();
-            application.titleStack.clear ();
             //跳转到登录界面
             ActivityUtils.getInstance ().skipActivity ( aty, LoginActivity.class );
         }else if(url.contains(Constants.WEB_TAG_INFO)){
@@ -126,7 +110,7 @@ class UrlFilterUtils {
             return true;
         }else if(url.contains(Constants.WEB_TAG_FINISH)){
             if(view.canGoBack())
-                view.goBack(null, null, null);
+                view.goBack();
 
         }
         else if(url.contains ( Constants.WEB_PAY ) )
@@ -195,11 +179,7 @@ class UrlFilterUtils {
         else
         {
             //跳转到新界面
-            /*Bundle bundle = new Bundle (  );
-            bundle.putString ( Constants.INTENT_URL, url );
-            ActivityUtils.getInstance ().showActivity ( aty,  WebViewActivity.class, bundle);
-            return true;*/
-            view.loadUrl ( aty, url, titleView, mHandler, application, swipeRefreshLayout );
+            view.loadUrl(url);
             return false;
         }
         return false;

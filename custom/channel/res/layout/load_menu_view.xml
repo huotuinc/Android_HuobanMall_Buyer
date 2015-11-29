@@ -6,7 +6,7 @@
         android:layout_height="@dimen/main_title_height"
         android:id="@+id/loadMenuView">
 
-        <com.huotu.partnermall.widgets.KJWebView
+        <WebView
             android:id="@+id/menuPage"
             android:layout_width="match_parent"
             android:layout_height="@dimen/main_title_height"
