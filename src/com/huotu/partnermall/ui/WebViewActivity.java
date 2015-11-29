@@ -86,9 +86,9 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
-
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         application = ( BaseApplication ) this.getApplication ( );
         resources = this.getResources ( );
         this.setContentView(R.layout.new_load_page);

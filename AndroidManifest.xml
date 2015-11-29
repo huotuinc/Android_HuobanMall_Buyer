@@ -109,10 +109,11 @@
             android:screenOrientation="portrait"
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity android:name="com.huotu.partnermall.ui.WebViewActivity"
                   android:theme="@style/AppTheme"
-                  android:screenOrientation="portrait"></activity>
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode = "stateVisible|adjustResize"></activity>
 
         <service android:name="com.huotu.partnermall.service.LocationService"></service>
         <!-- 极光配置 -->

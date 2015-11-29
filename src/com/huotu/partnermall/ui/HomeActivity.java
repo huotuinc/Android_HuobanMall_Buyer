@@ -124,7 +124,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     protected
     void onCreate ( Bundle savedInstanceState ) {
         // TODO Auto-generated method stub
-        super.onCreate ( savedInstanceState );
+        super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         application = ( BaseApplication ) HomeActivity.this.getApplication ( );
         resources = HomeActivity.this.getResources ( );
         mHandler = new Handler ( this );
