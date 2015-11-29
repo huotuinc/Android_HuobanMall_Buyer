@@ -1,15 +1,19 @@
 package com.huotu.partnermall.ui.sis;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,6 +27,7 @@ import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.utils.Util;
 import com.huotu.partnermall.utils.ViewHolderUtil;
 import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 
@@ -33,15 +38,16 @@ import java.util.List;
 import it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow;
 
 public class SelectTempleteActivity extends Activity implements View.OnClickListener{
-
     FeatureCoverFlow flow;
     CoverFlowAdapter adapter;
     List<SisTemplateListModel> data;
-    TextView back;
+    Button back;
     TextView operate;
     RelativeLayout header;
     Long templateId;
     BaseApplication app;
+    ProgressDialog pgDlg;
+    Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,67 +55,52 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
         setContentView(R.layout.sis_activity_select_templete);
 
         app=(BaseApplication)this.getApplication();
+        handler =new Handler(getMainLooper());
         header  =(RelativeLayout)findViewById(R.id.sis_selecttemplate_header);
         header.setBackgroundColor(SystemTools.obtainColor( ((BaseApplication)SelectTempleteActivity.this.getApplication()).obtainMainColor() ));
 
-        back=(TextView)findViewById(R.id.sis_selecttemplate_back);
+        back=(Button)findViewById(R.id.sis_selecttemplate_back);
         back.setOnClickListener(this);
         operate=(TextView)findViewById(R.id.sis_selecttemplate_operate);
         operate.setOnClickListener(this);
 
         flow = (FeatureCoverFlow)findViewById(R.id.sis_selecttemplate_show);
-//        int screenWidth = getWindowManager().getDefaultDisplay().getWidth();
-//        int screenHeight=getWindowManager().getDefaultDisplay().getHeight();
-//        int wid = screenWidth*80/100;
-//        int hei = screenHeight*70/100;
-//        flow.setCoverWidth(wid);
-//        flow.setCoverHeight(hei);
-//        flow.invalidate();
+
         adapter =new CoverFlowAdapter(this);
         data=new ArrayList<>();
-//        TemplateModel model = new TemplateModel();
-//        model.setUrl("http://file27.mafengwo.net/M00/C3/AE/wKgB6lQOj0WAV9CnAADdQ7JRe5c84.jpeg");
-//        model.setTitle("aaaaaaaaaa");
-//        data.add(model);
-//        model = new TemplateModel();
-//        model.setUrl("http://news.xinhuanet.com/photo/2015-10/29/128371793_14460865923871n.jpg");
-//        model.setTitle("bbbbbbbbb");
-//        data.add(model);
-//        model = new TemplateModel();
-//        model.setUrl("http://photocdn.sohu.com/20101028/Img276615376.jpg");
-//        model.setTitle("ccccccccc");
-//        data.add(model);
-//        model = new TemplateModel();
-//        model.setUrl("http://tse3.mm.bing.net/th?id=OIP.Mf7393380e0097336300acdabcccc5947o0&pid=15.1");
-//        model.setTitle("dddddddddd");
-//        data.add(model);
-//        model = new TemplateModel();
-//        model.setUrl("http://img1.gtimg.com/kid/pics/28359/28359562.jpg");
-//        model.setTitle("eeeeeeeeee");
-//        data.add(model);
-//        model = new TemplateModel();
-//        model.setUrl("http://i3.sinaimg.cn/IT/2010/0606/20106691227.jpg");
-//        model.setTitle("ffffffffff");
-//        data.add(model);
-//        model = new TemplateModel();
-//        model.setUrl("http://tse2.mm.bing.net/th?id=OIP.M2a098aa358ab6282fe7bc98da41c6fbeo0&pid=15.1");
-//        model.setTitle("gggggggggg");
-//        data.add(model);
+        SisTemplateListModel model = new SisTemplateListModel();
+        model.setPictureUrl("");
+        model.setTid(1L);
+        data.add(model);
 
         adapter.setData(data);
 
-        getData();
-
         flow.setAdapter(adapter);
+
+        getData();
 
         flow.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //ToastUtils.showLongToast();
+                //data.get(position).setSelected( !data.get(position).isSelected());
+                //adapter.setSelectedId( data.get(position).getTid() );
+                //flow.setAdapter(adapter);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                //ToastUtils.showLongToast(SelectTempleteActivity.this,"nnnnnnnnnnn");
+            }
+        });
+
+        flow.setOnScrollPositionListener(new FeatureCoverFlow.OnScrollPositionListener() {
+            @Override
+            public void onScrolledToPosition(int position) {
+                flow.setSeletedItemPosition(position);
+            }
+
+            @Override
+            public void onScrolling() {
 
             }
         });
@@ -121,12 +112,24 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
             this.finish();
         }else if( v.getId()==R.id.sis_selecttemplate_operate){
             int idx = (int)flow.getSelectedItemId();
-            long templateid = data.get(idx).getId();
+            long templateid = data.get(idx).getTid();
             update( templateid );
         }
     }
 
     protected void update( long id ){
+        if (false == Util.isConnect(this)) {
+            ToastUtils.showLongToast(this,"无网络");
+            return;
+        }
+
+        if( pgDlg==null){
+            pgDlg=new ProgressDialog(this);
+            pgDlg.setCanceledOnTouchOutside(false);
+        }
+        pgDlg.setMessage("正在更新数据,请稍等...");
+        pgDlg.show();
+
         String url = SisConstant.INTERFACE_updateTemplate;
         url +="?sisid="+ SisConstant.SHOPINFO.getSisId();
         url +="&templateid="+ String.valueOf(id);
@@ -139,13 +142,25 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
                 BaseModel.class,
                 null,
                 new MyUpdateListener(this),
-                new ErrorListener(this,null,null)
+                new ErrorListener(this,null,null,pgDlg)
         );
         VolleyUtil.getRequestQueue().add(request);
     }
 
     protected  void getData(){
+        if (false == Util.isConnect(this)) {
+            ToastUtils.showLongToast(this,"无网络");
+            return;
+        }
+
         if( SisConstant.SHOPINFO==null )return;
+
+        if( pgDlg==null){
+            pgDlg=new ProgressDialog(this);
+            pgDlg.setCanceledOnTouchOutside(false);
+        }
+        pgDlg.setMessage("正在获取数据,请稍等...");
+        pgDlg.show();
 
         String url = SisConstant.INTERFACE_getTemplateList;
         url += "?sisid="+ String.valueOf( SisConstant.SHOPINFO.getSisId());
@@ -158,7 +173,7 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
                 AppSisTemplateListModel.class,
                 null,
                 new MyListener(this),
-                new ErrorListener(this,null,null)
+                new ErrorListener(this,null,null, pgDlg)
         );
         VolleyUtil.getRequestQueue().add(request);
     }
@@ -172,9 +187,9 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
         @Override
         public void onResponse(BaseModel baseModel ) {
             if( ref.get()==null) return;
-//            if( ref.get().progress!=null ) {
-//                ref.get().progress.dismissView();
-//            }
+            if( ref.get().pgDlg!=null ) {
+                ref.get().pgDlg.dismiss();
+            }
             if (null == baseModel) {
                 ToastUtils.showLongToast(ref.get(), "出错");
                 return;
@@ -189,12 +204,10 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
                 return;
             }
 
+            ToastUtils.showShortToast( ref.get() ,"设置模板成功" );
             ref.get().finish();
-            //ref.get().templateId = appSisTemplateListModel.getResultData().getTemplateid();
-            //ref.get().adapter.notifyDataSetChanged();
         }
     }
-
 
     static class MyListener implements Response.Listener<AppSisTemplateListModel> {
         WeakReference<SelectTempleteActivity> ref;
@@ -205,9 +218,10 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
         @Override
         public void onResponse(AppSisTemplateListModel appSisTemplateListModel) {
             if( ref.get()==null) return;
-//            if( ref.get().progress!=null ) {
-//                ref.get().progress.dismissView();
-//            }
+            if( ref.get().pgDlg!=null ) {
+                ref.get().pgDlg.dismiss();
+            }
+
             if (null == appSisTemplateListModel) {
                 ToastUtils.showLongToast(ref.get(), "出错");
                 return;
@@ -222,9 +236,39 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
                 return;
             }
 
-            ref.get().data = appSisTemplateListModel.getResultData().getList();
+            ref.get().data.clear();
+            ref.get().data.addAll(appSisTemplateListModel.getResultData().getList());
+            ref.get().adapter.setData(ref.get().data);
+            ref.get().adapter.setSelectedId( appSisTemplateListModel.getResultData().getTemplateid() );
             ref.get().templateId = appSisTemplateListModel.getResultData().getTemplateid();
-            ref.get().adapter.notifyDataSetChanged();
+
+
+//            if( ref.get().templateId!=null) {
+//                for (SisTemplateListModel item : ref.get().data) {
+//                    if (item.getTid().equals(ref.get().templateId)) {
+//                        item.setSelected(true);
+//                        break;
+//                    }
+//                }
+//            }
+
+            ref.get().flow.setAdapter(ref.get().adapter);
+
+            if( ref.get().templateId!=null) {
+                for ( int position =0;position < ref.get().data.size();position++) {
+                    if (ref.get().data.get(position).getTid().equals(ref.get().templateId)) {
+                        final int pos = position;
+                        ref.get().handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ref.get().flow.scrollToPosition(pos);
+                            }
+                        },400);
+
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -238,31 +282,11 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
         return super.onKeyDown(keyCode, event);
     }
 
-    class TemplateModel {
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        private String url;
-        private String title;
-    }
-
     public class CoverFlowAdapter extends BaseAdapter {
 
-        private List<SisTemplateListModel> mData = new ArrayList<>(0);
+        private List<SisTemplateListModel> mData;
         private Context mContext;
+        private Long selectId=-1L;
 
         public CoverFlowAdapter(Context context) {
             mContext = context;
@@ -272,14 +296,18 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
             mData = data;
         }
 
+        public void setSelectedId( Long id){
+            selectId = id;
+        }
+
         @Override
         public int getCount() {
-            return mData.size();
+            return mData==null? 0: mData.size();
         }
 
         @Override
         public Object getItem(int pos) {
-            return mData.get(pos);
+            return mData==null ? null: mData.get(pos);
         }
 
         @Override
@@ -296,12 +324,18 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
             }
 
             NetworkImageViewCircle iv = ViewHolderUtil.get( rowView , R.id.sis_selecttemplate_item_pic );
-            TextView tv = ViewHolderUtil.get(rowView , R.id.sis_selecttemplate_item_title);
+            //TextView tv = ViewHolderUtil.get(rowView , R.id.sis_selecttemplate_item_title);
+            TextView tvflag = ViewHolderUtil.get(rowView,R.id.sis_selecttemplate_item_flag);
 
             SisTemplateListModel model = mData.get(position);
             BitmapLoader.create().displayUrl(mContext, iv, model.getPictureUrl(), R.drawable.sis_pic, R.drawable.sis_pic);
 
             //tv.setText(model.ge());
+            if( selectId !=null && selectId.equals( model.getTid() ) ) {
+                tvflag.setVisibility(View.VISIBLE);
+            }else{
+                tvflag.setVisibility(View.GONE);
+            }
 
             return rowView;
         }

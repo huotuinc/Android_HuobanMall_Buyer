@@ -5,10 +5,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.ArcShape;
+import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +21,13 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,14 +55,15 @@ import com.huotu.partnermall.widgets.KJEditText;
 import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class AddGoodsActivity extends Activity implements View.OnClickListener{
     LinearLayout llClass1;
@@ -78,6 +84,8 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
     RelativeLayout rlHeader;
     RelativeLayout rlcd;
     TextView tvSelect;
+    TextView tvAll;
+    TextView tvLine;
     HorizontalScrollView scrollView;
     BaseApplication app;
     List<SisSortModel> categorys;
@@ -88,6 +96,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
     Handler handler;
     ProgressPopupWindow progress;
     ProgressDialog progressDialog;
+    Button btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,16 +104,21 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         setContentView(R.layout.sis_activity_add_goods);
 
         app = (BaseApplication)this.getApplication();
-        //progress = new ProgressPopupWindow(app, this, getWindowManager());
         handler = new Handler(getMainLooper());
+        btnBack = (Button)findViewById(R.id.sis_addgoods_back);
+        btnBack.setOnClickListener(this);
         rlcd = (RelativeLayout)findViewById(R.id.sis_addgoods_cd);
-        rlcd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) this.getApplication()).obtainMainColor()));
+        rlcd.setBackgroundColor(SystemTools.obtainColor(app.obtainMainColor()));
         rlSearchBar =(RelativeLayout)findViewById(R.id.sis_addgoods_searchBar);
+        rlSearchBar.setBackgroundColor( SystemTools.obtainColor( app.obtainMainColor()));
         rlHeader = (RelativeLayout)findViewById(R.id.sis_addgoods_header);
-        rlHeader.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) this.getApplication()).obtainMainColor()));
+        rlHeader.setBackgroundColor(SystemTools.obtainColor( app.obtainMainColor()));
         scrollView =(HorizontalScrollView)findViewById(R.id.sis_addgoods_scrollView);
         tvSelect =(TextView)findViewById(R.id.sis_addgoods_select);
         tvSelect.setOnClickListener(this);
+        tvAll = (TextView)findViewById(R.id.sis_addgoods_all);
+        tvAll.setOnClickListener(this);
+        tvLine =(TextView)findViewById(R.id.sis_addgoods_footerline);
         tvCancel = (TextView)findViewById(R.id.sis_addgoods_cancel);
         tvCancel.setOnClickListener(this);
         ivQuery = (ImageView)findViewById(R.id.sis_addgoods_query);
@@ -117,7 +131,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                         || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     if (TextUtils.isEmpty(etSearchBar.getText())) {
                         etSearchBar.requestFocus();
-                        etSearchBar.setError("不能为空");
+                        etSearchBar.setError("搜索条件不能为空");
                     } else {
                         key = etSearchBar.getText().toString();
                         key = key.trim();
@@ -134,11 +148,17 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                             AddGoodsActivity.this.searchKeysList.add(0, key);
                             keysAdapter.notifyDataSetChanged();
                             PreferenceHelper.writeString(AddGoodsActivity.this, PRE_SEARCHKEY_FILE, PRE_SEARCHKEY_NAME, temp);
-
-                            pageno = 0;
-                            isRefreshing = true;
-                            goodListView.setRefreshing(true);
                         }
+
+                        pageno = 0;
+                        isRefreshing = true;
+                        //goodListView.setRefreshing(true);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                goodListView.setRefreshing(true);
+                            }
+                        });
                     }
                     return true;
                 }
@@ -214,6 +234,8 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             rlSearchBar.setVisibility(View.VISIBLE);
             etSearchBar.requestFocus();
         }else if( v.getId()== R.id.sis_addgoods_select){
+            if( adapter!=null && adapter.getCount() <=0 ) return;
+
             if( ((TextView)v).getText().equals("∨")){
                 ((TextView) v).setText("∧");
                 llClass2.setVisibility(View.VISIBLE);
@@ -221,7 +243,26 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                 ((TextView) v).setText("∨");
                 llClass2.setVisibility(View.GONE);
             }
+        }else if( v.getId() == R.id.sis_addgoods_all ){
+            selectAll();
+        }else if( v.getId() == R.id.sis_addgoods_back){
+            this.finish();
         }
+    }
+
+    protected void selectAll(){
+        for (int i = 0; i < llClass1.getChildCount(); i++) {
+            llClass1.getChildAt(i).findViewById(R.id.sis_goods_class_footline).setBackgroundColor(Color.WHITE);
+            ((TextView)llClass1.getChildAt(i).findViewById(R.id.sis_goods_class_name)).setTextColor(Color.BLACK);
+        }
+        tvAll.setTextColor( Color.BLUE );
+        tvLine.setBackgroundColor(Color.BLUE);
+        llClass2.setVisibility(View.GONE);
+
+        classid = 0L;
+        pageno=0;
+        goodListView.setRefreshing(true);
+
     }
 
     protected void loadSearchKeys(){
@@ -247,17 +288,16 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         etSearchBar.setDropDownWidth(350);
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-        KJLoger.debug( "onWindowFocusChanged" );
-
-    }
-
     protected void getClassData(){
-        if( SisConstant.CATEGORY !=null ){
+        if( SisConstant.CATEGORY !=null && SisConstant.CATEGORY.size()>0 ){
             loadClass1(SisConstant.CATEGORY);
+            classid = 0L;//SisConstant.CATEGORY.get(0).getSisId();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    goodListView.setRefreshing(true);
+                }
+            },300);
             return;
         }
 
@@ -290,9 +330,12 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         VolleyUtil.getRequestQueue().add(request);
     }
 
-
-    protected void loadClass1( List<SisSortModel> data ){
+    protected void loadClass1( final List<SisSortModel> data ){
         llClass1.removeAllViews();
+
+        tvAll.setTextColor(Color.BLUE);
+        tvLine.setBackgroundColor(Color.BLUE);
+
         if( data ==null )return;
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -306,6 +349,9 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                         ((TextView)llClass1.getChildAt(i).findViewById(R.id.sis_goods_class_name)).setTextColor(Color.BLACK);
                     }
 
+                    tvAll.setTextColor(Color.BLACK);
+                    tvLine.setBackgroundColor(Color.WHITE);
+
                     v.findViewById(R.id.sis_goods_class_footline).setBackgroundColor(Color.BLUE);
                     ((TextView)v.findViewById(R.id.sis_goods_class_name)).setTextColor(Color.BLUE);
                     loadClass2((SisSortModel) v.getTag());
@@ -317,10 +363,23 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                     int leftScreen = left-scrollX;
                     scrollView.smoothScrollBy((leftScreen - helfwid ), 0);
 
+                    llClass2.setVisibility(View.GONE);
+                    tvSelect.setText("∨");
+
                     SisSortModel model = (SisSortModel)v.getTag();
                     classid = model.getSisId();
-                    goodListView.setRefreshing(true);
-                    //loadGoods( model.getId() , key , pageno );
+                    isRefreshing=true;
+                    pageno=0;
+                    goodsList.clear();
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            goodListView.onRefreshComplete();
+                            goodListView.setRefreshing();
+                        }
+                    });
                 }
             });
             TextView tvClass = (TextView)v.findViewById(R.id.sis_goods_class_name);
@@ -328,28 +387,47 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             v.setTag( item );
             llClass1.addView(v);
         }
-        if( data!=null && data.size()>0 ){
-            llClass1.getChildAt(0).findViewById(R.id.sis_goods_class_footline).setBackgroundColor(Color.BLUE);
-            ((TextView)llClass1.getChildAt(0).findViewById(R.id.sis_goods_class_name)).setTextColor(Color.BLUE);
-            loadClass2( (SisSortModel) llClass1.getChildAt(0).getTag() );
-        }
+        //if( data!=null && data.size()>0 ){
+            //llClass1.getChildAt(0).findViewById(R.id.sis_goods_class_footline).setBackgroundColor(Color.BLUE);
+            //((TextView)llClass1.getChildAt(0).findViewById(R.id.sis_goods_class_name)).setTextColor(Color.BLUE);
+            //loadClass2( (SisSortModel) llClass1.getChildAt(0).getTag() );
+        //}
     }
 
     protected void loadClass2(SisSortModel model ){
-        adapter=new ClassAdapter( model.getList() ,this);
+
+        List<SisSortModel> listfl= model.getList();
+        int m = listfl.size() % 4;
+        if( m >0){
+            for( int i=0;i<4 - m;i++){
+                SisSortModel empty =new SisSortModel();
+                empty.setSisId(-1L);
+                empty.setSisName("");
+                listfl.add(empty);
+            }
+        }
+
+        adapter=new ClassAdapter( listfl ,this);
         llClass2.setAdapter(adapter);
     }
 
     protected void loadGoods( long classid ,String key , int pageNo ){
+        if (false == Util.isConnect(this)) {
+            ToastUtils.showLongToast(this,"无网络");
+            goodListView.onRefreshComplete();
+            return;
+        }
 
         String url = SisConstant.INTERFACE_searchGoodsList;
-        url +="?userid="+ app.readMemberId();
-        url +="&categoryid="+ classid;
-        url +="&key="+ key;
-        url +="&pageno=" + pageNo;
-        AuthParamUtils authParamUtils = new AuthParamUtils(app , System.currentTimeMillis() , url , AddGoodsActivity.this );
 
-        String urlstr = authParamUtils.obtainUrlName();
+        AuthParamUtils authParamUtils = new AuthParamUtils(app , System.currentTimeMillis() , url , AddGoodsActivity.this );
+        Map<String,String> map = new HashMap<>();
+        map.put("userid" ,  app.readMemberId());
+        map.put("categoryid" , String.valueOf(classid));
+        map.put("key", key);
+        map.put("pageno", String.valueOf(pageNo));
+
+        String urlstr = authParamUtils.getEncodeUrl( map );
 
         GsonRequest<AppSisGoodsModel> request = new GsonRequest<AppSisGoodsModel>(
                 Request.Method.GET,
@@ -374,6 +452,10 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
             ref.get().goodListView.onRefreshComplete();
 
+            if( !validateData( ref.get() , appSisGoodsModel) ){
+                return;
+            }
+
             if( ref.get().isRefreshing){
                 ref.get().goodsList.clear();
                 ref.get().pageno = appSisGoodsModel.getResultData().getRpageno();
@@ -382,6 +464,12 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                 }
                 ref.get().goodsAdapter.notifyDataSetChanged();
             }else{
+                if (appSisGoodsModel.getResultData().getList() == null ||
+                        appSisGoodsModel.getResultData().getList().size() == 0) {
+                    ToastUtils.showShortToast(ref.get(), "已经没有数据了。");
+                    return;
+                }
+
                 ref.get().pageno = appSisGoodsModel.getResultData().getRpageno();
                 if( appSisGoodsModel.getResultData().getList()!=null ) {
                     ref.get().goodsList.addAll(appSisGoodsModel.getResultData().getList());
@@ -392,14 +480,17 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
     }
 
     static class MyGoodsErrorListener implements Response.ErrorListener{
-        WeakReference<Activity> ref;
-        public MyGoodsErrorListener(Activity act){
+        WeakReference<AddGoodsActivity> ref;
+        public MyGoodsErrorListener(AddGoodsActivity act){
             ref = new WeakReference<>(act);
         }
 
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             if( ref.get() ==null ) return;
+
+            ref.get().goodListView.onRefreshComplete();
+
             ToastUtils.showLongToast( ref.get() , "error" );
         }
     }
@@ -411,7 +502,6 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             ref =new WeakReference<>(act);
         }
 
-
         @Override
         public void onResponse(AppSisSortModel appSisSortModel) {
             if( ref.get()==null)return;
@@ -421,6 +511,11 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             }
             if( ref.get().progressDialog !=null){
                 ref.get().progressDialog.dismiss();
+            }
+            ref.get().goodListView.onRefreshComplete();
+
+            if( !validateData(ref.get(), appSisSortModel)){
+                return;
             }
 
             if( ref.get().categorys==null ){
@@ -432,9 +527,9 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             SisConstant.CATEGORY = appSisSortModel.getResultData().getList();
             ref.get().loadClass1(ref.get().categorys);
 
-            ref.get().classid = appSisSortModel.getResultData().getList().get(0).getSisId();
+            ref.get().classid = 0L;// appSisSortModel.getResultData().getList().get(0).getSisId();
             ref.get().pageno=0;
-            //ref.get().loadGoods( ref.get().classid , ref.get().key , ref.get().pageno );
+
             ref.get().handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -448,7 +543,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         WeakReference<AddGoodsActivity> ref;
 
         public MyErrorListener(AddGoodsActivity act){
-            ref = new WeakReference<AddGoodsActivity>(act);
+            ref = new WeakReference<>(act);
         }
 
         @Override
@@ -477,12 +572,12 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         }
         @Override
         public int getCount() {
-            return list.size();
+            return list==null? 0: list.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return list.get(position);
+            return list==null? null: list.get(position);
         }
 
         @Override
@@ -499,22 +594,39 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
             TextView tvName = ViewHolderUtil.get(convertView , R.id.sis_goods_class2_name);
             tvName.setTag( model );
+            tvName.setText( model.getSisName() );
 
             tvName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     SisSortModel data = (SisSortModel)v.getTag();
+                    if( data.getSisId()<0)return;
+
                     selectedClass = data;
                     ((TextView)v).setTextColor(Color.BLUE);
-                    //loadGoods( data.getId() );
+
+                    adapter.notifyDataSetChanged();
+
+                    llClass2.setVisibility(View.GONE);
+                    tvSelect.setText("∨");
+
+                    classid = data.getSisId();
+                    pageno=0;
+                    isRefreshing=true;
+                    goodsList.clear();
+                    goodListView.setRefreshing(true);
                 }
             });
 
-            if( selectedClass.equals( list.get(position) ) ){
+            if( selectedClass !=null && selectedClass.getSisId().equals( list.get(position).getSisId() ) ){
                 tvName.setTextColor(Color.BLUE);
             }else{
                 tvName.setTextColor(Color.BLACK);
             }
+
+            tvAll.setTextColor(Color.BLACK);
+            tvLine.setBackgroundColor(Color.WHITE);
+
             return convertView;
         }
     }
@@ -557,53 +669,63 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             TextView tvCommsion = ViewHolderUtil.get(convertView, R.id.sis_addgoods_item_commission);
             //String temp =  list.get(position).getProfit()
             DecimalFormat format =new DecimalFormat("0.00");
-            String temp = format.format( list.get(position).getProfit() );
-            tvCommsion.setText(  temp );
+            String temp = format.format(list.get(position).getProfit());
+            tvCommsion.setText(temp);
+            LinearLayout llOperate =ViewHolderUtil.get( convertView , R.id.sis_addgoods_item_ll_operate );
+            llOperate.setBackgroundColor( SystemTools.obtainColor( app.obtainMainColor() ) );
             TextView tvOperate= ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_operate);
+            tvOperate.setTextColor( SystemTools.obtainColor( app.obtainMainColor() ) );
             tvOperate.setTag( list.get(position) );
+            final ProgressBar pgbar = ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_pgbar);
             RelativeLayout rl = ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_ll);
             TextView tvValidate = ViewHolderUtil.get(convertView,R.id.sis_addgoods_items_invalidate);
-            LinearLayout main= ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_main);
+//            LinearLayout main= ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_main);
+//            main.setTag( list.get(position) );
 
             rl.setVisibility( list.get(position).isValidate() ? View.VISIBLE:View.GONE );
-            tvValidate.setVisibility( list.get(position).isValidate()? View.GONE : View.VISIBLE );
+            tvValidate.setVisibility(list.get(position).isValidate() ? View.GONE : View.VISIBLE);
 
-            tvName.setText(list.get(position).getName());
+            tvName.setText(list.get(position).getGoodsName());
 
-            BitmapLoader.create().displayUrl(context, ivPic, list.get(position).getImgUrl() , R.drawable.ic_launcher, R.drawable.ic_launcher);
+            BitmapLoader.create().displayUrl(context, ivPic, list.get(position).getImgUrl(), R.drawable.ic_launcher, R.drawable.ic_launcher);
 
-            main.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ToastUtils.showLongToast(context, "goods");
-                    Intent intent =new Intent();
-                    intent.setClass(context, GoodsDetailActivity.class);
-                    intent.putExtra("url","http://www.sina.com.cn");
-                    context.startActivity(intent);
-                }
-            });
+//            main.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    SisGoodsModel model = (SisGoodsModel)v.getTag();
+//                    Intent intent = new Intent();
+//                    intent.setClass(context, GoodsDetailActivity.class);
+//                    intent.putExtra("goodsid", model.getGoodsId());
+//                    context.startActivity(intent);
+//                }
+//            });
 
             tvOperate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //ToastUtils.showLongToast(context, "online");
-                    SisGoodsModel model =(SisGoodsModel) v.getTag();
-                    online( model );
+                    SisGoodsModel model = (SisGoodsModel) v.getTag();
+                    pgbar.setVisibility(View.VISIBLE);
+                    v.setVisibility(View.GONE);
+                    online(model);
                 }
             });
 
-            tvOperate.setVisibility( list.get(position).isOnSale() ? View.GONE : View.VISIBLE );
+            llOperate.setVisibility(list.get(position).isGoodSelected() || list.get(position).isProcessing() ? View.GONE : View.VISIBLE);
+            pgbar.setVisibility( list.get(position).isProcessing() ? View.VISIBLE : View.GONE );
 
             return convertView;
         }
 
+
         protected void online( SisGoodsModel model){
+            model.setIsProcessing(true);
+
             String url = SisConstant.INTERFACE_operGoods;
             AuthParamUtils authParamUtils =new AuthParamUtils( app ,
                     System.currentTimeMillis() , url , context );
             Map para = new HashMap();
             para.put("userid", app.readMemberId());
-            para.put("goodsid", model.getId());
+            para.put("goodsid", model.getGoodsId());
             para.put("opertype", 1);
 
             Map maps = authParamUtils.obtainParams( para );
@@ -611,22 +733,22 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             GsonRequest<BaseModel> request = new GsonRequest<BaseModel>(
                     Request.Method.POST, url , BaseModel.class , null , maps ,
                     new MyOnSaleListener(model , this , (AddGoodsActivity) context),
-                    new MyOnSaleErrorListener( (AddGoodsActivity)context )
+                    new MyOnSaleErrorListener( (AddGoodsActivity)context , model )
             );
             VolleyUtil.getRequestQueue().add(request);
         }
     }
 
-    protected boolean validateData(BaseModel data){
+    protected static boolean validateData( Context context , BaseModel data){
 
         if(null == data){
-            ToastUtils.showLongToast( AddGoodsActivity.this ,"请求失败");
+            ToastUtils.showLongToast( context ,"请求失败");
             return false;
         }else if(data.getSystemResultCode()!=1){
-            ToastUtils.showLongToast( AddGoodsActivity.this , data.getSystemResultDescription());
+            ToastUtils.showLongToast( context , data.getSystemResultDescription());
             return false;
         }else if( data.getResultCode() != 1){
-            ToastUtils.showLongToast( AddGoodsActivity.this , data.getResultDescription());
+            ToastUtils.showLongToast( context , data.getResultDescription());
             return false;
         }
         return true;
@@ -646,8 +768,13 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         public void onResponse(BaseModel baseModel) {
             if( ref.get()==null )return;
 
-            ToastUtils.showLongToast( ref.get() , "onsale success");
-            this.model.setIsOnSale(true);
+            if(!validateData(ref.get(), baseModel)){
+                return;
+            }
+
+            //ToastUtils.showLongToast( ref.get() , "onsale success");
+            this.model.setGoodSelected(true);
+            this.model.setIsProcessing(false);
             this.adapter.notifyDataSetChanged();
             ref.get().setResult( RESULT_OK );
         }
@@ -655,15 +782,18 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
     static class MyOnSaleErrorListener implements Response.ErrorListener{
         WeakReference<AddGoodsActivity> ref;
-        public MyOnSaleErrorListener(AddGoodsActivity act){
+        SisGoodsModel model;
+        public MyOnSaleErrorListener(AddGoodsActivity act , SisGoodsModel model ){
             ref = new WeakReference<AddGoodsActivity>(act);
+            this.model = model;
         }
 
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             if( ref.get()==null)return;
-
-            ToastUtils.showLongToast(ref.get() , "error");
+            ToastUtils.showLongToast(ref.get(), "error");
+            this.model.setIsProcessing(false);
+            ref.get().adapter.notifyDataSetChanged();
         }
     }
 }

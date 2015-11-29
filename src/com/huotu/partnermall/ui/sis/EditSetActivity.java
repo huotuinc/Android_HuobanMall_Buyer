@@ -4,6 +4,7 @@ package com.huotu.partnermall.ui.sis;
 import android.content.Intent;
 import android.os.Bundle;
 import android.sax.RootElement;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -39,8 +40,7 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
     public Button header_back;
 
     public EditSetTypeEnum typeEnum;
-    public
-    ProgressPopupWindow progress;
+    public ProgressPopupWindow progress;
     WindowManager wManager;
 
     private RelativeLayout header;
@@ -68,8 +68,6 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void initView() {
         header_title.setText("修改");
-
-
         int temp = getIntent().getIntExtra("type", 0);
         typeEnum = EditSetTypeEnum.valueOf(temp);
         String tempName = EditSetTypeEnum.getName(temp);
@@ -77,7 +75,6 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
         String context = getIntent().getExtras().getString("text");
         ET.setText(context);
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -91,10 +88,8 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
         return super.onKeyDown(keyCode, event);
     }
 
-
-
     protected void commit() {
-        if (ET.getText().toString().trim() == "") {
+        if (TextUtils.isEmpty( ET.getText().toString().trim() )) {
             ToastUtils.showLongToast(this,"请输入内容");
             return;
         }
@@ -118,8 +113,8 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
         );
 
         progress.showProgress("正在更新数据，请稍等...");
-        progress.showAtLocation (
-                findViewById ( R.id.editRL ),
+        progress.showAtLocation(
+                findViewById(R.id.editRL),
                 Gravity.CENTER, 0, 0
         );
 

@@ -13,5 +13,13 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_alignBottom="@id/sis_selecttemplate_item_pic"
-        android:text="模板1"/>
+        android:text=""/>
+    <TextView
+        android:id="@+id/sis_selecttemplate_item_flag"
+        android:layout_alignTop="@id/sis_selecttemplate_item_pic"
+        android:layout_alignLeft="@id/sis_selecttemplate_item_pic"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:background="@drawable/skyblue_platform_checked"
+        android:layout_height="wrap_content"/>
 </RelativeLayout>

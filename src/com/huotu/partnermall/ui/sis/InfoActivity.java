@@ -54,7 +54,6 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
     private TextView header_title;
     private LinearLayout imgLabel;
     private LinearLayout shopNameLabel;
-    //private LinearLayout shopdescriptionLabel;
     private PhotoSelectView pop;
     private CropperView cropperView;
     private RelativeLayout header;
@@ -82,21 +81,21 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
 
     @Override
     protected void findViewById() {
-        app = (BaseApplication)this.getApplication();
-        shopName= (TextView) findViewById(R.id.shopName);
-        header = (RelativeLayout)findViewById(R.id.sis_header);
-        header_back= (Button) findViewById(R.id.header_back);
-        header_title= (TextView) findViewById(R.id.header_title);
-        imgLabel= (LinearLayout) findViewById(R.id.imgLabel);
-        shopNameLabel= (LinearLayout) findViewById(R.id.shopNameLabel);
+        app = (BaseApplication) this.getApplication();
+        shopName = (TextView) findViewById(R.id.shopName);
+        header = (RelativeLayout) findViewById(R.id.sis_header);
+        header_back = (Button) findViewById(R.id.header_back);
+        header_title = (TextView) findViewById(R.id.header_title);
+        imgLabel = (LinearLayout) findViewById(R.id.imgLabel);
+        shopNameLabel = (LinearLayout) findViewById(R.id.shopNameLabel);
         shopDescription = (TextView) findViewById(R.id.shopDescription);
-        shopDescriptionLabel= (LinearLayout) findViewById(R.id.shopDescriptionLabel);
-        shareTitle = (TextView)findViewById(R.id.shareTitle);
-        shareDesciption = (TextView)findViewById(R.id.shareDescription);
-        shareTitleLabel = (LinearLayout)findViewById(R.id.shareTitleLabel);
-        shareDescriptionLabel = (LinearLayout)findViewById(R.id.shareDescriptionLabel);
-        templateLabel = (LinearLayout)findViewById(R.id.shopTemplateLabel);
-        logo = (CircleImageView)findViewById(R.id.logo);
+        shopDescriptionLabel = (LinearLayout) findViewById(R.id.shopDescriptionLabel);
+        shareTitle = (TextView) findViewById(R.id.shareTitle);
+        shareDesciption = (TextView) findViewById(R.id.shareDescription);
+        shareTitleLabel = (LinearLayout) findViewById(R.id.shareTitleLabel);
+        shareDescriptionLabel = (LinearLayout) findViewById(R.id.shareDescriptionLabel);
+        templateLabel = (LinearLayout) findViewById(R.id.shopTemplateLabel);
+        logo = (CircleImageView) findViewById(R.id.logo);
     }
 
     @Override
@@ -111,14 +110,11 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
         shareTitleLabel.setOnClickListener(this);
         shareDescriptionLabel.setOnClickListener(this);
         templateLabel.setOnClickListener(this);
-
-       setData();
-
+        setData();
     }
 
-    protected void setData(){
-        if( SisConstant.SHOPINFO ==null )return;
-
+    protected void setData() {
+        if (SisConstant.SHOPINFO == null) return;
         VolleyUtil.getImageLoader(this).get(SisConstant.SHOPINFO.imgUrl, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
@@ -140,8 +136,8 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if( keyCode == KeyEvent.KEYCODE_BACK &&
-                event.getAction() == KeyEvent.ACTION_DOWN){
+        if (keyCode == KeyEvent.KEYCODE_BACK &&
+                event.getAction() == KeyEvent.ACTION_DOWN) {
             this.finish();
             return true;
         }
@@ -150,49 +146,48 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.header_back:{
+        switch (v.getId()) {
+            case R.id.header_back: {
                 finish();
             }
             break;
-            case R.id.imgLabel:{
+            case R.id.imgLabel: {
                 if (null == pop)
                     pop = new PhotoSelectView(this, this);
                 pop.show();
-
             }
             break;
-            case R.id.shopNameLabel:{
+            case R.id.shopNameLabel: {
                 Bundle bd = new Bundle();
-                bd.putInt("type", EditSetTypeEnum.SHOPNAME.getIndex() );
+                bd.putInt("type", EditSetTypeEnum.SHOPNAME.getIndex());
                 bd.putString("text", shopName.getText().toString());
                 ActivityUtils.getInstance().showActivityForResult(InfoActivity.this, SisConstant.REFRESHSHOPINFO_CODE, EditSetActivity.class, bd);
             }
             break;
-            case R.id.shopTemplateLabel:{
-                Intent intent =new Intent(this,SelectTempleteActivity.class);
+            case R.id.shopTemplateLabel: {
+                Intent intent = new Intent(this, SelectTempleteActivity.class);
                 this.startActivity(intent);
             }
             break;
-            case R.id.shopDescriptionLabel:{
+            case R.id.shopDescriptionLabel: {
                 Bundle bd = new Bundle();
-                bd.putInt("type", EditSetTypeEnum.SHOPDESCRIPTION.getIndex() );
+                bd.putInt("type", EditSetTypeEnum.SHOPDESCRIPTION.getIndex());
                 bd.putString("text", shopDescription.getText().toString());
                 ActivityUtils.getInstance().showActivityForResult(InfoActivity.this, SisConstant.REFRESHSHOPINFO_CODE, EditSetActivity.class, bd);
 
             }
             break;
-            case R.id.shareTitleLabel:{
+            case R.id.shareTitleLabel: {
                 Bundle bd = new Bundle();
-                bd.putInt("type", EditSetTypeEnum.SHARETITLE.getIndex() );
+                bd.putInt("type", EditSetTypeEnum.SHARETITLE.getIndex());
                 bd.putString("text", shareTitle.getText().toString());
                 ActivityUtils.getInstance().showActivityForResult(InfoActivity.this, SisConstant.REFRESHSHOPINFO_CODE, EditSetActivity.class, bd);
 
             }
             break;
-            case R.id.shareDescriptionLabel:{
+            case R.id.shareDescriptionLabel: {
                 Bundle bd = new Bundle();
-                bd.putInt("type", EditSetTypeEnum.SHAREDESCRIPTION.getIndex() );
+                bd.putInt("type", EditSetTypeEnum.SHAREDESCRIPTION.getIndex());
                 bd.putString("text", shareDesciption.getText().toString());
                 ActivityUtils.getInstance().showActivityForResult(InfoActivity.this, SisConstant.REFRESHSHOPINFO_CODE, EditSetActivity.class, bd);
 
@@ -200,7 +195,6 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
             break;
         }
     }
-
 
     public void onPhotoSelectBack(PhotoSelectView.SelectType type) {
         // TODO Auto-generated method stub
@@ -249,7 +243,6 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
         startActivityForResult(intent2, 1);
     }
 
-
     public void onDateBack(String date) {
         // TODO Auto-generated method stub
 
@@ -261,7 +254,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
         cropBitmap = bitmap;
 
         // 上传头像
-        if( false == canConnect() ){
+        if (false == canConnect()) {
             return;
         }
 
@@ -273,28 +266,28 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
         String profileData = imgStr;
 
         String url = SisConstant.INTERFACE_updateSisProfile;
-        Map<String,String> paras =new HashMap<>();
+        Map<String, String> paras = new HashMap<>();
         paras.put("profiletype", String.valueOf(EditSetTypeEnum.LOGO.getIndex()));
-        paras.put("profiledata", profileData );
-        paras.put("sisid", String.valueOf( SisConstant.SHOPINFO.getSisId() )) ;
+        paras.put("profiledata", profileData);
+        paras.put("sisid", String.valueOf(SisConstant.SHOPINFO.getSisId()));
 
-        AuthParamUtils authParamUtils =new AuthParamUtils(application , System.currentTimeMillis() , url , InfoActivity.this);
-        Map<String,String > maps = authParamUtils.obtainParams(paras);
+        AuthParamUtils authParamUtils = new AuthParamUtils(application, System.currentTimeMillis(), url, InfoActivity.this);
+        Map<String, String> maps = authParamUtils.obtainParams(paras);
         GsonRequest<AppSisBaseinfoModel> request = new GsonRequest<AppSisBaseinfoModel>(
                 Request.Method.POST,
-                url ,
+                url,
                 AppSisBaseinfoModel.class,
                 null,
                 maps,
                 new MyLogoListener(InfoActivity.this),
-                new ErrorListener(InfoActivity.this , null , progressPopupWindow)
+                new ErrorListener(InfoActivity.this, null, progressPopupWindow)
         );
 
-        if( progressPopupWindow==null){
-            progressPopupWindow =new ProgressPopupWindow(app , InfoActivity.this, getWindowManager());
+        if (progressPopupWindow == null) {
+            progressPopupWindow = new ProgressPopupWindow(app, InfoActivity.this, getWindowManager());
         }
         progressPopupWindow.showProgress("正在上传，请稍等...");
-        progressPopupWindow.showAtLocation( getWindow().getDecorView(), Gravity.CENTER , 0,0);
+        progressPopupWindow.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
 
         VolleyUtil.getRequestQueue().add(request);
     }
@@ -305,7 +298,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
         if (resultCode != Activity.RESULT_OK)
             return;
 
-        if( requestCode == SisConstant.REFRESHSHOPINFO_CODE && resultCode == RESULT_OK ) {
+        if (requestCode == SisConstant.REFRESHSHOPINFO_CODE && resultCode == RESULT_OK) {
             setData();
             setResult(RESULT_OK);
             return;
@@ -327,7 +320,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
                 // url是content开头的格式
                 if (uri.toString().startsWith("content://")) {
                     String path = null;
-                    String[] pojo = { MediaStore.Images.Media.DATA };
+                    String[] pojo = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContentResolver().query(uri, pojo, null,
                             null, null);
                     if (cursor != null) {
@@ -364,38 +357,40 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
 
     }
 
-    static class MyLogoListener implements Response.Listener<AppSisBaseinfoModel>{
+    static class MyLogoListener implements Response.Listener<AppSisBaseinfoModel> {
         WeakReference<InfoActivity> ref;
-        public MyLogoListener(InfoActivity act){
+
+        public MyLogoListener(InfoActivity act) {
             ref = new WeakReference<>(act);
         }
 
         @Override
         public void onResponse(AppSisBaseinfoModel appSisBaseinfoModel) {
-            if( ref.get()==null)return;
+            if (ref.get() == null) return;
 
-            if( ref.get().progressPopupWindow!=null){
+            if (ref.get().progressPopupWindow != null) {
                 ref.get().progressPopupWindow.dismissView();
             }
 
-            if( !validateData( ref.get() , appSisBaseinfoModel)){
+            if (!validateData(ref.get(), appSisBaseinfoModel)) {
                 return;
             }
 
             SisConstant.SHOPINFO = appSisBaseinfoModel.getResultData().getData();
+            ref.get().setResult(RESULT_OK);
             ref.get().setData();
         }
     }
 
-    static protected boolean validateData( Context context , BaseModel data){
-        if(null == data){
-            ToastUtils.showLongToast( context ,"请求失败");
+    static protected boolean validateData(Context context, BaseModel data) {
+        if (null == data) {
+            ToastUtils.showLongToast(context, "请求失败");
             return false;
-        }else if(data.getSystemResultCode()!=1){
-            ToastUtils.showLongToast( context , data.getSystemResultDescription());
+        } else if (data.getSystemResultCode() != 1) {
+            ToastUtils.showLongToast(context, data.getSystemResultDescription());
             return false;
-        }else if( data.getResultCode() != 1){
-            ToastUtils.showLongToast( context , data.getResultDescription());
+        } else if (data.getResultCode() != 1) {
+            ToastUtils.showLongToast(context, data.getResultDescription());
             return false;
         }
         return true;

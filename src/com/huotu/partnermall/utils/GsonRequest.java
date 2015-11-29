@@ -97,7 +97,7 @@ public class GsonRequest<T> extends Request<T> {
 		}
 		mTypeToken=null;
 		mParams=null;
-		this.setRetryPolicy( new DefaultRetryPolicy(15000,1,1.0f));
+		this.setRetryPolicy( new DefaultRetryPolicy(10000,1,1.0f));
 
 		this.setTag( TAG );
 	}
@@ -122,7 +122,7 @@ public class GsonRequest<T> extends Request<T> {
 		}
 		this.mClass=null;
 		this.mParams=null;
-		this.setRetryPolicy( new DefaultRetryPolicy(15000,1,1.0f));
+		this.setRetryPolicy( new DefaultRetryPolicy(10000,1,1.0f));
 		this.setTag(TAG);
 	}
 
@@ -149,7 +149,7 @@ public class GsonRequest<T> extends Request<T> {
 		this.mParams = paras;
 		this.mTypeToken=null;
 
-		this.setRetryPolicy( new DefaultRetryPolicy(15000,1,1.0f));
+		this.setRetryPolicy( new DefaultRetryPolicy(10000,1,1.0f));
 		this.setTag( TAG );
 	}
 
