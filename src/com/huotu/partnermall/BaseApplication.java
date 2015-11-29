@@ -70,8 +70,8 @@ public class BaseApplication extends Application {
     //底部菜单是否隐藏 true显示， false隐藏
     public boolean isMenuHide = false;
     //维护页面标题信息栈
-    public
-    Stack< PageInfoModel > titleStack;
+    /*public
+    Stack< PageInfoModel > titleStack;*/
 
     public
     AssetManager am;
@@ -115,10 +115,10 @@ public class BaseApplication extends Application {
         ShareSDK.initSDK ( getApplicationContext ( ) );
         solveAsyncTaskOnPostExecuteBug ( );
 
-        titleStack = new Stack< PageInfoModel > ( );
+        //titleStack = new Stack< PageInfoModel > ( );
         //加载异常处理模块
         CrashHandler crashHandler = CrashHandler.getInstance ( );
-        crashHandler.init ( getApplicationContext ( ), titleStack );
+        crashHandler.init ( getApplicationContext ( ) );
 
     }
 

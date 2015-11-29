@@ -444,7 +444,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 else {
                     try {
                         HomeActivity.this.finish ( );
-                        application.titleStack.clear ();
                         Runtime.getRuntime ( ).exit ( 0 );
                     }
                     catch ( Exception e ) {
@@ -510,16 +509,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         }
         String title = application.obtainMerchantName ()+"分享";
         String url = null;
-        if(0 == application.titleStack.size ())
-        {
-            url = application.obtainMerchantUrl ();
-            url = SystemTools.shareUrl ( application, url );
-        }
-        else
-        {
-            url = application.titleStack.peek ().getPageUrl ();
-            url = SystemTools.shareUrl(application, url);
-        }
+        url = pageWeb.getUrl();
+        url = SystemTools.shareUrl ( application, url );
         ShareModel msgModel = new ShareModel ();
         msgModel.setImageUrl ( imageurl);
         msgModel.setText ( text );

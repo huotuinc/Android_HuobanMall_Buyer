@@ -231,12 +231,6 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
         }
         else
         {
-            //清空消息
-            if(0 < application.titleStack.size())
-            {
-                application.titleStack.pop ();
-            }
-
             //关闭界面
             WebViewActivity.this.finish ();
         }
@@ -258,14 +252,7 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
         }
         String title = application.obtainMerchantName ()+"分享";
         String url = null;
-        if(0 == application.titleStack.size ()) {
-            url = application.obtainMerchantUrl ();
-        }
-        else
-        {
-            url = application.titleStack.peek ().getPageUrl ();
-            url = SystemTools.shareUrl ( application, url );
-        }
+        url = viewPage.getUrl();
         ShareModel msgModel = new ShareModel ();
         msgModel.setImageUrl ( imageurl);
         msgModel.setText ( text );
@@ -324,12 +311,6 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
                 viewPage.goBack ( );
             }
             else {
-                //清空消息
-                if(0 < application.titleStack.size())
-                {
-                    application.titleStack.pop ();
-                }
-
                 //关闭当前页
                 closeSelf ( WebViewActivity.this );
             }

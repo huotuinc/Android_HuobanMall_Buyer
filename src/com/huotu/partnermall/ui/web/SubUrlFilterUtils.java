@@ -82,7 +82,6 @@ class SubUrlFilterUtils {
             //鉴权失效
             //清除登录信息
             application.logout ();
-            application.titleStack.clear ();
             //跳转到登录界面
             ActivityUtils.getInstance ().skipActivity ( aty, LoginActivity.class );
         }else if(url.contains(Constants.WEB_TAG_INFO)){
@@ -151,7 +150,6 @@ class SubUrlFilterUtils {
             //鉴权失效
             //清除登录信息
             application.logout ();
-            application.titleStack.clear ();
             //跳转到登录界面
             ActivityUtils.getInstance ().skipActivity ( aty, LoginActivity.class );
         }
