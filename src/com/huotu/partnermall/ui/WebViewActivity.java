@@ -69,8 +69,8 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
     private MyBroadcastReceiver myBroadcastReceiver;
 
     //tilte组件
-    @Bind(R.id.homeTitle)
-    RelativeLayout homeTitle;
+    @Bind(R.id.newtitleLayout)
+    RelativeLayout newtitleLayout;
     //标题栏左侧图标
     @Bind(R.id.titleLeftImage)
     ImageView titleLeftImage;
@@ -93,7 +93,7 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
         resources = this.getResources ( );
         this.setContentView(R.layout.new_load_page);
         ButterKnife.bind(this);
-        setImmerseLayout(homeTitle);
+        setImmerseLayout(newtitleLayout);
         mHandler = new Handler ( this );
         share = new SharePopupWindow ( WebViewActivity.this, WebViewActivity.this, application );
         myBroadcastReceiver = new MyBroadcastReceiver(WebViewActivity.this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
@@ -107,7 +107,7 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
     void initView ( ) {
 
         //设置title背景
-        homeTitle.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        newtitleLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         //设置左侧图标
         Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_back );
         SystemTools.loadBackground(titleLeftImage, leftDraw);
@@ -118,7 +118,6 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
         refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
             @Override
             public void onRefresh(PullToRefreshBase<WebView> pullToRefreshBase) {
-
                 viewPage.reload();
             }
         });
@@ -168,6 +167,7 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
+                        titleText.setText(view.getTitle());
                     }
 
 
@@ -194,8 +194,7 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if(100 == newProgress)
-                {
+                if (100 == newProgress) {
                     refreshWebView.onRefreshComplete();
                 }
                 super.onProgressChanged(view, newProgress);

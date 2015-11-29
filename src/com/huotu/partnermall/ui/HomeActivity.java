@@ -260,7 +260,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                             WebView view, String
                             url
                     ) {
-                        doLoadUrl(url);
+                        pageWeb.loadUrl(url);
                         return true;
                     }
 
@@ -301,7 +301,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         String url = paramUtils.obtainUrl ();
         //首页默认为商户站点 + index
-        doLoadUrl(url);
+        pageWeb.loadUrl(url);
 
         pageWeb.setWebViewClient(
                 new WebViewClient() {
@@ -330,16 +330,29 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     public void onPageFinished(WebView view, String url) {
                         //页面加载完成后,读取菜单项
                         super.onPageFinished(view, url);
-                        if (url.contains("&back") || url.contains("?back")) {
-                            mHandler.sendEmptyMessage(Constants.LEFT_IMG_SIDE);
+                        titleText.setText(view.getTitle());
+                        if(url.contains ( "&back" ) || url.contains ( "?back" ))
+                        {
+                            mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
                         }
+                        else {
+
+                            if ( pageWeb.canGoBack ( ) ) {
+                                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+                            }
+                            else {
+                                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                            }
+                        }
+
                     }
 
                     @Override
                     public void onReceivedError(
                             WebView view, int errorCode, String description,
                             String failingUrl
-                    ) {
+                    )
+                    {
                         super.onReceivedError(view, errorCode, description, failingUrl);
                     }
 
@@ -352,6 +365,20 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 titleText.setText(title);
+                String url = view.getUrl();
+                if(url.contains ( "&back" ) || url.contains ( "?back" ))
+                {
+                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                }
+                else {
+
+                    if ( pageWeb.canGoBack ( ) ) {
+                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+                    }
+                    else {
+                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                    }
+                }
             }
 
             @Override
@@ -385,25 +412,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
     }
 
-    void doLoadUrl(String url)
-    {
-        if(url.contains ( "&back" ) || url.contains ( "?back" ))
-        {
-            pageWeb.loadUrl(url);
-            mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
-        }
-        else {
-
-            if ( pageWeb.canGoBack() ) {
-                pageWeb.loadUrl(url);
-                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
-            }
-            else {
-                pageWeb.loadUrl(url);
-                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
-            }
-        }
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == FILECHOOSER_RESULTCODE) {
@@ -569,14 +577,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             {
                 //加载菜单页面
                 String url = msg.obj.toString ();
-                doLoadUrl(url);
+                pageWeb.loadUrl(url);
             }
             break;
             case Constants.FRESHEN_PAGE_MESSAGE_TAG:
             {
                 //刷新界面
                 String url = msg.obj.toString ();
-                doLoadUrl ( url );
+                pageWeb.loadUrl(url);
             }
             break;
             //分享
