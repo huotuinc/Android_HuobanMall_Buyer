@@ -42,19 +42,20 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
     RelativeLayout header;
     RelativeLayout botton;
     RelativeLayout rlcd;
-    Long goodsid;
+    //Long goodsid;
     int tabtype;
     BaseApplication app;
     ProgressPopupWindow progressPopupWindow;
     TextView tvOn;
+    SisGoodsModel goods;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sis_activity_goods_detail);
 
-        if (getIntent() != null && getIntent().hasExtra("goodsid")) {
-            goodsid = getIntent().getLongExtra("goodsid", -1);
+        if (getIntent() != null && getIntent().hasExtra("goods")) {
+            goods = (SisGoodsModel)getIntent().getSerializableExtra("goods");
         }
         if (getIntent() != null && getIntent().hasExtra("state")) {
             tabtype = getIntent().getIntExtra("state", 0);
@@ -85,15 +86,14 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
 
         progressBar = (ProgressBar) findViewById(R.id.sis_goodsdetail_pgb);
 
-//        if (getIntent() != null && getIntent().hasExtra("url")) {
-//            url = getIntent().getStringExtra("url");
-//            if (!TextUtils.isEmpty(url)) {
-//                webview.loadUrl(url);
-//            }
-//        }
-
-        url = SisConstant.INTERFACE_getGoodDetails +"?goodsId="+ String.valueOf( goodsid );
-        webview.loadUrl(url);
+//        url = SisConstant.INTERFACE_getGoodDetails +"?goodsId="+ String.valueOf( goodsid );
+//        webview.loadUrl(url);
+        if( goods!=null && goods.getDetailsUrl() !=null && !TextUtils.isEmpty( goods.getDetailsUrl() )){
+            url = goods.getDetailsUrl();
+            webview.loadUrl(url);
+        }else{
+            ToastUtils.showShortToast(this,"url地址空");
+        }
 
         setImmerseLayout();
     }
@@ -143,14 +143,15 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
             return;
         }
 
-        if (goodsid < 0) return;
+        //if (goodsid < 0) return;
+        if( goods==null  )return;
 
         String url = SisConstant.INTERFACE_operGoods;
         AuthParamUtils authParamUtils = new AuthParamUtils(app,
                 System.currentTimeMillis(), url, this);
         Map para = new HashMap();
         para.put("userId", app.readMemberId());
-        para.put("goodsId", goodsid);
+        para.put("goodsId", goods.getGoodsId() );
         para.put("opertype", tabtype);
         Map maps = authParamUtils.obtainParams(para);
 
@@ -206,7 +207,7 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
         WeakReference<GoodsDetailActivity> ref;
 
         public MyOperateListener(GoodsDetailActivity act) {
-            ref = new WeakReference<GoodsDetailActivity>(act);
+            ref = new WeakReference<>(act);
         }
 
         @Override

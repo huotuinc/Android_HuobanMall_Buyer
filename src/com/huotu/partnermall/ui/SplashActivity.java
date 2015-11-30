@@ -77,19 +77,6 @@ public class SplashActivity extends BaseActivity {
 
 //        this.startActivity(new Intent(this, GoodManageActivity.class));
 //        return;
-
-
-
-//        DisplayMetrics metrics = new DisplayMetrics ( );
-//        getWindowManager ( ).getDefaultDisplay ( ).getMetrics ( metrics );
-//        Constants.SCREEN_DENSITY = metrics.density;
-//        Constants.SCREEN_HEIGHT = metrics.heightPixels;
-//        Constants.SCREEN_WIDTH = metrics.widthPixels;
-//
-//        mHandler = new Handler ( getMainLooper ( ) );
-//        findViewById ( );
-//        initView ( );
-
     }
 
     @Override

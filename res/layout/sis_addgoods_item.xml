@@ -3,6 +3,9 @@
               android:id="@+id/sis_addgoods_item_main"
               android:orientation="horizontal"
               android:background="@color/white"
+              android:paddingBottom="6dp"
+              android:paddingLeft="8dp"
+              android:paddingTop="6dp"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
     <com.huotu.partnermall.widgets.NetworkImageViewCircle
@@ -13,19 +16,20 @@
         android:layout_gravity="center"
         />
     <RelativeLayout
+        android:id="@+id/sis_addgoods_item_submain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/sis_addgoods_item_name"
             android:layout_width="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="6dp"
+            android:textSize="15sp"
+            android:layout_marginBottom="2dp"
             android:maxLines="2"
             android:ellipsize="end"
             android:textStyle="bold"
             android:layout_height="wrap_content"
-            android:text="阿是打发阿是打发受到发反对搞活东方财富公司股份锁定豆腐干山东分公司的风格山东分公司的风格速度"/>
-
+            android:text=""/>
         <RelativeLayout
             android:id="@+id/sis_addgoods_item_ll"
             android:layout_below="@id/sis_addgoods_item_name"
@@ -38,7 +42,7 @@
             android:textColor="@color/gray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="销售价:345 库存:344件"/>
+            android:text="库存:345 返利:344件"/>
         <TextView
             android:id="@+id/sis_addgoods_item_label"
             android:layout_below="@id/sis_addgoods_item_des"
@@ -46,7 +50,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/gray"
             android:layout_alignLeft="@id/sis_addgoods_item_des"
-            android:text="佣金："/>
+            android:text="销售价:"/>
         <TextView
             android:id="@+id/sis_addgoods_item_commission"
             android:layout_width="wrap_content"
@@ -66,13 +70,13 @@
                 android:layout_marginBottom="2dp"
                 android:background="@color/orangered"
                 android:layout_height="wrap_content">
-        <TextView
+               <TextView
             android:id="@+id/sis_addgoods_item_operate"
             android:text="上架"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
             android:textColor="@color/orangered"
             android:background="@color/white"
             android:layout_width="wrap_content"

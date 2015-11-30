@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.AvoidXfermode;
 import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.ArcShape;
@@ -42,6 +43,7 @@ import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
@@ -62,6 +64,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +77,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
     List<SisGoodsModel> goodsList;
     KJEditText etSearchBar;
     TextView tvCancel;
-    ImageView ivQuery;
+    TextView ivQuery;
     final String PRE_SEARCHKEY_FILE="searchkey_info";
     final String PRE_SEARCHKEY_NAME="searchkey";
     String searchKeys = "";
@@ -83,7 +86,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
     RelativeLayout rlSearchBar;
     RelativeLayout rlHeader;
     RelativeLayout rlcd;
-    TextView tvSelect;
+    ImageView ivSelect;
     TextView tvAll;
     TextView tvLine;
     HorizontalScrollView scrollView;
@@ -91,7 +94,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
     List<SisSortModel> categorys;
     String key="";
     int pageno;
-    Long classid;
+    Long classid=0L;
     boolean isRefreshing=true;
     Handler handler;
     ProgressPopupWindow progress;
@@ -114,14 +117,14 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         rlHeader = (RelativeLayout)findViewById(R.id.sis_addgoods_header);
         rlHeader.setBackgroundColor(SystemTools.obtainColor( app.obtainMainColor()));
         scrollView =(HorizontalScrollView)findViewById(R.id.sis_addgoods_scrollView);
-        tvSelect =(TextView)findViewById(R.id.sis_addgoods_select);
-        tvSelect.setOnClickListener(this);
+        ivSelect =(ImageView)findViewById(R.id.sis_addgoods_select);
+        ivSelect.setOnClickListener(this);
         tvAll = (TextView)findViewById(R.id.sis_addgoods_all);
         tvAll.setOnClickListener(this);
         tvLine =(TextView)findViewById(R.id.sis_addgoods_footerline);
         tvCancel = (TextView)findViewById(R.id.sis_addgoods_cancel);
         tvCancel.setOnClickListener(this);
-        ivQuery = (ImageView)findViewById(R.id.sis_addgoods_query);
+        ivQuery = (TextView)findViewById(R.id.sis_addgoods_query);
         ivQuery.setOnClickListener(this);
         etSearchBar = (KJEditText)findViewById(R.id.sis_addgoods_key);
         etSearchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -152,7 +155,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
                         pageno = 0;
                         isRefreshing = true;
-                        //goodListView.setRefreshing(true);
+
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -234,13 +237,18 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             rlSearchBar.setVisibility(View.VISIBLE);
             etSearchBar.requestFocus();
         }else if( v.getId()== R.id.sis_addgoods_select){
-            if( adapter!=null && adapter.getCount() <=0 ) return;
+            if( adapter!=null && adapter.getCount() <=0 ) {
+                ToastUtils.showShortToast(AddGoodsActivity.this,"没有二级分类");
+                return;
+            }
 
-            if( ((TextView)v).getText().equals("∨")){
-                ((TextView) v).setText("∧");
+            if(((ImageView)v).getTag() ==null ||  ((ImageView)v).getTag().equals("∨")){
+                ((ImageView) v).setTag("∧");
+                ((ImageView)v).setImageResource(R.drawable.up);
                 llClass2.setVisibility(View.VISIBLE);
             }else{
-                ((TextView) v).setText("∨");
+                ((ImageView) v).setTag("∨");
+                ((ImageView)v).setImageResource(R.drawable.down);
                 llClass2.setVisibility(View.GONE);
             }
         }else if( v.getId() == R.id.sis_addgoods_all ){
@@ -250,19 +258,45 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if( resultCode == RESULT_OK && requestCode == SisConstant.REFRESHGOODS_CODE ){
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (AddGoodsActivity.this.isFinishing()) return;
+
+                    if (goodListView.getCurrentMode() == PullToRefreshBase.Mode.PULL_FROM_END) {
+                        goodListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                        goodListView.setMode(PullToRefreshBase.Mode.BOTH);
+                    }
+                    goodListView.setRefreshing(true);
+                }
+            }, 500);
+        }
+    }
+
     protected void selectAll(){
         for (int i = 0; i < llClass1.getChildCount(); i++) {
             llClass1.getChildAt(i).findViewById(R.id.sis_goods_class_footline).setBackgroundColor(Color.WHITE);
             ((TextView)llClass1.getChildAt(i).findViewById(R.id.sis_goods_class_name)).setTextColor(Color.BLACK);
         }
-        tvAll.setTextColor( Color.BLUE );
-        tvLine.setBackgroundColor(Color.BLUE);
+        tvAll.setTextColor( SystemTools.obtainColor( app.obtainMainColor() ) );
+        tvLine.setBackgroundColor(SystemTools.obtainColor(app.obtainMainColor()));
+        ivSelect.setTag("∨");
+
+        if( tvAll.getTag() !=null  ) {
+            SisSortModel allitem = (SisSortModel)tvAll.getTag();
+            loadClass2(allitem);
+        }
+
         llClass2.setVisibility(View.GONE);
 
         classid = 0L;
         pageno=0;
         goodListView.setRefreshing(true);
-
     }
 
     protected void loadSearchKeys(){
@@ -290,8 +324,17 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
     protected void getClassData(){
         if( SisConstant.CATEGORY !=null && SisConstant.CATEGORY.size()>0 ){
+
             loadClass1(SisConstant.CATEGORY);
-            classid = 0L;//SisConstant.CATEGORY.get(0).getSisId();
+            classid = 0L;
+            for(SisSortModel item : SisConstant.CATEGORY){
+                if( item.getSisId()==0){
+                    tvAll.setTag( item );
+                    loadClass2(item);
+                    break;
+                }
+            }
+
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -333,8 +376,8 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
     protected void loadClass1( final List<SisSortModel> data ){
         llClass1.removeAllViews();
 
-        tvAll.setTextColor(Color.BLUE);
-        tvLine.setBackgroundColor(Color.BLUE);
+        tvAll.setTextColor(SystemTools.obtainColor( app.obtainMainColor() ));
+        tvLine.setBackgroundColor(SystemTools.obtainColor(app.obtainMainColor()));
 
         if( data ==null )return;
 
@@ -352,19 +395,19 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                     tvAll.setTextColor(Color.BLACK);
                     tvLine.setBackgroundColor(Color.WHITE);
 
-                    v.findViewById(R.id.sis_goods_class_footline).setBackgroundColor(Color.BLUE);
-                    ((TextView)v.findViewById(R.id.sis_goods_class_name)).setTextColor(Color.BLUE);
+                    v.findViewById(R.id.sis_goods_class_footline).setBackgroundColor( SystemTools.obtainColor( app.obtainMainColor() ));
+                    ((TextView)v.findViewById(R.id.sis_goods_class_name)).setTextColor( SystemTools.obtainColor(app.obtainMainColor()));
                     loadClass2((SisSortModel) v.getTag());
 
                     int scrollX = scrollView.getScrollX();
                     System.out.println("scrollX----->"+scrollX);
-                    int helfwid = (getWindowManager().getDefaultDisplay().getWidth()- tvSelect.getWidth()) /2;
+                    int helfwid = (getWindowManager().getDefaultDisplay().getWidth()- ivSelect.getWidth()) /2;
                     int left = v.getLeft();
                     int leftScreen = left-scrollX;
                     scrollView.smoothScrollBy((leftScreen - helfwid ), 0);
 
                     llClass2.setVisibility(View.GONE);
-                    tvSelect.setText("∨");
+                    ivSelect.setTag("∨");
 
                     SisSortModel model = (SisSortModel)v.getTag();
                     classid = model.getSisId();
@@ -387,11 +430,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             v.setTag( item );
             llClass1.addView(v);
         }
-        //if( data!=null && data.size()>0 ){
-            //llClass1.getChildAt(0).findViewById(R.id.sis_goods_class_footline).setBackgroundColor(Color.BLUE);
-            //((TextView)llClass1.getChildAt(0).findViewById(R.id.sis_goods_class_name)).setTextColor(Color.BLUE);
-            //loadClass2( (SisSortModel) llClass1.getChildAt(0).getTag() );
-        //}
+
     }
 
     protected void loadClass2(SisSortModel model ){
@@ -440,10 +479,24 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         VolleyUtil.getRequestQueue().add(request);
     }
 
+
+
     static class MyGoodsListener implements Response.Listener<AppSisGoodsModel>{
         WeakReference<AddGoodsActivity> ref;
         public MyGoodsListener(AddGoodsActivity act){
             ref = new WeakReference<>(act);
+        }
+
+        protected void removeRepeatData(List<SisGoodsModel> data){
+            Iterator<SisGoodsModel> iterator = data.iterator();
+            while( iterator.hasNext() ){
+                SisGoodsModel item = iterator.next();
+                for(SisGoodsModel child : ref.get().goodsList){
+                    if( item.getGoodsId().equals( child.getGoodsId() ) ) {
+                        data.remove( item );
+                    }
+                }
+            }
         }
 
         @Override
@@ -472,6 +525,9 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
                 ref.get().pageno = appSisGoodsModel.getResultData().getRpageno();
                 if( appSisGoodsModel.getResultData().getList()!=null ) {
+
+                    removeRepeatData( appSisGoodsModel.getResultData().getList() );
+
                     ref.get().goodsList.addAll(appSisGoodsModel.getResultData().getList());
                 }
                 ref.get().goodsAdapter.notifyDataSetChanged();
@@ -522,20 +578,36 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                 ref.get().categorys=new ArrayList<>();
             }
 
+            SisSortModel allitem = new SisSortModel();
+            allitem.setSisId(0L);
+            allitem.setSisName("全部");
+            List<SisSortModel> child =new ArrayList<>();
+            for(SisSortModel item : appSisSortModel.getResultData().getList()){
+                SisSortModel cc = new SisSortModel();
+                cc.setSisId( item.getSisId() );
+                cc.setSisName(item.getSisName());
+                cc.setIsFirstClass(true);
+                child.add(cc);
+            }
+            allitem.setList(child);
+            ref.get().tvAll.setTag(allitem);
+
             ref.get().categorys.clear();
             ref.get().categorys = appSisSortModel.getResultData().getList();
-            SisConstant.CATEGORY = appSisSortModel.getResultData().getList();
+            ref.get().categorys.add( allitem );
+            SisConstant.CATEGORY = ref.get().categorys;
             ref.get().loadClass1(ref.get().categorys);
 
-            ref.get().classid = 0L;// appSisSortModel.getResultData().getList().get(0).getSisId();
+            ref.get().classid = 0L;
             ref.get().pageno=0;
+            ref.get().loadClass2(allitem);
 
             ref.get().handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     ref.get().goodListView.setRefreshing(true);
                 }
-            },300);
+            }, 300);
         }
     }
 
@@ -585,6 +657,25 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             return position;
         }
 
+
+        protected void selectClass1( Long id ){
+            for (int i = 0; i < llClass1.getChildCount(); i++) {
+                View v = llClass1.getChildAt(i);
+                View v1 = llClass1.getChildAt(i).findViewById(R.id.sis_goods_class_footline);
+                TextView v2 =  ((TextView) llClass1.getChildAt(i).findViewById(R.id.sis_goods_class_name));
+                if( v.getTag() ==null ) continue;
+                SisSortModel model = (SisSortModel)v.getTag();
+                if( model.getSisId().equals( id ) ){
+                    v1.setBackgroundColor( SystemTools.obtainColor( app.obtainMainColor() ) );
+                    v2.setTextColor( SystemTools.obtainColor( app.obtainMainColor() ) );
+                    v.performClick();
+                    continue;
+                }
+                v1.setBackgroundColor(Color.WHITE);
+                v2.setTextColor(Color.BLACK);
+            }
+        }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             SisSortModel model = list.get(position);
@@ -602,13 +693,18 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                     SisSortModel data = (SisSortModel)v.getTag();
                     if( data.getSisId()<0)return;
 
+                    if( data.isFirstClass() ){
+                        selectClass1( data.getSisId() );
+                        return;
+                    }
+
                     selectedClass = data;
-                    ((TextView)v).setTextColor(Color.BLUE);
+                    ((TextView)v).setTextColor(SystemTools.obtainColor( app.obtainMainColor() ));
 
                     adapter.notifyDataSetChanged();
 
                     llClass2.setVisibility(View.GONE);
-                    tvSelect.setText("∨");
+                    ivSelect.setTag("∨");
 
                     classid = data.getSisId();
                     pageno=0;
@@ -619,13 +715,13 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             });
 
             if( selectedClass !=null && selectedClass.getSisId().equals( list.get(position).getSisId() ) ){
-                tvName.setTextColor(Color.BLUE);
+                tvName.setTextColor( SystemTools.obtainColor( app.obtainMainColor() ));
             }else{
-                tvName.setTextColor(Color.BLACK);
+                tvName.setTextColor(Color.GRAY);
             }
 
-            tvAll.setTextColor(Color.BLACK);
-            tvLine.setBackgroundColor(Color.WHITE);
+            //tvAll.setTextColor(Color.BLACK);
+            //tvLine.setBackgroundColor(Color.WHITE);
 
             return convertView;
         }
@@ -665,47 +761,47 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             TextView tvName = ViewHolderUtil.get(convertView, R.id.sis_addgoods_item_name);
             NetworkImageViewCircle ivPic = ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_pic);
             TextView tvDes= ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_des);
-            tvDes.setText("销售价:"+ list.get(position).getPrice()  +" 库存:"+ list.get(position).getStock() );
+            tvDes.setText("库存:"+ list.get(position).getStock()  +" 返利:"+ list.get(position).getRebate() );
             TextView tvCommsion = ViewHolderUtil.get(convertView, R.id.sis_addgoods_item_commission);
-            //String temp =  list.get(position).getProfit()
             DecimalFormat format =new DecimalFormat("0.00");
-            String temp = format.format(list.get(position).getProfit());
+            String temp = format.format(list.get(position).getPrice());
             tvCommsion.setText(temp);
             LinearLayout llOperate =ViewHolderUtil.get( convertView , R.id.sis_addgoods_item_ll_operate );
             llOperate.setBackgroundColor( SystemTools.obtainColor( app.obtainMainColor() ) );
             TextView tvOperate= ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_operate);
             tvOperate.setTextColor( SystemTools.obtainColor( app.obtainMainColor() ) );
-            tvOperate.setTag( list.get(position) );
+            llOperate.setTag( list.get(position) );
             final ProgressBar pgbar = ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_pgbar);
             RelativeLayout rl = ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_ll);
             TextView tvValidate = ViewHolderUtil.get(convertView,R.id.sis_addgoods_items_invalidate);
-//            LinearLayout main= ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_main);
-//            main.setTag( list.get(position) );
+            RelativeLayout main= ViewHolderUtil.get(convertView,R.id.sis_addgoods_item_submain);
+            main.setTag( list.get(position) );
 
             rl.setVisibility( list.get(position).isValidate() ? View.VISIBLE:View.GONE );
             tvValidate.setVisibility(list.get(position).isValidate() ? View.GONE : View.VISIBLE);
 
             tvName.setText(list.get(position).getGoodsName());
 
-            BitmapLoader.create().displayUrl(context, ivPic, list.get(position).getImgUrl(), R.drawable.ic_launcher, R.drawable.ic_launcher);
+            BitmapLoader.create().displayUrl(context, ivPic, list.get(position).getImgUrl(), R.drawable.sis_pic, R.drawable.sis_pic);
 
-//            main.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    SisGoodsModel model = (SisGoodsModel)v.getTag();
-//                    Intent intent = new Intent();
-//                    intent.setClass(context, GoodsDetailActivity.class);
-//                    intent.putExtra("goodsid", model.getGoodsId());
-//                    context.startActivity(intent);
-//                }
-//            });
+            main.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SisGoodsModel model = (SisGoodsModel)v.getTag();
+                    Intent intent = new Intent();
+                    intent.setClass(context, GoodsDetailActivity.class);
+                    intent.putExtra("goods", model);
+                    intent.putExtra("state", model.isGoodSelected() ? 0 : 1);
+                    ActivityUtils.getInstance().showActivityForResult((Activity) context, SisConstant.REFRESHGOODS_CODE, intent);
+                }
+            });
 
-            tvOperate.setOnClickListener(new View.OnClickListener() {
+            llOperate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     SisGoodsModel model = (SisGoodsModel) v.getTag();
-                    pgbar.setVisibility(View.VISIBLE);
                     v.setVisibility(View.GONE);
+                    pgbar.setVisibility(View.VISIBLE);
                     online(model);
                 }
             });

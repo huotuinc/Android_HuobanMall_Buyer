@@ -759,4 +759,11 @@ public class BaseApplication extends Application {
     {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.DATA_INIT, Constants.PACKAGE_VERSION );
     }
+
+    public void writeMemberType( int usertype){
+        PreferenceHelper.writeInt( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_USERTYPE , usertype );
+    }
+    public int readMemberType(){
+        return PreferenceHelper.readInt( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_USERTYPE );
+    }
 }

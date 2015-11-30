@@ -28,15 +28,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.huotu.partnermall.AppManager;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
+import com.huotu.partnermall.model.AuthMallModel;
+import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.SwitchUserModel;
+import com.huotu.partnermall.model.UpdateLeftInfoModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
@@ -44,6 +51,7 @@ import com.huotu.partnermall.ui.sis.GoodManageActivity;
 import com.huotu.partnermall.ui.sis.SisHomeActivity;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.SwitchUserPopWin;
 import com.huotu.partnermall.utils.SystemTools;
@@ -60,8 +68,11 @@ import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import com.huotu.partnermall.widgets.UserInfoView;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
@@ -275,6 +286,29 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         }
         //初始化侧滑菜单面板
         application.layDrag = ( DrawerLayout ) this.findViewById ( R.id.layDrag );
+
+        application.layDrag.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                refreshLeftMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
+
         //设置title背景
         homeTitle.setBackgroundColor ( SystemTools.obtainColor ( application.obtainMainColor ( ) ) );
         //设置左侧图标
@@ -629,10 +663,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         {
             case R.id.titleLeftImage:
             {
-                //----test
-                openSis();
-                //-------
-
                 if(application.isLeftImg)
                 {
                     //切换出侧滑界面
@@ -843,8 +873,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 //加载菜单页面
                 String url = msg.obj.toString ();
 
-
-                if( url.toLowerCase().contains("sis=666666") ){
+                if( url.toLowerCase().contains("http://www.dzd.com") ){
                     openSis();
                 }else {
                     viewPage.loadUrl(HomeActivity.this, url, titleText, mHandler, application, swipeRefreshLayout);
@@ -993,6 +1022,63 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
     private void openSis(){
         HomeActivity.this.startActivity( new Intent(HomeActivity.this, GoodManageActivity.class));
+    }
+
+    private void refreshLeftMenu(){
+        String url = Constants.INTERFACE_PREFIX + "weixin/UpdateLeftInfo";
+        url +="?customerId="+ application.readMerchantId();
+        url +="&userId="+ application.readMemberId();
+        url +="&clientUserType="+ application.readMemberType();
+        AuthParamUtils authParamUtils=new AuthParamUtils(application , System.currentTimeMillis() , url , HomeActivity.this);
+        url = authParamUtils.obtainUrlName();
+        GsonRequest<UpdateLeftInfoModel> request = new GsonRequest<UpdateLeftInfoModel>(
+                Request.Method.GET,
+                url,
+                UpdateLeftInfoModel.class,
+                null,
+                new Response.Listener<UpdateLeftInfoModel>() {
+                    @Override
+                    public void onResponse(UpdateLeftInfoModel updateLeftInfoModel) {
+                        if( updateLeftInfoModel==null ) return;
+
+                        if( updateLeftInfoModel.getCode() != 200 ){
+                            ToastUtils.showShortToast(application, updateLeftInfoModel.getMsg());
+                            return;
+                        }
+
+                        if( updateLeftInfoModel.getData()==null ) return;
+                        if( updateLeftInfoModel.getData().getMenusCode()==0) return;
+
+                        //设置侧滑栏菜单
+                        List<MenuBean > menus = new ArrayList< MenuBean >(  );
+                        MenuBean menu = null;
+                        List<UpdateLeftInfoModel.MenuModel > home_menus = updateLeftInfoModel.getData().getHome_menus ();
+                        for(UpdateLeftInfoModel.MenuModel home_menu:home_menus)
+                        {
+                            menu = new MenuBean ();
+                            menu.setMenuGroup ( String.valueOf ( home_menu.getMenu_group () ) );
+                            menu.setMenuIcon ( home_menu.getMenu_icon ( ) );
+                            menu.setMenuName ( home_menu.getMenu_name ( ) );
+                            menu.setMenuUrl ( home_menu.getMenu_url ( ) );
+                            menus.add ( menu );
+                        }
+                        if(null != menus && !menus.isEmpty ()) {
+                            application.writeMenus(menus);
+                            //动态加载侧滑菜单
+                            mainMenuLayout.removeAllViews();
+                            UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am );
+                            ui.loadMenus();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        ToastUtils.showShortToast(application,"error");
+                    }
+                }
+        );
+        VolleyUtil.getRequestQueue().add(request);
     }
 
 }

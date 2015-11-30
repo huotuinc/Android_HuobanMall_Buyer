@@ -45,8 +45,25 @@ class AuthMallModel  {
         private String levelName;
         private String nickName;
         private String headImgUrl;
-        private
-        List<MenuModel> home_menus;
+        private List<MenuModel> home_menus;
+        private int bindUserCount;
+        private int userType;
+
+        public int getBindUserCount() {
+            return bindUserCount;
+        }
+
+        public void setBindUserCount(int bindUserCount) {
+            this.bindUserCount = bindUserCount;
+        }
+
+        public int getUserType() {
+            return userType;
+        }
+
+        public void setUserType(int userType) {
+            this.userType = userType;
+        }
 
         public
         List< MenuModel > getHome_menus ( ) {
@@ -105,6 +122,7 @@ class AuthMallModel  {
         private String menu_name;
         private String menu_url;
         private String menu_icon;
+        private String menu_icon_url;
 
         public
         int getMenu_group ( ) {
@@ -144,6 +162,14 @@ class AuthMallModel  {
         public
         void setMenu_icon ( String menu_icon ) {
             this.menu_icon = menu_icon;
+        }
+
+        public String getMenu_icon_url() {
+            return menu_icon_url;
+        }
+
+        public void setMenu_icon_url(String menu_icon_url) {
+            this.menu_icon_url = menu_icon_url;
         }
     }
 }

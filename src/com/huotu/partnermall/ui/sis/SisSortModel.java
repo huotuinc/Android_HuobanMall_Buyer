@@ -27,6 +27,15 @@ public class SisSortModel {
     private String sisName;
     private List<SisSortModel> list;
 
+    private boolean isFirstClass = false;
+
+    public boolean isFirstClass() {
+        return isFirstClass;
+    }
+
+    public void setIsFirstClass(boolean isFirstClass) {
+        this.isFirstClass = isFirstClass;
+    }
 
     public List<SisSortModel> getList() {
         return list;

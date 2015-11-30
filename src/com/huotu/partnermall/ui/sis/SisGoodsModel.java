@@ -1,9 +1,11 @@
 package com.huotu.partnermall.ui.sis;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2015/11/16.
  */
-public class SisGoodsModel {
+public class SisGoodsModel implements Serializable{
 
     private java.lang.Long goodsId;//商品ID
     private java.lang.String imgUrl;//商品图片
@@ -13,8 +15,26 @@ public class SisGoodsModel {
     private double profit;//佣金
     private boolean goodSelected;//是否上架
     private boolean validate=true;//是否有效
+    private double rebate ;//返利
     //private boolean isOnSale=false;//
     private boolean isProcessing=false;//是否正在处理....
+    private String detailsUrl;//
+
+    public String getDetailsUrl() {
+        return detailsUrl;
+    }
+
+    public void setDetailsUrl(String detailsUrl) {
+        this.detailsUrl = detailsUrl;
+    }
+
+    public double getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(double rebate) {
+        this.rebate = rebate;
+    }
 
     public boolean isGoodSelected() {
         return goodSelected;

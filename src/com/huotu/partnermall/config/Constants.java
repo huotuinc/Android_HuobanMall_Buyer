@@ -187,6 +187,8 @@ public class Constants {
 	public static final String MEMBER_TOKEN             = "member_token";
 	//会员icon
 	public static final String MEMBER_ICON              = "member_icon";
+	//会员类型
+	public static final String MEMBER_USERTYPE          ="member_usertype";
 	//商户ID
 	public static final String MERCHANT_INFO_ID         = "merchant_id";
 	//商户支付宝key信息

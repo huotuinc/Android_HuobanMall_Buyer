@@ -69,6 +69,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import cn.sharesdk.framework.Platform;
@@ -121,8 +122,13 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.sis_activity_good_manage);
 
         findViewById();
+
+        getinitdata();
+
         initView();
         setImmerseLayout();
+
+
     }
 
     @Override
@@ -185,7 +191,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if( msg.what == 7001 ){
-                    ivBarcode.setImageBitmap( barCode );
+                    //ivBarcode.setImageBitmap( barCode );
                 }else if( msg.what == 7000){
                     ToastUtils.showShortToast(app,"生成二维码失败");
                 }
@@ -200,6 +206,8 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         search_cancel.setOnClickListener(this);
         ivBarcode.setOnClickListener(this);
         shopmanger.setOnClickListener(this);
+        logo.setOnClickListener(this);
+        shopName.setOnClickListener(this);
 
         listview.setMode(PullToRefreshBase.Mode.BOTH);
         listview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -239,6 +247,10 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                     if (GoodManageActivity.this.isFinishing()) return;
                     isRefresh = true;
                     salestate = true;
+                    if(listview.getMode() == PullToRefreshBase.Mode.PULL_FROM_END){
+                        listview.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                        listview.setMode(PullToRefreshBase.Mode.BOTH);
+                    }
                     listview.setRefreshing(true);
                 }
             }, 500);
@@ -249,7 +261,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             if( SisConstant.SHOPINFO==null)return;
             if( barCode!=null) barCode.recycle();
             barCode=null;
-            shopName.setText( SisConstant.SHOPINFO.getTitle());
+            shopName.setText(SisConstant.SHOPINFO.getTitle());
             loadLogo(SisConstant.SHOPINFO.getImgUrl());
             //showBarCode( SisConstant.SHOPINFO.getIndexUrl() , ivBarcode );
         }
@@ -265,10 +277,18 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 isRefresh=true;
                 pageno1 = 0;
                 list1.clear();
-                adapter1.notifyDataSetChanged();
+                //adapter1.notifyDataSetChanged();
                 list2.clear();
                 adapter2.notifyDataSetChanged();
+
+                listview.setAdapter(adapter1);
+
+                if( listview.getCurrentMode() == PullToRefreshBase.Mode.PULL_FROM_END ) {
+                    listview.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                    listview.setMode(PullToRefreshBase.Mode.BOTH);
+                }
                 listview.setRefreshing(true);
+
             }
             break;
             case R.id.salestatus_remove:{
@@ -280,11 +300,19 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 list1.clear();
                 adapter1.notifyDataSetChanged();
                 list2.clear();
-                adapter2.notifyDataSetChanged();
+                //adapter2.notifyDataSetChanged();
+                listview.setAdapter(adapter2);
+
+                if( listview.getCurrentMode() == PullToRefreshBase.Mode.PULL_FROM_END ) {
+                    listview.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                    listview.setMode(PullToRefreshBase.Mode.BOTH);
+                }
+
                 listview.setRefreshing(true);
             }
             break;
             case R.id.header_operate:{
+                listview.onRefreshComplete();
                 GoodManageActivity.this.startActivityForResult(new Intent(GoodManageActivity.this, AddGoodsActivity.class), SisConstant.REFRESHGOODS_CODE );
             }
             break;
@@ -300,20 +328,13 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 }
             }
             break;
+            case R.id.sis_logo:
+            case R.id.sis_shopname:
             case R.id.sis_shopmanager:{
+                listview.onRefreshComplete();
                 GoodManageActivity.this.startActivityForResult(new Intent(GoodManageActivity.this, InfoActivity.class), SisConstant.REFRESHSHOPINFO_CODE);
             }
             break;
-//            case R.id.header_operate:{
-//                header_bar.setVisibility(View.GONE);
-//                search_bar.setVisibility(View.VISIBLE);
-//            }
-//            break;
-//            case R.id.search_cancel:{
-//                search_bar.setVisibility(View.GONE);
-//                header_bar.setVisibility(View.VISIBLE);
-//            }
-//            break;
         }
 
     }
@@ -719,18 +740,22 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                     SisGoodsModel model = (SisGoodsModel) v.getTag();
                     Intent intent = new Intent();
                     intent.setClass(mContext, GoodsDetailActivity.class);
-                    intent.putExtra("goodsid", model.getGoodsId());
+                    //intent.putExtra("goodsid", model.getGoodsId());
+                    intent.putExtra("goods", model);
                     intent.putExtra("state", tabtype);
-                    ActivityUtils.getInstance().showActivityForResult( (Activity)mContext , SisConstant.REFRESHGOODS_CODE , intent );
+                    ActivityUtils.getInstance().showActivityForResult((Activity) mContext, SisConstant.REFRESHGOODS_CODE, intent);
                 }
             });
 
             TextView txtName = ViewHolderUtil.get(convertView, R.id.goods_item_goodsName);
             txtName.setText(datas.get(position).getGoodsName());
             TextView txtamount = ViewHolderUtil.get(convertView, R.id.goods_item_amount);
-            txtamount.setText("销售量:" + String.valueOf(datas.get(position).getStock()));
+            txtamount.setText("库存:" + String.valueOf(datas.get(position).getStock()));
             TextView txtprofit = ViewHolderUtil.get(convertView, R.id.goods_item_profit);
-            txtprofit.setText("利润:￥" + String.valueOf(datas.get(position).getProfit()));
+            txtprofit.setText("返利:￥" + String.valueOf(datas.get(position).getRebate()));
+            TextView txtPrice = ViewHolderUtil.get(convertView , R.id.goods_item_commission);
+            txtPrice.setText( "￥"+String.valueOf( datas.get(position).getPrice() ));
+
             final Button goods_item_btn = ViewHolderUtil.get(convertView, R.id.goods_item_btn);
             goods_item_btn.setTag(datas.get(position));
 
@@ -740,7 +765,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                     if (popWin == null) {
                         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
                         View prView = layoutInflater.inflate(R.layout.layout_good_manage_popwindow, null);//自定义的布局文件
-                        popWin = new PopupWindow(prView, 200, 300);
+                        popWin = new PopupWindow(prView, 200, 280);
                         ColorDrawable cd = new ColorDrawable(0x00000000);
                         popWin.setBackgroundDrawable(cd);
                         //popWin.setFocusable(true); //设置PopupWindow可获得焦点
@@ -786,7 +811,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                             operateGoods(model, state);
                         }
                     });
-                    popWin.showAsDropDown(v, -200, 10);
+                    popWin.showAsDropDown(v, -200, 8);
                 }
             });
             return convertView;
@@ -942,6 +967,18 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             ref = new WeakReference<>(act);
         }
 
+        protected void removeRepeatData( List<SisGoodsModel> list ,  List<SisGoodsModel> data ){
+            Iterator<SisGoodsModel> iterator = data.iterator();
+            while( iterator.hasNext() ){
+                SisGoodsModel item = iterator.next();
+                for(SisGoodsModel child : list ){
+                    if( item.getGoodsId().equals( child.getGoodsId() ) ) {
+                        data.remove( item );
+                    }
+                }
+            }
+        }
+
         @Override
         public void onResponse(AppSisGoodsModel appSisGoodsModel) {
             if (ref.get() == null) return;
@@ -967,6 +1004,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
 
                 ref.get().pageno1 = appSisGoodsModel.getResultData().getRpageno();
                 if (appSisGoodsModel.getResultData().getList() != null) {
+                    removeRepeatData( ref.get().list1 , appSisGoodsModel.getResultData().getList() );
                     ref.get().list1.addAll(appSisGoodsModel.getResultData().getList());
                 }
                 ref.get().adapter1.notifyDataSetChanged();
@@ -986,6 +1024,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
 
                 ref.get().pageno2 = appSisGoodsModel.getResultData().getRpageno();
                 if (appSisGoodsModel.getResultData().getList() != null) {
+                    removeRepeatData( ref.get().list2 , appSisGoodsModel.getResultData().getList() );
                     ref.get().list2.addAll(appSisGoodsModel.getResultData().getList());
                 }
                 ref.get().adapter2.notifyDataSetChanged();
@@ -1194,4 +1233,14 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         );
         VolleyUtil.getRequestQueue().add(request);
     }
+
+    protected void getinitdata(){
+        String url = Constants.INTERFACE_PREFIX+"/mall/Init?customerId="+ app.readMerchantId();
+        AuthParamUtils authParamUtils =new AuthParamUtils(app, System.currentTimeMillis(), url , this);
+        url = authParamUtils.obtainUrlName();
+
+
+
+    }
+
 }
