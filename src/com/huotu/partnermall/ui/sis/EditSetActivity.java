@@ -54,7 +54,6 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
         initView();
     }
 
-    @Override
     protected void  findViewById() {
         ET= (KJEditText) findViewById(R.id.ET);
         header_title= (TextView) findViewById(R.id.header_title);
@@ -63,7 +62,7 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
         wManager = this.getWindowManager ( );
         progress = new ProgressPopupWindow ( EditSetActivity.this, EditSetActivity.this, wManager );
         header = (RelativeLayout)findViewById(R.id.header_bar);
-        header.setBackgroundColor(SystemTools.obtainColor( application.obtainMainColor()) );
+        header.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
     }
     @Override
     protected void initView() {
@@ -89,10 +88,15 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
     }
 
     protected void commit() {
-        if (TextUtils.isEmpty( ET.getText().toString().trim() )) {
-            ToastUtils.showLongToast(this,"请输入内容");
+        if( !canConnect() ){
             return;
         }
+
+        if (TextUtils.isEmpty( ET.getText().toString().trim() )) {
+            ToastUtils.showLongToast(this, "请输入内容");
+            return;
+        }
+
         String context = ET.getText().toString().trim();
         String url = SisConstant.INTERFACE_updateSisProfile;
         Map<String, String> paras = new HashMap<>();
@@ -159,6 +163,12 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.header_back: {
+                if( SisConstant.SHOPINFO ==null ) {
+                    ToastUtils.showShortToast(EditSetActivity.this, "无法获得店铺信息，操作失败！");
+                    return;
+                }
+
+
                commit();
             }
             break;

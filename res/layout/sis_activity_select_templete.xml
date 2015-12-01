@@ -55,6 +55,7 @@
     android:layout_below="@id/sis_selecttemplate_header"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
     coverflow:coverHeight="180dp"
     coverflow:coverWidth="120dp"
     coverflow:maxScaleFactor="1.5"

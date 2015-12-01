@@ -6,11 +6,12 @@
         android:layout_height="match_parent"
         android:id="@+id/pageLoadView">
 
-        <com.huotu.partnermall.widgets.KJWebView
+        <com.handmark.pulltorefresh.library.PullToRefreshWebView
             android:id="@+id/viewPage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:scrollbars="none"/>
         </RelativeLayout>
+
     </merge>

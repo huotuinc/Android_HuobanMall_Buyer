@@ -103,16 +103,16 @@
         </activity>
         <activity
             android:name="com.huotu.partnermall.ui.HomeActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <activity android:name="com.huotu.partnermall.ui.WebViewActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
-            android:name="com.huotu.partnermall.ui.WebViewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:windowSoftInputMode = "stateVisible|adjustResize"></activity>
 
         <service android:name="com.huotu.partnermall.service.LocationService" />
         <!-- 极光配置 -->

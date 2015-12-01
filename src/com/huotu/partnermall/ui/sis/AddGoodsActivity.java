@@ -489,13 +489,18 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
         protected void removeRepeatData(List<SisGoodsModel> data){
             Iterator<SisGoodsModel> iterator = data.iterator();
+            List<SisGoodsModel> delList= new ArrayList<>();
             while( iterator.hasNext() ){
                 SisGoodsModel item = iterator.next();
                 for(SisGoodsModel child : ref.get().goodsList){
                     if( item.getGoodsId().equals( child.getGoodsId() ) ) {
-                        data.remove( item );
+                        //iterator.remove();
+                        delList.add(item);
                     }
                 }
+            }
+            if( delList.size()>0 ){
+                data.removeAll(delList);
             }
         }
 
@@ -508,6 +513,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             if( !validateData( ref.get() , appSisGoodsModel) ){
                 return;
             }
+            if( appSisGoodsModel.getResultData() ==null ) return;
 
             if( ref.get().isRefreshing){
                 ref.get().goodsList.clear();
@@ -547,7 +553,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
             ref.get().goodListView.onRefreshComplete();
 
-            ToastUtils.showLongToast( ref.get() , "error" );
+            ToastUtils.showLongToast( ref.get() , "请求异常" );
         }
     }
 
@@ -628,7 +634,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             if( ref.get().progressDialog!=null){
                 ref.get().progressDialog.dismiss();
             }
-            ToastUtils.showLongToast( ref.get() , "error" );
+            ToastUtils.showLongToast( ref.get() , "请求异常" );
         }
     }
 
@@ -887,7 +893,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             if( ref.get()==null)return;
-            ToastUtils.showLongToast(ref.get(), "error");
+            ToastUtils.showLongToast(ref.get(), "请求异常");
             this.model.setIsProcessing(false);
             ref.get().adapter.notifyDataSetChanged();
         }

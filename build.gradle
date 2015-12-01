@@ -105,6 +105,6 @@ dependencies {
         exclude module: 'support-v4'
     }
     compile 'com.github.mikephil.charting:MPAndroidChart:1.1'
-
+    compile 'com.jakewharton:butterknife:7.0.1'
 }
 

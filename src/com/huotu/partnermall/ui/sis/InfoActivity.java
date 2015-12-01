@@ -79,7 +79,6 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
         initView();
     }
 
-    @Override
     protected void findViewById() {
         app = (BaseApplication) this.getApplication();
         shopName = (TextView) findViewById(R.id.shopName);
@@ -250,6 +249,11 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
 
     @Override
     public void OnCropperBack(Bitmap bitmap) {
+        if( SisConstant.SHOPINFO ==null ) {
+            ToastUtils.showShortToast(InfoActivity.this,"无法获得店铺信息，操作失败！");
+            return;
+        }
+
         if (null == bitmap) return;
         cropBitmap = bitmap;
 

@@ -4,21 +4,19 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -26,13 +24,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshWebView;
 import com.huotu.partnermall.AppManager;
-
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
@@ -46,9 +43,7 @@ import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.model.UpdateLeftInfoModel;
 import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
-import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.sis.GoodManageActivity;
-import com.huotu.partnermall.ui.sis.SisHomeActivity;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
@@ -57,15 +52,10 @@ import com.huotu.partnermall.utils.SwitchUserPopWin;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
-import com.huotu.partnermall.widgets.CircleImageDrawable;
-import com.huotu.partnermall.widgets.CropperView;
-import com.huotu.partnermall.widgets.KJSubWebView;
-import com.huotu.partnermall.widgets.KJWebView;
-import com.huotu.partnermall.widgets.PhotoSelectView;
-import com.huotu.partnermall.widgets.PopTimeView;
+
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
-import com.huotu.partnermall.widgets.ScrollSwipeRefreshLayout;
 import com.huotu.partnermall.widgets.SharePopupWindow;
+
 import com.huotu.partnermall.widgets.UserInfoView;
 
 import java.lang.reflect.Method;
@@ -74,206 +64,123 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import java.util.HashMap;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener,
-                                                          Handler.Callback,
-                                                          PhotoSelectView.OnPhotoSelectBackListener,
-                                                          UserInfoView.OnUserInfoBackListener,
-                                                          PopTimeView.OnDateBackListener {
+public class HomeActivity extends BaseActivity implements Handler.Callback {
 
     //获取资源文件对象
     private
     Resources      resources;
-    //标题栏布局对象
-    private
-    RelativeLayout homeTitle;
-    //标题栏左侧图标
-    private
-    ImageView      titleLeftImage;
-    //标题栏标题文字
-    private
-    TextView       titleText;
-    //标题栏右侧图标
-    private ImageView titleRightImage;
-    //web视图
-    private
-    KJWebView viewPage;
-    //单独加载菜单
-    private KJWebView menuView;
-
-
-    //底部菜单
-    private RelativeLayout bottomMenuLayout;
-
-    //侧滑登录
-    private RelativeLayout loginLayout;
-    //侧滑设置按钮
-    private ImageView      loginSetting;
-
-    //主菜单容器
-    private LinearLayout   mainMenuLayout;
-    //未登陆界面
-    private RelativeLayout noAuthLayout;
-    //侧滑登录按钮
-    /*private
-    Button loginButton;*/
-    //已授权界面
-    private RelativeLayout getAuthLayout;
-    //用户头像
-    private
-    ImageView userLogo;
-    //用户名称
-    private TextView userName;
-    //用户类型
-    private TextView userType;
-
-
     private long exitTime = 0l;
     //application引用
     public BaseApplication application;
-
     //handler对象
     public Handler mHandler;
-
     //windows类
     WindowManager wManager;
-    private
-    PhotoSelectView photo;
-
-    private UserInfoView userInfoView;
-    private CropperView  cropperView;
-
-    private String[]         YEAR;
-    private PopTimeView
-                             popTimeView;
     private SharePopupWindow share;
-
-    private
-    AutnLogin login;
-    //未登录时的头像
-    private ImageView accountLogo;
-
-    private ImageView titleRightLeftImage;
-
     private SwitchUserPopWin switchUser;
-
     public
     ProgressPopupWindow progress;
-
-    private ScrollSwipeRefreshLayout swipeRefreshLayout;
-
     public
     AssetManager am;
-
     public static ValueCallback< Uri > mUploadMessage;
     public static final int FILECHOOSER_RESULTCODE = 1;
+
+
+    //标题栏布局对象
+    @Bind(R.id.titleLayout)
+    RelativeLayout homeTitle;
+    //标题栏左侧图标
+    @Bind(R.id.titleLeftImage)
+    ImageView titleLeftImage;
+    //标题栏标题文字
+    @Bind(R.id.titleText)
+    TextView titleText;
+    //标题栏右侧图标
+    @Bind(R.id.titleRightImage)
+    ImageView titleRightImage;
+    //web视图
+    public WebView pageWeb;
+    //单独加载菜单
+    @Bind(R.id.menuPage)
+    WebView menuView;
+    //底部菜单
+    @Bind(R.id.menuL)
+    RelativeLayout bottomMenuLayout;
+    //侧滑登录
+    @Bind(R.id.loginLayout)
+    RelativeLayout loginLayout;
+    //侧滑设置按钮
+    @Bind(R.id.sideslip_setting)
+    ImageView loginSetting;
+    //主菜单容器
+    @Bind(R.id.mainMenuLayout)
+    LinearLayout mainMenuLayout;
+    //已授权界面
+    @Bind(R.id.getAuth)
+    RelativeLayout getAuthLayout;
+    //用户头像
+    @Bind(R.id.accountIcon)
+    ImageView userLogo;
+    //用户名称
+    @Bind(R.id.accountName)
+    TextView userName;
+    //用户类型
+    @Bind(R.id.accountType)
+    TextView userType;
+    @Bind(R.id.viewPage)
+    PullToRefreshWebView refreshWebView;
 
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
         // TODO Auto-generated method stub
-        super.onCreate ( savedInstanceState );
+        super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         application = ( BaseApplication ) HomeActivity.this.getApplication ( );
         resources = HomeActivity.this.getResources ( );
         mHandler = new Handler ( this );
         share = new SharePopupWindow ( HomeActivity.this, HomeActivity.this, application );
-        wManager = this.getWindowManager ( );
-        am = this.getAssets ( );
-        AppManager.getInstance ( ).addActivity ( this );
-        setContentView ( R.layout.activity_home );
+        wManager = this.getWindowManager();
+        am = this.getAssets();
+        AppManager.getInstance ( ).addActivity(this);
+        setContentView(R.layout.activity_home);
+        ButterKnife.bind(this);
         //设置沉浸模式
-        setImmerseLayout ( findViewById ( R.id.titleLayout ) );
-        findViewById ( );
-        initView ( );
-
-        //初始化修改信息组件
-        userInfoView = new UserInfoView ( this, application );
-        userInfoView.setOnUserInfoBackListener ( this );
+        setImmerseLayout(homeTitle);
+        initView();
         progress = new ProgressPopupWindow ( HomeActivity.this, HomeActivity.this, wManager );
-    }
-
-    @Override
-    protected void findViewById() {
-        //标题栏对象
-        homeTitle = ( RelativeLayout ) this.findViewById ( R.id.titleLayout );
-        //构建标题左侧图标，点击事件
-        titleLeftImage = ( ImageView ) this.findViewById ( R.id.titleLeftImage );
-        titleLeftImage.setOnClickListener ( this );
-        //titleLeftImage.setClickable ( false );
-        titleLeftImage.setVisibility(View.GONE);
-        //web下拉组件刷新
-        swipeRefreshLayout = (ScrollSwipeRefreshLayout) this.findViewById(R.id.pageLoadView);
-        //构建标题右侧图标，点击事件
-        titleRightImage = ( ImageView ) this.findViewById ( R.id.titleRightImage );
-        //titleRightImage.setClickable ( false );
-        titleRightImage.setVisibility ( View.GONE );
-        titleRightImage.setOnClickListener ( this );
-        loginLayout = ( RelativeLayout ) this.findViewById ( R.id.loginLayout );
-        loginSetting = ( ImageView ) this.findViewById ( R.id.sideslip_setting );
-        loginSetting.setOnClickListener ( this );
-
-        //标题栏文字
-        titleText = ( TextView ) this.findViewById ( R.id.titleText );
-        SystemTools.setFontStyle ( titleText, application );
-        viewPage = ( KJWebView ) this.findViewById ( R.id.viewPage );
-        mainMenuLayout = ( LinearLayout ) this.findViewById ( R.id.mainMenuLayout );
-
-        //登录界面区分未得到微信授权、已得到微信授权
-        //未得到授权界面
-        noAuthLayout = ( RelativeLayout ) this.findViewById ( R.id.noAuth );
-        //loginButton = ( Button ) this.findViewById ( R.id.sideslip_login );
-        accountLogo = ( ImageView ) this.findViewById ( R.id.accountLogo );
-
-        //已得到授权界面
-        getAuthLayout = ( RelativeLayout ) this.findViewById ( R.id.getAuth );
-        userLogo = ( ImageView ) this.findViewById ( R.id.accountIcon );
-        userName = ( TextView ) this.findViewById ( R.id.accountName );
-        SystemTools.setFontStyle ( userName, application );
-        userType = ( TextView ) this.findViewById ( R.id.accountType );
-        SystemTools.setFontStyle ( userType, application );
-
-        //初始化底部菜单
-        bottomMenuLayout = ( RelativeLayout ) this.findViewById ( R.id.menuL );
-
-        menuView = ( KJWebView ) this.findViewById ( R.id.menuPage );
-        titleRightLeftImage = ( ImageView ) this.findViewById ( R.id.titleRightLeftImage );
-        //titleRightLeftImage.setClickable ( false );
-        titleRightLeftImage.setVisibility ( View.GONE );
-        titleRightLeftImage.setOnClickListener ( this );
     }
 
     @Override
     protected
     void onResume ( ) {
-        super.onResume ( );
-        if ( application.isLogin ( ) ) {
-
-            noAuthLayout.setVisibility ( View.GONE );
-            getAuthLayout.setVisibility ( View.VISIBLE );
-            //渲染logo
-            //BitmapLoader.create ( ).displayUrl ( HomeActivity.this, userLogo, application.getUserLogo (), R.drawable.ic_login_username, R.drawable.ic_login_username );
-            new LoadLogoImageAyscTask ( resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username ).execute ( );
+        super.onResume();
+            new LoadLogoImageAyscTask ( resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username ).execute();
             //渲染用户名
             userName.setText ( application.getUserName ( ) );
-            userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
-            userType.setTextColor (
-                    SystemTools.obtainColor (
-                            application.obtainMainColor (
-                                                        )
-                                            )
-                                  );
-            userType.setText ( application.readMemberLevel ( ) );
-        }
-        else {
-            noAuthLayout.setVisibility ( View.VISIBLE );
-            getAuthLayout.setVisibility ( View.GONE );
-            /*loginButton.setTextColor ( resources.getColor ( R.color.theme_color ) );
-            loginButton.setOnClickListener ( this );*/
-            noAuthLayout.setOnClickListener ( this );
-        }
+            userName.setTextColor(resources.getColor(R.color.theme_color));
+            userType.setTextColor(
+                    SystemTools.obtainColor(
+                            application.obtainMainColor(
+                            )
+                    )
+            );
+            userType.setText(application.readMemberLevel());
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -310,55 +217,28 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         });
 
         //设置title背景
-        homeTitle.setBackgroundColor ( SystemTools.obtainColor ( application.obtainMainColor ( ) ) );
+        homeTitle.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor ( ) ) );
         //设置左侧图标
         Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
         SystemTools.loadBackground(titleLeftImage, leftDraw);
         //设置右侧图标
-        Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh );
-        SystemTools.loadBackground ( titleRightImage, rightDraw );
-        //设置分享图片
-        Drawable rightLeftDraw = resources.getDrawable ( R.drawable.home_title_right_share );
-        SystemTools.loadBackground ( titleRightLeftImage, rightLeftDraw );
-
+        Drawable rightDraw = resources.getDrawable ( R.drawable.home_title_right_share );
+        SystemTools.loadBackground(titleRightImage, rightDraw );
         //设置侧滑界面
-        loginLayout.setBackgroundColor (
-                SystemTools.obtainColor (
-                        application.obtainMainColor (
-                                                    )
-                                        )
-                                       );
-        //设置登录按钮背景
-        /*Drawable loginDrawable = resources.getDrawable ( R.drawable.login_button_draw );
-        loginDrawable.setColorFilter (
-                new LightingColorFilter (
-                        SystemTools.obtainColor (
-                                application.obtainMainColor ( )
-                                                ), SystemTools.obtainColor (
-                        application.obtainMainColor ( )
-                                                                           )
+        loginLayout.setBackgroundColor(
+                SystemTools.obtainColor(
+                        application.obtainMainColor(
+                        )
                 )
-                                     );
-        SystemTools.loadBackground ( loginButton, loginDrawable );*/
-
-        //设置未登陆按钮
-        Bitmap bitmap = BitmapFactory.decodeResource ( resources, R.drawable.sideslip_login_lefttop_logo );
-        accountLogo.setImageDrawable ( new CircleImageDrawable ( bitmap ) );
+        );
 
         //设置设置图标
-        SystemTools.loadBackground (
-                loginSetting, resources.getDrawable (
+        SystemTools.loadBackground(
+                loginSetting, resources.getDrawable(
                         R.drawable
                                 .switch_white
-                                                    )
-                                   );
-        //设置登录界面背景
-        noAuthLayout.setBackgroundColor (
-                SystemTools.obtainColor (
-                        application.obtainMainColor (
-                                                    )
-                                        )
-                                        );
+                )
+        );
         getAuthLayout.setBackgroundColor (
                 SystemTools.obtainColor (
                         application.obtainMainColor (
@@ -367,13 +247,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                          );
 
         //设置登录界面
-        if ( application.isLogin ( ) ) {
-            noAuthLayout.setVisibility ( View.GONE );
             getAuthLayout.setVisibility ( View.VISIBLE );
             //渲染logo
             new LoadLogoImageAyscTask ( resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username ).execute ( );
-            /*Bitmap bitmap = BitmapFactory.decodeResource ( resources, R.drawable.ic_launcher );
-            userLogo.setImageDrawable ( new CircleImageDrawable ( bitmap ) );*/
             //渲染用户名
             userName.setText ( application.getUserName ( ) );
             userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
@@ -389,29 +265,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             builder.append ( "&userId=" + application.readMemberId() );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), HomeActivity.this );
             String nameUrl = param.obtainUrlName ();
-            HttpUtil.getInstance ( ).doVolleyName ( HomeActivity.this, application, nameUrl, userType );
-        }
-        else {
-            noAuthLayout.setVisibility ( View.VISIBLE );
-            getAuthLayout.setVisibility ( View.GONE );
-            /*loginButton.setTextColor ( resources.getColor ( R.color.theme_color ) );
-            loginButton.setOnClickListener ( this );*/
-            noAuthLayout.setOnClickListener ( this );
-        }
+            HttpUtil.getInstance ( ).doVolleyName(HomeActivity.this, application, nameUrl, userType);
 
         //动态加载侧滑菜单
         UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am );
         ui.loadMenus();
-        //加载底部菜单
-        //ui.loadMainMenu ( null, bottomMenuLayout );
-        //加载页面
-        //页面集成，title无需展示
-        //titleText.setText ( "买家版" );
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
+        //监听web控件
+        pageWeb = refreshWebView.getRefreshableView();
+        refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
             @Override
-            public void onRefresh() {
-                viewPage.reload();
+            public void onRefresh(PullToRefreshBase<WebView> pullToRefreshBase) {
+                //刷新界面
+                pageWeb.reload();
             }
         });
 
@@ -422,21 +287,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     private
     void loadMainMenu ( )
     {
-        menuView.setBarHeight ( 0 );
-        menuView.setJavaScriptEnabled ( true );
-        menuView.setCacheMode ( WebSettings.LOAD_NO_CACHE );
+
+        menuView.getSettings().setJavaScriptEnabled(true);
+        menuView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         //首页默认为商户站点 + index
         String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
-        menuView.loadUrl ( null, menuUrl, null, null, null, swipeRefreshLayout );
-        menuView.setOnCustomScroolChangeListener ( new KJSubWebView.ScrollInterface ( ){
+        menuView.loadUrl( menuUrl );
 
-                                                       @Override
-                                                       public
-                                                       void onSChanged ( int l, int t, int oldl, int oldt ) {
-
-                                                       }
-                                                   });
         menuView.setWebViewClient(
                 new WebViewClient() {
 
@@ -445,7 +303,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             WebView view, String
                             url
                     ) {
-                        viewPage.loadUrl( HomeActivity.this, url, titleText, mHandler, application, swipeRefreshLayout);
+                        pageWeb.loadUrl(url);
                         return true;
                     }
 
@@ -466,44 +324,29 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     private
     void loadPage()
     {
-        viewPage.setScrollBarStyle ( View.SCROLLBARS_OUTSIDE_OVERLAY );
-        viewPage.setVerticalScrollBarEnabled ( false );
-        viewPage.setBarHeight ( 8 );
-        viewPage.setClickable ( true );
-        viewPage.setUseWideViewPort ( true );
+        pageWeb.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        pageWeb.setVerticalScrollBarEnabled(false);
+        pageWeb.setClickable ( true );
+        pageWeb.getSettings().setUseWideViewPort(true);
         //是否需要避免页面放大缩小操作
 
-        viewPage.setSupportZoom ( true );
-        viewPage.setBuiltInZoomControls ( true );
-        viewPage.setJavaScriptEnabled ( true );
-        viewPage.setCacheMode ( WebSettings.LOAD_DEFAULT );
-        viewPage.setSaveFormData ( true );
-        viewPage.setAllowFileAccess ( true );
-        viewPage.setLoadWithOverviewMode ( false );
-        viewPage.setSavePassword ( true );
-        viewPage.setLoadsImagesAutomatically ( true );
-        viewPage.setDomStorageEnabled(true);
+        pageWeb.getSettings().setSupportZoom(true);
+        pageWeb.getSettings().setBuiltInZoomControls(true);
+        pageWeb.getSettings().setJavaScriptEnabled(true);
+        pageWeb.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        pageWeb.getSettings().setSaveFormData(true);
+        pageWeb.getSettings().setAllowFileAccess(true);
+        pageWeb.getSettings().setLoadWithOverviewMode(false);
+        pageWeb.getSettings().setSavePassword(true);
+        pageWeb.getSettings().setLoadsImagesAutomatically(true);
+        pageWeb.getSettings().setDomStorageEnabled(true);
         //首页鉴权
         AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         String url = paramUtils.obtainUrl ();
         //首页默认为商户站点 + index
-        viewPage.loadUrl( HomeActivity.this, url, titleText, null, application, swipeRefreshLayout);
+        pageWeb.loadUrl(url);
 
-        viewPage.setOnCustomScroolChangeListener(
-                new KJSubWebView.ScrollInterface() {
-                    @Override
-                    public void onSChanged(int l, int t, int oldl, int oldt) {
-                        // TODO Auto-generated method stub
-                        if (viewPage.getWebScrollY() == 0) {
-                            swipeRefreshLayout.setEnabled(true);
-                        } else {
-                            swipeRefreshLayout.setEnabled(false);
-                        }
-                    }
-                }
-        );
-
-        viewPage.setWebViewClient(
+        pageWeb.setWebViewClient(
                 new WebViewClient() {
 
                     //重写此方法，浏览器内部跳转
@@ -518,59 +361,97 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                                 application,
                                 wManager
                         );
-                        return filter.shouldOverrideUrlBySFriend( viewPage, url, swipeRefreshLayout);
+                        return filter.shouldOverrideUrlBySFriend(pageWeb, url);
                     }
 
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
                         super.onPageStarted(view, url, favicon);
-                        /*titleLeftImage.setClickable ( false );
-                        titleRightImage.setClickable ( false );
-                        titleRightLeftImage.setClickable ( false );*/
                     }
 
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         //页面加载完成后,读取菜单项
                         super.onPageFinished(view, url);
-                        if (url.contains("&back") || url.contains("?back")) {
-                            //application.titleStack.clear ();
-                            mHandler.sendEmptyMessage(Constants.LEFT_IMG_SIDE);
-                        }
-                        //titleRightLeftImage.setClickable ( true );
-                        // titleLeftImage.setVisibility ( View.VISIBLE );
-                        //titleLeftImage.setClickable ( true );
-                        //titleRightImage.setClickable ( true );
-                        //titleRightLeftImage.setClickable ( true );
-                        titleLeftImage.setVisibility(View.VISIBLE);
-                        titleRightImage.setVisibility(View.GONE);
-                        titleRightLeftImage.setVisibility(View.VISIBLE);
                         titleText.setText(view.getTitle());
-                        //切换背景
-                        titleRightImage.clearAnimation();
-                        Drawable rightDraw = resources.getDrawable(R.drawable
-                                .main_title_left_refresh);
-                        SystemTools.loadBackground(titleRightImage, rightDraw);
+                        if(url.contains ( "&back" ) || url.contains ( "?back" ))
+                        {
+                            mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                        }
+                        else {
+
+                            if ( pageWeb.canGoBack ( ) ) {
+                                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+                            }
+                            else {
+                                mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                            }
+                        }
+
                     }
 
                     @Override
                     public void onReceivedError(
                             WebView view, int errorCode, String description,
                             String failingUrl
-                    ) {
+                    )
+                    {
                         super.onReceivedError(view, errorCode, description, failingUrl);
-                        //错误页面处理
-                        //隐藏菜单栏
-                        //bottomMenuLayout.setVisibility ( View.GONE  );
-                        /*viewPage.loadUrl (
-                                "file:///android_asset/maintenance.html", titleText,
-                                mHandler, application
-                                         );*/
-
                     }
 
                 }
         );
+
+        pageWeb.setWebChromeClient(new WebChromeClient()
+        {
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                titleText.setText(title);
+                String url = view.getUrl();
+                if(url.contains ( "&back" ) || url.contains ( "?back" ))
+                {
+                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                }
+                else {
+
+                    if ( pageWeb.canGoBack ( ) ) {
+                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+                    }
+                    else {
+                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+                    }
+                }
+            }
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                if(100 == newProgress)
+                {
+                    refreshWebView.onRefreshComplete();
+                }
+                super.onProgressChanged(view, newProgress);
+            }
+
+            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                    HomeActivity.mUploadMessage = uploadMsg;
+                    Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                    i.addCategory(Intent.CATEGORY_OPENABLE);
+                    i.setType("*/*");
+                    HomeActivity.this.startActivityForResult(Intent.createChooser(i, "File Chooser"), HomeActivity.FILECHOOSER_RESULTCODE);
+            }
+
+            public void openFileChooser( ValueCallback uploadMsg, String acceptType ) {
+                openFileChooser(uploadMsg);
+            }
+
+            //For Android 4.1
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture){
+
+                openFileChooser(uploadMsg);
+
+            }
+        });
 
     }
 
@@ -586,40 +467,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public
-    void onPhotoSelectBack ( PhotoSelectView.SelectType type ) {
-        if (null == type)
-            return;
-        getPhotoByType ( type );
-    }
-
-    private void getPhotoByType(PhotoSelectView.SelectType type) {
-        switch (type) {
-            case Camera:
-                //getPhotoByCamera();
-                break;
-            case File:
-                //getPhotoByFile();
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public
-    void onUserInfoBack ( UserInfoView.Type type, UserSelectData data ) {
-
-    }
-
-    @Override
-    public
-    void onDateBack ( String date ) {
-
-    }
-
-    @Override
     public boolean dispatchKeyEvent(KeyEvent event)
     {
         // 2秒以内按两次推出程序
@@ -627,9 +474,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             && event.getAction() == KeyEvent.ACTION_DOWN)
         {
 
-            if(viewPage.canGoBack ())
+            if(pageWeb.canGoBack ())
             {
-                viewPage.goBack ( titleText, mHandler, application );
+                pageWeb.goBack ( );
             }
             else
             {
@@ -640,7 +487,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 else {
                     try {
                         HomeActivity.this.finish ( );
-                        application.titleStack.clear ();
                         Runtime.getRuntime ( ).exit ( 0 );
                     }
                     catch ( Exception e ) {
@@ -655,210 +501,114 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         return super.dispatchKeyEvent ( event );
     }
 
-    @Override
-    public
-    void onClick ( View v ) {
-
-        switch ( v.getId () )
+    @OnClick(R.id.titleLeftImage)
+    void doBackOrMenuClick()
+    {
+        if(application.isLeftImg)
         {
-            case R.id.titleLeftImage:
-            {
-                if(application.isLeftImg)
-                {
-                    //切换出侧滑界面
-                    application.layDrag.openDrawer(Gravity.LEFT);
-                } else
-                {
-                    viewPage .goBack ( titleText, mHandler, application );
-                }
-
-            }
-            break;
-            case R.id.titleRightImage:
-            {
-                //切换背景
-                Drawable rightDraw = resources.getDrawable ( R.drawable.main_title_left_refresh_loding );
-                SystemTools.loadBackground ( titleRightImage, rightDraw );
-                SystemTools.setRotateAnimation(titleRightImage);
-                /*//当前的url
-                PageInfoModel pageInfo = application.titleStack.peek ( );
-                //刷新页面
-                Message msg = mHandler.obtainMessage ( Constants.FRESHEN_PAGE_MESSAGE_TAG, pageInfo.getPageUrl ());
-                mHandler.sendMessage ( msg );*/
-                viewPage.reload ( );
-            }
-            break;
-            case R.id.sideslip_setting:
-            {
-                //切换用户
-                String url = Constants.INTERFACE_PREFIX + "weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
-                AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url, HomeActivity.this );
-                final String rootUrls = paramUtil.obtainUrls ( );
-                HttpUtil.getInstance ().doVolleyObtainUser (
-                        HomeActivity.this, HomeActivity.this, application,
-                        rootUrls, findViewById ( R.id.titleRightLeftImage ), wManager, mHandler
-                                                           );
-
-                //隐藏侧滑菜单
-                application.layDrag.closeDrawer ( Gravity.LEFT );
-                //切换进度条
-                progress.showProgress("正在获取用户数据");
-                progress.showAtLocation (
-                        findViewById ( R.id.titleLeftImage ),
-                        Gravity.CENTER, 0, 0
-                                        );
-            }
-            break;
-            /*case R.id.sideslip_home: {
-
-                //模拟分享
-               *//* String text = "这是我的分享测试数据！~我只是来酱油的！~请不要在意 好不好？？？？？";
-                String imageurl = "http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg";
-                String title = "江苏华漫";
-                String url = "www.baidu.com";
-                ShareModel msgModel = new ShareModel ();
-                msgModel.setImageUrl ( imageurl);
-                msgModel.setText ( text );
-                msgModel.setTitle ( title );
-                msgModel.setUrl ( url );
-                share.initShareParams ( msgModel );
-                share.showShareWindow ( );
-                share.showAtLocation (
-                        findViewById ( R.id.sideslip_home ),
-                        Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0
-                                     );
-                share.setPlatformActionListener (
-                        new PlatformActionListener ( ) {
-                            @Override
-                            public
-                            void onComplete (
-                                    Platform platform, int i, HashMap< String, Object > hashMap
-                                            ) {
-                                Message msg = Message.obtain ();
-                                msg.what = Constants.SHARE_SUCCESS;
-                                msg.obj = platform;
-                                mHandler.sendMessage ( msg );
-                            }
-
-                            @Override
-                            public
-                            void onError ( Platform platform, int i, Throwable throwable ) {
-                                Message msg = Message.obtain ();
-                                msg.what = Constants.SHARE_ERROR;
-                                msg.obj = platform;
-                                mHandler.sendMessage ( msg );
-                            }
-
-                            @Override
-                            public
-                            void onCancel ( Platform platform, int i ) {
-                                Message msg = Message.obtain ();
-                                msg.what = Constants.SHARE_CANCEL;
-                                msg.obj = platform;
-                                mHandler.sendMessage ( msg );
-                            }
-                        }
-                                                );
-                share.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );*//*
-                //home
-                String homeUrl = application.obtainMerchantUrl ();
-                Message msg = mHandler.obtainMessage ( Constants.LOAD_PAGE_MESSAGE_TAG, homeUrl);
-                mHandler.sendMessage ( msg );
-                //模拟弹出框
-               *//* MsgPopWindow popWindow = new MsgPopWindow ( HomeActivity.this,  null, "弹出框测试", "系统出错啦，请关闭系统");
-                popWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.CENTER, 0,0 );*//*
-                //模拟弹出支付界面
-                *//*PayPopWindow payPopWindow = new PayPopWindow ( HomeActivity.this, null, null );
-                payPopWindow.showAtLocation ( HomeActivity.this.findViewById ( R.id.sideslip_home ), Gravity.BOTTOM, 0, 0 );
-                payPopWindow.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );*//*
-                //隐藏侧滑菜单
-                application.layDrag.closeDrawer ( Gravity.LEFT );
-            }
-            break;*/
-            case R.id.noAuth:
-            {
-                //微信登录
-                /*ToastUtils.showShortToast ( HomeActivity.this, application );*/
-                /*Platform wechat = ShareSDK.getPlatform ( HomeActivity.this, Wechat.NAME );
-                login = new AutnLogin ( HomeActivity.this, mHandler, noAuthLayout );
-                login.authorize ( new Wechat ( HomeActivity.this ) );
-                noAuthLayout.setClickable ( false );*/
-            }
-            break;
-            case R.id.titleRightLeftImage:
-            {
-                String text = application.obtainMerchantName ()+"分享";
-                String imageurl = application.obtainMerchantLogo ();
-                if(!imageurl.contains ( "http://" ))
-                {
-                    //加上域名
-                    imageurl = application.obtainMerchantUrl () + imageurl;
-                }
-                else if(TextUtils.isEmpty ( imageurl ))
-                {
-                    imageurl = Constants.COMMON_SHARE_LOGO;
-                }
-                String title = application.obtainMerchantName ()+"分享";
-                String url = null;
-                if(0 == application.titleStack.size ())
-                {
-                    url = application.obtainMerchantUrl ();
-                    url = SystemTools.shareUrl ( application, url );
-                }
-                else
-                {
-                    url = application.titleStack.peek ().getPageUrl ();
-                    url = SystemTools.shareUrl(application, url);
-                }
-                ShareModel msgModel = new ShareModel ();
-                msgModel.setImageUrl ( imageurl);
-                msgModel.setText ( text );
-                msgModel.setTitle ( title );
-                msgModel.setUrl ( url );
-                share.initShareParams ( msgModel );
-                share.showShareWindow ( );
-                share.showAtLocation (
-                        findViewById ( R.id.titleRightLeftImage ),
-                        Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0
-                                     );
-                share.setPlatformActionListener (
-                        new PlatformActionListener ( ) {
-                            @Override
-                            public
-                            void onComplete (
-                                    Platform platform, int i, HashMap< String, Object > hashMap
-                                            ) {
-                                Message msg = Message.obtain ( );
-                                msg.what = Constants.SHARE_SUCCESS;
-                                msg.obj = platform;
-                                mHandler.sendMessage ( msg );
-                            }
-
-                            @Override
-                            public
-                            void onError ( Platform platform, int i, Throwable throwable ) {
-                                Message msg = Message.obtain ( );
-                                msg.what = Constants.SHARE_ERROR;
-                                msg.obj = platform;
-                                mHandler.sendMessage ( msg );
-                            }
-
-                            @Override
-                            public
-                            void onCancel ( Platform platform, int i ) {
-                                Message msg = Message.obtain ( );
-                                msg.what = Constants.SHARE_CANCEL;
-                                msg.obj = platform;
-                                mHandler.sendMessage ( msg );
-                            }
-                        }
-                                                );
-                share.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );
-            }
-            break;
-            default:
-                break;
+//            case R.id.titleLeftImage:
+//            {
+//                if(application.isLeftImg)
+//                {
+//                    //切换出侧滑界面
+//                    application.layDrag.openDrawer(Gravity.LEFT);
+//                } else
+//                {
+//                    viewPage .goBack ( titleText, mHandler, application );
+//                }
+            //切换出侧滑界面
+            application.layDrag.openDrawer ( Gravity.LEFT );
+        } else
+        {
+            pageWeb .goBack ( );
         }
+    }
+
+
+    @OnClick(R.id.sideslip_setting)
+    void doSetting()
+    {
+        //切换用户
+        String url = Constants.INTERFACE_PREFIX + "weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
+        AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url, HomeActivity.this );
+        final String rootUrls = paramUtil.obtainUrls ( );
+        HttpUtil.getInstance ().doVolleyObtainUser (
+                HomeActivity.this, HomeActivity.this, application,
+                rootUrls, titleRightImage, wManager, mHandler
+        );
+
+        //隐藏侧滑菜单
+        application.layDrag.closeDrawer ( Gravity.LEFT );
+        //切换进度条
+        progress.showProgress ( "正在获取用户数据" );
+        progress.showAtLocation (
+                findViewById ( R.id.titleLeftImage ),
+                Gravity.CENTER, 0, 0
+        );
+    }
+
+    @OnClick(R.id.titleRightImage)
+    void doShare()
+    {
+        String text = application.obtainMerchantName ()+"分享";
+        String imageurl = application.obtainMerchantLogo ();
+        if(!imageurl.contains ( "http://" ))
+        {
+            //加上域名
+            imageurl = application.obtainMerchantUrl () + imageurl;
+        }
+        else if(TextUtils.isEmpty ( imageurl ))
+        {
+            imageurl = Constants.COMMON_SHARE_LOGO;
+        }
+        String title = application.obtainMerchantName ()+"分享";
+        String url = null;
+        url = pageWeb.getUrl();
+        url = SystemTools.shareUrl ( application, url );
+        ShareModel msgModel = new ShareModel ();
+        msgModel.setImageUrl ( imageurl);
+        msgModel.setText ( text );
+        msgModel.setTitle ( title );
+        msgModel.setUrl ( url );
+        share.initShareParams ( msgModel );
+        share.showShareWindow ( );
+        share.showAtLocation (
+                titleRightImage,
+                Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0
+        );
+        share.setPlatformActionListener (
+                new PlatformActionListener ( ) {
+                    @Override
+                    public
+                    void onComplete (
+                            Platform platform, int i, HashMap< String, Object > hashMap
+                    ) {
+                        Message msg = Message.obtain ( );
+                        msg.what = Constants.SHARE_SUCCESS;
+                        msg.obj = platform;
+                        mHandler.sendMessage ( msg );
+                    }
+
+                    @Override
+                    public
+                    void onError ( Platform platform, int i, Throwable throwable ) {
+                        Message msg = Message.obtain ( );
+                        msg.what = Constants.SHARE_ERROR;
+                        msg.obj = platform;
+                        mHandler.sendMessage ( msg );
+                    }
+
+                    @Override
+                    public
+                    void onCancel ( Platform platform, int i ) {
+                        Message msg = Message.obtain ( );
+                        msg.what = Constants.SHARE_CANCEL;
+                        msg.obj = platform;
+                        mHandler.sendMessage ( msg );
+                    }
+                }
+        );
+        share.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );
     }
 
     @Override
@@ -876,7 +626,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 if( url.toLowerCase().contains("http://www.dzd.com") ){
                     openSis();
                 }else {
-                    viewPage.loadUrl(HomeActivity.this, url, titleText, mHandler, application, swipeRefreshLayout);
+                    pageWeb.loadUrl(url);
                 }
             }
             break;
@@ -884,7 +634,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             {
                 //刷新界面
                 String url = msg.obj.toString ();
-                viewPage.loadUrl ( HomeActivity.this, url, titleText, null, null, swipeRefreshLayout );
+                pageWeb.loadUrl(url);
             }
             break;
             //分享
@@ -1000,26 +750,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         return false;
     }
 
-    private void initYears() {
-        YEAR = new String[60];
-        Calendar calendar = Calendar.getInstance();
-        int curYear = calendar.get(Calendar.YEAR) - 10;
-        for (int i = 0; i < 60; i++) {
-            YEAR[i] = curYear - i + "";
-
-        }
-    }
-
-    public class JSModel
-    {
-        @JavascriptInterface
-        public void obtainMenuStatus(String status)
-        {
-            application.isMenuHide = Boolean.parseBoolean ( status );
-        }
-    }
-
-
     private void openSis(){
         HomeActivity.this.startActivity( new Intent(HomeActivity.this, GoodManageActivity.class));
     }
@@ -1074,7 +804,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        ToastUtils.showShortToast(application,"error");
+                        ToastUtils.showShortToast(application,"请求异常");
                     }
                 }
         );

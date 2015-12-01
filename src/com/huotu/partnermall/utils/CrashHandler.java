@@ -37,7 +37,6 @@ class CrashHandler implements Thread.UncaughtExceptionHandler {
     //程序的Context对象
     private Context mContext;
     //
-    private Stack<PageInfoModel> titleStack;
     //用来存储设备信息和异常信息
     private Map< String, String > infos = new HashMap< String, String > ( );
 
@@ -47,13 +46,12 @@ class CrashHandler implements Thread.UncaughtExceptionHandler {
      *
      * @param context
      */
-    public void init(Context context, Stack<PageInfoModel > titleSatck) {
+    public void init(Context context) {
         mContext = context;
         //获取系统默认的UncaughtException处理器
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         //设置该CrashHandler为程序的默认处理器
         Thread.setDefaultUncaughtExceptionHandler(this);
-        this.titleStack = titleSatck;
     }
 
 
@@ -70,9 +68,6 @@ class CrashHandler implements Thread.UncaughtExceptionHandler {
             } catch (InterruptedException e) {
                 KJLoger.e ( e.getMessage () );
             }
-            //清空信息
-            titleStack.clear ();
-            //清空信息
 
             //退出程序
             android.os.Process.killProcess(android.os.Process.myPid());

@@ -47,11 +47,6 @@ class PayActivity extends BaseActivity {
     }
 
     @Override
-    protected void findViewById() {
-
-    }
-
-    @Override
     protected
     void initView ( ) {
 

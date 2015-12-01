@@ -2,6 +2,7 @@ package com.huotu.partnermall.ui;
 
 import android.app.DownloadManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +38,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import cn.jpush.android.api.JPushInterface;
 
 
@@ -44,7 +47,8 @@ public class SplashActivity extends BaseActivity {
 
     public static final String TAG = SplashActivity.class.getSimpleName();
 
-    private RelativeLayout mSplashItem_iv = null;
+    @Bind(R.id.welcomeTips)
+    RelativeLayout mSplashItem_iv;
     private
     BaseApplication application;
     private Intent locationI = null;
@@ -53,25 +57,20 @@ public class SplashActivity extends BaseActivity {
     MsgPopWindow popWindow;
     public DownloadManager downloadManager;
 
-    @Override
-    protected void findViewById() {
-        mSplashItem_iv = (RelativeLayout) findViewById(R.id.welcomeTips);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        application = (BaseApplication) SplashActivity.this.getApplication();
+    protected
+    void onCreate ( Bundle savedInstanceState ) {
+        super.onCreate ( savedInstanceState );
+        application = ( BaseApplication ) SplashActivity.this.getApplication ( );
         setContentView(R.layout.activity_splash);
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        ButterKnife.bind(this);
+        downloadManager = ( DownloadManager ) this.getSystemService ( Context.DOWNLOAD_SERVICE );
+        DisplayMetrics metrics = new DisplayMetrics ( );
+        getWindowManager ( ).getDefaultDisplay ( ).getMetrics ( metrics );
         Constants.SCREEN_DENSITY = metrics.density;
         Constants.SCREEN_HEIGHT = metrics.heightPixels;
         Constants.SCREEN_WIDTH = metrics.widthPixels;
 
         mHandler = new Handler ( getMainLooper ( ) );
-        findViewById ( );
         initView ( );
 
 
@@ -237,9 +236,12 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (null != locationI) {
+    protected
+    void onDestroy ( ) {
+        super.onDestroy ( );
+        ButterKnife.unbind(this);
+        if (null != locationI)
+        {
             stopService(locationI);
         }
     }

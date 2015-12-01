@@ -131,9 +131,14 @@ class UIUtils {
                 }
                 else
                 {
-                    int iconId = resources.getIdentifier ( "menu_default", "drawable", application.readSysInfo () );
+                    //int iconId = resources.getIdentifier ( "menu_default", "drawable", application.readSysInfo () );
+                    int iconId = resources.getIdentifier( menu.getMenuIcon() , "drawable" ,application.readSysInfo() );
                     Drawable menuIconDraw = resources.getDrawable ( iconId );
-                    SystemTools.loadBackground ( menuIcon,  menuIconDraw);
+                    if( menuIconDraw == null ){
+                        iconId = resources.getIdentifier( "menu_default" ,"drawable" ,application.readSysInfo ()  );
+                        menuIconDraw = resources.getDrawable( iconId);
+                    }
+                    SystemTools.loadBackground(menuIcon, menuIconDraw);
                 }
 
 

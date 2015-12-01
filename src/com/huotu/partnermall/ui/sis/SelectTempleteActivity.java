@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.BitmapLoader;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
@@ -57,7 +58,7 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
         app=(BaseApplication)this.getApplication();
         handler =new Handler(getMainLooper());
         header  =(RelativeLayout)findViewById(R.id.sis_selecttemplate_header);
-        header.setBackgroundColor(SystemTools.obtainColor( ((BaseApplication)SelectTempleteActivity.this.getApplication()).obtainMainColor() ));
+        header.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) SelectTempleteActivity.this.getApplication()).obtainMainColor()));
 
         back=(Button)findViewById(R.id.sis_selecttemplate_back);
         back.setOnClickListener(this);
@@ -65,6 +66,14 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
         operate.setOnClickListener(this);
 
         flow = (FeatureCoverFlow)findViewById(R.id.sis_selecttemplate_show);
+        ViewGroup.LayoutParams layoutParams = flow.getLayoutParams();
+        layoutParams.width = Constants.SCREEN_WIDTH * 90/100;
+        layoutParams.height = Constants.SCREEN_HEIGHT * 90/100;
+        int cw = layoutParams.width * 50/100;
+        int ch = layoutParams.height * 60/100;
+        flow.setLayoutParams( layoutParams );
+        flow.setCoverWidth(cw);
+        flow.setCoverHeight(ch);
 
         adapter =new CoverFlowAdapter(this);
         data=new ArrayList<>();

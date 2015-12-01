@@ -30,7 +30,6 @@ public class SisLoginActivity extends BaseActivity implements View.OnClickListen
         initView();
     }
 
-    @Override
     protected void findViewById() {
         header_title = (TextView) findViewById(R.id.header_title);
         header_back = (Button) findViewById(R.id.header_back);

@@ -131,7 +131,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
 
     }
 
-    @Override
     protected void findViewById() {
         app = (BaseApplication)this.getApplication();
         rlcd = (RelativeLayout)findViewById(R.id.goodmange_cd);
@@ -225,6 +224,11 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 getGoods(salestate, salestate ? pageno1 : pageno2);
             }
         });
+
+        View emptView = new View(this);
+        emptView.setBackgroundResource(R.drawable.sis_tpzw);
+        listview.setEmptyView(emptView);
+        listview.setScrollEmptyView(false);
 
         list1 = new ArrayList<>();
         adapter1 = new Goodmanageadapter(this, list1 , 0 );
@@ -752,7 +756,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             TextView txtamount = ViewHolderUtil.get(convertView, R.id.goods_item_amount);
             txtamount.setText("库存:" + String.valueOf(datas.get(position).getStock()));
             TextView txtprofit = ViewHolderUtil.get(convertView, R.id.goods_item_profit);
-            txtprofit.setText("返利:￥" + String.valueOf(datas.get(position).getRebate()));
+            txtprofit.setText("返利:" + String.valueOf(datas.get(position).getRebate()));
             TextView txtPrice = ViewHolderUtil.get(convertView , R.id.goods_item_commission);
             txtPrice.setText( "￥"+String.valueOf( datas.get(position).getPrice() ));
 
@@ -969,13 +973,18 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
 
         protected void removeRepeatData( List<SisGoodsModel> list ,  List<SisGoodsModel> data ){
             Iterator<SisGoodsModel> iterator = data.iterator();
+            List<SisGoodsModel> delList=new ArrayList<>();
             while( iterator.hasNext() ){
                 SisGoodsModel item = iterator.next();
                 for(SisGoodsModel child : list ){
                     if( item.getGoodsId().equals( child.getGoodsId() ) ) {
-                        data.remove( item );
+                        //data.remove( item );
+                        delList.add(item);
                     }
                 }
+            }
+            if( delList.size()>0 ){
+                data.removeAll(delList);
             }
         }
 
@@ -1141,7 +1150,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 ref.get().progressdlg.dismiss();
             }
 
-            ToastUtils.showLongToast(ref.get(),"error");
+            ToastUtils.showLongToast(ref.get(),"请求异常");
         }
     }
 

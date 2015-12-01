@@ -27,14 +27,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 引导界面
  */
 public
 class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, Handler.Callback {
 
-
-    private ViewPager        mVPActivity;
+    @Bind(R.id.vp_activity)
+    ViewPager mVPActivity;
     private ViewPagerAdapter vpAdapter;
     private List< View >     views;
     private int lastValue = - 1;
@@ -51,21 +54,16 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
         // TODO Auto-generated method stub
         super.onCreate ( arg0 );
         resources = this.getResources ();
-        setContentView ( R.layout.guide_ui );
+        setContentView(R.layout.guide_ui);
+        ButterKnife.bind(this);
         mHandler = new Handler ( this );
         views = new ArrayList< View > ( );
-        mVPActivity = ( ViewPager ) findViewById ( R.id.vp_activity );
         initImage ( );
-
         //初始化Adapter
         vpAdapter = new ViewPagerAdapter ( views );
         mVPActivity.setAdapter ( vpAdapter );
         //绑定回调
         mVPActivity.setOnPageChangeListener ( this );
-    }
-
-    @Override
-    protected void findViewById() {
     }
 
     @Override
@@ -162,5 +160,11 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
     public
     boolean handleMessage ( Message msg ) {
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 }

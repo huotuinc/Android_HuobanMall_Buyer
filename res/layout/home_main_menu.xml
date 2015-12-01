@@ -22,46 +22,6 @@
             android:layout_marginRight="@dimen/sideslip_login_icon_margin"
             android:layout_marginEnd="@dimen/sideslip_login_icon_margin"/>
         <RelativeLayout
-            android:id="@+id/noAuth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="@dimen/sideslip_login_icon_margin"
-            android:layout_marginStart="@dimen/sideslip_login_icon_margin"
-            android:visibility="visible">
-            <ImageView
-                android:id="@+id/accountLogo"
-                android:layout_width="@dimen/account_icon_width"
-                android:layout_height="@dimen/account_icon_height"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/accountLogo"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_alignTop="@+id/accountLogo"
-                android:text="登录"
-                android:textStyle="bold"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/medium_text_size"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/accountLogo"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_alignBottom="@+id/accountLogo"
-                android:text="使用微信授权登录"
-                android:textStyle="normal"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/notice_text_size"/>
-
-        </RelativeLayout>
-        <RelativeLayout
             android:id="@+id/getAuth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,8 +29,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginLeft="@dimen/sideslip_login_icon_margin"
-            android:layout_marginStart="@dimen/sideslip_login_icon_margin"
-            android:visibility="gone">
+            android:layout_marginStart="@dimen/sideslip_login_icon_margin">
             <ImageView
                 android:id="@+id/accountIcon"
                 android:layout_width="@dimen/account_icon_width"
@@ -128,10 +87,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
             </LinearLayout>
         </com.huotu.partnermall.widgets.BounceScrollView>
-
     </RelativeLayout>
-
 </RelativeLayout>
