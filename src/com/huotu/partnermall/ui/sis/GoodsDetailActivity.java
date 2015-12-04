@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.utils.AuthParamUtils;
@@ -42,7 +44,6 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
     RelativeLayout header;
     RelativeLayout botton;
     RelativeLayout rlcd;
-    //Long goodsid;
     int tabtype;
     BaseApplication app;
     ProgressPopupWindow progressPopupWindow;
@@ -86,16 +87,19 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
 
         progressBar = (ProgressBar) findViewById(R.id.sis_goodsdetail_pgb);
 
-//        url = SisConstant.INTERFACE_getGoodDetails +"?goodsId="+ String.valueOf( goodsid );
-//        webview.loadUrl(url);
+        setImmerseLayout();
+
+        loadUrl();
+    }
+
+    protected void loadUrl(){
         if( goods!=null && goods.getDetailsUrl() !=null && !TextUtils.isEmpty( goods.getDetailsUrl() )){
             url = goods.getDetailsUrl();
+            progressBar.setVisibility(View.VISIBLE);
             webview.loadUrl(url);
         }else{
             ToastUtils.showShortToast(this,"url地址空");
         }
-
-        setImmerseLayout();
     }
 
     public void setImmerseLayout() {

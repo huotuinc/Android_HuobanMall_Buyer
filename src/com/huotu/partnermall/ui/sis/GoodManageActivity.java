@@ -325,6 +325,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             }
             break;
             case R.id.sis_barcode:{
+
                 if( barCode ==null ) {
                     ToastUtils.showLongToast(this,"二维码没有生成");
                 }else {
@@ -960,7 +961,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             }
 
             ref.get().listview.onRefreshComplete();
-            ToastUtils.showLongToast(ref.get(),"error");
+            ToastUtils.showLongToast(ref.get(),"请求异常");
         }
     }
 

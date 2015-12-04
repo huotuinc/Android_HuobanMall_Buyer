@@ -16,10 +16,8 @@
         android:text=""/>
     <TextView
         android:id="@+id/sis_selecttemplate_item_flag"
-        android:layout_alignTop="@id/sis_selecttemplate_item_pic"
-        android:layout_alignLeft="@id/sis_selecttemplate_item_pic"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:visibility="gone"
-        android:background="@drawable/skyblue_platform_checked"
-        android:layout_height="wrap_content"/>
+        android:background="@drawable/selecttem"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

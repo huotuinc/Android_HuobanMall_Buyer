@@ -155,6 +155,10 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
                         pageno = 0;
                         isRefreshing = true;
+                        if( goodListView.getCurrentMode() == PullToRefreshBase.Mode.PULL_FROM_END ){
+                            goodListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                            goodListView.setMode(PullToRefreshBase.Mode.BOTH);
+                        }
 
                         handler.post(new Runnable() {
                             @Override
@@ -296,6 +300,10 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
         classid = 0L;
         pageno=0;
+        if( goodListView.getCurrentMode() == PullToRefreshBase.Mode.PULL_FROM_END ){
+            goodListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+            goodListView.setMode(PullToRefreshBase.Mode.BOTH);
+        }
         goodListView.setRefreshing(true);
     }
 
@@ -408,6 +416,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
                     llClass2.setVisibility(View.GONE);
                     ivSelect.setTag("∨");
+                    ivSelect.setImageResource(R.drawable.down);
 
                     SisSortModel model = (SisSortModel)v.getTag();
                     classid = model.getSisId();
@@ -420,6 +429,12 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
                         public void run() {
                             adapter.notifyDataSetChanged();
                             goodListView.onRefreshComplete();
+
+                            if( goodListView.getCurrentMode() == PullToRefreshBase.Mode.PULL_FROM_END ){
+                                goodListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                                goodListView.setMode(PullToRefreshBase.Mode.BOTH);
+                            }
+
                             goodListView.setRefreshing();
                         }
                     });
@@ -465,6 +480,8 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         map.put("categoryid" , String.valueOf(classid));
         map.put("key", key);
         map.put("pageno", String.valueOf(pageNo));
+        //
+        //map.put("customerid",app.readMerchantId());
 
         String urlstr = authParamUtils.getEncodeUrl( map );
 
@@ -509,6 +526,9 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             if( ref.get() ==null) return;
 
             ref.get().goodListView.onRefreshComplete();
+            if(ref.get().etSearchBar.isPopupShowing()){
+                ref.get().etSearchBar.dismissDropDown();
+            }
 
             if( !validateData( ref.get() , appSisGoodsModel) ){
                 return;
@@ -552,6 +572,9 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
             if( ref.get() ==null ) return;
 
             ref.get().goodListView.onRefreshComplete();
+            if(ref.get().etSearchBar.isPopupShowing()){
+                ref.get().etSearchBar.dismissDropDown();
+            }
 
             ToastUtils.showLongToast( ref.get() , "请求异常" );
         }
@@ -711,11 +734,17 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
                     llClass2.setVisibility(View.GONE);
                     ivSelect.setTag("∨");
+                    ivSelect.setImageResource(R.drawable.down);
 
                     classid = data.getSisId();
                     pageno=0;
                     isRefreshing=true;
                     goodsList.clear();
+                    if( goodListView.getCurrentMode() == PullToRefreshBase.Mode.PULL_FROM_END ){
+                        goodListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                        goodListView.setMode(PullToRefreshBase.Mode.BOTH);
+                    }
+
                     goodListView.setRefreshing(true);
                 }
             });

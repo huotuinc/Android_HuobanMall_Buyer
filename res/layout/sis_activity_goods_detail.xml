@@ -17,7 +17,7 @@
         android:id="@+id/sis_goodsdetail_header"
         android:layout_below="@id/sis_goodsdetail_cd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:background="@color/orangered"
         android:paddingLeft="0dp"
         android:paddingRight="0dp">
@@ -43,7 +43,7 @@
             android:textColor="@color/white"
             android:paddingLeft="15dp"
             android:paddingRight="10dp"
-            android:text="···"/>
+            android:text=""/>
         <TextView
             android:id="@+id/sis_goodsdetail_title"
             android:text="商品详情"
@@ -56,13 +56,16 @@
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 
+
+
     <ProgressBar
-            android:layout_below="@id/sis_goodsdetail_header"
+        android:visibility="gone"
+        android:layout_below="@id/sis_goodsdetail_header"
             android:id="@+id/sis_goodsdetail_pgb"
             android:layout_width="match_parent"
             style="?android:attr/progressBarStyleHorizontal"
             android:progressDrawable="@drawable/progress_bar_states"
-            android:layout_height="1dp"/>
+            android:layout_height="2dp"/>
 
     <RelativeLayout
         android:id="@+id/sis_goodsdetail_botton"
@@ -79,7 +82,7 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="25dp"/>
     </RelativeLayout>
 
     <WebView
@@ -88,5 +91,6 @@
         android:layout_above="@id/sis_goodsdetail_botton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 
 </RelativeLayout>
