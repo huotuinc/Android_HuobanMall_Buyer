@@ -391,6 +391,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
 
         LayoutInflater inflater = LayoutInflater.from(this);
         for(SisSortModel item : data ){
+            if( item.getSisId() == 0 ) continue;
             View v = inflater.inflate(R.layout.sis_goods_class,null);
             v.setOnClickListener(new View.OnClickListener() {
                 @Override

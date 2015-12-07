@@ -1,5 +1,7 @@
 package com.huotu.partnermall.model;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Administrator on 2015/9/22.
  */
@@ -10,6 +12,7 @@ class ShareModel {
     private String text;
     private String url;
     private String imageUrl;
+    private Bitmap imageData;
 
     public String getTitle() {
         return title;
@@ -43,4 +46,11 @@ class ShareModel {
         this.imageUrl = imageUrl;
     }
 
+    public Bitmap getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(Bitmap imageData) {
+        this.imageData = imageData;
+    }
 }

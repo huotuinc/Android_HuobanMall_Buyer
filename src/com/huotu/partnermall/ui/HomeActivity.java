@@ -48,6 +48,7 @@ import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
+import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SwitchUserPopWin;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
@@ -564,7 +565,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         String title = application.obtainMerchantName ()+"分享";
         String url = null;
         url = pageWeb.getUrl();
-        url = SystemTools.shareUrl ( application, url );
+        url = SystemTools.shareUrl(application, url);
         ShareModel msgModel = new ShareModel ();
         msgModel.setImageUrl ( imageurl);
         msgModel.setText ( text );

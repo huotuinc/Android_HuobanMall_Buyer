@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.adapter.ShareAdapter;
+import com.huotu.partnermall.image.LruImageCache;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.utils.SystemTools;
@@ -162,7 +163,7 @@ class SharePopupWindow extends PopupWindow implements View.OnClickListener {
      *
      * @param position
      */
-    private void share(int position) {
+    public void share(int position) {
 
        if(3 == position){
             //qq控件分享
@@ -212,6 +213,7 @@ class SharePopupWindow extends PopupWindow implements View.OnClickListener {
             sp.setText(shareModel.getText());
             sp.setUrl(shareModel.getUrl());
             sp.setImageUrl(shareModel.getImageUrl());
+            sp.setImageData(shareModel.getImageData());
             shareParams = sp;
         }
     }
@@ -243,7 +245,7 @@ class SharePopupWindow extends PopupWindow implements View.OnClickListener {
     /**
      * 分享到QQ空间
      */
-    private void qzone() {
+    public void qzone() {
 
         Platform.ShareParams sp = new Platform.ShareParams ();
         sp.setTitle ( shareParams.getTitle ( ) );
@@ -259,12 +261,13 @@ class SharePopupWindow extends PopupWindow implements View.OnClickListener {
     /**
      * 分享到sina微博
      */
-    private void sinaWeibo()
+    public void sinaWeibo()
     {
         Platform.ShareParams sp = new Platform.ShareParams ( );
         sp.setShareType(Platform.SHARE_WEBPAGE);
-        sp.setText(shareParams.getText() + shareParams.getUrl ( ));
+        sp.setText(shareParams.getText() + shareParams.getUrl());
         sp.setImageUrl(shareParams.getImageUrl());
+
         Platform sinaWeibo = ShareSDK.getPlatform ( context, SinaWeibo.NAME );
         sinaWeibo.setPlatformActionListener ( platformActionListener );
         //执行分享

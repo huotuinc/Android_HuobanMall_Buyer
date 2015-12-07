@@ -18,7 +18,16 @@ public class SisGoodsModel implements Serializable{
     private double rebate ;//返利
     //private boolean isOnSale=false;//
     private boolean isProcessing=false;//是否正在处理....
-    private String detailsUrl;//
+    private String detailsUrl;//APP里面的商品页面
+    private String shareUrl;//商品详情分享出去的URL
+
+    public String getShareUrl() {
+        return shareUrl;
+    }
+
+    public void setShareUrl(String shareUrl) {
+        this.shareUrl = shareUrl;
+    }
 
     public String getDetailsUrl() {
         return detailsUrl;

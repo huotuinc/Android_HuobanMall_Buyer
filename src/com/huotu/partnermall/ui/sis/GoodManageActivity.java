@@ -33,6 +33,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -44,6 +45,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.BitmapLoader;
+import com.huotu.partnermall.image.LruImageCache;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
@@ -52,6 +54,7 @@ import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
+import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.Util;
@@ -75,6 +78,7 @@ import java.util.Map;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
@@ -534,31 +538,35 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         sp.setText(model.getText());
         sp.setUrl(model.getUrl());
         sp.setImageUrl(model.getImageUrl());
+        //sp.setImageUrl( "http://www.baidu.com/234324.png");
+        sp.setImageData(logo.getDrawingCache());
+
+
         platform.setPlatformActionListener(new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
                 String msg = "";
-                if( platform.getName().equals(Wechat.NAME) ) {
+                if (platform.getName().equals(Wechat.NAME)) {
                     ToastUtils.showShortToast(context, "微信分享成功");
-                }else if( platform.getName().equals(WechatMoments.NAME)){
+                } else if (platform.getName().equals(WechatMoments.NAME)) {
                     ToastUtils.showShortToast(context, "微信朋友圈分享成功");
                 }
             }
 
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
-                if( platform.getName().equals(Wechat.NAME)) {
+                if (platform.getName().equals(Wechat.NAME)) {
                     ToastUtils.showShortToast(context, "微信分享失败");
-                }else if( platform.getName().equals(WechatMoments.NAME)){
+                } else if (platform.getName().equals(WechatMoments.NAME)) {
                     ToastUtils.showShortToast(context, "微信朋友圈分享失败");
                 }
             }
 
             @Override
             public void onCancel(Platform platform, int i) {
-                if( platform.getName().equals(Wechat.NAME) ) {
+                if (platform.getName().equals(Wechat.NAME)) {
                     ToastUtils.showShortToast(context, "取消微信分享");
-                }else if( platform.getName().equals(WechatMoments.NAME)){
+                } else if (platform.getName().equals(WechatMoments.NAME)) {
                     ToastUtils.showShortToast(context, "取消微信朋友圈分享");
                 }
             }
@@ -733,7 +741,8 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_goodmanage_item, null);
             }
-            NetworkImageViewCircle iv = (NetworkImageViewCircle)ViewHolderUtil.get(convertView,R.id.goods_item_picture);
+            final NetworkImageViewCircle iv = (NetworkImageViewCircle)ViewHolderUtil.get(convertView,R.id.goods_item_picture);
+            iv.setDrawingCacheEnabled(true);
             BitmapLoader.create().displayUrl(mContext, iv, datas.get(position).getImgUrl(), R.drawable.sis_pic, R.drawable.sis_pic);
 
             RelativeLayout llmain = ViewHolderUtil.get(convertView,R.id.goodmange_item_ll);
@@ -759,7 +768,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             TextView txtprofit = ViewHolderUtil.get(convertView, R.id.goods_item_profit);
             txtprofit.setText("返利:" + String.valueOf(datas.get(position).getRebate()));
             TextView txtPrice = ViewHolderUtil.get(convertView , R.id.goods_item_commission);
-            txtPrice.setText( "￥"+String.valueOf( datas.get(position).getPrice() ));
+            txtPrice.setText("￥" + String.valueOf(datas.get(position).getPrice()));
 
             final Button goods_item_btn = ViewHolderUtil.get(convertView, R.id.goods_item_btn);
             goods_item_btn.setTag(datas.get(position));
@@ -788,9 +797,8 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                                 public void onClick(View v) {
                                     popWin.dismiss();
                                     SisGoodsModel model = (SisGoodsModel) goods_item_btn.getTag();
-                                    //ToastUtils.showLongToast(GoodManageActivity.this, model.getGoodsName());
-                                    String goodurl = SisConstant.INTERFACE_getGoodDetails + "?goodsId="+ String.valueOf( model.getGoodsId() );
-                                    share(model.getGoodsName(), model.getGoodsName(), model.getImgUrl(), goodurl );
+                                    String goodurl = model.getShareUrl(); //SisConstant.INTERFACE_getGoodDetails + "?goodsId=" + String.valueOf(model.getGoodsId());
+                                    share(model.getGoodsName(), model.getGoodsName(), model.getImgUrl(), goodurl, iv.getDrawingCache());
                                 }
                             });
 
@@ -822,15 +830,24 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             return convertView;
         }
 
-        protected void share(String title , String text , String imageUrl , String goodsUrl) {
+        protected void share(String title , String text , String imageUrl , String goodsUrl , Bitmap imageData) {
             if (sharePopWin == null) {
                 sharePopWin = new SharePopupWindow(GoodManageActivity.this, GoodManageActivity.this, GoodManageActivity.this.application);
             }
-            ShareModel shareModel = new ShareModel();
+            final ShareModel shareModel = new ShareModel();
             shareModel.setUrl(goodsUrl);
-            shareModel.setImageUrl(imageUrl);
+
+            String tempPath = "#W0#H0" + imageUrl;
+            if( null == LruImageCache.instance().getBitmap(tempPath) ){
+                shareModel.setImageUrl("");
+            }else {
+                shareModel.setImageUrl(imageUrl);
+            }
+
+            //shareModel.setImageUrl(imageUrl);
             shareModel.setText(text);
             shareModel.setTitle(title);
+            shareModel.setImageData( imageData );
 
             sharePopWin.initShareParams(shareModel);
             sharePopWin.showShareWindow();
@@ -843,6 +860,8 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                         ToastUtils.showShortToast(application, "微信朋友圈分享成功");
                     } else if (platform.getName().equals(QZone.NAME)) {
                         ToastUtils.showShortToast(application, "QQ空间分享成功");
+                    }else if( platform.getName().equals(SinaWeibo.NAME)){
+                        //ToastUtils.showShortToast(application,"新浪微博分享成功");
                     }
                 }
 
