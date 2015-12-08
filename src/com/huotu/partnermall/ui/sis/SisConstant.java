@@ -21,7 +21,7 @@ public class SisConstant {
     public static String INTERFACE_updateSisProfile= SISBASEAPPURL+ "updateSisProfile";
     public static String INTERFACE_updateTemplate= SISBASEAPPURL+ "updateTemplate";
     public static String INTERFACE_getSisInfo= SISBASEAPPURL + "getSisInfo";//获取店铺信息
-    public static String INTERFACE_getGoodDetails = SISBASEURL + "getGoodDetails";//商品详细页面地址
+    //public static String INTERFACE_getGoodDetails = SISBASEURL + "getGoodDetails";//商品详细页面地址
 
     public static List<SisSortModel> CATEGORY;//商品分类数据
     public static SisBaseinfoModel SHOPINFO;//店中店信息
