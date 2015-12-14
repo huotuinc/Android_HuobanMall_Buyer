@@ -2,6 +2,8 @@ package com.huotu.partnermall.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -44,6 +46,8 @@ public class SwitchUserPopWin extends PopupWindow {
         this.wManager = wManager;
         this.mHandler = mHandler;
         this.view = view;
+        this.setBackgroundDrawable( new ColorDrawable(Color.TRANSPARENT));
+        this.setOutsideTouchable(true);
     }
 
     public void initView ( ) {

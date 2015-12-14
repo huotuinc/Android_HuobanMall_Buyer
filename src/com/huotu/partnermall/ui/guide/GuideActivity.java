@@ -33,25 +33,20 @@ import butterknife.ButterKnife;
 /**
  * 引导界面
  */
-public
-class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, Handler.Callback {
+public class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, Handler.Callback {
 
     @Bind(R.id.vp_activity)
     ViewPager mVPActivity;
     private ViewPagerAdapter vpAdapter;
-    private List< View >     views;
+    private List< View > views;
     private int lastValue = - 1;
-    private
-    Resources resources;
+    private Resources resources;
     public Handler mHandler;
-
     //引导图片资源
     private String[] pics;
 
     @Override
-    protected
-    void onCreate ( Bundle arg0 ) {
-        // TODO Auto-generated method stub
+    protected void onCreate ( Bundle arg0 ) {
         super.onCreate ( arg0 );
         resources = this.getResources ();
         setContentView(R.layout.guide_ui);
@@ -87,8 +82,11 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
                 //int iconId = resources.getIdentifier ( pics[i], "drawable", application.readSysInfo () );
                 int iconId = resources.getIdentifier( pics[i] , "drawable" , this.getPackageName() );
 
-                Drawable menuIconDraw = resources.getDrawable ( iconId );
-                SystemTools.loadBackground(iv, menuIconDraw);
+                Drawable menuIconDraw = null;
+                if( iconId >0) {
+                    menuIconDraw = resources.getDrawable(iconId);
+                    SystemTools.loadBackground(iv, menuIconDraw);
+                }
                 skipText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -96,17 +94,11 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
                         mHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-
                                 //判断是否登录
                                 if (application.isLogin()) {
                                     ActivityUtils.getInstance().skipActivity(GuideActivity.this, HomeActivity.class);
-
                                 } else {
-                                    ActivityUtils.getInstance()
-                                            .skipActivity(
-                                                    GuideActivity
-                                                            .this,
-                                                    LoginActivity.class);
+                                    ActivityUtils.getInstance().skipActivity( GuideActivity.this, LoginActivity.class);
                                 }
                             }
                         }, 1000);
@@ -133,33 +125,27 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
 
 
     @Override
-    public
-    void onClick ( View v ) {
+    public  void onClick ( View v ) {
         int position = (Integer)v.getTag();
         setCurView ( position );
     }
 
     @Override
-    public
-    void onPageScrolled ( int arg0, float v, int i1 ) {
+    public void onPageScrolled ( int arg0, float v, int i1 ) {
         lastValue = arg0;
     }
 
     @Override
-    public
-    void onPageSelected ( int arg0 ) {
+    public void onPageSelected ( int arg0 ) {
+    }
+
+    @Override
+    public void onPageScrollStateChanged ( int arg0 ) {
 
     }
 
     @Override
-    public
-    void onPageScrollStateChanged ( int arg0 ) {
-
-    }
-
-    @Override
-    public
-    boolean handleMessage ( Message msg ) {
+    public boolean handleMessage ( Message msg ) {
         return false;
     }
 

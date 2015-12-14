@@ -19,8 +19,7 @@ import cn.sharesdk.framework.PlatformDb;
 /**
  * 微信授权实现类
  */
-public
-class AutnLogin {
+public class AutnLogin {
     private Context context;
     private Handler mHandler;
     private View view;

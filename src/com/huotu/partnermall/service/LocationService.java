@@ -61,7 +61,7 @@ class LocationService extends Service {
         option.setNeedDeviceDirect(true);
         mLocationClient.setLocOption(option);
 
-        mLocationClient.registerLocationListener( new MyLocationListener());
+        //mLocationClient.registerLocationListener( new MyLocationListener());
 
         mLocationClient.start();
         return super.onStartCommand ( intent, flags, startId );

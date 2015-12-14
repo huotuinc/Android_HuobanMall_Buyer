@@ -30,11 +30,9 @@ public abstract class BaseActivity extends Activity {
         application = ( BaseApplication ) this.getApplication ();
         //禁止横屏
         BaseActivity.this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT );
-
     }
 
-    public void setImmerseLayout(View view)
-    {
+    public void setImmerseLayout(View view){
         if (application.isKITKAT ()) {
             Window window = getWindow();
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -43,11 +41,9 @@ public abstract class BaseActivity extends Activity {
         }
     }
 
-    public int getStatusBarHeight(Context context)
-    {
+    public int getStatusBarHeight(Context context){
         int result = 0;
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen",
-                                                              "android");
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
@@ -56,37 +52,31 @@ public abstract class BaseActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy ( );
     }
 
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
     }
 
     @Override
     protected void onRestart() {
-        // TODO Auto-generated method stub
         super.onRestart();
     }
 
     @Override
     protected void onResume() {
-        // TODO Auto-generated method stub
         super.onResume();
     }
 
     @Override
     protected void onStart() {
-        // TODO Auto-generated method stub
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        // TODO Auto-generated method stub
         super.onStop();
     }
     protected boolean canConnect(){
@@ -149,8 +139,7 @@ public abstract class BaseActivity extends Activity {
         startActivity(intent);
     }
 
-    public void closeSelf(Activity aty)
-    {
+    public void closeSelf(Activity aty){
         aty.finish();
     }
 
