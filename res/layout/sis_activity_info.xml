@@ -5,6 +5,14 @@
     >
 
     <RelativeLayout
+        android:id="@+id/sis_info_cd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orangered">
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@id/sis_info_cd"
         android:id="@+id/title_login"
         android:layout_width="fill_parent"
         android:layout_height="50dp"

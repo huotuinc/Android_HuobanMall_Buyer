@@ -10,6 +10,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -49,6 +51,7 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
     BaseApplication app;
     ProgressDialog pgDlg;
     Handler handler;
+    RelativeLayout rlcd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,9 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
         header  =(RelativeLayout)findViewById(R.id.sis_selecttemplate_header);
         header.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) SelectTempleteActivity.this.getApplication()).obtainMainColor()));
 
+        rlcd = (RelativeLayout)findViewById(R.id.sis_selecttemplate_cd);
+        rlcd.setBackgroundColor( SystemTools.obtainColor(app.obtainMainColor()) );
+
         back=(Button)findViewById(R.id.sis_selecttemplate_back);
         back.setOnClickListener(this);
         operate=(TextView)findViewById(R.id.sis_selecttemplate_operate);
@@ -68,12 +74,14 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
         flow = (FeatureCoverFlow)findViewById(R.id.sis_selecttemplate_show);
         ViewGroup.LayoutParams layoutParams = flow.getLayoutParams();
         layoutParams.width = Constants.SCREEN_WIDTH * 90/100;
-        layoutParams.height = Constants.SCREEN_HEIGHT * 90/100;
+        layoutParams.height = Constants.SCREEN_HEIGHT * 80/100;
         int cw = layoutParams.width * 50/100;
         int ch = layoutParams.height * 60/100;
         flow.setLayoutParams( layoutParams );
         flow.setCoverWidth(cw);
         flow.setCoverHeight(ch);
+
+        setImmerseLayout();
 
         adapter =new CoverFlowAdapter(this);
         data=new ArrayList<>();
@@ -123,6 +131,23 @@ public class SelectTempleteActivity extends Activity implements View.OnClickList
             int idx = (int)flow.getSelectedItemId();
             long templateid = data.get(idx).getTid();
             update( templateid );
+        }
+    }
+
+    public void setImmerseLayout(){
+        if ( ((BaseApplication)this.getApplication()).isKITKAT ()) {
+            Window window = getWindow();
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+            int statusBarHeight;
+            int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen","android");
+            if (resourceId > 0) {
+                statusBarHeight = this.getResources().getDimensionPixelSize(resourceId);
+                rlcd.setPadding(0,statusBarHeight,0,0);
+                rlcd.getLayoutParams().height+=statusBarHeight;
+                rlcd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) this.getApplication()).obtainMainColor()) );
+            }
         }
     }
 

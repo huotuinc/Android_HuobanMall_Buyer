@@ -26,23 +26,16 @@ import java.util.List;
 /**
  * 切换用户面板
  */
-public
-class SwitchUserPopWin extends PopupWindow {
-
-    private
-    Activity context;
+public class SwitchUserPopWin extends PopupWindow {
+    private Activity context;
     private View popView;
-    private
-    List< SwitchUserModel.SwitchUser > users;
-    private
-    BaseApplication                    application;
+    private List< SwitchUserModel.SwitchUser > users;
+    private BaseApplication application;
     private WindowManager wManager;
-    private
-    Handler mHandler;
+    private Handler mHandler;
     private View view;
 
-    public
-    SwitchUserPopWin ( Activity context, List< SwitchUserModel.SwitchUser > users, BaseApplication application,
+    public SwitchUserPopWin ( Activity context, List< SwitchUserModel.SwitchUser > users, BaseApplication application,
                        WindowManager wManager, Handler mHandler, View view ) {
 
         this.context = context;
@@ -53,8 +46,7 @@ class SwitchUserPopWin extends PopupWindow {
         this.view = view;
     }
 
-    public
-    void initView ( ) {
+    public void initView ( ) {
         LayoutInflater inflater = ( LayoutInflater ) context.getSystemService ( Context.LAYOUT_INFLATER_SERVICE );
         popView = inflater.inflate ( R.layout.switch_user_layout, null );
 
@@ -78,13 +70,11 @@ class SwitchUserPopWin extends PopupWindow {
             for ( int i = 0 ; i < users.size () ; i++ ) {
 
                 final SwitchUserModel.SwitchUser user = users.get ( i );
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( ViewGroup
-                                                                                      .LayoutParams.MATCH_PARENT, (wManager.getDefaultDisplay ().getHeight ()/15));
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, (wManager.getDefaultDisplay ().getHeight ()/15));
                 LinearLayout userItem = ( LinearLayout ) LayoutInflater.from ( context ).inflate ( R.layout.switch_user_item, null );
                 final TextView account = ( TextView ) userItem.findViewById ( R.id.accountName );
                 ImageView tag = ( ImageView ) userItem.findViewById ( R.id.switchUserTag );
-                if(application.readUserId ().equals ( String.valueOf ( user.getUserid
-                                                                               ( ) ) ))
+                if(application.readUserId ().equals ( String.valueOf ( user.getUserid( ) ) ))
                 {
                     tag.setVisibility ( View.VISIBLE );
                 }
@@ -95,29 +85,16 @@ class SwitchUserPopWin extends PopupWindow {
                 account.setOnClickListener (
                         new View.OnClickListener ( ) {
                             @Override
-                            public
-                            void onClick ( View v ) {
-
-                                //
-                                dismiss ( );
+                            public void onClick ( View v ) {
+                                dismiss();
                                 //判断当前的用户
-                                if ( application.readUserId ( ).equals (
-                                        String.valueOf (
-                                                user.getUserid
-                                                        ( )
-                                                       )
-                                                                       ) ) {
-
+                                if ( application.readUserId().equals (String.valueOf (user.getUserid())) ) {
                                     NoticePopWindow noticePop = new NoticePopWindow ( context,
                                                                                       context,
                                                                                       wManager,
                                                                                       "当前登录的是该用户，无需切换。" );
                                     noticePop.showNotice ( );
-                                    noticePop.showAtLocation (
-                                            view,
-                                            Gravity.CENTER, 0, 0
-                                                             );
-
+                                    noticePop.showAtLocation ( view, Gravity.CENTER, 0, 0 );
                                 }
                                 else {
                                     //切换用户通知
@@ -126,9 +103,7 @@ class SwitchUserPopWin extends PopupWindow {
                                     msg.obj = user;
                                     mHandler.sendMessage ( msg );
                                 }
-                            }
-                        }
-                                           );
+                            }});
                 userLayout.addView ( userItem );
 
             }

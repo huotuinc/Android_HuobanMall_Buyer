@@ -35,6 +35,7 @@ import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.web.SubUrlFilterUtils;
 import com.huotu.partnermall.utils.AliPayUtil;
+import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.SharePopupWindow;
@@ -50,20 +51,15 @@ import cn.sharesdk.framework.PlatformActionListener;
 /**
  * 单张展示web页面
  */
-public
-class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadcastReceiver.BroadcastListener {
+public class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadcastReceiver.BroadcastListener {
 
     //获取资源文件对象
-    private
-    Resources       resources;
-    private
-    Handler         mHandler;
+    private Resources  resources;
+    private Handler  mHandler;
     //application
-    private
-    BaseApplication application;
+    //private BaseApplication application;
     //web视图
-    private
-    WebView viewPage;
+    private WebView viewPage;
     private String url;
     private SharePopupWindow share;
     private MyBroadcastReceiver myBroadcastReceiver;
@@ -89,7 +85,7 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        application = ( BaseApplication ) this.getApplication ( );
+        //application = ( BaseApplication ) this.getApplication ( );
         resources = this.getResources ( );
         this.setContentView(R.layout.new_load_page);
         ButterKnife.bind(this);
@@ -97,15 +93,14 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
         mHandler = new Handler ( this );
         share = new SharePopupWindow ( WebViewActivity.this, WebViewActivity.this, application );
         myBroadcastReceiver = new MyBroadcastReceiver(WebViewActivity.this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
-        Bundle bundle = this.getIntent ( ).getExtras ( );
+        Bundle bundle = this.getIntent().getExtras();
         url = bundle.getString ( Constants.INTENT_URL );
         initView();
     }
 
     @Override
     protected
-    void initView ( ) {
-
+    void initView() {
         //设置title背景
         newtitleLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         //设置左侧图标
@@ -118,6 +113,7 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
         refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
             @Override
             public void onRefresh(PullToRefreshBase<WebView> pullToRefreshBase) {
+                if( viewPage ==null) return;
                 viewPage.reload();
             }
         });
@@ -131,7 +127,6 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
         viewPage.setClickable(true);
         viewPage.getSettings().setUseWideViewPort(true);
         //是否需要避免页面放大缩小操作
-
         viewPage.getSettings().setSupportZoom(true);
         viewPage.getSettings().setBuiltInZoomControls(true);
         viewPage.getSettings().setJavaScriptEnabled(true);
@@ -147,10 +142,9 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
                 new WebViewClient() {
 
                     //重写此方法，浏览器内部跳转
-                    public boolean shouldOverrideUrlLoading(
-                            WebView view, String
-                            url
-                    ) {
+                    public boolean shouldOverrideUrlLoading( WebView view, String  url ) {
+                        if( titleText ==null ) return false;
+
                         SubUrlFilterUtils filter = new SubUrlFilterUtils(WebViewActivity.this,
                                 WebViewActivity.this,
                                 titleText, mHandler,
@@ -167,6 +161,7 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
+                        if( titleText ==null ) return;
                         titleText.setText(view.getTitle());
                     }
 
@@ -174,26 +169,32 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
                     @Override
                     public void onReceivedError(
                             WebView view, int errorCode, String description,
-                            String failingUrl
-                    ) {
+                            String failingUrl ) {
                         super.onReceivedError(view, errorCode, description, failingUrl);
-
+                        refreshWebView.onRefreshComplete();
                     }
-
                 }
-
-
         );
 
         viewPage.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
+
+                if( titleText ==null ){
+                    KJLoger.e( "titleText=null");
+                    return;
+                }
+                if( title ==null ) {
+                    KJLoger.e("title=null");                    return;
+                }
+
                 titleText.setText(title);
             }
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
+                if( refreshWebView ==null  ) return;
                 if (100 == newProgress) {
                     refreshWebView.onRefreshComplete();
                 }
@@ -225,12 +226,9 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
     @OnClick(R.id.titleLeftImage)
     void doBack()
     {
-        if(viewPage.canGoBack ())
-        {
+        if(viewPage.canGoBack ()){
             viewPage.goBack ( );
-        }
-        else
-        {
+        }else{
             //关闭界面
             WebViewActivity.this.finish ();
         }
@@ -429,11 +427,10 @@ class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadc
 
     @Override
     protected
-    void onDestroy ( ) {
+    void onDestroy() {
         super.onDestroy ( );
         ButterKnife.unbind(this);
-        if( null != myBroadcastReceiver)
-        {
+        if( null != myBroadcastReceiver){
             myBroadcastReceiver.unregisterReceiver();
         }
     }

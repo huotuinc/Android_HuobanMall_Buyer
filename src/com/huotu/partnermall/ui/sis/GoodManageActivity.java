@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,6 +16,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -50,6 +52,7 @@ import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.ShareModel;
+import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
@@ -65,6 +68,8 @@ import com.huotu.partnermall.widgets.MsgPopWindow;
 import com.huotu.partnermall.widgets.NetworkImageViewCircle;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
+import com.tencent.utils.SystemUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -174,7 +179,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         if ( ((BaseApplication)this.getApplication()).isKITKAT ()) {
             Window window = getWindow();
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            //window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
             int statusBarHeight;
             int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen","android");
@@ -538,7 +543,6 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
         sp.setText(model.getText());
         sp.setUrl(model.getUrl());
         sp.setImageUrl(model.getImageUrl());
-        //sp.setImageUrl( "http://www.baidu.com/234324.png");
         sp.setImageData(logo.getDrawingCache());
 
 
@@ -556,9 +560,19 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
                 if (platform.getName().equals(Wechat.NAME)) {
-                    ToastUtils.showShortToast(context, "微信分享失败");
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showShortToast(context, "微信分享失败");
+                        }
+                    });
                 } else if (platform.getName().equals(WechatMoments.NAME)) {
-                    ToastUtils.showShortToast(context, "微信朋友圈分享失败");
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showShortToast(context, "微信朋友圈分享失败");
+                        }
+                    });
                 }
             }
 
@@ -776,10 +790,14 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             goods_item_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int wx = dip2px(mContext , 120);
+
                     if (popWin == null) {
                         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
                         View prView = layoutInflater.inflate(R.layout.layout_good_manage_popwindow, null);//自定义的布局文件
-                        popWin = new PopupWindow(prView, 200, 280);
+                        popWin = new PopupWindow(prView, wx , 280);
+                        //popWin.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+                        popWin.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
                         ColorDrawable cd = new ColorDrawable(0x00000000);
                         popWin.setBackgroundDrawable(cd);
                         //popWin.setFocusable(true); //设置PopupWindow可获得焦点
@@ -824,10 +842,45 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                             operateGoods(model, state);
                         }
                     });
-                    popWin.showAsDropDown(v, -200, 8);
+
+                    //int wx = dip2px(mContext , 120);
+
+                    popWin.showAsDropDown(v, -wx , 8);
                 }
             });
             return convertView;
+        }
+
+        /**
+         * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+         */
+        public int dip2px(Context context, float dpValue) {
+            final float scale = mContext.getResources().getDisplayMetrics().density;
+            return (int) (dpValue * scale + 0.5f);
+        }
+
+        /**
+         * 获取当前分辨率下指定单位对应的像素大小（根据设备信息）
+         * px,dip,sp -> px
+         *
+         * Paint.setTextSize()单位为px
+         *
+         * 代码摘自：TextView.setTextSize()
+         *
+         * @param unit  TypedValue.COMPLEX_UNIT_*
+         * @param size
+         * @return
+         */
+        public float getRawSize(int unit, float size) {
+            //Context c = getContext();
+            Resources r;
+
+            if (mContext == null)
+                r = Resources.getSystem();
+            else
+                r = mContext.getResources();
+
+            return TypedValue.applyDimension(unit, size, r.getDisplayMetrics());
         }
 
         protected void share(String title , String text , String imageUrl , String goodsUrl , Bitmap imageData) {

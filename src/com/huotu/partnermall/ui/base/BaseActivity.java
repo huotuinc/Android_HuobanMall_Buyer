@@ -12,15 +12,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.huotu.partnermall.AppManager;
+//import com.huotu.partnermall.AppManager;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.Util;
 
 public abstract class BaseActivity extends Activity {
 
-    public
-    BaseApplication application;
+    public BaseApplication application;
     protected Handler mHandler = null;
     protected static final String NULL_NETWORK = "无网络或当前网络不可用!";
 

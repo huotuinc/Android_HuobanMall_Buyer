@@ -75,9 +75,8 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
     private
     void initImage ( ) {
         try {
-            pics = this.getResources ( ).getAssets ( ).list ( "guide" );
-            LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                                                                              LinearLayout.LayoutParams.MATCH_PARENT);
+            //pics = this.getResources ( ).getAssets ( ).list ( "guide" );
+            LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             pics = resources.getStringArray ( R.array.guide_icon );
 
             //初始化引导图片列表
@@ -85,7 +84,9 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
                 RelativeLayout iv = ( RelativeLayout ) LayoutInflater.from(GuideActivity.this).inflate ( R.layout.guid_item, null );
                 TextView skipText = (TextView) iv.findViewById(R.id.skipText);
                 iv.setLayoutParams ( mParams );
-                int iconId = resources.getIdentifier ( pics[i], "drawable", application.readSysInfo () );
+                //int iconId = resources.getIdentifier ( pics[i], "drawable", application.readSysInfo () );
+                int iconId = resources.getIdentifier( pics[i] , "drawable" , this.getPackageName() );
+
                 Drawable menuIconDraw = resources.getDrawable ( iconId );
                 SystemTools.loadBackground(iv, menuIconDraw);
                 skipText.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +114,7 @@ class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPa
                 });
                 views.add(iv);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             KJLoger.e ( e.getMessage () );
         }
     }

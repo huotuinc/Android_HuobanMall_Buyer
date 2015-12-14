@@ -52,6 +52,13 @@ android {
             jniLibs.srcDirs = ['libs']
         }
 
+        morefan {
+            manifest.srcFile 'custom/morefan/AndroidManifest.xml'
+            java.srcDirs = ['custom/morefan/src']
+            res.srcDirs = ['custom/morefan/res']
+            assets.srcDirs = ['custom/morefan/assets']
+        }
+
         yaoshengji{
             manifest.srcFile '/custom/channel/AndroidManifest.xml'
             java.srcDirs = ['src']
@@ -61,6 +68,13 @@ android {
             res.srcDirs = ['/custom/channel/res']
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
+        }
+
+        yunyi{
+            manifest.srcFile 'custom/yunyi/AndroidManifest.xml'
+            java.srcDirs = ['custom/yunyi/src']
+            res.srcDirs = ['custom/yunyi/res']
+            assets.srcDirs = ['custom/assets']
         }
 
         // Move the tests to tests/java, tests/res, etc...
@@ -79,8 +93,16 @@ android {
 
     //打包渠道
     productFlavors {
-        yaoshengji{
+        morefan{
             applicationId 'cy.com.morefan'
+            versionCode 2
+            versionName "1.0.1"
+        }
+        yaoshengji{
+            applicationId 'com.yaoshengji'
+        }
+        yunyi{
+            applicationId 'com.yunyi'
         }
     }
 

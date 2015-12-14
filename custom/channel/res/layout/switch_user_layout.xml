@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:gravity="center_vertical"
-            android:onClick="onClick"
             android:orientation="horizontal"
             android:background="@color/theme_color">
 
@@ -33,7 +32,6 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:gravity="center_vertical"
-            android:onClick="onClick"
             android:paddingBottom="5dp"
             android:orientation="horizontal"
             android:background="@color/theme_color">
@@ -65,7 +63,6 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:gravity="center"
-            android:onClick="onClick"
             android:orientation="horizontal"
             android:background="@color/theme_color">
 
@@ -81,7 +78,6 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:gravity="center_vertical"
-            android:onClick="onClick"
             android:orientation="horizontal"
             android:background="@color/theme_color">
 

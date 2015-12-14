@@ -29,71 +29,70 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshWebView;
-import com.huotu.partnermall.AppManager;
-import com.huotu.partnermall.BaseApplication;
+//import com.huotu.partnermall.AppManager;
+//import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
-import com.huotu.partnermall.model.AuthMallModel;
+import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.MenuBean;
+import com.huotu.partnermall.model.PhoneLoginModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.model.UpdateLeftInfoModel;
-import com.huotu.partnermall.model.UserSelectData;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.ui.login.AutnLogin;
+import com.huotu.partnermall.ui.login.BindPhoneActivity;
 import com.huotu.partnermall.ui.sis.GoodManageActivity;
+import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SwitchUserPopWin;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
-
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
-
 import com.huotu.partnermall.widgets.UserInfoView;
-
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-
 import java.util.HashMap;
+import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.wechat.friends.Wechat;
 
 public class HomeActivity extends BaseActivity implements Handler.Callback {
-
     //获取资源文件对象
-    private
-    Resources      resources;
+    private Resources resources;
     private long exitTime = 0l;
     //application引用
-    public BaseApplication application;
+    //public BaseApplication application;
     //handler对象
     public Handler mHandler;
     //windows类
-    WindowManager wManager;
+    private WindowManager wManager;
     private SharePopupWindow share;
     private SwitchUserPopWin switchUser;
-    public
-    ProgressPopupWindow progress;
-    public
-    AssetManager am;
+    public ProgressPopupWindow progress;
+    public AssetManager am;
     public static ValueCallback< Uri > mUploadMessage;
     public static final int FILECHOOSER_RESULTCODE = 1;
-
+    public static final int BINDPHONE_REQUESTCODE = 1001;
+    private AutnLogin autnLogin;
 
     //标题栏布局对象
     @Bind(R.id.titleLayout)
@@ -138,21 +137,21 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     TextView userType;
     @Bind(R.id.viewPage)
     PullToRefreshWebView refreshWebView;
+    @Bind(R.id.layDrag)
+    DrawerLayout layDrag;
 
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        application = ( BaseApplication ) HomeActivity.this.getApplication ( );
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        //application = ( BaseApplication ) HomeActivity.this.getApplication ( );
         resources = HomeActivity.this.getResources ( );
         mHandler = new Handler ( this );
         share = new SharePopupWindow ( HomeActivity.this, HomeActivity.this, application );
         wManager = this.getWindowManager();
         am = this.getAssets();
-        AppManager.getInstance ( ).addActivity(this);
+        //AppManager.getInstance ( ).addActivity(this);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         //设置沉浸模式
@@ -162,20 +161,18 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
     @Override
-    protected
-    void onResume ( ) {
+    protected void onResume() {
         super.onResume();
-            new LoadLogoImageAyscTask ( resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username ).execute();
-            //渲染用户名
-            userName.setText ( application.getUserName ( ) );
-            userName.setTextColor(resources.getColor(R.color.theme_color));
-            userType.setTextColor(
-                    SystemTools.obtainColor(
-                            application.obtainMainColor(
-                            )
-                    )
-            );
-            userType.setText(application.readMemberLevel());
+        initUserInfo();
+    }
+
+    protected void initUserInfo(){
+        new LoadLogoImageAyscTask ( resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username ).execute();
+        //渲染用户名
+        userName.setText ( application.getUserName ( ) );
+        userName.setTextColor(resources.getColor(R.color.theme_color));
+        userType.setTextColor(SystemTools.obtainColor(application.obtainMainColor()));
+        userType.setText(application.readMemberLevel());
     }
 
     @Override
@@ -185,20 +182,18 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
     @Override
-    protected
-    void initView ( ) {
+    protected void initView ( ) {
         //获取系统标题栏高度
-        if ( application.isKITKAT ( ) ) {
-            int statusBarHeight = getStatusBarHeight ( HomeActivity.this );
-            loginLayout.setPadding ( 0, statusBarHeight, 0, 0 );
+        if (application.isKITKAT()) {
+            int statusBarHeight = getStatusBarHeight(HomeActivity.this);
+            loginLayout.setPadding(0, statusBarHeight, 0, 0);
         }
         //初始化侧滑菜单面板
-        application.layDrag = ( DrawerLayout ) this.findViewById ( R.id.layDrag );
-
-        application.layDrag.setDrawerListener(new DrawerLayout.DrawerListener() {
+        //application.layDrag = (DrawerLayout) this.findViewById(R.id.layDrag);
+        //application.layDrag.setDrawerListener(new DrawerLayout.DrawerListener() {
+        layDrag.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-
             }
 
             @Override
@@ -208,68 +203,48 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             @Override
             public void onDrawerClosed(View drawerView) {
-
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
-
             }
         });
 
         //设置title背景
-        homeTitle.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor ( ) ) );
+        homeTitle.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         //设置左侧图标
-        Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
+        Drawable leftDraw = resources.getDrawable(R.drawable.main_title_left_sideslip);
         SystemTools.loadBackground(titleLeftImage, leftDraw);
         //设置右侧图标
-        Drawable rightDraw = resources.getDrawable ( R.drawable.home_title_right_share );
-        SystemTools.loadBackground(titleRightImage, rightDraw );
+        Drawable rightDraw = resources.getDrawable(R.drawable.home_title_right_share);
+        SystemTools.loadBackground(titleRightImage, rightDraw);
         //设置侧滑界面
-        loginLayout.setBackgroundColor(
-                SystemTools.obtainColor(
-                        application.obtainMainColor(
-                        )
-                )
-        );
+        loginLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
 
         //设置设置图标
-        SystemTools.loadBackground(
-                loginSetting, resources.getDrawable(
-                        R.drawable
-                                .switch_white
-                )
-        );
-        getAuthLayout.setBackgroundColor (
-                SystemTools.obtainColor (
-                        application.obtainMainColor (
-                                                    )
-                                        )
-                                         );
+        SystemTools.loadBackground(loginSetting, resources.getDrawable(R.drawable.switch_white));
+        getAuthLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
 
         //设置登录界面
-            getAuthLayout.setVisibility ( View.VISIBLE );
-            //渲染logo
-            new LoadLogoImageAyscTask ( resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username ).execute ( );
-            //渲染用户名
-            userName.setText ( application.getUserName ( ) );
-            userName.setTextColor ( resources.getColor ( R.color.theme_color ) );
-            userType.setTextColor ( SystemTools.obtainColor (
-                                            application.obtainMainColor (
-                                                                        )
-                                                            ) );
-            //获取用户等级
-            StringBuilder builder = new StringBuilder (  );
-            builder.append ( Constants.INTERFACE_PREFIX + "Weixin/GetUserLevelName" );
-            builder.append ( "?customerId="+application.readMerchantId ( ) );
-            builder.append ( "&unionId="+application.readUserUnionId ( ) );
-            builder.append ( "&userId=" + application.readMemberId() );
-            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), HomeActivity.this );
-            String nameUrl = param.obtainUrlName ();
-            HttpUtil.getInstance ( ).doVolleyName(HomeActivity.this, application, nameUrl, userType);
+        getAuthLayout.setVisibility(View.VISIBLE);
+        //渲染logo
+        new LoadLogoImageAyscTask(resources, userLogo, application.getUserLogo(), R.drawable.ic_login_username).execute();
+        //渲染用户名
+        userName.setText(application.getUserName());
+        userName.setTextColor(resources.getColor(R.color.theme_color));
+        userType.setTextColor(SystemTools.obtainColor(application.obtainMainColor()));
+        //获取用户等级
+        StringBuilder builder = new StringBuilder();
+        builder.append(Constants.INTERFACE_PREFIX + "Weixin/GetUserLevelName");
+        builder.append("?customerId=" + application.readMerchantId());
+        builder.append("&unionId=" + application.readUserUnionId());
+        builder.append("&userId=" + application.readMemberId());
+        AuthParamUtils param = new AuthParamUtils(application, System.currentTimeMillis(), builder.toString(), HomeActivity.this);
+        String nameUrl = param.obtainUrlName();
+        HttpUtil.getInstance().doVolleyName(HomeActivity.this, application, nameUrl, userType);
 
         //动态加载侧滑菜单
-        UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am );
+        UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am);
         ui.loadMenus();
         //监听web控件
         pageWeb = refreshWebView.getRefreshableView();
@@ -285,16 +260,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         loadMainMenu();
     }
 
-    private
-    void loadMainMenu ( )
+    private void loadMainMenu ( )
     {
-
         menuView.getSettings().setJavaScriptEnabled(true);
         menuView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         //首页默认为商户站点 + index
         String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
-        menuView.loadUrl( menuUrl );
+        menuView.loadUrl(menuUrl);
 
         menuView.setWebViewClient(
                 new WebViewClient() {
@@ -322,8 +295,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         );
     }
 
-    private
-    void loadPage()
+    private void loadPage()
     {
         pageWeb.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         pageWeb.setVerticalScrollBarEnabled(false);
@@ -464,6 +436,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             Uri result = intent == null || resultCode != RESULT_OK ? null : intent.getData();
             mUploadMessage.onReceiveValue(result);
             mUploadMessage = null;
+        }else if( requestCode == BINDPHONE_REQUESTCODE && resultCode == RESULT_OK){
+            UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am);
+            ui.loadMenus();
         }
     }
 
@@ -518,39 +493,34 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 //                    viewPage .goBack ( titleText, mHandler, application );
 //                }
             //切换出侧滑界面
-            application.layDrag.openDrawer ( Gravity.LEFT );
-        } else
-        {
+            //application.layDrag.openDrawer ( Gravity.LEFT );
+            layDrag.openDrawer(Gravity.LEFT);
+        } else {
             pageWeb .goBack ( );
         }
     }
 
-
     @OnClick(R.id.sideslip_setting)
-    void doSetting()
-    {
+    void doSetting(){
         //切换用户
         String url = Constants.INTERFACE_PREFIX + "weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
         AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url, HomeActivity.this );
         final String rootUrls = paramUtil.obtainUrls ( );
-        HttpUtil.getInstance ().doVolleyObtainUser (
+        HttpUtil.getInstance().doVolleyObtainUser(
                 HomeActivity.this, HomeActivity.this, application,
                 rootUrls, titleRightImage, wManager, mHandler
         );
 
         //隐藏侧滑菜单
-        application.layDrag.closeDrawer ( Gravity.LEFT );
+        //application.layDrag.closeDrawer(Gravity.LEFT);
+        layDrag.closeDrawer(Gravity.LEFT);
         //切换进度条
-        progress.showProgress ( "正在获取用户数据" );
-        progress.showAtLocation (
-                findViewById ( R.id.titleLeftImage ),
-                Gravity.CENTER, 0, 0
-        );
+        progress.showProgress("正在获取用户数据");
+        progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
     }
 
     @OnClick(R.id.titleRightImage)
-    void doShare()
-    {
+    void doShare(){
         String text = application.obtainMerchantName ()+"分享";
         String imageurl = application.obtainMerchantLogo ();
         if(!imageurl.contains ( "http://" ))
@@ -565,66 +535,72 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         String title = application.obtainMerchantName ()+"分享";
         String url = null;
         url = pageWeb.getUrl();
+        if( url == null ){
+            url = application.obtainMerchantUrl();
+        }
         url = SystemTools.shareUrl(application, url);
         ShareModel msgModel = new ShareModel ();
-        msgModel.setImageUrl ( imageurl);
-        msgModel.setText ( text );
-        msgModel.setTitle ( title );
-        msgModel.setUrl ( url );
+        msgModel.setImageUrl(imageurl);
+        msgModel.setText(text);
+        msgModel.setTitle(title);
+        msgModel.setUrl ( url);
         share.initShareParams ( msgModel );
-        share.showShareWindow ( );
-        share.showAtLocation (
-                titleRightImage,
-                Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0
-        );
-        share.setPlatformActionListener (
-                new PlatformActionListener ( ) {
+        share.showShareWindow();
+        share.showAtLocation(titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0 );
+        share.setPlatformActionListener(
+                new PlatformActionListener() {
                     @Override
-                    public
-                    void onComplete (
-                            Platform platform, int i, HashMap< String, Object > hashMap
+                    public void onComplete(
+                            Platform platform, int i, HashMap<String, Object> hashMap
                     ) {
-                        Message msg = Message.obtain ( );
+                        Message msg = Message.obtain();
                         msg.what = Constants.SHARE_SUCCESS;
                         msg.obj = platform;
-                        mHandler.sendMessage ( msg );
+                        mHandler.sendMessage(msg);
                     }
 
                     @Override
-                    public
-                    void onError ( Platform platform, int i, Throwable throwable ) {
-                        Message msg = Message.obtain ( );
+                    public void onError(Platform platform, int i, Throwable throwable) {
+                        Message msg = Message.obtain();
                         msg.what = Constants.SHARE_ERROR;
                         msg.obj = platform;
-                        mHandler.sendMessage ( msg );
+                        mHandler.sendMessage(msg);
                     }
 
                     @Override
-                    public
-                    void onCancel ( Platform platform, int i ) {
-                        Message msg = Message.obtain ( );
+                    public void onCancel(Platform platform, int i) {
+                        Message msg = Message.obtain();
                         msg.what = Constants.SHARE_CANCEL;
                         msg.obj = platform;
-                        mHandler.sendMessage ( msg );
+                        mHandler.sendMessage(msg);
                     }
                 }
         );
-        share.setOnDismissListener ( new PoponDismissListener ( HomeActivity.this ) );
+        share.setOnDismissListener(new PoponDismissListener(HomeActivity.this));
     }
 
     @Override
-    public
-    boolean handleMessage ( Message msg ) {
+    public boolean handleMessage ( Message msg ) {
+        if( layDrag !=null && layDrag.isShown()){
+            layDrag.closeDrawer(Gravity.LEFT);
+        }
 
         switch ( msg.what )
         {
             //加载页面
             case Constants.LOAD_PAGE_MESSAGE_TAG:
-            {
-                //加载菜单页面
-                String url = msg.obj.toString ();
+            {//加载菜单页面
 
-                if( url.toLowerCase().contains("http://www.dzd.com") ){
+                String url = msg.obj.toString ();
+                if( url.toLowerCase().contains("http://www.bindweixin.com") ){
+                    //绑定微信
+                    callWeixin();
+                }
+                else if( url.toLowerCase().trim().contains("http://www.bindphone.com") ){
+                    //绑定手机
+                    callPhone();
+                }
+                else if( url.toLowerCase().contains("http://www.dzd.com") ){
                     openSis();
                 }else {
                     pageWeb.loadUrl(url);
@@ -657,9 +633,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 }
                 else if("SinaWeibo".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( HomeActivity.this, "sina微博分享成功" );
+                    //ToastUtils.showShortToast ( HomeActivity.this, "sina微博分享成功" );
                 }
-
             }
             break;
             case Constants.SHARE_ERROR:
@@ -735,14 +710,67 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
                 //更新界面
                 userName.setText ( user.getWxNickName () );
-                userType.setText ( user.getLevelName ( ) );
+                userType.setText(user.getLevelName());
                 new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute ( );
 
+                //切换用户，需要清空 店中店的 缓存数据
+                SisConstant.SHOPINFO = null;
+                SisConstant.CATEGORY = null;
             }
             break;
             case Constants.LOAD_SWITCH_USER_OVER:
             {
-                progress.dismissView ( );
+                progress.dismissView();
+            }
+            break;
+            case Constants.MSG_AUTH_COMPLETE:
+            {//提示授权成功
+                Platform plat = ( Platform ) msg.obj;
+                autnLogin.authorize(plat);
+            }
+            break;
+            case Constants.LOGIN_AUTH_ERROR:
+            {//授权登录 失败
+                titleLeftImage.setClickable ( true );
+                progress.dismissView();
+                ToastUtils.showShortToast(this, "授权失败");
+            }
+            break;
+            case Constants.MSG_AUTH_ERROR:
+            {//
+                titleLeftImage.setClickable ( true );
+                progress.dismissView ();
+                Throwable throwable = ( Throwable ) msg.obj;
+                //if("cn.sharesdk.wechat.utils.WechatClientNotExistException".equals ( throwable.toString () ))
+                if( throwable instanceof cn.sharesdk.wechat.utils.WechatClientNotExistException ){
+                    ToastUtils.showShortToast(this,"请安装微信客户端，在进行绑定操作");
+                }else{
+                    ToastUtils.showShortToast(this,"微信绑定失败");
+                }
+            }
+            break;
+            case Constants.MSG_AUTH_CANCEL:
+            {
+                if( progress!=null ){
+                    progress.dismissView();
+                }
+                ToastUtils.showShortToast(this,"你已经取消微信授权，绑定操作失败");
+            }
+            break;
+            case Constants.MSG_USERID_FOUND:
+            {
+                progress.showProgress ( "已经获取微信的用户信息" );
+                progress.showAtLocation(
+                        this.getWindow().getDecorView(),
+                        Gravity.CENTER, 0, 0
+                );
+            }
+            break;
+            case Constants.MSG_LOGIN:
+            {
+                progress.dismissView();
+                AccountModel account = ( AccountModel ) msg.obj;
+                bindWeiXin( account );
             }
             break;
             default:
@@ -752,7 +780,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
     private void openSis(){
-        HomeActivity.this.startActivity( new Intent(HomeActivity.this, GoodManageActivity.class));
+        HomeActivity.this.startActivity(new Intent(HomeActivity.this, GoodManageActivity.class));
     }
 
     private void refreshLeftMenu(){
@@ -779,6 +807,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
                         if( updateLeftInfoModel.getData()==null ) return;
                         if( updateLeftInfoModel.getData().getMenusCode()==0) return;
+
+                        application.writeMemberLevel( updateLeftInfoModel.getData().getLevelName() );
+                        userType.setText(application.readMemberLevel());
 
                         //设置侧滑栏菜单
                         List<MenuBean > menus = new ArrayList< MenuBean >(  );
@@ -812,5 +843,119 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         VolleyUtil.getRequestQueue().add(request);
     }
 
+    /*
+     * 手机绑定微信
+     */
+    private void callWeixin() {
+        progress.showProgress("正在调用微信授权，请稍等...");
+        progress.showAtLocation( titleLeftImage , Gravity.CENTER, 0, 0);
+        //微信授权登录
+        //Platform wechat = ShareSDK.getPlatform ( HomeActivity.this, Wechat.NAME);
+        autnLogin = new AutnLogin(HomeActivity.this, mHandler, titleLeftImage, application);
+        autnLogin.authorize(new Wechat(HomeActivity.this));
+    }
+
+    /*
+     *微信绑定手机
+     */
+    private void callPhone(){
+        Intent intent =new Intent(HomeActivity.this , BindPhoneActivity.class);
+        HomeActivity.this.startActivityForResult( intent , BINDPHONE_REQUESTCODE);
+    }
+
+    private  void bindWeiXin(AccountModel model ){
+        String url = Constants.INTERFACE_PREFIX + "Account/bindWeixin";
+        Map map = new HashMap();
+        map.put("userid",  application.readMemberId() );
+        map.put("customerid", application.readMerchantId());
+        map.put("sex", model.getSex());
+        map.put("nickname", model.getNickname());
+        map.put("openid", model.getOpenid());
+        map.put("city", model.getCity());
+        map.put("country",model.getCountry());
+        map.put("province",model.getProvince());
+        map.put("headimgurl",model.getAccountIcon());
+        map.put("unionid",model.getAccountUnionId());
+        map.put("refreshToken",model.getAccountToken());
+        AuthParamUtils authParamUtils =new AuthParamUtils(application, System.currentTimeMillis(), url , HomeActivity.this);
+        Map<String,String> params = authParamUtils.obtainParams(map);
+
+        GsonRequest<PhoneLoginModel> request =new GsonRequest<PhoneLoginModel>(Request.Method.POST,
+                url ,
+                PhoneLoginModel.class,
+                null,
+                params,
+                new MyBindWeiXinListener(this , model ),
+                new MyBindWeiXinErrorListener(this)
+                );
+        VolleyUtil.getRequestQueue().add(request);
+
+        progress.showProgress("正在绑定微信，请稍等...");
+        progress.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+    }
+
+    class MyBindWeiXinListener implements Response.Listener<PhoneLoginModel>{
+        WeakReference<HomeActivity> ref;
+        AccountModel weixinModel;
+        MyBindWeiXinListener(HomeActivity act , AccountModel model ){
+            ref=new WeakReference<>(act);
+            weixinModel=model;
+        }
+        @Override
+        public void onResponse(PhoneLoginModel phoneLoginModel ) {
+            if( ref.get()==null) return;
+            if( ref.get().progress!=null){
+                ref.get().progress.dismissView();
+            }
+            if( phoneLoginModel ==null){
+                ToastUtils.showShortToast(ref.get(), "绑定微信操作失败");
+                return;
+            }
+            if( phoneLoginModel.getCode() != 200){
+                String msg ="绑定微信操作失败";
+                if( !TextUtils.isEmpty(phoneLoginModel.getMsg() )){
+                    msg = phoneLoginModel.getMsg();
+                }
+                ToastUtils.showShortToast(ref.get(), msg);
+                return;
+            }
+            if( phoneLoginModel.getData() ==null ){
+                ToastUtils.showShortToast(ref.get(),"绑定微信操作失败");
+                return;
+            }
+
+            ToastUtils.showShortToast(ref.get(), "绑定操作成功");
+
+            application.writeMemberInfo (
+                    phoneLoginModel.getData().getNickName() , String.valueOf( phoneLoginModel.getData().getUserid() ),
+                    phoneLoginModel.getData().getHeadImgUrl() , weixinModel.getAccountToken (),
+                    weixinModel.getAccountUnionId ()
+            );
+            application.writeMemberLevel( phoneLoginModel.getData().getLevelName());
+            //记录登录类型(1:微信登录，2：手机登录)
+            application.writeMemberLoginType( 1 );
+            ref.get().application.writeMemberRelatedType( phoneLoginModel.getData().getRelatedType() );//重写 关联类型=2 已经绑定
+            //动态加载侧滑菜单
+            UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am );
+            ui.loadMenus();
+
+            initUserInfo();
+        }
+    }
+
+    class MyBindWeiXinErrorListener implements Response.ErrorListener{
+        WeakReference<HomeActivity> ref;
+        public MyBindWeiXinErrorListener(HomeActivity act){
+            ref=new WeakReference<HomeActivity>(act);
+        }
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            if(ref.get()==null)return;
+            if(ref.get().progress!=null ){
+                ref.get().progress.dismissView();
+            }
+            ToastUtils.showShortToast(ref.get(),"绑定微信操作失败。");
+        }
+    }
 }
 

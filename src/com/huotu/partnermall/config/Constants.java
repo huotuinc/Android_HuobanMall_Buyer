@@ -189,6 +189,19 @@ public class Constants {
 	public static final String MEMBER_ICON              = "member_icon";
 	//会员类型
 	public static final String MEMBER_USERTYPE          ="member_usertype";
+	//手机用户 登录名
+	public static final String MEMBER_LOGINNAME         ="loginname";
+	//手机用户 管理类型
+	public static final String MEMBER_RELATEDTYPE       ="relatedType";
+	//手机用户 授权码
+	public static final String MEMBER_AUTHORIZECODE     ="authorizeCode";
+	//手机用户 姓名
+	public static final String MEMBER_REALNAME ="realName";
+	//手机用户 安全码
+	public static final String MEMBER_SECURE = "secure";
+	//用户登录类型（1：微信登录，2：手机登录）
+	public static final String MEMBER_LOGINTYPE="loginType";
+
 	//商户ID
 	public static final String MERCHANT_INFO_ID         = "merchant_id";
 	//商户支付宝key信息

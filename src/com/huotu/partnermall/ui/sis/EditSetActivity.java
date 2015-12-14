@@ -97,7 +97,15 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
             return;
         }
 
+        String context1 = getIntent().getExtras().getString("text");
+
         String context = ET.getText().toString().trim();
+
+        if( context1.equals(context) ){
+            this.finish();
+            return;
+        }
+
         String url = SisConstant.INTERFACE_updateSisProfile;
         Map<String, String> paras = new HashMap<>();
         paras.put("profiletype", String.valueOf(typeEnum.getIndex()));

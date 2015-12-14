@@ -9,8 +9,7 @@ import android.os.Bundle;
 /**
  * Created by Administrator on 2015/9/19.
  */
-public
-class MyBroadcastReceiver extends BroadcastReceiver {
+public class MyBroadcastReceiver extends BroadcastReceiver {
 
     public static String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED" ;
     public static String ACTION_BACKGROUD_BACK_TO_UPDATE = "cy.com.morefan.BACKGROUD_BACK_TO_UPDATE" ;//后台返回

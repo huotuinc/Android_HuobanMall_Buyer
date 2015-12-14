@@ -6,19 +6,23 @@ import android.content.res.AssetManager;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.adapter.ShareAdapter;
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.LruImageCache;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ShareModel;
+import com.huotu.partnermall.utils.DensityUtils;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.WindowUtils;
 
@@ -131,24 +135,29 @@ class SharePopupWindow extends PopupWindow implements View.OnClickListener {
         ShareItem sinaweibo = new ShareItem(4, "新浪微博", R.drawable.logo_sinaweibo);
         items.add(sinaweibo);
 
+        int itemWidth = Constants.SCREEN_WIDTH/4*80/100; //DensityUtils.dip2px( context , 58 );
+        int itemHeight = itemWidth; //DensityUtils.dip2px(context , 58);
+        int itemspace = (Constants.SCREEN_WIDTH - itemWidth * 4 ) /5;
         //构建ui
         for(ShareItem item:items)
         {
-            View view = LayoutInflater.from ( context ).inflate (
-                    R.layout.share_item,
-                    null);
+            View view = LayoutInflater.from ( context ).inflate ( R.layout.share_item, null);
             view.setOnClickListener(this);
             view.setId(item.getId());
-            ImageView img = (ImageView) view
-                    .findViewById(R.id.share_icon);
+            ImageView img = (ImageView) view.findViewById(R.id.share_icon);
             img.setImageResource(item.getShareIcon());
-            TextView txt = (TextView) view
-                    .findViewById(R.id.share_title);
+            RelativeLayout.LayoutParams params =(RelativeLayout.LayoutParams) img.getLayoutParams();
+            params.rightMargin = itemspace ;
+            params.leftMargin = itemspace ;
+            params.width = itemWidth;
+
+            params.height = itemHeight;
+            img.setLayoutParams(params);
+
+            TextView txt = (TextView) view.findViewById(R.id.share_title);
             txt.setText(item.getShareName());
             shareItems.addView(view);
         }
-
-
     }
 
     @Override

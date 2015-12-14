@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.huotu.partnermall.utils.KJLoger;
@@ -57,7 +58,7 @@ class LoadLogoImageAyscTask extends AsyncTask<Void, Void, Bitmap> {
         Bitmap bitmap = null;
         URL imgUrl = null;
         InputStream is = null;
-        if(null == url)
+        if(TextUtils.isEmpty( url) || null == url)
         {
             bitmap = BitmapFactory.decodeResource ( resources, defaultImg );
         }

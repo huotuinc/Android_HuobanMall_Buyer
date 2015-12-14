@@ -18,32 +18,24 @@ import org.w3c.dom.Text;
 /**
  * 消息显示框
  */
-public
-class NoticePopWindow extends PopupWindow {
+public class NoticePopWindow extends PopupWindow {
 
     private Context       context;
     private Activity      aty;
     private WindowManager wManager;
-    private
-    ImageView closeImg;
-    private
-    TextView notice;
+    private ImageView closeImg;
+    private TextView notice;
     private String msg;
 
-    public
-    NoticePopWindow ( Context context, Activity aty, WindowManager wManager, String msg ) {
+    public NoticePopWindow ( Context context, Activity aty, WindowManager wManager, String msg ) {
         this.context = context;
         this.aty = aty;
         this.wManager = wManager;
         this.msg = msg;
     }
 
-    public
-    void showNotice ( ) {
-        View view = LayoutInflater.from ( context ).inflate (
-                R.layout.notice_ui,
-                null
-                                                            );
+    public void showNotice ( ) {
+        View view = LayoutInflater.from ( context ).inflate ( R.layout.notice_ui, null );
         closeImg = ( ImageView ) view.findViewById ( R.id.notice_close );
         closeImg.setOnClickListener ( new View.OnClickListener ( ) {
                                           @Override
@@ -67,10 +59,8 @@ class NoticePopWindow extends PopupWindow {
         WindowUtils.backgroundAlpha ( aty, 0.4f );
     }
 
-    public void dismissView()
-    {
+    public void dismissView() {
         setOnDismissListener ( new PoponDismissListener ( aty ) );
         dismiss ();
-
     }
 }

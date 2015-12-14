@@ -21,25 +21,19 @@ import cn.sharesdk.framework.PlatformDb;
  */
 public
 class AutnLogin {
-
-    private
-    Context context;
-    private
-    Handler mHandler;
+    private Context context;
+    private Handler mHandler;
     private View view;
-    private
-    BaseApplication application;
+    private BaseApplication application;
 
-    public
-    AutnLogin ( Context context, Handler mHandler, View view, BaseApplication application ) {
+    public AutnLogin ( Context context, Handler mHandler, View view, BaseApplication application ) {
         this.context = context;
         this.mHandler = mHandler;
         this.view = view;
         this.application = application;
     }
 
-    public
-    void authorize ( Platform plat ) {
+    public void authorize ( Platform plat ) {
         if ( plat.isValid ( ) ) {
             application.plat = plat;
             String userId = plat.getDb ( ).getUserId ( );

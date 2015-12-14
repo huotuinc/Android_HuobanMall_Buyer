@@ -27,6 +27,7 @@ import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.model.PageInfoModel;
 import com.huotu.partnermall.model.PageType;
 import com.huotu.partnermall.model.SysModel;
+import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.utils.CrashHandler;
 import com.huotu.partnermall.utils.KJConfig;
 import com.huotu.partnermall.utils.KJLoger;
@@ -42,6 +43,7 @@ import java.util.Stack;
 import cn.jpush.android.api.JPushInterface;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.wechat.friends.Wechat;
 
 /**
  * 系统级别的变量、方法
@@ -49,9 +51,9 @@ import cn.sharesdk.framework.ShareSDK;
  */
 public class BaseApplication extends Application {
 
-    public DrawerLayout layDrag;
+    //public DrawerLayout layDrag;
     //定位句柄
-    public Intent locationI = new Intent ( );
+    //public Intent locationI = new Intent ( );
     //定位类型
     public int    localType;
     //地址
@@ -70,29 +72,24 @@ public class BaseApplication extends Application {
     //底部菜单是否隐藏 true显示， false隐藏
     public boolean isMenuHide = false;
     //维护页面标题信息栈
-    /*public
-    Stack< PageInfoModel > titleStack;*/
+    /*public Stack< PageInfoModel > titleStack;*/
 
-    public
-    AssetManager am;
+    public  AssetManager am;
     public Typeface font;
 
     public Platform plat;
-
 
     /**
      * 是否是左划或者返回
      * true 左划
      * false 返回
      */
-
     public boolean isLeftImg = true;
 
     public IWXAPI wApi;
 
     @Override
-    public
-    void onConfigurationChanged ( Configuration newConfig ) {
+    public void onConfigurationChanged ( Configuration newConfig ) {
         super.onConfigurationChanged ( newConfig );
     }
 
@@ -119,13 +116,12 @@ public class BaseApplication extends Application {
         //加载异常处理模块
         CrashHandler crashHandler = CrashHandler.getInstance ( );
         crashHandler.init ( getApplicationContext ( ) );
-
     }
 
     @Override
     public
     void onLowMemory ( ) {
-        super.onLowMemory ( );
+        super.onLowMemory();
     }
 
     @Override
@@ -145,8 +141,7 @@ public class BaseApplication extends Application {
      *@exception
      *@since
      */
-    protected
-    void solveAsyncTaskOnPostExecuteBug ( ) {
+    protected void solveAsyncTaskOnPostExecuteBug ( ) {
         try {
             Class.forName ( "android.os.AsyncTask" );
         }
@@ -158,31 +153,23 @@ public class BaseApplication extends Application {
     /**
      * 获取手机IMEI码
      */
-    public static
-    String getPhoneIMEI ( Context cxt ) {
-        TelephonyManager tm = ( TelephonyManager ) cxt
-                .getSystemService ( Context.TELEPHONY_SERVICE );
-        return tm.getDeviceId ( );
+    public static String getPhoneIMEI ( Context cxt ) {
+        TelephonyManager tm = ( TelephonyManager ) cxt.getSystemService ( Context.TELEPHONY_SERVICE );
+        return tm.getDeviceId();
     }
 
-    public String readMemberId()
-    {
-        return PreferenceHelper.readString (
-                getApplicationContext ( ), Constants.MEMBER_INFO,
-                Constants.MEMBER_ID
-                                           );
+    public String readMemberId() {
+        return PreferenceHelper.readString( getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID  );
     }
 
-    public String readCurrentUrl()
-    {
-        return PreferenceHelper.readString (
-                getApplicationContext ( ), Constants.BASE_INFO,
-                Constants.CURRENT_URL
-                                           );
-    }
+//    public String readCurrentUrl(){
+//        return PreferenceHelper.readString (
+//                getApplicationContext ( ), Constants.BASE_INFO,
+//                Constants.CURRENT_URL
+//                                           );
+//    }
 
-    public void writeMemberId(String userId)
-    {
+    public void writeMemberId(String userId){
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID, userId );
     }
 
@@ -197,36 +184,36 @@ public class BaseApplication extends Application {
         return info != null;// 网络是否连接
     }
 
-    /**
-     * 仅wifi联网功能是否开启
-     */
-    public static boolean checkOnlyWifi(Context context)
-    {
-        if ( PreferenceHelper.readBoolean (
-                context, KJConfig.SETTING_FILE,
-                KJConfig.ONLY_WIFI
-                                          ))
-        {
-            return isWiFi(context);
-        } else
-        {
-            return true;
-        }
-    }
+//    /**
+//     * 仅wifi联网功能是否开启
+//     */
+//    public static boolean checkOnlyWifi(Context context)
+//    {
+//        if ( PreferenceHelper.readBoolean (
+//                context, KJConfig.SETTING_FILE,
+//                KJConfig.ONLY_WIFI
+//                                          ))
+//        {
+//            return isWiFi(context);
+//        } else
+//        {
+//            return true;
+//        }
+//    }
 
-    /**
-     * 判断是否为wifi联网
-     */
-    public static boolean isWiFi(Context cxt)
-    {
-        ConnectivityManager cm = (ConnectivityManager) cxt
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        // wifi的状态：ConnectivityManager.TYPE_WIFI
-        // 3G的状态：ConnectivityManager.TYPE_MOBILE
-        NetworkInfo.State state = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-                                    .getState ( );
-        return NetworkInfo.State.CONNECTED == state;
-    }
+//    /**
+//     * 判断是否为wifi联网
+//     */
+//    public static boolean isWiFi(Context cxt)
+//    {
+//        ConnectivityManager cm = (ConnectivityManager) cxt
+//                .getSystemService(Context.CONNECTIVITY_SERVICE);
+//        // wifi的状态：ConnectivityManager.TYPE_WIFI
+//        // 3G的状态：ConnectivityManager.TYPE_MOBILE
+//        NetworkInfo.State state = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+//                                    .getState ( );
+//        return NetworkInfo.State.CONNECTED == state;
+//    }
 
     /**
      * 获取当前应用程序的版本号
@@ -250,27 +237,19 @@ public class BaseApplication extends Application {
      * 检测APP端是否已经设置商户信息
      * @return
      */
-    public boolean checkMerchantInfo()
-    {
+    public boolean checkMerchantInfo(){
         //商户ID
         String merchantId = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID );
         //商户支付宝key信息
-        String merchantAlipayKey = PreferenceHelper.readString ( getApplicationContext ( ),
-                                                                 Constants.MERCHANT_INFO,
-                                                                 Constants.MERCHANT_INFO_ALIPAY_KEY );
+        String merchantAlipayKey = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY );
         //商户微信支付KEY信息
         String merchantWeixinKey = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_WEIXIN_KEY );
         //商户菜单
         String merchantMenus = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS );
         //商户类别菜单
-        String merChantCatagory = PreferenceHelper.readString (
-                getApplicationContext ( ),
-                Constants.MERCHANT_INFO,
-                Constants.MERCHANT_INFO_CATAGORY
-                                                              );
+        String merChantCatagory = PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_CATAGORY );
 
-        if((null == merchantId) && (null == merchantAlipayKey) && (null == merchantWeixinKey) && (null == merchantMenus) && (null == merChantCatagory))
-        {
+        if((null == merchantId) && (null == merchantAlipayKey) && (null == merchantWeixinKey) && (null == merchantMenus) && (null == merChantCatagory)) {
             //app端未设置商户信息
             return false;
         }
@@ -280,19 +259,11 @@ public class BaseApplication extends Application {
         }
     }
 
-    public boolean scanWx()
-    {
+    public boolean scanWx(){
         String parentId = PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
-        String appid =  PreferenceHelper.readString ( getApplicationContext ( ), Constants
-                                                              .MERCHANT_INFO, Constants
-                                                              .MERCHANT_WEIXIN_ID );
-        String appKey = PreferenceHelper.readString (
-                getApplicationContext ( ), Constants.MERCHANT_INFO,
-                Constants.WEIXIN_KEY
-                                                    );
-        String notify = PreferenceHelper.readString (
-                getApplicationContext ( ), Constants.MERCHANT_INFO,
-                Constants.WEIXIN_NOTIFY );
+        String appid =  PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID );
+        String appKey = PreferenceHelper.readString (getApplicationContext ( ), Constants.MERCHANT_INFO, Constants.WEIXIN_KEY );
+        String notify = PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO, Constants.WEIXIN_NOTIFY );
 
         if(!TextUtils.isEmpty ( parentId ) && !TextUtils.isEmpty ( appid ) && !TextUtils.isEmpty ( appKey ) && !TextUtils.isEmpty ( notify ))
         {
@@ -304,37 +275,36 @@ public class BaseApplication extends Application {
         }
     }
 
-    public String createUrl(String suffix)
-    {
-        return obtainMerchantUrl() + suffix;
-    }
+//    public String createUrl(String suffix)
+//    {
+//        return obtainMerchantUrl() + suffix;
+//    }
 
     /**
      * 判断是否配置菜单信息
      * @return
      */
-    public boolean checkMenuInfo()
-    {
-        //菜单信息
-        String menuStr = PreferenceHelper.readString ( getApplicationContext ( ), Constants
-                                                               .MERCHANT_INFO, Constants
-                                                               .MERCHANT_INFO_MENUS );
-        if(null != menuStr && !"".equals ( menuStr.trim () ))
-        {
-            return  true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+//    public boolean checkMenuInfo()
+//    {
+//        //菜单信息
+//        String menuStr = PreferenceHelper.readString ( getApplicationContext ( ), Constants
+//                                                               .MERCHANT_INFO, Constants
+//                                                               .MERCHANT_INFO_MENUS );
+//        if(null != menuStr && !"".equals ( menuStr.trim () ))
+//        {
+//            return  true;
+//        }
+//        else
+//        {
+//            return false;
+//        }
+//    }
 
     /**
      * 写入商户信息到文件
      * @param merchant
      */
-    public void writeMerchantInfo(MerchantBean merchant)
-    {
+    public void writeMerchantInfo(MerchantBean merchant) {
         //商户ID
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID, merchant.getMerchantId ( ) );
         //版本号
@@ -362,21 +332,17 @@ public class BaseApplication extends Application {
      * 记录域名
      * @param domain
      */
-    public void writeDomain(String domain)
-    {
+    public void writeDomain(String domain){
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO,  Constants.PREFIX, domain);
     }
 
-    public void writeMenus(List<MenuBean> menus)
-    {
+    public void writeMenus(List<MenuBean> menus) {
         Gson gson = new Gson ();
         String menuStr = gson.toJson ( menus );
-
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS,  menuStr);
     }
 
-    public void writeMemberInfo(String userName, String userId, String userIcon, String userToken, String unionid)
-    {
+    public void writeMemberInfo(String userName, String userId, String userIcon, String userToken, String unionid) {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID, userId );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_NAME, userName );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ICON, userIcon );
@@ -384,41 +350,34 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID, unionid );
     }
 
-    public void writeUserName(String userName)
-    {
+    public void writeUserName(String userName){
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_NAME, userName );
     }
 
-    public void writeUserIcon(String userIcon)
-    {
+    public void writeUserIcon(String userIcon) {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ICON, userIcon );
     }
 
     //获取用户unionId
-    public String readUserUnionId()
-    {
+    public String readUserUnionId() {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID );
     }
 
     //获取用户编号
-    public String readUserId()
-    {
+    public String readUserId() {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID );
     }
 
     //获取商户ID
-    public String readMerchantId()
-    {
-        return PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO,
-                                             Constants.MERCHANT_INFO_ID );
+    public String readMerchantId() {
+        return PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID );
     }
 
     /**
      * 获取商户的底部菜单信息
      * @return
      */
-    public String readMenus()
-    {
+    public String readMenus() {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS );
     }
 
@@ -427,7 +386,6 @@ public class BaseApplication extends Application {
      */
     public class MyLocationListener implements BDLocationListener
     {
-
         @Override
         public void onReceiveLocation(BDLocation location)
         {
@@ -477,7 +435,7 @@ public class BaseApplication extends Application {
     //判断是否登录
     public boolean isLogin()
     {
-        String token = PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN );
+        String token = PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN);
         if(null != token && !"".equals ( token ))
         {
             return true;
@@ -491,12 +449,19 @@ public class BaseApplication extends Application {
     //登出
     public void logout()
     {
+        if( plat ==null ) {
+            plat = ShareSDK.getPlatform(Wechat.NAME);
+        }
+
         //取消授权
         if(null != plat)
         {
             plat.removeAccount ();
         }
         PreferenceHelper.clean ( getApplicationContext (), Constants.MEMBER_INFO );
+
+        SisConstant.CATEGORY = null;
+        SisConstant.SHOPINFO = null;
     }
 
     //获取用户图片
@@ -563,18 +528,18 @@ public class BaseApplication extends Application {
         }
     }
 
-    public boolean checkSysInfo()
-    {
-        String packageStr = PreferenceHelper.readString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE );
-        if(TextUtils.isEmpty ( packageStr ))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
+//    public boolean checkSysInfo()
+//    {
+//        String packageStr = PreferenceHelper.readString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE );
+//        if(TextUtils.isEmpty ( packageStr ))
+//        {
+//            return false;
+//        }
+//        else
+//        {
+//            return true;
+//        }
+//    }
 
     public void writeInitInfo(String initStr)
     {
@@ -592,8 +557,7 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_level );
     }
 
-    public boolean isFirst()
-    {
+    public boolean isFirst() {
         String initInfo = PreferenceHelper.readString ( getApplicationContext (), Constants.SYS_INFO, Constants.FIRST_OPEN );
         if(TextUtils.isEmpty ( initInfo ))
         {
@@ -609,8 +573,7 @@ public class BaseApplication extends Application {
      * 写入颜色信息
      * @param colorBean
      */
-    public void writeColorInfo(ColorBean colorBean)
-    {
+    public void writeColorInfo(ColorBean colorBean) {
         if(null != colorBean)
         {
             String mainColor = colorBean.getColorMap ().get ( "MAIN_COLOR_1" );
@@ -625,29 +588,29 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_MAIN );
     }
 
-    public String obtainSecondColor()
-    {
-        return PreferenceHelper.readString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_SECOND );
-    }
+//    public String obtainSecondColor()
+//    {
+//        return PreferenceHelper.readString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_SECOND );
+//    }
 
-    public void writeSysInfo(SysModel sysModel)
-    {
-        if(null != sysModel)
-        {
-            PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE, sysModel.getPackageStr () );
-            PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_MENU, sysModel.getSysMenu () );
-        }
-    }
+//    public void writeSysInfo(SysModel sysModel)
+//    {
+//        if(null != sysModel)
+//        {
+//            PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE, sysModel.getPackageStr () );
+//            PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_MENU, sysModel.getSysMenu () );
+//        }
+//    }
 
-    public String readSysInfo()
-    {
-        return PreferenceHelper.readString (  getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE );
-    }
+//    public String readSysInfo()
+//    {
+//        return PreferenceHelper.readString (  getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE );
+//    }
 
-    public String readSysMenu()
-    {
-        return PreferenceHelper.readString (  getApplicationContext (), Constants.SYS_INFO, Constants.SYS_MENU );
-    }
+//    public String readSysMenu()
+//    {
+//        return PreferenceHelper.readString (  getApplicationContext (), Constants.SYS_INFO, Constants.SYS_MENU );
+//    }
 
     //获取微信key
     public String readWeixinKey()
@@ -765,5 +728,34 @@ public class BaseApplication extends Application {
     }
     public int readMemberType(){
         return PreferenceHelper.readInt( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_USERTYPE );
+    }
+
+    public void writePhoneLogin( String loginName , String realName ,  int relatedType , String authorizeCode ,String secure){
+        PreferenceHelper.writeString( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_LOGINNAME , loginName );
+        PreferenceHelper.writeString( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_REALNAME , realName);
+        PreferenceHelper.writeInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_RELATEDTYPE, relatedType);
+        PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_AUTHORIZECODE, authorizeCode);
+        PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO,Constants.MEMBER_SECURE, secure);
+    }
+
+    public void writeMemberRelatedType( int relatedType){
+        PreferenceHelper.writeInt( getApplicationContext(), Constants.MEMBER_INFO , Constants.MEMBER_RELATEDTYPE, relatedType );
+    }
+
+    //读取 手机登录用户的关联类型
+    public int readMemberRelatedType(){
+        return PreferenceHelper.readInt( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_RELATEDTYPE , -1 );
+    }
+    //读取 手机登录 的安全码
+    public String readMemberSecure(){
+        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_SECURE, "");
+    }
+    //写入 用户登录类型 （1：微信授权登录，2:手机登录）
+    public void writeMemberLoginType(int loginType){
+        PreferenceHelper.writeInt( getApplicationContext(),Constants.MEMBER_INFO , Constants.MEMBER_LOGINTYPE , loginType);
+    }
+    //读取 用户登录类型 （1：微信授权登录，2:手机登录）
+    public int readMemberLoginType(){
+        return PreferenceHelper.readInt( getApplicationContext(), Constants.MEMBER_INFO , Constants.MEMBER_LOGINTYPE, 1);
     }
 }

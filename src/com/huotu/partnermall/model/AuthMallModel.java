@@ -48,6 +48,7 @@ class AuthMallModel  {
         private List<MenuModel> home_menus;
         private int bindUserCount;
         private int userType;
+        private int relatedType;
 
         public int getBindUserCount() {
             return bindUserCount;
@@ -113,6 +114,14 @@ class AuthMallModel  {
         public
         void setUserid ( int userid ) {
             this.userid = userid;
+        }
+
+        public int getRelatedType() {
+            return relatedType;
+        }
+
+        public void setRelatedType(int relatedType) {
+            this.relatedType = relatedType;
         }
     }
 

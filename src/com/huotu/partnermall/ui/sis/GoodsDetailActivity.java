@@ -2,8 +2,10 @@ package com.huotu.partnermall.ui.sis;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -49,6 +51,7 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
     ProgressPopupWindow progressPopupWindow;
     TextView tvOn;
     SisGoodsModel goods;
+    RelativeLayout rlmain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,7 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
         }
 
         app = (BaseApplication) this.getApplication();
+        rlmain = (RelativeLayout)findViewById((R.id.sis_goodsdetail_main));
         rlcd = (RelativeLayout) findViewById(R.id.sis_goodsdetail_cd);
         rlcd.setBackgroundColor(SystemTools.obtainColor(((BaseApplication) GoodsDetailActivity.this.getApplication()).obtainMainColor()));
 
@@ -106,7 +110,7 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
         if (((BaseApplication) this.getApplication()).isKITKAT()) {
             Window window = getWindow();
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            //window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
             int statusBarHeight;
             int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -247,5 +251,14 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
         }
         return true;
     }
+
+    private int getNavigationBarHeight() {
+        Resources resources = this.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height","dimen", "android");
+        int height = resources.getDimensionPixelSize(resourceId);
+        Log.v("dbw", "Navi height:" + height);
+        return height;
+    }
+
 
 }

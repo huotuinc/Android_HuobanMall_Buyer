@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    tools:context="com.huotu.partnermall.ui.login.PhoneLoginActivity">
+
+    <com.huotu.partnermall.widgets.KJEditText
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/edtPhone"
+        android:hint="请输入手机号"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"/>
+
+    <com.huotu.partnermall.widgets.KJEditText
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/edtPhone"
+        android:id="@+id/edtCode"
+        android:hint="请输入验证码"
+        android:layout_alignLeft="@id/edtPhone"
+        android:layout_toLeftOf="@+id/tvGetCode"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"/>
+    <TextView
+        android:id="@+id/tvGetCode"
+        android:padding="8dp"
+        android:text="60S"
+        android:layout_marginLeft="1dp"
+        android:background="#D1D1D1"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_alignTop="@id/edtCode"
+        android:layout_alignRight="@id/edtPhone"
+        android:layout_width="80dp"
+        android:layout_height="45dp"/>
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_marginTop="25dp"
+        android:layout_below="@id/edtCode"
+        android:layout_alignLeft="@id/edtCode"
+        android:layout_alignRight="@id/tvGetCode"
+        android:text="登录"
+        android:textSize="20sp"
+        android:background="#FF3D00"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tvAuthorise"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/btnLogin"
+        android:textColor="#FF3D00"
+        android:padding="5dp"
+        android:textSize="16sp"
+        android:layout_alignRight="@id/tvGetCode"
+        android:text="重新授权"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

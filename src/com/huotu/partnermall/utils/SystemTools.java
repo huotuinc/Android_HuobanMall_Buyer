@@ -189,8 +189,7 @@ public class SystemTools
      * @param url
      * @return
      */
-    public static String shareUrl(BaseApplication application, String url)
-    {
+    public static String shareUrl(BaseApplication application, String url){
         String param = "gduid=" + application.readUserId ();
         if(application.obtainMerchantUrl ().equals (url) )
         {

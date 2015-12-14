@@ -11,11 +11,9 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 /**
  * 创建广播注册微信api
  */
-public
-class AppRegister extends BroadcastReceiver {
+public class AppRegister extends BroadcastReceiver {
     @Override
-    public
-    void onReceive ( Context context, Intent intent ) {
+    public void onReceive ( Context context, Intent intent ) {
         final IWXAPI api = WXAPIFactory.createWXAPI ( context, null );
         api.registerApp( Constants.WXPAY_ID );
     }

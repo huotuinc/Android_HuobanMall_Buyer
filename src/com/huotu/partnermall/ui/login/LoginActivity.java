@@ -1,5 +1,6 @@
 package com.huotu.partnermall.ui.login;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -22,16 +23,14 @@ import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.SystemTools;
+import com.huotu.partnermall.widgets.MsgPopWindow;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
-
 import java.util.Map;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 
 /**
@@ -42,27 +41,19 @@ class LoginActivity extends BaseActivity implements Handler.Callback {
 
     @Bind(R.id.loginL)
     RelativeLayout loginL;
-    private
-    AutnLogin      login;
-    //handler对象
+    AutnLogin login;
     public Handler mHandler;
-    public
-    ProgressPopupWindow progress;
-    public
-    ProgressPopupWindow successProgress;
+    public ProgressPopupWindow progress;
+    public ProgressPopupWindow successProgress;
     //windows类
     WindowManager wManager;
 
-    public
-    NoticePopWindow noticePop;
+    public NoticePopWindow noticePop;
     @Bind(R.id.loginText)
-    TextView        loginText;
-    public
-    AssetManager    am;
-
-    public
-    BaseApplication application;
+    TextView loginText;
+    public AssetManager am;
     public Resources res;
+    MsgPopWindow msgPopWindow;
 
     @Override
     protected
@@ -73,23 +64,18 @@ class LoginActivity extends BaseActivity implements Handler.Callback {
         res = this.getResources();
         setContentView ( R.layout.login_ui );
         ButterKnife.bind(this);
-        application = ( BaseApplication ) this.getApplication ();
-        initView ( );
-        wManager = this.getWindowManager ( );
+        initView();
+        wManager = this.getWindowManager();
         progress = new ProgressPopupWindow ( LoginActivity.this, LoginActivity.this, wManager );
         successProgress = new ProgressPopupWindow ( LoginActivity.this, LoginActivity.this, wManager );
     }
 
     @Override
-    protected
-    void initView ( ) {
+    protected void initView ( ) {
         SystemTools.setFontStyle(loginText, application);
         Drawable[] drawables = new Drawable[2];
         drawables[0] = new PaintDrawable(res.getColor(R.color.theme_color));
-        drawables[1] = new PaintDrawable(SystemTools.obtainColor(
-                application.obtainMainColor(
-                )
-        ));
+        drawables[1] = new PaintDrawable(SystemTools.obtainColor( application.obtainMainColor()));
         LayerDrawable ld = new LayerDrawable(drawables);
         ld.setLayerInset(0, 0, 0, 0, 0);
         ld.setLayerInset(1, 0, 2, 0, 0);
@@ -97,20 +83,24 @@ class LoginActivity extends BaseActivity implements Handler.Callback {
     }
 
     @Override
-    protected
-    void onDestroy ( ) {
+    protected void onDestroy ( ) {
         super.onDestroy ( );
         ButterKnife.unbind(this);
-        progress.dismissView();
-        successProgress.dismissView();
+        if( progress!=null ){
+            progress.dismissView();
+            progress=null;
+        }
+        if( successProgress !=null) {
+            successProgress.dismissView();
+            successProgress=null;
+        }
     }
 
     @Override
-    protected
-    void onResume ( ) {
+    protected void onResume ( ) {
         super.onResume();
-        if(null != progress)
-        {
+
+        if(null != progress){
             progress.dismissView ( );
         }
 
@@ -118,28 +108,18 @@ class LoginActivity extends BaseActivity implements Handler.Callback {
     }
 
     @OnClick(R.id.loginL)
-    void doLogin()
-    {
-
+    void doLogin(){
         //
         progress.showProgress ( null );
-        progress.showAtLocation (
-                findViewById ( R.id.loginL ),
-                Gravity.CENTER, 0, 0
-        );
+        progress.showAtLocation ( loginL, Gravity.CENTER, 0, 0 );
         //微信授权登录
-        Platform wechat = ShareSDK.getPlatform ( LoginActivity.this, Wechat.NAME );
         login = new AutnLogin ( LoginActivity.this, mHandler, loginL, application );
-        login.authorize ( new Wechat ( LoginActivity.this ) );
-        loginL.setClickable ( false );
-        //ActivityUtils.getInstance ().skipActivity ( LoginActivity.this, HomeActivity
-        // .class );
+        login.authorize(new Wechat(LoginActivity.this));
+        loginL.setClickable(false);
     }
     
     @Override
-    public
-    boolean handleMessage ( Message msg ) {
-
+    public boolean handleMessage ( Message msg ) {
         switch ( msg.what )
         {
             //授权登录
@@ -150,7 +130,7 @@ class LoginActivity extends BaseActivity implements Handler.Callback {
                 login.authorize ( plat );
             }
             break;
-            //授权登录
+            //授权登录 失败
             case Constants.LOGIN_AUTH_ERROR:
             {
                 loginL.setClickable ( true );
@@ -159,11 +139,8 @@ class LoginActivity extends BaseActivity implements Handler.Callback {
                 //提示授权失败
                 String notice = ( String ) msg.obj;
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, notice);
-                noticePop.showNotice ( );
-                noticePop.showAtLocation (
-                        findViewById ( R.id.loginL ),
-                        Gravity.CENTER, 0, 0
-                                         );
+                noticePop.showNotice ();
+                noticePop.showAtLocation ( loginL , Gravity.CENTER, 0, 0 );
             }
             break;
             case Constants.MSG_AUTH_ERROR:
@@ -171,53 +148,45 @@ class LoginActivity extends BaseActivity implements Handler.Callback {
                 loginL.setClickable ( true );
                 progress.dismissView ( );
                 Throwable throwable = ( Throwable ) msg.obj;
-                if("cn.sharesdk.wechat.utils.WechatClientNotExistException".equals ( throwable.toString () ))
-                {
+                //if("cn.sharesdk.wechat.utils.WechatClientNotExistException".equals ( throwable.toString () ))
+                if( throwable instanceof cn.sharesdk.wechat.utils.WechatClientNotExistException ){
                     //手机没有安装微信客户端
-                    noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "手机没有安装微信客户端");
-                    noticePop.showNotice ();
-                    noticePop.showAtLocation (
-                            findViewById ( R.id.loginL ),
-                            Gravity.CENTER, 0, 0
-                                             );
+//                    noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "手机没有安装微信客户端");
+//                    noticePop.showNotice ();
+//                    noticePop.showAtLocation (
+//                            findViewById ( R.id.loginL ),
+//                            Gravity.CENTER, 0, 0
+//                                             );
+                    phoneLogin("您的设备没有安装微信客户端,是否通过手机登录?");
                 }
-                else
-                {
+                else {
                     loginL.setClickable ( true );
                     progress.dismissView ();
                     //提示授权失败
                     noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权失败");
                     noticePop.showNotice ();
-                    noticePop.showAtLocation (
-                            findViewById ( R.id.loginL ),
-                            Gravity.CENTER, 0, 0
-                                             );
+                    noticePop.showAtLocation ( loginL, Gravity.CENTER, 0, 0 );
                 }
-
             }
             break;
             case Constants.MSG_AUTH_CANCEL:
             {
-                loginL.setClickable ( true );
-                //提示取消授权
-                progress.dismissView ();
-                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权被取消");
-                noticePop.showNotice ( );
-                noticePop.showAtLocation (
-                        findViewById ( R.id.loginL ),
-                        Gravity.CENTER, 0, 0
-                                         );
-
+//                loginL.setClickable ( true );
+//                //提示取消授权
+//                progress.dismissView ();
+//                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权被取消");
+//                noticePop.showNotice ( );
+//                noticePop.showAtLocation (
+//                        findViewById ( R.id.loginL ),
+//                        Gravity.CENTER, 0, 0
+//                                         );
+                phoneLogin("你已经取消微信授权,是否通过手机登录?");
             }
             break;
             case Constants.MSG_USERID_FOUND:
             {
                 successProgress.showProgress ( "已经获取用户信息" );
-                successProgress.showAtLocation (
-                        findViewById ( R.id.loginL ),
-                        Gravity.CENTER, 0, 0
-                                        );
-
+                successProgress.showAtLocation ( loginL , Gravity.CENTER, 0, 0);
             }
             break;
             case Constants.MSG_LOGIN:
@@ -232,8 +201,7 @@ class LoginActivity extends BaseActivity implements Handler.Callback {
                 //String authUrl = "http://192.168.1.56:8032/weixin/LoginAuthorize";
                 HttpUtil.getInstance ().doVolley (
                         LoginActivity.this, LoginActivity.this,
-                        mHandler, application, authUrl, param, account
-                                                 );
+                        mHandler, application, authUrl, param, account );
             }
             break;
             case Constants.MSG_USERID_NO_FOUND:
@@ -242,10 +210,7 @@ class LoginActivity extends BaseActivity implements Handler.Callback {
                 //提示授权成功
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "获取用户信息失败");
                 noticePop.showNotice ();
-                noticePop.showAtLocation (
-                        findViewById ( R.id.loginL ),
-                        Gravity.CENTER, 0, 0
-                                         );
+                noticePop.showAtLocation (loginL , Gravity.CENTER, 0, 0);
             }
             break;
             case Constants.INIT_MENU_ERROR:
@@ -254,13 +219,42 @@ class LoginActivity extends BaseActivity implements Handler.Callback {
                 //提示初始化菜单失败
                 noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "初始化菜单失败");
                 noticePop.showNotice ();
-                noticePop.showAtLocation (
-                        findViewById ( R.id.loginL ),
-                        Gravity.CENTER, 0, 0
-                                         );
+                noticePop.showAtLocation (loginL , Gravity.CENTER, 0, 0 );
             }
             break;
         }
         return false;
     }
+
+    /**
+    * 方法描述：通过手机号码注册或者登录（当没有安装微信客户端，或者用户取消微信授权的时候，会提示手机登录方式）
+    * 方法名称：
+    * 参数：
+    * 返回值：
+    * 创建时间: 2015/12/8
+    * 作者:jinxiangdong
+    */
+    protected void phoneLogin( String msg ){
+        loginL.setClickable ( true );
+
+        if( msgPopWindow==null ){
+            msgPopWindow =new MsgPopWindow(this, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(LoginActivity.this, PhoneLoginActivity.class);
+                    LoginActivity.this.startActivity(intent);
+                    LoginActivity.this.finish();
+                }
+            }, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    msgPopWindow.dismiss();
+                }
+            },"询问",msg ,false);
+            msgPopWindow.setWindowsStyle();
+        }
+
+        msgPopWindow.showAtLocation( getWindow().getDecorView() , Gravity.CENTER ,0,0 );
+    }
+
 }

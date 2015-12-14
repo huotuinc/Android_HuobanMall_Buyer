@@ -7,8 +7,15 @@
     xmlns:coverflow="http://schemas.android.com/apk/res-auto"
     tools:context="com.huotu.partnermall.ui.sis.SelectTempleteActivity">
 
+    <RelativeLayout
+        android:id="@+id/sis_selecttemplate_cd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orangered">
+    </RelativeLayout>
     <!-- 页头 -->
     <RelativeLayout
+        android:layout_below="@id/sis_selecttemplate_cd"
         android:id="@+id/sis_selecttemplate_header"
         android:layout_width="match_parent"
         android:layout_height="50dp"

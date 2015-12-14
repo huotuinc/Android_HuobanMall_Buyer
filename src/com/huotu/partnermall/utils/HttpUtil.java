@@ -82,8 +82,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-public class HttpUtil
-{
+public class HttpUtil{
 
     private static class Holder
     {
@@ -92,7 +91,6 @@ public class HttpUtil
 
     private HttpUtil()
     {
-
     }
 
     public static final HttpUtil getInstance()
@@ -534,9 +532,9 @@ public class HttpUtil
                     if(null != mall)
                     {
                         //写入userID
-                        account.setAccountId ( String.valueOf ( mall.getUserid ( ) ) );
-                        account.setAccountName ( mall.getNickName ( ) );
-                        account.setAccountIcon ( mall.getHeadImgUrl ( ) );
+                        account.setAccountId(String.valueOf(mall.getUserid()));
+                        account.setAccountName(mall.getNickName());
+                        account.setAccountIcon(mall.getHeadImgUrl());
 
                         //和商城用户系统交互
                         application.writeMemberInfo (
@@ -544,7 +542,11 @@ public class HttpUtil
                                 account.getAccountIcon ( ), account.getAccountToken ( ),
                                 account.getAccountUnionId ( )
                         );
-                        application.writeMemberLevel ( mall.getLevelName () );
+                        application.writeMemberLevel(mall.getLevelName());
+                        //记录登录类型(1:微信登录，2：手机登录)
+                        application.writeMemberLoginType(1);
+                        //记录微信关联类型（0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号）
+                        application.writeMemberRelatedType( mall.getRelatedType() );
 
                         //设置侧滑栏菜单
                         List<MenuBean > menus = new ArrayList< MenuBean > (  );
@@ -653,6 +655,12 @@ public class HttpUtil
                                 view,
                                 Gravity.CENTER, 0, 0
                         );
+                    }else {
+                        //关闭载入数据条
+                        mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
+                        NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "无其他账户。");
+                        noticePop.showNotice ();
+                        noticePop.showAtLocation(view,Gravity.CENTER, 0, 0);
                     }
                 } else
                 {

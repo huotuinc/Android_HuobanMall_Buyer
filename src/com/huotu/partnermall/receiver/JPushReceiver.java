@@ -12,8 +12,7 @@ import cn.jpush.android.api.JPushInterface;
 /**
  * 激光推送处理广播类
  */
-public
-class JPushReceiver extends BroadcastReceiver
+public class JPushReceiver extends BroadcastReceiver
 {
     private static final String TAG = "JPush";
 

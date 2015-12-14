@@ -23,35 +23,32 @@ import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
+import java.lang.ref.WeakReference;
+
 /**
  * 拦截页面操作类
  */
 public
 class UrlFilterUtils {
 
-    private
-    Context  context;
-    private
-    Activity aty;
+    private Context  context;
+    private WeakReference<Activity> ref;// aty;
     TextView titleView;
     private Handler mHandler;
-    private
-    BaseApplication application;
+    private BaseApplication application;
     //windows类
     private WindowManager wManager;
-    public
-    ProgressPopupWindow payProgress;
+    public ProgressPopupWindow payProgress;
 
-    public
-    UrlFilterUtils (
+    public UrlFilterUtils (
             Activity aty, Context context, TextView titleView, Handler mHandler,
-            BaseApplication application, WindowManager wManager
-                   ) {
+            BaseApplication application, WindowManager wManager ) {
         this.context = context;
         this.titleView = titleView;
         this.mHandler = mHandler;
         this.application = application;
-        this.aty = aty;
+        //this.aty = aty;
+        this.ref = new WeakReference<Activity>(aty);
         this.wManager = wManager;
         payProgress = new ProgressPopupWindow ( context, aty, wManager );
     }
@@ -64,32 +61,27 @@ class UrlFilterUtils {
      */
     public
     boolean shouldOverrideUrlBySFriend ( WebView view, String url ) {
+        if( ref.get() ==null)return false;
+
         if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
             String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
             Bundle bundle = new Bundle ( );
             bundle.putString ( Constants.INTENT_URL, urlStr );
-            ActivityUtils.getInstance ( ).showActivity ( aty, WebViewActivity.class, bundle );
+            ActivityUtils.getInstance ( ).showActivity ( ref.get() , WebViewActivity.class, bundle );
             return true;
         }
-        else if ( url.contains ( Constants.WEB_CONTACT ) )
-        {
+        else if ( url.contains ( Constants.WEB_CONTACT ) ){
             //拦截客服联系
             //获取QQ号码
             String qq = url.substring ( 0, url.indexOf ( "&version=" ));
             //调佣本地的QQ号码
-            try
-            {
+            try{
                 context.startActivity ( new Intent ( Intent.ACTION_VIEW, Uri.parse ( qq ) ) );
-            } catch ( Exception e )
-            {
-                if(e.getMessage ().contains ( "No Activity found to handle Intent" ))
-                {
-                    NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "请安装QQ客户端");
+            } catch ( Exception e ){
+                if(e.getMessage ().contains ( "No Activity found to handle Intent" )){
+                    NoticePopWindow noticePop = new NoticePopWindow ( context, ref.get() , wManager, "请安装QQ客户端");
                     noticePop.showNotice ();
-                    noticePop.showAtLocation (
-                            titleView,
-                            Gravity.CENTER, 0, 0
-                                             );
+                    noticePop.showAtLocation ( titleView, Gravity.CENTER, 0, 0 );
                 }
             }
             return true;
@@ -104,7 +96,7 @@ class UrlFilterUtils {
             //清除登录信息
             application.logout ();
             //跳转到登录界面
-            ActivityUtils.getInstance ().skipActivity ( aty, LoginActivity.class );
+            ActivityUtils.getInstance ().skipActivity ( ref.get() , LoginActivity.class );
         }else if(url.contains(Constants.WEB_TAG_INFO)){
             //处理信息保护
             return true;
@@ -164,7 +156,7 @@ class UrlFilterUtils {
             builder.append ( "?orderid="+tradeNo );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress, titleView, wManager );
+            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() , context, mHandler, application, orderUrl, payModel, payProgress, titleView, wManager );
             return true;
 
         }
@@ -174,7 +166,7 @@ class UrlFilterUtils {
             //清除登录信息
             application.logout ();
             //跳转到登录界面
-            ActivityUtils.getInstance ().skipActivity ( aty, LoginActivity.class );
+            ActivityUtils.getInstance ().skipActivity ( ref.get() , LoginActivity.class );
         }
         else
         {

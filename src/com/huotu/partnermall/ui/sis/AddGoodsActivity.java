@@ -207,7 +207,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener{
         if ( ((BaseApplication)this.getApplication()).isKITKAT ()) {
             Window window = getWindow();
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            //window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
             int statusBarHeight;
             int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen","android");

@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">买家版</string>
+    <string name="app_name">云驿O2O</string>
     <string name="splash_version_info"></string>
     <string name="index_search_edit_hint">搜索商品</string>
 
@@ -118,7 +118,5 @@
     <!--引导界面图片-->
     <string-array name="guide_icon">
         <item>newfeature_0</item>
-        <item>newfeature_1</item>
-        <item>newfeature_2</item>
     </string-array>
 </resources>

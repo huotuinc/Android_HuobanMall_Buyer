@@ -6,6 +6,7 @@
     android:id="@+id/welcomeTips">
 
     <TextView
+        android:id="@+id/splash_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
