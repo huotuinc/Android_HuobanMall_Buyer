@@ -59,17 +59,6 @@ android {
             assets.srcDirs = ['custom/morefan/assets']
         }
 
-        yaoshengji{
-            manifest.srcFile '/custom/channel/AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['/custom/channel/res']
-            assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
-        }
-
         yunyi{
             manifest.srcFile 'custom/yunyi/AndroidManifest.xml'
             java.srcDirs = ['custom/yunyi/src']
@@ -82,6 +71,7 @@ android {
             res.srcDirs = ['custom/yingyan/res']
             assets.srcDirs = ['custom/yingyan/assets']
         }
+
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
 
@@ -107,15 +97,18 @@ android {
             applicationId 'com.yaoshengji'
         }
         yunyi{
-            applicationId 'com.yunyi'
+            applicationId 'com.huotu.mall.yunyi'
+            versionCode 1
+            versionName "1.0.0"
         }
         yingyan{
             applicationId 'com.huotu.mall.yingyan'
+            versionCode 2
+            versionName "1.0.1"
         }
     }
 
     buildTypes{
-
         release{
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.huotu

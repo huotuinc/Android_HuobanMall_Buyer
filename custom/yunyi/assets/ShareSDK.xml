@@ -53,14 +53,14 @@
     -->
     
     <ShareSDK 
-        AppKey = "a45f0c4321a4"/> <!-- 修改成你在sharesdk后台注册的应用的appkey"-->
+        AppKey = "d58c3c003afc"/> <!-- 修改成你在sharesdk后台注册的应用的appkey"-->
     
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <SinaWeibo
         Id="1"
         SortId="1"
-        AppKey="1994677353"
-        AppSecret="0783d8dd1f0eb5a45687cde79aa10108"
+        AppKey="1055668791"
+        AppSecret="c95987ea61d6919b7868296303e4dcbe"
         RedirectUrl="https://api.weibo.com/oauth2/default.html"
         ShareByAppClient="true"
         Enable="true" />
@@ -68,16 +68,16 @@
     <TencentWeibo
         Id="5"
         SortId="5"
-        AppKey="1101260450"
-        AppSecret="qBjXnyJfVgppCpKF"
+        AppKey="1105021260"
+        AppSecret="TmqHXkheCH6R5pNz"
         RedirectUri="https://api.weibo.com/oauth2/default.html"
         Enable="false" />
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <QZone
         Id="4"
         SortId="4 "
-        AppId="1101260450"
-        AppKey="qBjXnyJfVgppCpKF"
+        AppId="1105021260"
+        AppKey="TmqHXkheCH6R5pNz"
         ShareByAppClient="true"
         Enable="true" />
     
@@ -96,32 +96,32 @@
     <Wechat
         Id="2"
         SortId="2"
-        AppId="wxe6c5fb423ca4a637"
-        AppSecret="99943c3d25c0129539591e54f1a58793"
+        AppId="wx3ffb8909086d8e26"
+        AppSecret="d4624c36b6795d1d99dcf0547af5443d"
         BypassApproval="false"
         Enable="true" />
     
     <WechatMoments
         Id="3"
         SortId="3"
-        AppId="wxe6c5fb423ca4a637"
-        AppSecret="99943c3d25c0129539591e54f1a58793"
+        AppId="wx3ffb8909086d8e26"
+        AppSecret="d4624c36b6795d1d99dcf0547af5443d"
         BypassApproval="false"
         Enable="true" />
         
 	<WechatFavorite
         Id="6"
         SortId="6"
-        AppId="wxe6c5fb423ca4a637"
-        AppSecret="99943c3d25c0129539591e54f1a58793"
+        AppId="wx3ffb8909086d8e26"
+        AppSecret="d4624c36b6795d1d99dcf0547af5443d"
         Enable="false" />
     
 	<!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
 	<QQ
         Id="7"
         SortId="7"
-        AppId="1101260450"
-        AppKey="qBjXnyJfVgppCpKF"
+        AppId="1105021260"
+        AppKey="TmqHXkheCH6R5pNz"
         ShareByAppClient="false"
         Enable="false" />
 

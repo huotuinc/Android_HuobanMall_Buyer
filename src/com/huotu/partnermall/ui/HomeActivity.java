@@ -1,5 +1,6 @@
 package com.huotu.partnermall.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -29,8 +30,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshWebView;
-//import com.huotu.partnermall.AppManager;
-//import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
@@ -69,7 +68,6 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
@@ -79,14 +77,12 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     //获取资源文件对象
     private Resources resources;
     private long exitTime = 0l;
-    //application引用
-    //public BaseApplication application;
     //handler对象
     public Handler mHandler;
     //windows类
     private WindowManager wManager;
     private SharePopupWindow share;
-    private SwitchUserPopWin switchUser;
+    //private SwitchUserPopWin switchUser;
     public ProgressPopupWindow progress;
     public AssetManager am;
     public static ValueCallback< Uri > mUploadMessage;
@@ -112,8 +108,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     @Bind(R.id.menuPage)
     WebView menuView;
     //底部菜单
-    @Bind(R.id.menuL)
-    RelativeLayout bottomMenuLayout;
+    //@Bind(R.id.menuL)
+    //RelativeLayout bottomMenuLayout;
     //侧滑登录
     @Bind(R.id.loginLayout)
     RelativeLayout loginLayout;
@@ -145,13 +141,12 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        //application = ( BaseApplication ) HomeActivity.this.getApplication ( );
+
         resources = HomeActivity.this.getResources ( );
         mHandler = new Handler ( this );
         share = new SharePopupWindow ( HomeActivity.this, HomeActivity.this, application );
         wManager = this.getWindowManager();
         am = this.getAssets();
-        //AppManager.getInstance ( ).addActivity(this);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         //设置沉浸模式
@@ -179,6 +174,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        if( progress !=null ){
+            progress.dismissView();
+            progress=null;
+        }
+        if( share !=null){
+            share.dismiss();
+            share=null;
+        }
     }
 
     @Override
@@ -260,8 +263,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         loadMainMenu();
     }
 
-    private void loadMainMenu ( )
-    {
+    private void loadMainMenu() {
         menuView.getSettings().setJavaScriptEnabled(true);
         menuView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
@@ -271,19 +273,15 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         menuView.setWebViewClient(
                 new WebViewClient() {
-
                     //重写此方法，浏览器内部跳转
-                    public boolean shouldOverrideUrlLoading(
-                            WebView view, String
-                            url
-                    ) {
+                    public boolean shouldOverrideUrlLoading( WebView view, String url ) {
+                        if( pageWeb ==null ) return true;
                         pageWeb.loadUrl(url);
                         return true;
                     }
 
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
-
                         super.onPageStarted(view, url, favicon);
                     }
 
@@ -295,14 +293,12 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         );
     }
 
-    private void loadPage()
-    {
+    private void loadPage(){
         pageWeb.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         pageWeb.setVerticalScrollBarEnabled(false);
         pageWeb.setClickable ( true );
         pageWeb.getSettings().setUseWideViewPort(true);
         //是否需要避免页面放大缩小操作
-
         pageWeb.getSettings().setSupportZoom(true);
         pageWeb.getSettings().setBuiltInZoomControls(true);
         pageWeb.getSettings().setJavaScriptEnabled(true);
@@ -321,12 +317,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         pageWeb.setWebViewClient(
                 new WebViewClient() {
-
                     //重写此方法，浏览器内部跳转
-                    public boolean shouldOverrideUrlLoading(
-                            WebView view, String
-                            url
-                    ) {
+                    public boolean shouldOverrideUrlLoading( WebView view, String url ) {
                         UrlFilterUtils filter = new UrlFilterUtils(
                                 HomeActivity.this,
                                 HomeActivity.this,
@@ -346,13 +338,13 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     public void onPageFinished(WebView view, String url) {
                         //页面加载完成后,读取菜单项
                         super.onPageFinished(view, url);
+                        if( titleText ==null || pageWeb ==null ) return;
+
                         titleText.setText(view.getTitle());
-                        if(url.contains ( "&back" ) || url.contains ( "?back" ))
-                        {
+                        if(url.contains ( "&back" ) || url.contains ( "?back" )){
                             mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
                         }
                         else {
-
                             if ( pageWeb.canGoBack ( ) ) {
                                 mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
                             }
@@ -360,18 +352,12 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                                 mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
                             }
                         }
-
                     }
 
                     @Override
-                    public void onReceivedError(
-                            WebView view, int errorCode, String description,
-                            String failingUrl
-                    )
-                    {
+                    public void onReceivedError( WebView view, int errorCode, String description,String failingUrl ){
                         super.onReceivedError(view, errorCode, description, failingUrl);
                     }
-
                 }
         );
 
@@ -380,6 +366,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
+                if( titleText ==null) return;
+
                 titleText.setText(title);
                 String url = view.getUrl();
                 if(url.contains ( "&back" ) || url.contains ( "?back" ))
@@ -399,8 +387,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if(100 == newProgress)
-                {
+                if( refreshWebView ==null ) return;
+
+                if(100 == newProgress) {
                     refreshWebView.onRefreshComplete();
                 }
                 super.onProgressChanged(view, newProgress);
@@ -478,10 +467,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
     @OnClick(R.id.titleLeftImage)
-    void doBackOrMenuClick()
-    {
-        if(application.isLeftImg)
-        {
+    void doBackOrMenuClick(){
+        if(application.isLeftImg){
 //            case R.id.titleLeftImage:
 //            {
 //                if(application.isLeftImg)
@@ -496,7 +483,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             //application.layDrag.openDrawer ( Gravity.LEFT );
             layDrag.openDrawer(Gravity.LEFT);
         } else {
-            pageWeb .goBack ( );
+            if( pageWeb.canGoBack() ) {
+                pageWeb.goBack();
+            }
         }
     }
 
@@ -795,54 +784,68 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 url,
                 UpdateLeftInfoModel.class,
                 null,
-                new Response.Listener<UpdateLeftInfoModel>() {
-                    @Override
-                    public void onResponse(UpdateLeftInfoModel updateLeftInfoModel) {
-                        if( updateLeftInfoModel==null ) return;
+                new MyRefreshMenuListener(HomeActivity.this),
+                new MyRefreshMenuErrorListener(HomeActivity.this));
 
-                        if( updateLeftInfoModel.getCode() != 200 ){
-                            ToastUtils.showShortToast(application, updateLeftInfoModel.getMsg());
-                            return;
-                        }
-
-                        if( updateLeftInfoModel.getData()==null ) return;
-                        if( updateLeftInfoModel.getData().getMenusCode()==0) return;
-
-                        application.writeMemberLevel( updateLeftInfoModel.getData().getLevelName() );
-                        userType.setText(application.readMemberLevel());
-
-                        //设置侧滑栏菜单
-                        List<MenuBean > menus = new ArrayList< MenuBean >(  );
-                        MenuBean menu = null;
-                        List<UpdateLeftInfoModel.MenuModel > home_menus = updateLeftInfoModel.getData().getHome_menus ();
-                        for(UpdateLeftInfoModel.MenuModel home_menu:home_menus)
-                        {
-                            menu = new MenuBean ();
-                            menu.setMenuGroup ( String.valueOf ( home_menu.getMenu_group () ) );
-                            menu.setMenuIcon ( home_menu.getMenu_icon ( ) );
-                            menu.setMenuName ( home_menu.getMenu_name ( ) );
-                            menu.setMenuUrl ( home_menu.getMenu_url ( ) );
-                            menus.add ( menu );
-                        }
-                        if(null != menus && !menus.isEmpty ()) {
-                            application.writeMenus(menus);
-                            //动态加载侧滑菜单
-                            mainMenuLayout.removeAllViews();
-                            UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am );
-                            ui.loadMenus();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        ToastUtils.showShortToast(application,"请求异常");
-                    }
-                }
-        );
         VolleyUtil.getRequestQueue().add(request);
     }
 
+    class MyRefreshMenuListener implements Response.Listener<UpdateLeftInfoModel>{
+        WeakReference<Activity> ref;
+        public MyRefreshMenuListener(Activity aty){
+            ref= new WeakReference<Activity>(aty);
+        }
+
+        @Override
+        public void onResponse(UpdateLeftInfoModel updateLeftInfoModel) {
+            if( ref.get() ==null) return;
+            if( updateLeftInfoModel==null ) return;
+
+            if( updateLeftInfoModel.getCode() != 200 ){
+                ToastUtils.showShortToast(application, updateLeftInfoModel.getMsg());
+                return;
+            }
+
+            if( updateLeftInfoModel.getData()==null ) return;
+            if( updateLeftInfoModel.getData().getMenusCode()==0) return;
+
+            application.writeMemberLevel( updateLeftInfoModel.getData().getLevelName() );
+            userType.setText(application.readMemberLevel());
+
+            //设置侧滑栏菜单
+            List<MenuBean > menus = new ArrayList< MenuBean >(  );
+            MenuBean menu = null;
+            List<UpdateLeftInfoModel.MenuModel > home_menus = updateLeftInfoModel.getData().getHome_menus ();
+            for(UpdateLeftInfoModel.MenuModel home_menu:home_menus)
+            {
+                menu = new MenuBean ();
+                menu.setMenuGroup ( String.valueOf ( home_menu.getMenu_group () ) );
+                menu.setMenuIcon ( home_menu.getMenu_icon ( ) );
+                menu.setMenuName ( home_menu.getMenu_name ( ) );
+                menu.setMenuUrl ( home_menu.getMenu_url ( ) );
+                menus.add ( menu );
+            }
+            if(null != menus && !menus.isEmpty ()) {
+                application.writeMenus(menus);
+                //动态加载侧滑菜单
+                mainMenuLayout.removeAllViews();
+                UIUtils ui = new UIUtils ( application, ref.get() , resources, mainMenuLayout, wManager, mHandler, am );
+                ui.loadMenus();
+            }
+        }
+    }
+
+    class MyRefreshMenuErrorListener implements Response.ErrorListener{
+        WeakReference<HomeActivity> ref;
+        public MyRefreshMenuErrorListener(HomeActivity aty){
+            ref = new WeakReference<HomeActivity>(aty);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            if( ref.get()==null) return;
+        }
+    }
     /*
      * 手机绑定微信
      */

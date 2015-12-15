@@ -42,6 +42,7 @@ public class AutnLogin {
                 return;
             }
             else {
+                plat.removeAccount();
                 mHandler.sendEmptyMessage ( Constants.MSG_USERID_NO_FOUND );
                 return;
             }

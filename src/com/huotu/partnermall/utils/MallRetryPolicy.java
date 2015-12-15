@@ -6,8 +6,7 @@ import com.android.volley.VolleyError;
 /**
  * 买家版自定义的volley网络请求时间设置
  */
-public
-class MallRetryPolicy implements RetryPolicy {
+public class MallRetryPolicy implements RetryPolicy {
     private int mCurrentTimeoutMs;
     private int mCurrentRetryCount;
     private final int mMaxNumRetries;

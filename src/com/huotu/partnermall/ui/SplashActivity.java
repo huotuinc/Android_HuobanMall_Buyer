@@ -45,25 +45,20 @@ public class SplashActivity extends BaseActivity {
     RelativeLayout mSplashItem_iv;
     @Bind(R.id.splash_version)
     TextView tvVersion;
-    //private BaseApplication application;
     private Intent locationI = null;
     private boolean isConnection = false;// 假定无网络连接
     private MsgPopWindow popWindow;
-    //public DownloadManager downloadManager;
 
     protected
     void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
-        //application = ( BaseApplication ) SplashActivity.this.getApplication ( );
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        //downloadManager = ( DownloadManager ) this.getSystemService ( Context.DOWNLOAD_SERVICE );
         DisplayMetrics metrics = new DisplayMetrics ( );
         getWindowManager ( ).getDefaultDisplay ( ).getMetrics ( metrics );
         Constants.SCREEN_DENSITY = metrics.density;
         Constants.SCREEN_HEIGHT = metrics.heightPixels;
         Constants.SCREEN_WIDTH = metrics.widthPixels;
-
         mHandler = new Handler ( getMainLooper ( ) );
         initView();
     }

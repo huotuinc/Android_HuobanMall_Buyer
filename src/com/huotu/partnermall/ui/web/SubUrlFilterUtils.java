@@ -20,26 +20,23 @@ import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
+import java.lang.ref.WeakReference;
+
 /**
  * 过滤UI类
  */
-public
-class SubUrlFilterUtils {
+public class SubUrlFilterUtils {
 
-    private
-    Context  context;
-    private
-    Activity aty;
+    private Context  context;
+    private WeakReference<Activity> ref;
+    //private Activity aty;
     TextView titleView;
     private Handler mHandler;
-    private
-    BaseApplication     application;
-    public
-    ProgressPopupWindow payProgress;
+    private BaseApplication     application;
+    public ProgressPopupWindow payProgress;
     public WindowManager wManager;
 
-    public
-    SubUrlFilterUtils (
+    public SubUrlFilterUtils (
             Activity aty, Context context, TextView titleView, Handler mHandler,
             BaseApplication application
                       ) {
@@ -47,7 +44,7 @@ class SubUrlFilterUtils {
         this.titleView = titleView;
         this.mHandler = mHandler;
         this.application = application;
-        this.aty = aty;
+        this.ref = new WeakReference<>(aty);
         wManager = aty.getWindowManager ( );
         payProgress = new ProgressPopupWindow ( context, aty, wManager );
     }
@@ -58,22 +55,21 @@ class SubUrlFilterUtils {
      * @param url
      * @return
      */
-    public
-    boolean shouldOverrideUrlBySFriend ( WebView view, String url ) {
-        if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
+    public boolean shouldOverrideUrlBySFriend ( WebView view, String url ) {
+        if( ref.get()==null) return true;
 
+        if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
             String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
             Bundle bundle = new Bundle ( );
             bundle.putString ( Constants.INTENT_URL, urlStr );
-            ActivityUtils.getInstance ( ).showActivity ( aty, WebViewActivity.class, bundle );
+            ActivityUtils.getInstance ( ).showActivity ( ref.get() , WebViewActivity.class, bundle );
             return true;
         }
         else if ( url.contains ( Constants.WEB_TAG_USERINFO ) ) {
             //修改用户信息
             //判断修改信息的类型
             String type = url.substring(url.indexOf("=", 1)+1, url.indexOf("&", 1));
-            if(Constants.MODIFY_PSW.equals ( type ))
-            {
+            if(Constants.MODIFY_PSW.equals ( type )){
                 //弹出修改密码框
             }
             return true;
@@ -83,7 +79,7 @@ class SubUrlFilterUtils {
             //清除登录信息
             application.logout ();
             //跳转到登录界面
-            ActivityUtils.getInstance ().skipActivity ( aty, LoginActivity.class );
+            ActivityUtils.getInstance ().skipActivity ( ref.get() , LoginActivity.class );
         }else if(url.contains(Constants.WEB_TAG_INFO)){
             //处理信息保护
             return true;
@@ -95,10 +91,7 @@ class SubUrlFilterUtils {
         {
             //支付进度
             payProgress.showProgress ( "正在启用支付模块" );
-            payProgress.showAtLocation (
-                    titleView,
-                    Gravity.CENTER, 0, 0
-                                           );
+            payProgress.showAtLocation (titleView, Gravity.CENTER, 0, 0 );
             //支付模块
             //获取信息
             //截取问号后面的
@@ -141,7 +134,7 @@ class SubUrlFilterUtils {
             builder.append ( "?orderid="+tradeNo );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( aty, context, mHandler, application, orderUrl, payModel, payProgress, titleView, wManager );
+            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() , context, mHandler, application, orderUrl, payModel, payProgress, titleView, wManager );
             return true;
 
         }
@@ -151,7 +144,7 @@ class SubUrlFilterUtils {
             //清除登录信息
             application.logout ();
             //跳转到登录界面
-            ActivityUtils.getInstance ().skipActivity ( aty, LoginActivity.class );
+            ActivityUtils.getInstance ().skipActivity ( ref.get() , LoginActivity.class );
         }
         else
         {

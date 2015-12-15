@@ -31,26 +31,20 @@ import com.tencent.utils.SystemUtils;
 /**
  * 自定义弹出框
  */
-public
-class MsgPopWindow extends PopupWindow {
+public class MsgPopWindow extends PopupWindow {
 
     //标题
-    private
-    ImageView titleIcon;
-    private
-    TextView titleTxt;
+    private ImageView titleIcon;
+    private TextView titleTxt;
     private ImageView titleClose;
 
     //内容
     private TextView tipsMsg;
-    private
-    Button btnSure;
+    private Button btnSure;
     private Button btnCancel;
     private Activity context;
     private boolean isClose;
-
     private View popView;
-
     private RelativeLayout popTitle;
     private RelativeLayout popContext;
 

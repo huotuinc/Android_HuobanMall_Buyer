@@ -28,11 +28,9 @@ import java.lang.ref.WeakReference;
 /**
  * 拦截页面操作类
  */
-public
-class UrlFilterUtils {
-
+public class UrlFilterUtils {
     private Context  context;
-    private WeakReference<Activity> ref;// aty;
+    private WeakReference<Activity> ref;
     TextView titleView;
     private Handler mHandler;
     private BaseApplication application;
@@ -47,7 +45,6 @@ class UrlFilterUtils {
         this.titleView = titleView;
         this.mHandler = mHandler;
         this.application = application;
-        //this.aty = aty;
         this.ref = new WeakReference<Activity>(aty);
         this.wManager = wManager;
         payProgress = new ProgressPopupWindow ( context, aty, wManager );
@@ -59,8 +56,7 @@ class UrlFilterUtils {
      * @param url
      * @return
      */
-    public
-    boolean shouldOverrideUrlBySFriend ( WebView view, String url ) {
+    public boolean shouldOverrideUrlBySFriend ( WebView view, String url ) {
         if( ref.get() ==null)return false;
 
         if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {

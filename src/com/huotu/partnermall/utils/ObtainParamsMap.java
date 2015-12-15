@@ -18,8 +18,7 @@ import java.util.Map;
 /**
  * Created by Administrator on 2015/9/21.
  */
-public
-class ObtainParamsMap {
+public class ObtainParamsMap {
 
     private Context context;
 

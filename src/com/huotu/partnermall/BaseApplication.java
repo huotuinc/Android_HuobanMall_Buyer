@@ -24,23 +24,12 @@ import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
-import com.huotu.partnermall.model.PageInfoModel;
-import com.huotu.partnermall.model.PageType;
-import com.huotu.partnermall.model.SysModel;
 import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.utils.CrashHandler;
-import com.huotu.partnermall.utils.KJConfig;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
 import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
-
-import org.apache.commons.codec.binary.StringUtils;
-
 import java.util.List;
-import java.util.Stack;
-
-import cn.jpush.android.api.JPushInterface;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
@@ -183,23 +172,6 @@ public class BaseApplication extends Application {
         NetworkInfo info = cm.getActiveNetworkInfo ( );
         return info != null;// 网络是否连接
     }
-
-//    /**
-//     * 仅wifi联网功能是否开启
-//     */
-//    public static boolean checkOnlyWifi(Context context)
-//    {
-//        if ( PreferenceHelper.readBoolean (
-//                context, KJConfig.SETTING_FILE,
-//                KJConfig.ONLY_WIFI
-//                                          ))
-//        {
-//            return isWiFi(context);
-//        } else
-//        {
-//            return true;
-//        }
-//    }
 
 //    /**
 //     * 判断是否为wifi联网

@@ -9,10 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
-
 import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.inner.wxapi.WXEntryActivity;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 

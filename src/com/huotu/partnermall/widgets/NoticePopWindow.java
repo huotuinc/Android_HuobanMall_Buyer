@@ -20,8 +20,8 @@ import org.w3c.dom.Text;
  */
 public class NoticePopWindow extends PopupWindow {
 
-    private Context       context;
-    private Activity      aty;
+    private Context context;
+    private Activity aty;
     private WindowManager wManager;
     private ImageView closeImg;
     private TextView notice;
@@ -46,7 +46,6 @@ public class NoticePopWindow extends PopupWindow {
                                       } );
         notice = ( TextView ) view.findViewById ( R.id.notice_text );
         notice.setText ( msg );
-
 
         // 设置SelectPicPopupWindow的View
         this.setContentView ( view );

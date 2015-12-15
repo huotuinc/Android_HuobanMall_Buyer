@@ -36,8 +36,7 @@ import cn.sharesdk.wechat.friends.Wechat;
 /**
  * 登录界面
  */
-public
-class LoginActivity extends BaseActivity implements Handler.Callback {
+public class LoginActivity extends BaseActivity implements Handler.Callback {
 
     @Bind(R.id.loginL)
     RelativeLayout loginL;

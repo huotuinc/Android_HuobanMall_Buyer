@@ -219,10 +219,10 @@ class UIUtils {
     public void addRelateTypeMenu(List<MenuBean> menus){
         int loginType = application.readMemberLoginType();
         if( loginType== 1){
-//            int relateType = application.readMemberRelatedType();
-//            if( relateType !=1 ){//0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号
-//                return;
-//            }
+            int relateType = application.readMemberRelatedType();
+            if( relateType !=1 ){//0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号
+                return;
+            }
             MenuBean item = new MenuBean();
             item.setMenuGroup("888");
             item.setMenuIcon("home_menu_bindphone");

@@ -41,6 +41,7 @@ class LoadLogoImageAyscTask extends AsyncTask<Void, Void, Bitmap> {
     protected
     void onPostExecute ( Bitmap bitmap ) {
         super.onPostExecute ( bitmap );
+        if( view ==null )return;
 
         //加载图片
         if(null == bitmap)
