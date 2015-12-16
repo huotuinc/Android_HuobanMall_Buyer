@@ -779,6 +779,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
     protected void dealUserid(){
 
+        pageWeb.clearHistory();
+        pageWeb.clearCache(true);
         AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         String url = paramUtils.obtainUrl ();
         //首页默认为商户站点 + index
