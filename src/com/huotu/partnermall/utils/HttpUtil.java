@@ -394,7 +394,7 @@ public class HttpUtil{
                         //关闭载入数据条
                         mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
 
-                        NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "无其他账户，请绑定其他账户。");
+                        NoticePopWindow noticePop = new NoticePopWindow (  aty,  "无其他账户，请绑定其他账户。");
                         noticePop.showNotice ();
                         noticePop.showAtLocation (
                                 view,
@@ -403,7 +403,7 @@ public class HttpUtil{
                     }else {
                         //关闭载入数据条
                         mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
-                        NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "无其他账户。");
+                        NoticePopWindow noticePop = new NoticePopWindow (  aty,  "无其他账户。");
                         noticePop.showNotice ();
                         noticePop.showAtLocation(view,Gravity.CENTER, 0, 0);
                     }
@@ -412,7 +412,7 @@ public class HttpUtil{
                     //关闭载入数据条
                     mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
 
-                    NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "未检测到你的账户信息，请确认。");
+                    NoticePopWindow noticePop = new NoticePopWindow (  aty,  "未检测到你的账户信息，请确认。");
                     noticePop.showNotice ();
                     noticePop.showAtLocation (
                             view,
@@ -491,7 +491,7 @@ public class HttpUtil{
                         {
                             //支付信息获取错误
                             payProgress.dismissView ( );
-                            NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "获取订单信息失败。");
+                            NoticePopWindow noticePop = new NoticePopWindow ( aty, "获取订单信息失败。");
                             noticePop.showNotice ( );
                             noticePop.showAtLocation (
                                     titleView,
@@ -537,7 +537,7 @@ public class HttpUtil{
                     else
                     {
                         payProgress.dismissView ( );
-                        NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "获取订单信息失败。");
+                        NoticePopWindow noticePop = new NoticePopWindow ( aty,  "获取订单信息失败。");
                         noticePop.showNotice ();
                         noticePop.showAtLocation (
                                 titleView,
@@ -549,7 +549,7 @@ public class HttpUtil{
                 {
                     //支付信息获取错误
                     payProgress.dismissView ( );
-                    NoticePopWindow noticePop = new NoticePopWindow ( context, aty, wManager, "获取订单信息失败。");
+                    NoticePopWindow noticePop = new NoticePopWindow (  aty,  "获取订单信息失败。");
                     noticePop.showNotice ( );
                     noticePop.showAtLocation (
                             titleView,

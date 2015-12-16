@@ -75,7 +75,7 @@ public class UrlFilterUtils {
                 context.startActivity ( new Intent ( Intent.ACTION_VIEW, Uri.parse ( qq ) ) );
             } catch ( Exception e ){
                 if(e.getMessage ().contains ( "No Activity found to handle Intent" )){
-                    NoticePopWindow noticePop = new NoticePopWindow ( context, ref.get() , wManager, "请安装QQ客户端");
+                    NoticePopWindow noticePop = new NoticePopWindow ( ref.get() , "请安装QQ客户端");
                     noticePop.showNotice ();
                     noticePop.showAtLocation ( titleView, Gravity.CENTER, 0, 0 );
                 }

@@ -93,9 +93,6 @@ android {
             versionCode 2
             versionName "1.0.1"
         }
-        yaoshengji{
-            applicationId 'com.yaoshengji'
-        }
         yunyi{
             applicationId 'com.huotu.mall.yunyi'
             versionCode 1

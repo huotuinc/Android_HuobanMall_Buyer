@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.utils.WindowUtils;
@@ -20,22 +21,22 @@ import org.w3c.dom.Text;
  */
 public class NoticePopWindow extends PopupWindow {
 
-    private Context context;
+    //private Context context;
     private Activity aty;
-    private WindowManager wManager;
+    //private WindowManager wManager;
     private ImageView closeImg;
     private TextView notice;
     private String msg;
 
-    public NoticePopWindow ( Context context, Activity aty, WindowManager wManager, String msg ) {
-        this.context = context;
+    public NoticePopWindow (  Activity aty, String msg ) {
+        //this.context = context;
         this.aty = aty;
-        this.wManager = wManager;
+        //this.wManager = wManager;
         this.msg = msg;
     }
 
     public void showNotice ( ) {
-        View view = LayoutInflater.from ( context ).inflate ( R.layout.notice_ui, null );
+        View view = LayoutInflater.from ( aty ).inflate ( R.layout.notice_ui, null );
         closeImg = ( ImageView ) view.findViewById ( R.id.notice_close );
         closeImg.setOnClickListener ( new View.OnClickListener ( ) {
                                           @Override
@@ -45,14 +46,14 @@ public class NoticePopWindow extends PopupWindow {
                                           }
                                       } );
         notice = ( TextView ) view.findViewById ( R.id.notice_text );
-        notice.setText ( msg );
+        notice.setText ( msg);
 
         // 设置SelectPicPopupWindow的View
-        this.setContentView ( view );
+        this.setContentView ( view);
         // 设置SelectPicPopupWindow弹出窗体的宽
-        this.setWidth ( (wManager.getDefaultDisplay ().getWidth ()/4) * 3 );
+        this.setWidth ( (Constants.SCREEN_WIDTH / 4) * 3);
         // 设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight ( (wManager.getDefaultDisplay ().getWidth ()/6) * 2 );
+        this.setHeight ( (Constants.SCREEN_WIDTH / 6) * 2);
         // 设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(false);
         WindowUtils.backgroundAlpha ( aty, 0.4f );

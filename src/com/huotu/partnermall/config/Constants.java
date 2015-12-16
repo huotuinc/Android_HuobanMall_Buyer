@@ -2,6 +2,8 @@ package com.huotu.partnermall.config;
 
 import android.os.Environment;
 
+import com.huotu.partnermall.inner.BuildConfig;
+
 public class Constants {
 	/**
 	 ******************************************* 参数设置信息开始
@@ -431,4 +433,12 @@ public class Constants {
 	public static final String DATA_INIT            = "data_init";
 	//会员信息
 	public static final String PACKAGE_VERSION              = "package_version";
+
+//	public static String getINTERFACE_PREFIX(){
+//		if( BuildConfig.DEBUG ){
+//			return INTERFACE_PREFIX;
+//		}else{
+//			return  INTERFACE_PREFIX;
+//		}
+//	}
 }

@@ -67,7 +67,7 @@ class PayPopWindow extends PopupWindow {
                         {
                             //缺少支付信息
                             dismissView ( );
-                            NoticePopWindow noticePop = new NoticePopWindow ( context, aty, aty.getWindowManager (), "缺少支付信息" );
+                            NoticePopWindow noticePop = new NoticePopWindow (  aty,"缺少支付信息" );
                             noticePop.showNotice ();
                             noticePop.showAtLocation (
                                     aty.findViewById ( R.id.titleText ),

@@ -137,7 +137,7 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
                 successProgress.dismissView ();
                 //提示授权失败
                 String notice = ( String ) msg.obj;
-                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, notice);
+                noticePop = new NoticePopWindow ( LoginActivity.this,  notice);
                 noticePop.showNotice ();
                 noticePop.showAtLocation ( loginL , Gravity.CENTER, 0, 0 );
             }
@@ -162,7 +162,7 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
                     loginL.setClickable ( true );
                     progress.dismissView ();
                     //提示授权失败
-                    noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权失败");
+                    noticePop = new NoticePopWindow ( LoginActivity.this, "微信授权失败");
                     noticePop.showNotice ();
                     noticePop.showAtLocation ( loginL, Gravity.CENTER, 0, 0 );
                 }
@@ -207,7 +207,7 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
             {
                 progress.dismissView ();
                 //提示授权成功
-                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "获取用户信息失败");
+                noticePop = new NoticePopWindow (  LoginActivity.this, "获取用户信息失败");
                 noticePop.showNotice ();
                 noticePop.showAtLocation (loginL , Gravity.CENTER, 0, 0);
             }
@@ -216,7 +216,7 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
             {
                 progress.dismissView ();
                 //提示初始化菜单失败
-                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "初始化菜单失败");
+                noticePop = new NoticePopWindow (  LoginActivity.this, "初始化菜单失败");
                 noticePop.showNotice ();
                 noticePop.showAtLocation (loginL , Gravity.CENTER, 0, 0 );
             }

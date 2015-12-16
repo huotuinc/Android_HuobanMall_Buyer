@@ -175,120 +175,120 @@ class XMLParserUtils {
      * @param context
      * @return
      */
-    public List<MenuBean> readMenuInfo(Context context)
-    {
-        List<MenuBean> menus = null;
-        MenuBean menu = null;
-
-        try {
-            XmlResourceParser xmlResourceParser = context.getResources ().getXml ( R.xml.main_menu );
-            menus = new ArrayList< MenuBean > (  );
-            //如果没有到文件尾继续执行
-            while (xmlResourceParser.getEventType () != XmlResourceParser.END_DOCUMENT) {
-
-                //如果是开始标签
-                if (xmlResourceParser.getEventType() == XmlResourceParser.START_TAG) {
-                    //获取标签名称
-                    String name = xmlResourceParser.getName();
-
-                     if(name.equals ( Constants.HOME_MENU ))
-                    {
-                        menu = new MenuBean ();
-                    }
-                    if(null != menu)
-                    {
-                        if(name.equals ( Constants.MENU_NAME ))
-                        {
-                            String menuName = xmlResourceParser.nextText ();
-                            menu.setMenuName ( menuName );
-                        }
-                        else if(name.equals ( Constants.MENU_TAG ))
-                        {
-                            String menuTag = xmlResourceParser.nextText ();
-                            menu.setMenuTag (  menuTag );
-                        }
-                        else if(name.equals ( Constants.MENU_ICON ))
-                        {
-                            String menuIcon = xmlResourceParser.nextText ();
-                            menu.setMenuIcon ( menuIcon );
-                        }
-                        else if(name.equals ( Constants.MENU_URL ))
-                        {
-                            String menuUrl = xmlResourceParser.nextText ();
-                            menu.setMenuUrl ( menuUrl );
-                        }
-                        else if(name.equals ( Constants.MENU_GROUP ))
-                        {
-                            String menuGroup = xmlResourceParser.nextText ();
-                            menu.setMenuGroup ( menuGroup );
-                        }
-                    }
-
-                } else if (xmlResourceParser.getEventType() == XmlPullParser.END_TAG) {
-                    String endName = xmlResourceParser.getName ();
-                    if(endName.equals ( Constants.HOME_MENU ))
-                    {
-                        menus.add ( menu );
-                        menu = null;
-                    }
-                }
-                //下一个标签
-                xmlResourceParser.next ( );
-            }
-            return menus;
-        } catch (XmlPullParserException e) {
-            KJLoger.e ( e.getMessage ( ) );
-            return null;
-        } catch (IOException e) {
-            KJLoger.e ( e.getMessage ( ) );
-            return null;
-        }
-
-    }
+//    public List<MenuBean> readMenuInfo(Context context)
+//    {
+//        List<MenuBean> menus = null;
+//        MenuBean menu = null;
+//
+//        try {
+//            XmlResourceParser xmlResourceParser = context.getResources ().getXml ( R.xml.main_menu );
+//            menus = new ArrayList< MenuBean > (  );
+//            //如果没有到文件尾继续执行
+//            while (xmlResourceParser.getEventType () != XmlResourceParser.END_DOCUMENT) {
+//
+//                //如果是开始标签
+//                if (xmlResourceParser.getEventType() == XmlResourceParser.START_TAG) {
+//                    //获取标签名称
+//                    String name = xmlResourceParser.getName();
+//
+//                     if(name.equals ( Constants.HOME_MENU ))
+//                    {
+//                        menu = new MenuBean ();
+//                    }
+//                    if(null != menu)
+//                    {
+//                        if(name.equals ( Constants.MENU_NAME ))
+//                        {
+//                            String menuName = xmlResourceParser.nextText ();
+//                            menu.setMenuName ( menuName );
+//                        }
+//                        else if(name.equals ( Constants.MENU_TAG ))
+//                        {
+//                            String menuTag = xmlResourceParser.nextText ();
+//                            menu.setMenuTag (  menuTag );
+//                        }
+//                        else if(name.equals ( Constants.MENU_ICON ))
+//                        {
+//                            String menuIcon = xmlResourceParser.nextText ();
+//                            menu.setMenuIcon ( menuIcon );
+//                        }
+//                        else if(name.equals ( Constants.MENU_URL ))
+//                        {
+//                            String menuUrl = xmlResourceParser.nextText ();
+//                            menu.setMenuUrl ( menuUrl );
+//                        }
+//                        else if(name.equals ( Constants.MENU_GROUP ))
+//                        {
+//                            String menuGroup = xmlResourceParser.nextText ();
+//                            menu.setMenuGroup ( menuGroup );
+//                        }
+//                    }
+//
+//                } else if (xmlResourceParser.getEventType() == XmlPullParser.END_TAG) {
+//                    String endName = xmlResourceParser.getName ();
+//                    if(endName.equals ( Constants.HOME_MENU ))
+//                    {
+//                        menus.add ( menu );
+//                        menu = null;
+//                    }
+//                }
+//                //下一个标签
+//                xmlResourceParser.next ( );
+//            }
+//            return menus;
+//        } catch (XmlPullParserException e) {
+//            KJLoger.e ( e.getMessage ( ) );
+//            return null;
+//        } catch (IOException e) {
+//            KJLoger.e ( e.getMessage ( ) );
+//            return null;
+//        }
+//
+//    }
 
     /**
      * 获取app系统配置信息
      * @param context
      * @return
      */
-    public
-    SysModel readSys(Context context) {
-        SysModel sysModel = null;
-
-        try
-        {
-            XmlResourceParser xmlResourceParser = context.getResources ().getXml ( R.xml.sys_info );
-            sysModel = new SysModel ();
-            //如果没有到文件尾继续执行
-            while (xmlResourceParser.getEventType () != XmlResourceParser.END_DOCUMENT) {
-                //如果是开始标签
-                if (xmlResourceParser.getEventType() == XmlResourceParser.START_TAG) {
-                    //获取标签名称
-                    String name = xmlResourceParser.getName();
-                    //判断标签名称是否等于ID
-                    if(name.equals( Constants.SYS_PACKAGE_INI)){
-                        sysModel.setPackageStr ( xmlResourceParser.nextText ( ) );
-                    }
-                    else if(name.equals ( Constants.SYS_MENU ))
-                    {
-                        sysModel.setSysMenu ( xmlResourceParser.nextText () );
-                    }
-                }
-                else if (xmlResourceParser.getEventType() == XmlPullParser.END_TAG) {
-                }
-                //下一个标签
-                xmlResourceParser.next ( );
-            }
-
-            return sysModel;
-        }
-        catch (XmlPullParserException e) {
-            KJLoger.e ( e.getMessage ( ) );
-            return null;
-        } catch (IOException e) {
-            KJLoger.e ( e.getMessage ( ) );
-            return null;
-        }
-    }
+//    public
+//    SysModel readSys(Context context) {
+//        SysModel sysModel = null;
+//
+//        try
+//        {
+//            XmlResourceParser xmlResourceParser = context.getResources ().getXml ( R.xml.sys_info );
+//            sysModel = new SysModel ();
+//            //如果没有到文件尾继续执行
+//            while (xmlResourceParser.getEventType () != XmlResourceParser.END_DOCUMENT) {
+//                //如果是开始标签
+//                if (xmlResourceParser.getEventType() == XmlResourceParser.START_TAG) {
+//                    //获取标签名称
+//                    String name = xmlResourceParser.getName();
+//                    //判断标签名称是否等于ID
+//                    if(name.equals( Constants.SYS_PACKAGE_INI)){
+//                        sysModel.setPackageStr ( xmlResourceParser.nextText ( ) );
+//                    }
+//                    else if(name.equals ( Constants.SYS_MENU ))
+//                    {
+//                        sysModel.setSysMenu ( xmlResourceParser.nextText () );
+//                    }
+//                }
+//                else if (xmlResourceParser.getEventType() == XmlPullParser.END_TAG) {
+//                }
+//                //下一个标签
+//                xmlResourceParser.next ( );
+//            }
+//
+//            return sysModel;
+//        }
+//        catch (XmlPullParserException e) {
+//            KJLoger.e ( e.getMessage ( ) );
+//            return null;
+//        } catch (IOException e) {
+//            KJLoger.e ( e.getMessage ( ) );
+//            return null;
+//        }
+//    }
 
 }

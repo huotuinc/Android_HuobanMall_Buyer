@@ -93,10 +93,7 @@ public class SwitchUserPopWin extends PopupWindow {
                                 dismiss();
                                 //判断当前的用户
                                 if ( application.readUserId().equals (String.valueOf (user.getUserid())) ) {
-                                    NoticePopWindow noticePop = new NoticePopWindow ( context,
-                                                                                      context,
-                                                                                      wManager,
-                                                                                      "当前登录的是该用户，无需切换。" );
+                                    NoticePopWindow noticePop = new NoticePopWindow ( context, "当前登录的是该用户，无需切换。" );
                                     noticePop.showNotice ( );
                                     noticePop.showAtLocation ( view, Gravity.CENTER, 0, 0 );
                                 }

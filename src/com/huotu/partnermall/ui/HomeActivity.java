@@ -1,6 +1,7 @@
 package com.huotu.partnermall.ui;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -16,6 +17,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -54,11 +56,15 @@ import com.huotu.partnermall.utils.SwitchUserPopWin;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
+import com.huotu.partnermall.utils.Util;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import com.huotu.partnermall.widgets.UserInfoView;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -533,9 +539,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         msgModel.setText(text);
         msgModel.setTitle(title);
         msgModel.setUrl ( url);
-        share.initShareParams ( msgModel );
+        share.initShareParams(msgModel);
         share.showShareWindow();
-        share.showAtLocation(titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0 );
+        share.showAtLocation(titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         share.setPlatformActionListener(
                 new PlatformActionListener() {
                     @Override
@@ -690,21 +696,24 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             {
                 SwitchUserModel.SwitchUser user = ( SwitchUserModel.SwitchUser ) msg.obj;
                 //更新userId
-                application.writeMemberId ( String.valueOf ( user.getUserid ( ) ) );
+                application.writeMemberId(String.valueOf(user.getUserid()));
                 //更新昵称
-                application.writeUserName ( user.getWxNickName () );
-                application.writeUserIcon ( user.getWxHeadImg ( ) );
+                application.writeUserName(user.getWxNickName());
+                application.writeUserIcon(user.getWxHeadImg());
 
-                application.writeMemberLevel(user.getLevelName ());
+                application.writeMemberLevel(user.getLevelName());
 
                 //更新界面
-                userName.setText ( user.getWxNickName () );
+                userName.setText(user.getWxNickName());
                 userType.setText(user.getLevelName());
                 new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute ( );
 
                 //切换用户，需要清空 店中店的 缓存数据
                 SisConstant.SHOPINFO = null;
                 SisConstant.CATEGORY = null;
+
+                dealUserid();
+
             }
             break;
             case Constants.LOAD_SWITCH_USER_OVER:
@@ -766,6 +775,41 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 break;
         }
         return false;
+    }
+
+    protected void dealUserid(){
+
+        AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
+        String url = paramUtils.obtainUrl ();
+        //首页默认为商户站点 + index
+        pageWeb.loadUrl(url);
+        return;
+
+
+//        String url = pageWeb.getUrl();
+//        if( TextUtils.isEmpty( url )) return;
+//        String hurl = Util.UrlPage(url);
+//        Map<String,String> para = Util.URLRequest(url);
+//        if( para ==null || para.size()<1 ) return;
+//        boolean isexist = false;
+//        String p="";
+//        for( String k : para.keySet()){
+//            if(!TextUtils.isEmpty(p) ) {
+//                p+="&";
+//            }
+//
+//            if( k.toLowerCase().equals("userid") || k.toLowerCase().equals("buserid") ){
+//                p+= k+"="+ application.readMemberId();
+//                isexist=true;
+//            }else {
+//                p += k + "=" + para.get(k);
+//            }
+//        }
+//        if( !isexist) return;
+//
+//        String nurl = hurl+"?"+ p;
+//        pageWeb.loadUrl( nurl );
+
     }
 
     private void openSis(){
