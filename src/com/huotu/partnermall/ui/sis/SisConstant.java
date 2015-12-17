@@ -1,4 +1,6 @@
 package com.huotu.partnermall.ui.sis;
+import com.huotu.partnermall.inner.BuildConfig;
+
 import java.sql.Statement;
 import java.util.List;
 
@@ -7,12 +9,17 @@ import java.util.List;
  */
 public class SisConstant {
     //测试地址
-    private static String SISBASEURL = "http://test.api.open.huobanplus.com:8081/";
+    //private static String SISBASEURL = "http://test.api.open.huobanplus.com:8081/";
     //正式地址
     //private static String SISBASEURL = "http://api.open.huobanplus.com:8081/";
+
+    public static String getSISBASEURL(){
+        return BuildConfig.SIS_INTERFACE_URL;
+    }
+
     //private static String SISBASEURL="http://192.168.1.48:8080/sis/";
     //private static String SISBASEURL="http://192.168.1.57:8080/sis/";
-    private static String SISBASEAPPURL = SISBASEURL + "sis/";
+    private static String SISBASEAPPURL = getSISBASEURL() + "sis/";
 
     public static String INTERFACE_getCategoryList= SISBASEAPPURL + "getCategoryList";
     public static String INTERFACE_operGoods=SISBASEAPPURL + "operGoods";

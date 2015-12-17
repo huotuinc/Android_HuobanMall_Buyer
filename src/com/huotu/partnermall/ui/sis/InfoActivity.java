@@ -312,7 +312,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener ,
         );
 
         if (progressPopupWindow == null) {
-            progressPopupWindow = new ProgressPopupWindow(app, InfoActivity.this, getWindowManager());
+            progressPopupWindow = new ProgressPopupWindow( InfoActivity.this, getWindowManager());
         }
         progressPopupWindow.showProgress("正在上传，请稍等...");
         progressPopupWindow.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);

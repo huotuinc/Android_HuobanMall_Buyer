@@ -16,6 +16,7 @@ import android.widget.Button;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.Util;
+import com.umeng.analytics.MobclickAgent;
 
 public abstract class BaseActivity extends Activity {
 
@@ -58,6 +59,7 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override
@@ -68,6 +70,8 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        MobclickAgent.onResume(this);
     }
 
     @Override

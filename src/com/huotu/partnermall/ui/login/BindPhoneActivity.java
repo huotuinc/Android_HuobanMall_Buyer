@@ -80,7 +80,7 @@ public class BindPhoneActivity extends BaseActivity {
     }
 
     protected void bindPhone(String phone ,String code ){
-        String url = Constants.INTERFACE_PREFIX + "Account/bindMobile";
+        String url = Constants.getINTERFACE_PREFIX() + "Account/bindMobile";
         Map<String, String> map = new HashMap<>();
         map.put("userid", application.readMemberId());
         map.put("customerid", application.readMerchantId());
@@ -138,7 +138,7 @@ public class BindPhoneActivity extends BaseActivity {
     }
 
     protected void getCode(String phone) {
-        String url = Constants.INTERFACE_PREFIX + "Account/sendCode";
+        String url = Constants.getINTERFACE_PREFIX() + "Account/sendCode";
         Map<String, String> map = new HashMap<>();
         map.put("customerid", application.readMerchantId());
         map.put("mobile", phone);

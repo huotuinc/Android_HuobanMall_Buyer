@@ -111,7 +111,7 @@ public class PhoneLoginActivity extends BaseActivity {
 
     protected void login(String phone ,String code ){
         secure = System.currentTimeMillis();
-        String url = Constants.INTERFACE_PREFIX + "Account/loginAuthorize";
+        String url = Constants.getINTERFACE_PREFIX() + "Account/loginAuthorize";
         Map<String, String> map = new HashMap<>();
         map.put("customerid", application.readMerchantId());
         map.put("mobile", phone);
@@ -161,7 +161,7 @@ public class PhoneLoginActivity extends BaseActivity {
 
     protected void getCode(String phone) {
 
-        String url = Constants.INTERFACE_PREFIX + "Account/sendCode";
+        String url = Constants.getINTERFACE_PREFIX() + "Account/sendCode";
         Map<String, String> map = new HashMap<>();
         map.put("customerid", application.readMerchantId());
         map.put("mobile", phone);
@@ -221,7 +221,7 @@ public class PhoneLoginActivity extends BaseActivity {
     }
 
     protected void getLeftMenuData(){
-        String url = Constants.INTERFACE_PREFIX + "weixin/UpdateLeftInfo";
+        String url = Constants.getINTERFACE_PREFIX() + "weixin/UpdateLeftInfo";
         url +="?customerId="+application.readMerchantId();
         url +="&userId=" + application.readMemberId();
         url +="&clientUserType=" + application.readMemberType();

@@ -885,7 +885,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
 
         protected void share(String title , String text , String imageUrl , String goodsUrl , Bitmap imageData) {
             if (sharePopWin == null) {
-                sharePopWin = new SharePopupWindow(GoodManageActivity.this, GoodManageActivity.this, GoodManageActivity.this.application);
+                sharePopWin = new SharePopupWindow( GoodManageActivity.this.application);
             }
             final ShareModel shareModel = new ShareModel();
             shareModel.setUrl(goodsUrl);
@@ -938,7 +938,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 popWin.dismiss();
             }
             if( progressPopupWindow==null){
-                progressPopupWindow= new ProgressPopupWindow(application , (GoodManageActivity) mContext , getWindowManager() );
+                progressPopupWindow= new ProgressPopupWindow( (GoodManageActivity) mContext , getWindowManager() );
             }
             progressPopupWindow.showProgress("请稍等...");
             progressPopupWindow.showAtLocation( getWindow().getDecorView() , Gravity.CENTER , 0 ,0 );
@@ -1296,7 +1296,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             msgPopWindow.dismiss();
         }
         if( progressPopupWindow==null){
-            progressPopupWindow=new ProgressPopupWindow(application, GoodManageActivity.this,getWindowManager());
+            progressPopupWindow=new ProgressPopupWindow(GoodManageActivity.this,getWindowManager());
         }
         progressPopupWindow.showProgress("正在开启,请稍等...");
         progressPopupWindow.showAtLocation(getWindow().getDecorView(),Gravity.CENTER,0,0);
@@ -1317,7 +1317,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
     }
 
     protected void getinitdata(){
-        String url = Constants.INTERFACE_PREFIX+"/mall/Init?customerId="+ app.readMerchantId();
+        String url = Constants.getINTERFACE_PREFIX()+"/mall/Init?customerId="+ app.readMerchantId();
         AuthParamUtils authParamUtils =new AuthParamUtils(app, System.currentTimeMillis(), url , this);
         url = authParamUtils.obtainUrlName();
 

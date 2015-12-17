@@ -3,6 +3,7 @@ package com.huotu.partnermall.ui;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -38,6 +40,8 @@ import com.huotu.partnermall.utils.AliPayUtil;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.utils.WindowUtils;
+import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 
 import java.util.HashMap;
@@ -79,6 +83,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     @Bind(R.id.viewPage)
     PullToRefreshWebView refreshWebView;
 
+    ProgressPopupWindow progress;
+
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
@@ -91,7 +97,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         ButterKnife.bind(this);
         setImmerseLayout(newtitleLayout);
         mHandler = new Handler ( this );
-        share = new SharePopupWindow ( WebViewActivity.this, WebViewActivity.this, application );
+        progress = new ProgressPopupWindow ( WebViewActivity.this, this.getWindowManager() );
+        share = new SharePopupWindow ( WebViewActivity.this );
         myBroadcastReceiver = new MyBroadcastReceiver(WebViewActivity.this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
         Bundle bundle = this.getIntent().getExtras();
         url = bundle.getString ( Constants.INTENT_URL );
@@ -118,6 +125,36 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             }
         });
         loadPage();
+
+        share.showShareWindow();
+        share.setPlatformActionListener(
+                new PlatformActionListener() {
+                    @Override
+                    public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+                        Message msg = Message.obtain();
+                        msg.what = Constants.SHARE_SUCCESS;
+                        msg.obj = platform;
+                        mHandler.sendMessage(msg);
+                    }
+
+                    @Override
+                    public void onError(Platform platform, int i, Throwable throwable) {
+                        Message msg = Message.obtain();
+                        msg.what = Constants.SHARE_ERROR;
+                        msg.obj = platform;
+                        mHandler.sendMessage(msg);
+                    }
+
+                    @Override
+                    public void onCancel(Platform platform, int i) {
+                        Message msg = Message.obtain();
+                        msg.what = Constants.SHARE_CANCEL;
+                        msg.obj = platform;
+                        mHandler.sendMessage(msg);
+                    }});
+        share.setOnDismissListener(new PoponDismissListener(WebViewActivity.this ) );
+
+
     }
 
     private void loadPage()
@@ -136,14 +173,15 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         viewPage.getSettings().setLoadWithOverviewMode(false);
         viewPage.getSettings().setSavePassword(true);
         viewPage.getSettings().setLoadsImagesAutomatically(true);
+        viewPage.addJavascriptInterface(this, "android");
         viewPage.loadUrl(url);
 
         viewPage.setWebViewClient(
                 new WebViewClient() {
 
                     //重写此方法，浏览器内部跳转
-                    public boolean shouldOverrideUrlLoading( WebView view, String  url ) {
-                        if( titleText ==null ) return false;
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        if (titleText == null) return false;
 
                         SubUrlFilterUtils filter = new SubUrlFilterUtils(WebViewActivity.this,
                                 WebViewActivity.this,
@@ -161,7 +199,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
-                        if( titleText ==null ) return;
+                        if (titleText == null) return;
                         titleText.setText(view.getTitle());
                     }
 
@@ -169,7 +207,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                     @Override
                     public void onReceivedError(
                             WebView view, int errorCode, String description,
-                            String failingUrl ) {
+                            String failingUrl) {
                         super.onReceivedError(view, errorCode, description, failingUrl);
                         refreshWebView.onRefreshComplete();
                     }
@@ -181,12 +219,13 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
 
-                if( titleText ==null ){
-                    KJLoger.e( "titleText=null");
+                if (titleText == null) {
+                    KJLoger.e("titleText=null");
                     return;
                 }
-                if( title ==null ) {
-                    KJLoger.e("title=null");                    return;
+                if (title == null) {
+                    KJLoger.e("title=null");
+                    return;
                 }
 
                 titleText.setText(title);
@@ -194,7 +233,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if( refreshWebView ==null  ) return;
+                if (refreshWebView == null) return;
                 if (100 == newProgress) {
                     refreshWebView.onRefreshComplete();
                 }
@@ -234,9 +273,25 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         }
     }
 
+    protected void getShareContentByJS(){
+        viewPage.loadUrl("javascript:__getShareStr();");
+    }
+
     @OnClick(R.id.titleRightImage)
     void doShare()
     {
+        String sourceUrl = viewPage.getUrl();
+        if( !TextUtils.isEmpty( sourceUrl )) {
+            Uri u = Uri.parse( sourceUrl );
+            String path = u.getPath().toLowerCase().trim();
+            if( path.endsWith("view.aspx") ) {
+                progress.showProgress("请稍等...");
+                progress.showAtLocation( getWindow().getDecorView() , Gravity.CENTER, 0, 0);
+                getShareContentByJS();
+                return;
+            }
+        }
+
         String text = application.obtainMerchantName ()+"分享";
         String imageurl = application.obtainMerchantLogo ();
         if(!imageurl.contains ( "http://" ))
@@ -252,49 +307,14 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         String url = null;
         url = viewPage.getUrl();
         ShareModel msgModel = new ShareModel ();
-        msgModel.setImageUrl ( imageurl);
-        msgModel.setText ( text );
-        msgModel.setTitle ( title );
-        msgModel.setUrl ( url );
-        share.initShareParams ( msgModel );
-        share.showShareWindow ( );
-        share.showAtLocation (
-                titleRightImage,
-                Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0
-        );
-        share.setPlatformActionListener (
-                new PlatformActionListener ( ) {
-                    @Override
-                    public
-                    void onComplete (
-                            Platform platform, int i, HashMap< String, Object > hashMap
-                    ) {
-                        Message msg = Message.obtain ();
-                        msg.what = Constants.SHARE_SUCCESS;
-                        msg.obj = platform;
-                        mHandler.sendMessage ( msg );
-                    }
+        msgModel.setImageUrl(imageurl);
+        msgModel.setText(text);
+        msgModel.setTitle(title);
+        msgModel.setUrl(url);
+        share.initShareParams(msgModel);
+        //share.showShareWindow ( );
+        share.showAtLocation(titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
-                    @Override
-                    public
-                    void onError ( Platform platform, int i, Throwable throwable ) {
-                        Message msg = Message.obtain ();
-                        msg.what = Constants.SHARE_ERROR;
-                        msg.obj = platform;
-                        mHandler.sendMessage ( msg );
-                    }
-
-                    @Override
-                    public
-                    void onCancel ( Platform platform, int i ) {
-                        Message msg = Message.obtain ();
-                        msg.what = Constants.SHARE_CANCEL;
-                        msg.obj = platform;
-                        mHandler.sendMessage ( msg );
-                    }
-                }
-        );
-        share.setOnDismissListener ( new PoponDismissListener ( WebViewActivity.this ) );
     }
 
     @Override
@@ -344,7 +364,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 }
                 else if("SinaWeibo".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( WebViewActivity.this, "sina微博分享成功" );
+                    //ToastUtils.showShortToast ( WebViewActivity.this, "sina微博分享成功" );
                 }
 
             }
@@ -442,6 +462,54 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         {
             viewPage.goBack ( );
         }
+    }
+
+
+    @JavascriptInterface
+    public void sendShare(final String title, final String desc, final String link, final String img_url) {
+        if (this == null) return;
+        if (this.share == null) return;
+
+        this.mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+
+                if( WebViewActivity.this ==null ) return;
+                if( progress!=null ){
+                    progress.dismissView();
+                }
+
+                String sTitle = title;
+                if( TextUtils.isEmpty( sTitle ) ){
+                    sTitle = application.obtainMerchantName ()+"分享";
+                }
+                String sDesc = desc;
+                if( TextUtils.isEmpty( sDesc ) ){
+                    sDesc = sTitle;
+                }
+                String imageUrl = img_url; //application.obtainMerchantLogo ();
+                if(TextUtils.isEmpty ( imageUrl )) {
+                    imageUrl = Constants.COMMON_SHARE_LOGO;
+                }
+
+                String sLink = link;
+                if( TextUtils.isEmpty( sLink ) ){
+                    sLink = application.obtainMerchantUrl();
+                }
+                ShareModel msgModel = new ShareModel ();
+                msgModel.setImageUrl(imageUrl);
+                msgModel.setText(sDesc);
+                msgModel.setTitle(sTitle);
+                msgModel.setUrl(sLink);
+                //msgModel.setImageData(BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ));
+                share.initShareParams(msgModel);
+                //share.showShareWindow();
+                WindowUtils.backgroundAlpha( WebViewActivity.this , 0.4f);
+                share.showAtLocation( WebViewActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+
+            }
+        });
+
     }
 
 }

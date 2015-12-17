@@ -65,8 +65,8 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
         ButterKnife.bind(this);
         initView();
         wManager = this.getWindowManager();
-        progress = new ProgressPopupWindow ( LoginActivity.this, LoginActivity.this, wManager );
-        successProgress = new ProgressPopupWindow ( LoginActivity.this, LoginActivity.this, wManager );
+        progress = new ProgressPopupWindow ( LoginActivity.this, wManager );
+        successProgress = new ProgressPopupWindow (  LoginActivity.this, wManager );
     }
 
     @Override
@@ -196,7 +196,7 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
                 //和商家授权
                 AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "", LoginActivity.this );
                 final Map param = paramUtils.obtainParams ( account );
-                String authUrl = Constants.INTERFACE_PREFIX + "weixin/LoginAuthorize";
+                String authUrl = Constants.getINTERFACE_PREFIX() + "weixin/LoginAuthorize";
                 //String authUrl = "http://192.168.1.56:8032/weixin/LoginAuthorize";
                 HttpUtil.getInstance ().doVolley (
                         LoginActivity.this, LoginActivity.this,

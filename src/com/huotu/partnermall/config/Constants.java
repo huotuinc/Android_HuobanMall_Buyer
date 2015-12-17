@@ -3,6 +3,7 @@ package com.huotu.partnermall.config;
 import android.os.Environment;
 
 import com.huotu.partnermall.inner.BuildConfig;
+import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 
 public class Constants {
 	/**
@@ -403,13 +404,13 @@ public class Constants {
 	public static final String USER_ID     = "userid={}";
 
 	//测试
-	public static final String APP_ID = "huotu686ad1fe2bd8a02bb";
+	//public static final String APP_ID = "huotu686ad1fe2bd8a02bb";
 	//正式
 	//public static final String APP_ID = "huotuacf89c9231848c9f49";
 
 	//接口连接前缀
 	//测试
-	public static final String INTERFACE_PREFIX = "http://mallapi.huobanj.cn/";
+	//public static final String INTERFACE_PREFIX = "http://mallapi.huobanj.cn/";
 	//正式
 	//public static final String INTERFACE_PREFIX = "http://mallapi.huobanmall.com/";
 	//接口连接前缀
@@ -417,7 +418,7 @@ public class Constants {
 
 	// 平台安全码
 	//测试
-	public static final String APP_SECRET = "483686ad1fe2bd8a02bbdca24e109953a4a96c";
+	//public static final String APP_SECRET = "483686ad1fe2bd8a02bbdca24e109953a4a96c";
 	//正式
 	//public static final String APP_SECRET = "0ad8abe244331aacf89c9231848c9f49";
 
@@ -434,11 +435,13 @@ public class Constants {
 	//会员信息
 	public static final String PACKAGE_VERSION              = "package_version";
 
-//	public static String getINTERFACE_PREFIX(){
-//		if( BuildConfig.DEBUG ){
-//			return INTERFACE_PREFIX;
-//		}else{
-//			return  INTERFACE_PREFIX;
-//		}
-//	}
+	public static String getINTERFACE_PREFIX(){
+		return BuildConfig.INTERFACE_URL;
+	}
+	public static String getAPP_ID(){
+		return BuildConfig.APP_ID;
+	}
+	public static String getAPP_SECRET(){
+		return BuildConfig.APP_SECRET;
+	}
 }

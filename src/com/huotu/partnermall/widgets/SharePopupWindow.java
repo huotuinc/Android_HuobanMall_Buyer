@@ -42,62 +42,47 @@ import cn.sharesdk.wechat.moments.WechatMoments;
 /**
  * 分享弹出框
  */
-public
-class SharePopupWindow extends PopupWindow implements View.OnClickListener {
+public class SharePopupWindow extends PopupWindow implements View.OnClickListener {
 
     private Context                context;
     private PlatformActionListener platformActionListener;
     private Platform.ShareParams   shareParams;
-    private Activity               aty;
-    private
-    AssetManager am;
-    private
-    BaseApplication application;
-
+    //private Activity               aty;
+    //private AssetManager am;
+    //private BaseApplication application;
 
     public
-    SharePopupWindow ( Context cx, Activity aty, BaseApplication application ) {
+    SharePopupWindow ( Context cx) {
         this.context = cx;
-        this.aty = aty;
-        this.application = application;
+        //this.aty = aty;
+        //this.application = application;
     }
 
-    public
-    PlatformActionListener getPlatformActionListener ( ) {
-        return platformActionListener;
-    }
+//    public
+//    PlatformActionListener getPlatformActionListener ( ) {
+//        return platformActionListener;
+//    }
 
-    public
-    void setPlatformActionListener (
-            PlatformActionListener platformActionListener
-                                   ) {
+    public void setPlatformActionListener ( PlatformActionListener platformActionListener ) {
         this.platformActionListener = platformActionListener;
     }
 
-    public
-    void showShareWindow ( ) {
-        View view = LayoutInflater.from ( context ).inflate (
-                R.layout.share_layout,
-                null
-                                                            );
+    public void showShareWindow ( ) {
+        View view = LayoutInflater.from ( context ).inflate (  R.layout.share_layout, null  );
         LinearLayout shareItems = ( LinearLayout ) view.findViewById ( R.id.shareItem );
         initShareItems(shareItems);
 
         Button btn_cancel = ( Button ) view.findViewById ( R.id.btn_cancel );
-        SystemTools.setFontStyle ( btn_cancel, application );
+        //SystemTools.setFontStyle ( btn_cancel, application );
         // 取消按钮
         btn_cancel.setOnClickListener (
                 new View.OnClickListener ( ) {
-
-                    public
-                    void onClick ( View v ) {
+                    public void onClick ( View v ) {
                         // 销毁弹出框
                         dismiss ( );
-                    }
-                }
-                                      );
-        TextView shareTitle = ( TextView ) view.findViewById ( R.id.share_title );
-        SystemTools.setFontStyle ( shareTitle, application );
+                    }});
+        //TextView shareTitle = ( TextView ) view.findViewById ( R.id.share_title );
+        //SystemTools.setFontStyle ( shareTitle, application );
 
         // 设置SelectPicPopupWindow的View
         this.setContentView ( view);
@@ -109,14 +94,12 @@ class SharePopupWindow extends PopupWindow implements View.OnClickListener {
         this.setFocusable(true);
         // 设置SelectPicPopupWindow弹出窗体动画效果
         this.setAnimationStyle(R.style.AnimationPop);
-        WindowUtils.backgroundAlpha ( aty, 0.4f );
+        //WindowUtils.backgroundAlpha ( aty, 0.4f );
         // 实例化一个ColorDrawable颜色为半透明
         //ColorDrawable dw = new ColorDrawable(0xb0000000);
         // 设置SelectPicPopupWindow弹出窗体的背景
         //this.setBackgroundDrawable(dw);
-        this.setBackgroundDrawable(context.getResources().getDrawable(R.drawable
-                .share_window_bg));
-
+        this.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.share_window_bg));
     }
 
     private void initShareItems(LinearLayout shareItems) {
@@ -162,7 +145,6 @@ class SharePopupWindow extends PopupWindow implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
         share(v.getId());
         this.dismiss();
     }

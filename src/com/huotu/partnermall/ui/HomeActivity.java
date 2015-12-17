@@ -1,11 +1,12 @@
 package com.huotu.partnermall.ui;
 
 import android.app.Activity;
-import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -57,6 +59,7 @@ import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.utils.Util;
+import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import com.huotu.partnermall.widgets.UserInfoView;
@@ -88,7 +91,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     //windows类
     private WindowManager wManager;
     private SharePopupWindow share;
-    //private SwitchUserPopWin switchUser;
     public ProgressPopupWindow progress;
     public AssetManager am;
     public static ValueCallback< Uri > mUploadMessage;
@@ -113,9 +115,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     //单独加载菜单
     @Bind(R.id.menuPage)
     WebView menuView;
-    //底部菜单
-    //@Bind(R.id.menuL)
-    //RelativeLayout bottomMenuLayout;
     //侧滑登录
     @Bind(R.id.loginLayout)
     RelativeLayout loginLayout;
@@ -150,7 +149,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         resources = HomeActivity.this.getResources ( );
         mHandler = new Handler ( this );
-        share = new SharePopupWindow ( HomeActivity.this, HomeActivity.this, application );
+        share = new SharePopupWindow ( HomeActivity.this );
         wManager = this.getWindowManager();
         am = this.getAssets();
         setContentView(R.layout.activity_home);
@@ -158,7 +157,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         //设置沉浸模式
         setImmerseLayout(homeTitle);
         initView();
-        progress = new ProgressPopupWindow ( HomeActivity.this, HomeActivity.this, wManager );
+        progress = new ProgressPopupWindow ( HomeActivity.this, wManager );
     }
 
     @Override
@@ -198,8 +197,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             loginLayout.setPadding(0, statusBarHeight, 0, 0);
         }
         //初始化侧滑菜单面板
-        //application.layDrag = (DrawerLayout) this.findViewById(R.id.layDrag);
-        //application.layDrag.setDrawerListener(new DrawerLayout.DrawerListener() {
         layDrag.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -237,14 +234,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         //设置登录界面
         getAuthLayout.setVisibility(View.VISIBLE);
         //渲染logo
-        new LoadLogoImageAyscTask(resources, userLogo, application.getUserLogo(), R.drawable.ic_login_username).execute();
+        //new LoadLogoImageAyscTask(resources, userLogo, application.getUserLogo(), R.drawable.ic_login_username).execute();
         //渲染用户名
-        userName.setText(application.getUserName());
-        userName.setTextColor(resources.getColor(R.color.theme_color));
-        userType.setTextColor(SystemTools.obtainColor(application.obtainMainColor()));
+        //userName.setText(application.getUserName());
+        //userName.setTextColor(resources.getColor(R.color.theme_color));
+        //userType.setTextColor(SystemTools.obtainColor(application.obtainMainColor()));
         //获取用户等级
         StringBuilder builder = new StringBuilder();
-        builder.append(Constants.INTERFACE_PREFIX + "Weixin/GetUserLevelName");
+        builder.append(Constants.getINTERFACE_PREFIX() + "Weixin/GetUserLevelName");
         builder.append("?customerId=" + application.readMerchantId());
         builder.append("&unionId=" + application.readUserUnionId());
         builder.append("&userId=" + application.readMemberId());
@@ -264,6 +261,37 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 pageWeb.reload();
             }
         });
+
+
+        share.setPlatformActionListener(
+                new PlatformActionListener() {
+                    @Override
+                    public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+                        Message msg = Message.obtain();
+                        msg.what = Constants.SHARE_SUCCESS;
+                        msg.obj = platform;
+                        mHandler.sendMessage(msg);
+                    }
+
+                    @Override
+                    public void onError(Platform platform, int i, Throwable throwable) {
+                        Message msg = Message.obtain();
+                        msg.what = Constants.SHARE_ERROR;
+                        msg.obj = platform;
+                        mHandler.sendMessage(msg);
+                    }
+
+                    @Override
+                    public void onCancel(Platform platform, int i) {
+                        Message msg = Message.obtain();
+                        msg.what = Constants.SHARE_CANCEL;
+                        msg.obj = platform;
+                        mHandler.sendMessage(msg);
+                    }
+                }
+        );
+        share.showShareWindow();
+        share.setOnDismissListener(new PoponDismissListener( this));
 
         loadPage();
         loadMainMenu();
@@ -302,7 +330,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     private void loadPage(){
         pageWeb.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         pageWeb.setVerticalScrollBarEnabled(false);
-        pageWeb.setClickable ( true );
+        pageWeb.setClickable(true);
         pageWeb.getSettings().setUseWideViewPort(true);
         //是否需要避免页面放大缩小操作
         pageWeb.getSettings().setSupportZoom(true);
@@ -315,6 +343,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         pageWeb.getSettings().setSavePassword(true);
         pageWeb.getSettings().setLoadsImagesAutomatically(true);
         pageWeb.getSettings().setDomStorageEnabled(true);
+        pageWeb.addJavascriptInterface( HomeActivity.this ,"android");
         //首页鉴权
         AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         String url = paramUtils.obtainUrl ();
@@ -363,6 +392,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     @Override
                     public void onReceivedError( WebView view, int errorCode, String description,String failingUrl ){
                         super.onReceivedError(view, errorCode, description, failingUrl);
+                        if( refreshWebView ==null) return;
+                        refreshWebView.onRefreshComplete();
                     }
                 }
         );
@@ -487,6 +518,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 //                }
             //切换出侧滑界面
             //application.layDrag.openDrawer ( Gravity.LEFT );
+
             layDrag.openDrawer(Gravity.LEFT);
         } else {
             if( pageWeb.canGoBack() ) {
@@ -498,7 +530,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     @OnClick(R.id.sideslip_setting)
     void doSetting(){
         //切换用户
-        String url = Constants.INTERFACE_PREFIX + "weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
+        String url = Constants.getINTERFACE_PREFIX() + "weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
         AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url, HomeActivity.this );
         final String rootUrls = paramUtil.obtainUrls ( );
         HttpUtil.getInstance().doVolleyObtainUser(
@@ -514,8 +546,29 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
     }
 
+    protected void getShareContentByJS(){
+        pageWeb.loadUrl("javascript:__getShareStr();");
+        //pageWeb.loadUrl("javascript:window.android.sendShare('t','d','l','i');");
+    }
+
     @OnClick(R.id.titleRightImage)
     void doShare(){
+        String sourceUrl = pageWeb.getUrl();
+        if( !TextUtils.isEmpty( sourceUrl )){
+            try {
+                URI u = URI.create(sourceUrl);
+                String path = u.getPath().toLowerCase().trim();
+                if (path.endsWith("view.aspx")) {
+                    progress.showProgress("请稍等...");
+                    progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
+                    getShareContentByJS();
+                    return;
+                }
+            }catch (Exception ex){
+            }
+        }
+
+
         String text = application.obtainMerchantName ()+"分享";
         String imageurl = application.obtainMerchantLogo ();
         if(!imageurl.contains ( "http://" ))
@@ -538,40 +591,41 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         msgModel.setImageUrl(imageurl);
         msgModel.setText(text);
         msgModel.setTitle(title);
-        msgModel.setUrl ( url);
+        msgModel.setUrl(url);
         share.initShareParams(msgModel);
-        share.showShareWindow();
+        //share.showShareWindow();
+        WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f );
         share.showAtLocation(titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        share.setPlatformActionListener(
-                new PlatformActionListener() {
-                    @Override
-                    public void onComplete(
-                            Platform platform, int i, HashMap<String, Object> hashMap
-                    ) {
-                        Message msg = Message.obtain();
-                        msg.what = Constants.SHARE_SUCCESS;
-                        msg.obj = platform;
-                        mHandler.sendMessage(msg);
-                    }
-
-                    @Override
-                    public void onError(Platform platform, int i, Throwable throwable) {
-                        Message msg = Message.obtain();
-                        msg.what = Constants.SHARE_ERROR;
-                        msg.obj = platform;
-                        mHandler.sendMessage(msg);
-                    }
-
-                    @Override
-                    public void onCancel(Platform platform, int i) {
-                        Message msg = Message.obtain();
-                        msg.what = Constants.SHARE_CANCEL;
-                        msg.obj = platform;
-                        mHandler.sendMessage(msg);
-                    }
-                }
-        );
-        share.setOnDismissListener(new PoponDismissListener(HomeActivity.this));
+//        share.setPlatformActionListener(
+//                new PlatformActionListener() {
+//                    @Override
+//                    public void onComplete(
+//                            Platform platform, int i, HashMap<String, Object> hashMap
+//                    ) {
+//                        Message msg = Message.obtain();
+//                        msg.what = Constants.SHARE_SUCCESS;
+//                        msg.obj = platform;
+//                        mHandler.sendMessage(msg);
+//                    }
+//
+//                    @Override
+//                    public void onError(Platform platform, int i, Throwable throwable) {
+//                        Message msg = Message.obtain();
+//                        msg.what = Constants.SHARE_ERROR;
+//                        msg.obj = platform;
+//                        mHandler.sendMessage(msg);
+//                    }
+//
+//                    @Override
+//                    public void onCancel(Platform platform, int i) {
+//                        Message msg = Message.obtain();
+//                        msg.what = Constants.SHARE_CANCEL;
+//                        msg.obj = platform;
+//                        mHandler.sendMessage(msg);
+//                    }
+//                }
+//        );
+//        share.setOnDismissListener(new PoponDismissListener(HomeActivity.this));
     }
 
     @Override
@@ -785,6 +839,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         String url = paramUtils.obtainUrl ();
         //首页默认为商户站点 + index
         pageWeb.loadUrl(url);
+
+        //设置左侧图标
+        Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
+        SystemTools.loadBackground ( titleLeftImage, leftDraw );
+
         return;
 
 
@@ -819,7 +878,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
     private void refreshLeftMenu(){
-        String url = Constants.INTERFACE_PREFIX + "weixin/UpdateLeftInfo";
+        String url = Constants.getINTERFACE_PREFIX() + "weixin/UpdateLeftInfo";
         url +="?customerId="+ application.readMerchantId();
         url +="&userId="+ application.readMemberId();
         url +="&clientUserType="+ application.readMemberType();
@@ -913,7 +972,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
     private  void bindWeiXin(AccountModel model ){
-        String url = Constants.INTERFACE_PREFIX + "Account/bindWeixin";
+        String url = Constants.getINTERFACE_PREFIX() + "Account/bindWeixin";
         Map map = new HashMap();
         map.put("userid",  application.readMemberId() );
         map.put("customerid", application.readMerchantId());
@@ -1004,6 +1063,102 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 ref.get().progress.dismissView();
             }
             ToastUtils.showShortToast(ref.get(),"绑定微信操作失败。");
+        }
+    }
+
+
+
+    @JavascriptInterface
+    public void sendShare(final String title, final String desc, final String link,final String img_url){
+        if(  this==null ) return;
+        if( this.share ==null ) return;
+
+        //ToastUtils.showShortToast( ref.get() , title+desc+link+img_url);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+
+                if( HomeActivity.this ==null ) return;
+
+            if( HomeActivity.this.progress !=null ){
+                HomeActivity.this.progress.dismissView();
+            }
+
+        String sTitle = title;
+        if( TextUtils.isEmpty( sTitle ) ){
+            sTitle = application.obtainMerchantName ()+"分享";
+        }
+        String sDesc = desc;
+        if( TextUtils.isEmpty( sDesc ) ){
+            sDesc = sTitle;
+        }
+        String imageUrl = img_url; //application.obtainMerchantLogo ();
+        if(TextUtils.isEmpty ( imageUrl )) {
+            imageUrl = Constants.COMMON_SHARE_LOGO;
+        }
+
+        String sLink = link;
+        if( TextUtils.isEmpty( sLink ) ){
+            sLink = application.obtainMerchantUrl();
+        }
+        sLink = SystemTools.shareUrl(application, sLink);
+        ShareModel msgModel = new ShareModel ();
+        msgModel.setImageUrl(imageUrl);
+        msgModel.setText(sDesc);
+        msgModel.setTitle(sTitle);
+        msgModel.setUrl(sLink);
+        //msgModel.setImageData( BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ) );
+        share.initShareParams(msgModel);
+        //share.showShareWindow();
+        WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f);
+        share.showAtLocation( HomeActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+
+            }
+        });
+    }
+
+
+    //@JavascriptInterface
+    public class JSShare{
+        private WeakReference<HomeActivity> ref;
+        public JSShare(HomeActivity aty){
+            ref=new WeakReference<>(aty);
+        }
+        @JavascriptInterface
+        public void sendShare(String title,String desc,String link,String img_url){
+            if( ref.get()==null ) return;
+            if( ref.get().share ==null ) return;
+
+            //ToastUtils.showShortToast( ref.get() , title+desc+link+img_url);
+
+            String sTitle = title;
+            if( TextUtils.isEmpty( sTitle ) ){
+                sTitle = application.obtainMerchantName ()+"分享";
+            }
+            String sDesc = desc;
+            if( TextUtils.isEmpty( sDesc ) ){
+                sDesc = sTitle;
+            }
+            String imageUrl = img_url; //application.obtainMerchantLogo ();
+            if(TextUtils.isEmpty ( imageUrl )) {
+                imageUrl = Constants.COMMON_SHARE_LOGO;
+            }
+
+            String sLink = link;
+            if( TextUtils.isEmpty( sLink ) ){
+                sLink = application.obtainMerchantUrl();
+            }
+            sLink = SystemTools.shareUrl(application, sLink);
+            ShareModel msgModel = new ShareModel ();
+            msgModel.setImageUrl(imageUrl);
+            msgModel.setText(sDesc);
+            msgModel.setTitle(sTitle);
+            msgModel.setUrl(sLink);
+            msgModel.setImageData(BitmapFactory.decodeResource( ref.get().resources , R.drawable.ic_launcher ));
+            share.initShareParams(msgModel);
+            //share.showShareWindow();
+            WindowUtils.backgroundAlpha( ref.get() , 0.4f);
+            share.showAtLocation(ref.get().titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         }
     }
 }

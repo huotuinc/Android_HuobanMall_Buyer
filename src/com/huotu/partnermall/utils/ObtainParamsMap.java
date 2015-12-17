@@ -263,7 +263,7 @@ public class ObtainParamsMap {
     private String doSort(Map<String, String> map)
     {
         Map<String, String> resultMap = packMap(map);
-        resultMap.put("appSecret", Constants.APP_SECRET);
+        resultMap.put("appSecret", Constants.getAPP_SECRET());
         StringBuffer buffer = new StringBuffer();
         List arrayList = new ArrayList (resultMap.entrySet());
 

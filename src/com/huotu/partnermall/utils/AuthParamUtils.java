@@ -25,20 +25,16 @@ import java.util.TreeMap;
 /**
  * 授权参数构建类
  */
-public
-class AuthParamUtils {
+public class AuthParamUtils {
 
-    private
-    BaseApplication application;
+    private BaseApplication application;
 
     private String url;
 
     private long timestamp;
-    private
-    Context context;
+    private Context context;
 
-    public
-    AuthParamUtils(BaseApplication application, long timestamp, String url, Context context)
+    public AuthParamUtils(BaseApplication application, long timestamp, String url, Context context)
     {
         this.application = application;
         this.timestamp = timestamp;
@@ -84,7 +80,7 @@ class AuthParamUtils {
                 paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ),
                                                                 "UTF-8" ) );
                 //appid
-                paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
+                paramMap.put ( "appid", URLEncoder.encode ( Constants.getAPP_ID() , "UTF-8" ));
                 //unionid
                 paramMap.put ( "unionid", URLEncoder.encode ( application.readUserUnionId ( ), "UTF-8" ) );
 
@@ -110,7 +106,7 @@ class AuthParamUtils {
                 //1、timestamp
                 paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
                 //appid
-                paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
+                paramMap.put ( "appid", URLEncoder.encode ( Constants.getAPP_ID() , "UTF-8" ));
                 //unionid
                 paramMap.put (
                         "unionid", URLEncoder.encode (
@@ -159,7 +155,7 @@ class AuthParamUtils {
             paramMap.put ( "headimgurl", account.getAccountIcon ( ) );
             paramMap.put ( "unionid", account.getAccountUnionId ( ) );
             paramMap.put ( "timestamp", String.valueOf ( timestamp ) );
-            paramMap.put ( "appid", Constants.APP_ID );
+            paramMap.put ( "appid", Constants.getAPP_ID() );
             paramMap.put ( "version", application.getAppVersion ( context ) );
             paramMap.put ( "operation", Constants.OPERATION_CODE );
             paramMap.put ( "sign", getSign ( paramMap ) );
@@ -213,7 +209,7 @@ class AuthParamUtils {
                 //1、timestamp
                 paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
                 //appid
-                paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
+                paramMap.put ( "appid", URLEncoder.encode ( Constants.getAPP_ID() , "UTF-8" ));
                 //生成sigin
                 paramMap.put ( "sign", getSign ( paramMap ) );
 
@@ -262,7 +258,7 @@ class AuthParamUtils {
             //1、timestamp
             paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
             //appid
-            paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
+            paramMap.put ( "appid", URLEncoder.encode ( Constants.getAPP_ID() , "UTF-8" ));
             //生成sigin
             paramMap.put ( "sign", getSign ( paramMap ) );
 
@@ -311,7 +307,7 @@ class AuthParamUtils {
             //1、timestamp
             paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
             //appid
-            paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
+            paramMap.put ( "appid", URLEncoder.encode ( Constants.getAPP_ID() , "UTF-8" ));
             //生成sigin
             paramMap.put ( "sign", getSign ( paramMap ) );
 
@@ -377,7 +373,7 @@ class AuthParamUtils {
             buffer.append ( entry.getKey ()+"=" );
             buffer.append ( entry.getValue ()+"&" );
         }
-        String suffix = buffer.substring ( 0, buffer.length ()-1 )+Constants.APP_SECRET;
+        String suffix = buffer.substring ( 0, buffer.length ()-1 )+Constants.getAPP_SECRET();
         return suffix;
     }
 
@@ -387,7 +383,7 @@ class AuthParamUtils {
             paramMap.putAll(map);
         }
         paramMap.put ( "timestamp", String.valueOf ( timestamp ) );
-        paramMap.put ( "appid", Constants.APP_ID );
+        paramMap.put ( "appid", Constants.getAPP_ID() );
         paramMap.put ( "version", application.getAppVersion ( context ) );
         paramMap.put ( "operation", Constants.OPERATION_CODE );
         paramMap.put ( "sign", getSign ( paramMap ) );
@@ -426,7 +422,7 @@ class AuthParamUtils {
             //1、timestamp
             paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
             //appid
-            paramMap.put ( "appid", URLEncoder.encode ( Constants.APP_ID , "UTF-8" ));
+            paramMap.put ( "appid", URLEncoder.encode ( Constants.getAPP_ID() , "UTF-8" ));
             //生成sigin
             paramMap.put("sign", getSign(paramMap));
 

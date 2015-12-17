@@ -170,7 +170,7 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
         );
 
         if (progressPopupWindow == null) {
-            progressPopupWindow = new ProgressPopupWindow(this, this, getWindowManager());
+            progressPopupWindow = new ProgressPopupWindow( this, getWindowManager());
         }
         progressPopupWindow.showProgress("请稍等...");
         progressPopupWindow.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);

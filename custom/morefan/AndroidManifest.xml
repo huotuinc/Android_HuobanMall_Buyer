@@ -35,13 +35,11 @@
                   android:screenOrientation="portrait">
         </activity>
 
-
-        <!-- meta-data需要写在application中
-            粉猫app对应 的百度定位服务的 key 包名需和注册的一致
-        -->
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="1111111111"/>
+        <!--需要写在application中粉猫app对应的百度定位服务的key包名需和注册的一致 -->
+        <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="1111111111"/>
+        <!-- 友盟统计参数 -->
+        <meta-data android:name="UMENG_APPKEY" android:value="56721dd567e58ecd3f002991" />
+        <meta-data android:name="UMENG_CHANNEL" android:value="huotu" />
 
     </application>
 

@@ -47,7 +47,7 @@ public class UrlFilterUtils {
         this.application = application;
         this.ref = new WeakReference<Activity>(aty);
         this.wManager = wManager;
-        payProgress = new ProgressPopupWindow ( context, aty, wManager );
+        payProgress = new ProgressPopupWindow ( aty, wManager );
     }
 
     /**
@@ -148,7 +148,7 @@ public class UrlFilterUtils {
             }
             //获取用户等级
             StringBuilder builder = new StringBuilder (  );
-            builder.append ( Constants.INTERFACE_PREFIX + "order/GetOrderInfo" );
+            builder.append ( Constants.getINTERFACE_PREFIX() + "order/GetOrderInfo" );
             builder.append ( "?orderid="+tradeNo );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
             String orderUrl = param.obtainUrlOrder ( );

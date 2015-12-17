@@ -28,15 +28,15 @@ android {
         }
     }
 
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion COMPILE_SDK_VERSION.toInteger()
+    buildToolsVersion "${BUILD_TOOLS_VERSION}"
 
     defaultConfig{
         applicationId "com.huotu.partnermall.inner"
-        minSdkVersion 8
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion MINSDKVERSION.toInteger()
+        targetSdkVersion TARGETSDKVERSION.toInteger()
+        versionCode BUYER_VERSIONCODE.toInteger()
+        versionName "${BUYER_VERSIONNAME}"
         signingConfig signingConfigs.huotu
     }
 
@@ -90,28 +90,37 @@ android {
     productFlavors {
         morefan{
             applicationId 'cy.com.morefan'
-            versionCode 2
-            versionName "1.0.1"
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
         }
         yunyi{
             applicationId 'com.huotu.mall.yunyi'
-            versionCode 1
-            versionName "1.0.0"
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
         }
         yingyan{
             applicationId 'com.huotu.mall.yingyan'
-            versionCode 2
-            versionName "1.0.1"
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
         }
     }
 
     buildTypes{
+        debug{
+            signingConfig signingConfigs.huotu
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanj.cn/\"'
+            buildConfigField 'String','APP_ID','\"huotu686ad1fe2bd8a02bb\"'
+            buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
+        }
+
         release{
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.huotu
-        }
-        debug{
-            signingConfig signingConfigs.huotu
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanmall.com/\"'
+            buildConfigField 'String','APP_ID','\"huotuacf89c9231848c9f49\"'
+            buildConfigField 'String','APP_SECRET','\"0ad8abe244331aacf89c9231848c9f49\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.huobanplus.com:8081/\"'
         }
     }
 }
@@ -121,10 +130,11 @@ dependencies {
     compile 'com.huotu.android.library:libcropper:1.0'
     compile 'com.android.support:support-v4:22.1.1'
     compile 'com.handmark.library:pulltorefresh:1.1'
-    compile ('com.huotu.android.library:libCoverFlow:1.1'){
+    compile('com.huotu.android.library:libCoverFlow:1.1') {
         exclude module: 'support-v4'
     }
     compile 'com.github.mikephil.charting:MPAndroidChart:1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.umeng.analytics:analytics:5.6.1'
 }
 

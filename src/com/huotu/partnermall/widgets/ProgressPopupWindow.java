@@ -20,16 +20,16 @@ import com.huotu.partnermall.utils.WindowUtils;
 public
 class ProgressPopupWindow extends PopupWindow {
 
-    private Context       context;
+    //private Context       context;
     private Activity      aty;
     private WindowManager wManager;
     private View rootView;
 
-    public ProgressPopupWindow ( Context context, Activity aty, WindowManager wManager ) {
-        this.context = context;
+    public ProgressPopupWindow ( Activity aty, WindowManager wManager ) {
+        //this.context = context;
         this.aty = aty;
         this.wManager = wManager;
-        this.rootView = LayoutInflater.from ( context ).inflate ( R.layout.pop_progress, null );
+        this.rootView = LayoutInflater.from ( aty ).inflate ( R.layout.pop_progress, null );
     }
 
     public void showProgress ( String loadingText  ) {
