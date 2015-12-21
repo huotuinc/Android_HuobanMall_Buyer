@@ -123,6 +123,13 @@ android {
             buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.huobanplus.com:8081/\"'
         }
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each {
+            output ->
+                output.outputFile = new File(output.outputFile.parent + "\\" + project.name + "_" + variant.flavorName + "_" + variant.buildType.name + "_" + variant.versionName + ".apk")
+        }
+    }
 }
 
 dependencies {

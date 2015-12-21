@@ -60,11 +60,9 @@ public class BaseApplication extends Application {
     public MyLocationListener mMyLocationListener;
     //底部菜单是否隐藏 true显示， false隐藏
     public boolean isMenuHide = false;
-    //维护页面标题信息栈
-    /*public Stack< PageInfoModel > titleStack;*/
 
     public  AssetManager am;
-    public Typeface font;
+    //public Typeface font;
 
     public Platform plat;
 
@@ -91,7 +89,8 @@ public class BaseApplication extends Application {
         mLocationClient.registerLocationListener ( mMyLocationListener );
         mGeofenceClient = new GeofenceClient ( getApplicationContext ( ) );
         am = this.getAssets ( );
-        font = Typeface.createFromAsset ( am, "fonts/font.TTF" );
+
+        //font = Typeface.createFromAsset ( am, "fonts/font.TTF" );
         // 初始化Volley实例
         VolleyUtil.init ( this );
         // 极光初始化
@@ -320,6 +319,14 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ICON, userIcon );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN, userToken );
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID, unionid );
+    }
+
+    public void writeUserUnionId(String unionid){
+        PreferenceHelper.writeString( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_UNIONID , unionid );
+    }
+
+    public void writeUserToken(String token){
+        PreferenceHelper.writeString( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_TOKEN , token );
     }
 
     public void writeUserName(String userName){

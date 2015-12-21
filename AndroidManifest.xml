@@ -81,7 +81,7 @@
         <activity
             android:name="com.huotu.partnermall.ui.login.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/LoginTheme">
         </activity>
         <activity
             android:name="com.huotu.partnermall.ui.HomeActivity"

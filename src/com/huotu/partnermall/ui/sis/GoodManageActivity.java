@@ -938,7 +938,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                 popWin.dismiss();
             }
             if( progressPopupWindow==null){
-                progressPopupWindow= new ProgressPopupWindow( (GoodManageActivity) mContext , getWindowManager() );
+                progressPopupWindow= new ProgressPopupWindow( (GoodManageActivity) mContext  );
             }
             progressPopupWindow.showProgress("请稍等...");
             progressPopupWindow.showAtLocation( getWindow().getDecorView() , Gravity.CENTER , 0 ,0 );
@@ -1296,7 +1296,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
             msgPopWindow.dismiss();
         }
         if( progressPopupWindow==null){
-            progressPopupWindow=new ProgressPopupWindow(GoodManageActivity.this,getWindowManager());
+            progressPopupWindow=new ProgressPopupWindow(GoodManageActivity.this);
         }
         progressPopupWindow.showProgress("正在开启,请稍等...");
         progressPopupWindow.showAtLocation(getWindow().getDecorView(),Gravity.CENTER,0,0);

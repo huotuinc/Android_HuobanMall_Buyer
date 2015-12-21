@@ -54,6 +54,7 @@ import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
+import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SwitchUserPopWin;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
@@ -157,7 +158,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         //设置沉浸模式
         setImmerseLayout(homeTitle);
         initView();
-        progress = new ProgressPopupWindow ( HomeActivity.this, wManager );
+        progress = new ProgressPopupWindow ( HomeActivity.this );
     }
 
     @Override
@@ -247,7 +248,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         builder.append("&userId=" + application.readMemberId());
         AuthParamUtils param = new AuthParamUtils(application, System.currentTimeMillis(), builder.toString(), HomeActivity.this);
         String nameUrl = param.obtainUrlName();
-        HttpUtil.getInstance().doVolleyName(HomeActivity.this, application, nameUrl, userType);
+        HttpUtil.getInstance().doVolleyName( application, nameUrl, userType);
 
         //动态加载侧滑菜单
         UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am);
@@ -376,6 +377,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                         if( titleText ==null || pageWeb ==null ) return;
 
                         titleText.setText(view.getTitle());
+
+                        //boolean r = url.startsWith( application.obtainMerchantUrl() );
+                        //KJLoger.i( "------>>>>" + url );
+
                         if(url.contains ( "&back" ) || url.contains ( "?back" )){
                             mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
                         }
@@ -406,20 +411,20 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 if( titleText ==null) return;
 
                 titleText.setText(title);
-                String url = view.getUrl();
-                if(url.contains ( "&back" ) || url.contains ( "?back" ))
-                {
-                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
-                }
-                else {
-
-                    if ( pageWeb.canGoBack ( ) ) {
-                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
-                    }
-                    else {
-                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
-                    }
-                }
+//                String url = view.getUrl();
+//                if(url.contains ( "&back" ) || url.contains ( "?back" ))
+//                {
+//                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+//                }
+//                else {
+//
+//                    if ( pageWeb.canGoBack ( ) ) {
+//                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
+//                    }
+//                    else {
+//                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
+//                    }
+//                }
             }
 
             @Override
@@ -469,19 +474,13 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
     @Override
-    public boolean dispatchKeyEvent(KeyEvent event)
-    {
+    public boolean dispatchKeyEvent(KeyEvent event){
         // 2秒以内按两次推出程序
-        if (event.getKeyCode () == KeyEvent.KEYCODE_BACK
-            && event.getAction() == KeyEvent.ACTION_DOWN)
-        {
-
-            if(pageWeb.canGoBack ())
-            {
+        if (event.getKeyCode () == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if(pageWeb.canGoBack ()){
                 pageWeb.goBack ( );
             }
-            else
-            {
+            else{
                 if ( ( System.currentTimeMillis ( ) - exitTime ) > 2000 ) {
                     ToastUtils.showLongToast ( getApplicationContext ( ), "再按一次退出程序" );
                     exitTime = System.currentTimeMillis ( );
@@ -506,19 +505,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     @OnClick(R.id.titleLeftImage)
     void doBackOrMenuClick(){
         if(application.isLeftImg){
-//            case R.id.titleLeftImage:
-//            {
-//                if(application.isLeftImg)
-//                {
-//                    //切换出侧滑界面
-//                    application.layDrag.openDrawer(Gravity.LEFT);
-//                } else
-//                {
-//                    viewPage .goBack ( titleText, mHandler, application );
-//                }
-            //切换出侧滑界面
-            //application.layDrag.openDrawer ( Gravity.LEFT );
-
             layDrag.openDrawer(Gravity.LEFT);
         } else {
             if( pageWeb.canGoBack() ) {
@@ -539,7 +525,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         );
 
         //隐藏侧滑菜单
-        //application.layDrag.closeDrawer(Gravity.LEFT);
         layDrag.closeDrawer(Gravity.LEFT);
         //切换进度条
         progress.showProgress("正在获取用户数据");
@@ -548,7 +533,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
     protected void getShareContentByJS(){
         pageWeb.loadUrl("javascript:__getShareStr();");
-        //pageWeb.loadUrl("javascript:window.android.sendShare('t','d','l','i');");
     }
 
     @OnClick(R.id.titleRightImage)
@@ -668,7 +652,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             {
                 //分享成功
                 Platform platform = ( Platform ) msg.obj;
-                int action = msg.arg1;
+                //int action = msg.arg1;
                 if("WechatMoments".equals ( platform.getName () )) {
                     ToastUtils.showShortToast ( HomeActivity.this, "微信朋友圈分享成功" );
                 }
@@ -690,7 +674,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             {
                 //分享失败
                 Platform platform = ( Platform ) msg.obj;
-                int action = msg.arg1;
+                //int action = msg.arg1;
                 if("WechatMoments".equals ( platform.getName () )) {
                     ToastUtils.showShortToast ( HomeActivity.this, "微信朋友圈分享失败" );
                 }
@@ -712,7 +696,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             {
                 //分享取消
                 Platform platform = ( Platform ) msg.obj;
-                int action = msg.arg1;
+                //int action = msg.arg1;
                 if("WechatMoments".equals ( platform.getName () )) {
                     ToastUtils.showShortToast ( HomeActivity.this, "微信朋友圈分享取消" );
                 }
@@ -749,13 +733,17 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             case Constants.SWITCH_USER_NOTIFY:
             {
                 SwitchUserModel.SwitchUser user = ( SwitchUserModel.SwitchUser ) msg.obj;
+
                 //更新userId
                 application.writeMemberId(String.valueOf(user.getUserid()));
                 //更新昵称
                 application.writeUserName(user.getWxNickName());
                 application.writeUserIcon(user.getWxHeadImg());
-
+                application.writeUserUnionId( user.getWxUnionId() );
                 application.writeMemberLevel(user.getLevelName());
+
+                //记录微信关联类型（0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号）
+                application.writeMemberRelatedType(user.getRelatedType());
 
                 //更新界面
                 userName.setText(user.getWxNickName());
@@ -766,8 +754,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 SisConstant.SHOPINFO = null;
                 SisConstant.CATEGORY = null;
 
-                dealUserid();
+                //动态加载侧滑菜单
+                UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am );
+                ui.loadMenus();
 
+                dealUserid();
             }
             break;
             case Constants.LOAD_SWITCH_USER_OVER:
@@ -812,10 +803,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             case Constants.MSG_USERID_FOUND:
             {
                 progress.showProgress ( "已经获取微信的用户信息" );
-                progress.showAtLocation(
-                        this.getWindow().getDecorView(),
-                        Gravity.CENTER, 0, 0
-                );
+                progress.showAtLocation( this.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
             }
             break;
             case Constants.MSG_LOGIN:
@@ -832,7 +820,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
     protected void dealUserid(){
-
         pageWeb.clearHistory();
         pageWeb.clearCache(true);
         AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
@@ -955,10 +942,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
      * 手机绑定微信
      */
     private void callWeixin() {
-        progress.showProgress("正在调用微信授权，请稍等...");
+        progress.showProgress("正在调用微信授权,请稍等");
         progress.showAtLocation( titleLeftImage , Gravity.CENTER, 0, 0);
         //微信授权登录
-        //Platform wechat = ShareSDK.getPlatform ( HomeActivity.this, Wechat.NAME);
         autnLogin = new AutnLogin(HomeActivity.this, mHandler, titleLeftImage, application);
         autnLogin.authorize(new Wechat(HomeActivity.this));
     }
@@ -1065,8 +1051,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             ToastUtils.showShortToast(ref.get(),"绑定微信操作失败。");
         }
     }
-
-
 
     @JavascriptInterface
     public void sendShare(final String title, final String desc, final String link,final String img_url){

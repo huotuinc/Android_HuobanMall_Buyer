@@ -50,7 +50,7 @@ class PayPopWindow extends PopupWindow {
         this.application = application;
         this.payModel = payModel;
         this.context = context;
-        progress = new ProgressPopupWindow ( aty, aty.getWindowManager () );
+        progress = new ProgressPopupWindow ( aty );
         LayoutInflater inflater = ( LayoutInflater ) aty.getSystemService ( Context.LAYOUT_INFLATER_SERVICE );
 
         payView = inflater.inflate ( R.layout.pop_pay_ui, null );

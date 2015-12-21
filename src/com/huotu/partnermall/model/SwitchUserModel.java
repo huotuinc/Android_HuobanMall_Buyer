@@ -59,14 +59,13 @@ class SwitchUserModel {
         private String wxOpenId;
         private int customerid;
         private String levelName;
+        private int relatedType;
 
-        public
-        int getCoerceloseefficacy ( ) {
+        public  int getCoerceloseefficacy ( ) {
             return coerceloseefficacy;
         }
 
-        public
-        void setCoerceloseefficacy ( int coerceloseefficacy ) {
+        public void setCoerceloseefficacy ( int coerceloseefficacy ) {
             this.coerceloseefficacy = coerceloseefficacy;
         }
 
@@ -198,6 +197,14 @@ class SwitchUserModel {
         public
         void setLevelName ( String levelName ) {
             this.levelName = levelName;
+        }
+
+        public int getRelatedType() {
+            return relatedType;
+        }
+
+        public void setRelatedType(int relatedType) {
+            this.relatedType = relatedType;
         }
     }
 }

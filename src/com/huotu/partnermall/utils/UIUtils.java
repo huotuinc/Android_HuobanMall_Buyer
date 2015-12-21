@@ -136,7 +136,7 @@ class UIUtils {
 
                 //设置文本
                 TextView menuText = ( TextView ) menuLayout.findViewById ( R.id.menuText );
-                SystemTools.setFontStyle ( menuText, application );
+                //SystemTools.setFontStyle ( menuText, application );
                 menuText.setText ( menu.getMenuName ( ) );
 
                 menuLayout.setOnClickListener (
@@ -217,12 +217,11 @@ class UIUtils {
 
 
     public void addRelateTypeMenu(List<MenuBean> menus){
-        int loginType = application.readMemberLoginType();
-        if( loginType== 1){
+        //int loginType = application.readMemberLoginType();
+        //if( loginType== 1){
             int relateType = application.readMemberRelatedType();
-            if( relateType !=1 ){//0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号
-                return;
-            }
+            if( relateType == 1 ){//0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号
+
             MenuBean item = new MenuBean();
             item.setMenuGroup("888");
             item.setMenuIcon("home_menu_bindphone");
@@ -232,7 +231,7 @@ class UIUtils {
             menus.add(item);
             return;
         }//微信登录。
-        else if( loginType == 2) {
+        else if( relateType == 0) {
 //            int relateType = application.readMemberRelatedType();
 //            if (relateType != 0) {//0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号
 //                return;

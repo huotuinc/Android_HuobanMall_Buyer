@@ -71,7 +71,7 @@ class ShareAdapter extends BaseAdapter {
         }
         ImageView shareIcon = (ImageView) convertView.findViewById(R.id.share_icon);
         TextView shareTitle = (TextView ) convertView.findViewById(R.id.share_title);
-        SystemTools.setFontStyle ( shareTitle, application );
+        //SystemTools.setFontStyle ( shareTitle, application );
         shareIcon.setImageResource(shareIcons[position]);
         shareTitle.setText(shareNames[position]);
 

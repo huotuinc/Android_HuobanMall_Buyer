@@ -97,7 +97,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         ButterKnife.bind(this);
         setImmerseLayout(newtitleLayout);
         mHandler = new Handler ( this );
-        progress = new ProgressPopupWindow ( WebViewActivity.this, this.getWindowManager() );
+        progress = new ProgressPopupWindow ( WebViewActivity.this );
         share = new SharePopupWindow ( WebViewActivity.this );
         myBroadcastReceiver = new MyBroadcastReceiver(WebViewActivity.this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
         Bundle bundle = this.getIntent().getExtras();
@@ -184,9 +184,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                         if (titleText == null) return false;
 
                         SubUrlFilterUtils filter = new SubUrlFilterUtils(WebViewActivity.this,
-                                WebViewActivity.this,
-                                titleText, mHandler,
-                                application);
+                                WebViewActivity.this, mHandler, application);
                         return filter.shouldOverrideUrlBySFriend(viewPage, url);
                     }
 
@@ -209,6 +207,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                             WebView view, int errorCode, String description,
                             String failingUrl) {
                         super.onReceivedError(view, errorCode, description, failingUrl);
+                        if( refreshWebView ==null ) return;
                         refreshWebView.onRefreshComplete();
                     }
                 }
@@ -220,11 +219,11 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 super.onReceivedTitle(view, title);
 
                 if (titleText == null) {
-                    KJLoger.e("titleText=null");
+                    //KJLoger.e("titleText=null");
                     return;
                 }
                 if (title == null) {
-                    KJLoger.e("title=null");
+                    //KJLoger.e("title=null");
                     return;
                 }
 

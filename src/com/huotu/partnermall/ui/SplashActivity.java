@@ -143,7 +143,7 @@ public class SplashActivity extends BaseActivity {
                             packageUrl += "?customerId=" + application.readMerchantId() + "&dataPacketVersion=" + packageVersion;
                             AuthParamUtils paramPackage = new AuthParamUtils(application, System.currentTimeMillis(), packageUrl, SplashActivity.this);
                             final String packageUrls = paramPackage.obtainUrls();
-                            HttpUtil.getInstance().doVolleyPackage(SplashActivity.this, application, packageUrls);
+                            HttpUtil.getInstance().doVolleyPackage( application, packageUrls);
 
                             //获取商家域名
                             //获取商户站点
@@ -151,19 +151,19 @@ public class SplashActivity extends BaseActivity {
                             rootUrl += "?customerId=" + application.readMerchantId();
                             AuthParamUtils paramUtil = new AuthParamUtils(application, System.currentTimeMillis(), rootUrl, SplashActivity.this);
                             final String rootUrls = paramUtil.obtainUrls();
-                            HttpUtil.getInstance().doVolleySite(SplashActivity.this, application, rootUrls);
+                            HttpUtil.getInstance().doVolleySite( application, rootUrls);
                             //获取商户logo信息
                             String logoUrl = Constants.getINTERFACE_PREFIX() + "mall/getConfig";
                             logoUrl += "?customerId=" + application.readMerchantId();
                             AuthParamUtils paramLogo = new AuthParamUtils(application, System.currentTimeMillis(), logoUrl, SplashActivity.this);
                             final String logoUrls = paramLogo.obtainUrls();
-                            HttpUtil.getInstance().doVolleyLogo( SplashActivity.this, application, logoUrls);
+                            HttpUtil.getInstance().doVolleyLogo(  application, logoUrls);
                             //获取商户支付信息
                             String targetUrl = Constants.getINTERFACE_PREFIX() + "PayConfig?customerid=";
                             targetUrl += application.readMerchantId();//动态获取商户编号，现在暂时使用3447////application.readMerchantId ();
                             AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), targetUrl, SplashActivity.this);
                             final String url = paramUtils.obtainUrls();
-                            HttpUtil.getInstance().doVolley(SplashActivity.this, application, url);
+                            HttpUtil.getInstance().doVolley( application, url);
                         }
                     }
 
@@ -197,14 +197,11 @@ public class SplashActivity extends BaseActivity {
     protected
     void onResume ( ) {
         super.onResume ( );
-        //JPushInterface.onResume ( SplashActivity.this );
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //JPushInterface.onPause(SplashActivity.this);
     }
 
     @Override

@@ -65,13 +65,13 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
         ButterKnife.bind(this);
         initView();
         wManager = this.getWindowManager();
-        progress = new ProgressPopupWindow ( LoginActivity.this, wManager );
-        successProgress = new ProgressPopupWindow (  LoginActivity.this, wManager );
+        progress = new ProgressPopupWindow ( LoginActivity.this );
+        successProgress = new ProgressPopupWindow (  LoginActivity.this );
     }
 
     @Override
     protected void initView ( ) {
-        SystemTools.setFontStyle(loginText, application);
+        //SystemTools.setFontStyle(loginText, application);
         Drawable[] drawables = new Drawable[2];
         drawables[0] = new PaintDrawable(res.getColor(R.color.theme_color));
         drawables[1] = new PaintDrawable(SystemTools.obtainColor( application.obtainMainColor()));
@@ -197,10 +197,7 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
                 AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "", LoginActivity.this );
                 final Map param = paramUtils.obtainParams ( account );
                 String authUrl = Constants.getINTERFACE_PREFIX() + "weixin/LoginAuthorize";
-                //String authUrl = "http://192.168.1.56:8032/weixin/LoginAuthorize";
-                HttpUtil.getInstance ().doVolley (
-                        LoginActivity.this, LoginActivity.this,
-                        mHandler, application, authUrl, param, account );
+                HttpUtil.getInstance ().doVolley ( LoginActivity.this, mHandler, application, authUrl, param, account );
             }
             break;
             case Constants.MSG_USERID_NO_FOUND:

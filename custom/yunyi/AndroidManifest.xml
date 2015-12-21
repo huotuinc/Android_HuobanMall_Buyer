@@ -31,9 +31,12 @@
               android:theme="@android:style/Theme.Translucent.NoTitleBar"
               android:configChanges="keyboardHidden|orientation|screenSize"
               android:exported="true"
-              android:screenOrientation="portrait">
-    </activity>
-
+              android:screenOrientation="portrait" />
+    <!--微信支付回调-->
+    <activity
+            android:name="com.huotu.mall.yunyi.wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"/>
 
     <!-- meta-data需要写在application中
         粉猫app对应 的百度定位服务的 key 包名需和注册的一致

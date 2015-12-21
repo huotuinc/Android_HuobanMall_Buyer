@@ -48,7 +48,7 @@ class AuthMallModel  {
         private List<MenuModel> home_menus;
         private int bindUserCount;
         private int userType;
-        private int relatedType;
+        private int relatedType=-1;
 
         public int getBindUserCount() {
             return bindUserCount;

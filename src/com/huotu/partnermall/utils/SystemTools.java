@@ -179,10 +179,10 @@ public class SystemTools
      * 设置字体theme
      * @param view
      */
-    public static void setFontStyle(TextView view, BaseApplication application )
-    {
-        view.setTypeface ( application.font );
-    }
+//    public static void setFontStyle(TextView view, BaseApplication application )
+//    {
+//        view.setTypeface ( application.font );
+//    }
 
     /**
      * 封装分享链接

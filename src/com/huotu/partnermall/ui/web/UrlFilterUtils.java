@@ -47,7 +47,7 @@ public class UrlFilterUtils {
         this.application = application;
         this.ref = new WeakReference<Activity>(aty);
         this.wManager = wManager;
-        payProgress = new ProgressPopupWindow ( aty, wManager );
+        payProgress = new ProgressPopupWindow ( aty );
     }
 
     /**
@@ -152,7 +152,7 @@ public class UrlFilterUtils {
             builder.append ( "?orderid="+tradeNo );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() , context, mHandler, application, orderUrl, payModel, payProgress, titleView, wManager );
+            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() , context, mHandler, application, orderUrl, payModel, payProgress );
             return true;
 
         }

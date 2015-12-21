@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.utils.WindowUtils;
@@ -17,18 +18,17 @@ import com.huotu.partnermall.utils.WindowUtils;
 /**
  * 延时加载时的进度条
  */
-public
-class ProgressPopupWindow extends PopupWindow {
+public class ProgressPopupWindow extends PopupWindow {
 
     //private Context       context;
     private Activity      aty;
-    private WindowManager wManager;
+    //private WindowManager wManager;
     private View rootView;
 
-    public ProgressPopupWindow ( Activity aty, WindowManager wManager ) {
+    public ProgressPopupWindow ( Activity aty ) {
         //this.context = context;
         this.aty = aty;
-        this.wManager = wManager;
+        //this.wManager = wManager;
         this.rootView = LayoutInflater.from ( aty ).inflate ( R.layout.pop_progress, null );
     }
 
@@ -42,9 +42,9 @@ class ProgressPopupWindow extends PopupWindow {
         // 设置SelectPicPopupWindow的View
         this.setContentView ( rootView );
         // 设置SelectPicPopupWindow弹出窗体的宽
-        this.setWidth ( (wManager.getDefaultDisplay ().getWidth ()/10) * 8 );
+        this.setWidth ( (Constants.SCREEN_WIDTH/10) * 8 );
         // 设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight ( (wManager.getDefaultDisplay ().getWidth ()/10) * 2 );
+        this.setHeight ( (Constants.SCREEN_WIDTH/10) * 2 );
         // 设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(false);
         WindowUtils.backgroundAlpha ( aty, 0.4f );

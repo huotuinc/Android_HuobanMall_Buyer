@@ -26,27 +26,20 @@ import java.lang.ref.WeakReference;
  * 过滤UI类
  */
 public class SubUrlFilterUtils {
-
     private Context  context;
     private WeakReference<Activity> ref;
-    //private Activity aty;
-    TextView titleView;
+    //TextView titleView;
     private Handler mHandler;
-    private BaseApplication     application;
+    private BaseApplication application;
     public ProgressPopupWindow payProgress;
-    public WindowManager wManager;
 
-    public SubUrlFilterUtils (
-            Activity aty, Context context, TextView titleView, Handler mHandler,
-            BaseApplication application
-                      ) {
+    public SubUrlFilterUtils ( Activity aty, Context context, Handler mHandler, BaseApplication application ) {
         this.context = context;
-        this.titleView = titleView;
+        //this.titleView = titleView;
         this.mHandler = mHandler;
         this.application = application;
         this.ref = new WeakReference<>(aty);
-        wManager = aty.getWindowManager ( );
-        payProgress = new ProgressPopupWindow ( aty, wManager );
+        payProgress = new ProgressPopupWindow ( aty );
     }
 
     /**
@@ -91,7 +84,7 @@ public class SubUrlFilterUtils {
         {
             //支付进度
             payProgress.showProgress ( "正在启用支付模块" );
-            payProgress.showAtLocation (titleView, Gravity.CENTER, 0, 0 );
+            payProgress.showAtLocation ( ref.get().getWindow().getDecorView() , Gravity.CENTER, 0, 0 );
             //支付模块
             //获取信息
             //截取问号后面的
@@ -134,7 +127,7 @@ public class SubUrlFilterUtils {
             builder.append ( "?orderid="+tradeNo );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() , context, mHandler, application, orderUrl, payModel, payProgress, titleView, wManager );
+            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() , context, mHandler, application, orderUrl, payModel, payProgress );
             return true;
 
         }

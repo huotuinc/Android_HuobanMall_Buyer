@@ -35,17 +35,17 @@ public class SwitchUserPopWin extends PopupWindow {
     private BaseApplication application;
     private WindowManager wManager;
     private Handler mHandler;
-    private View view;
+    //private View view;
 
     public SwitchUserPopWin ( Activity context, List< SwitchUserModel.SwitchUser > users, BaseApplication application,
-                       WindowManager wManager, Handler mHandler, View view ) {
+                       WindowManager wManager, Handler mHandler ) {
 
         this.context = context;
         this.users = users;
         this.application = application;
         this.wManager = wManager;
         this.mHandler = mHandler;
-        this.view = view;
+        //this.view = view;
         this.setBackgroundDrawable( new ColorDrawable(Color.TRANSPARENT));
         this.setOutsideTouchable(true);
     }
@@ -95,7 +95,7 @@ public class SwitchUserPopWin extends PopupWindow {
                                 if ( application.readUserId().equals (String.valueOf (user.getUserid())) ) {
                                     NoticePopWindow noticePop = new NoticePopWindow ( context, "当前登录的是该用户，无需切换。" );
                                     noticePop.showNotice ( );
-                                    noticePop.showAtLocation ( view, Gravity.CENTER, 0, 0 );
+                                    noticePop.showAtLocation ( v , Gravity.CENTER, 0, 0 );
                                 }
                                 else {
                                     //切换用户通知

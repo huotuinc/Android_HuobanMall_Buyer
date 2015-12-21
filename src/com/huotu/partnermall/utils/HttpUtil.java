@@ -21,6 +21,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
@@ -58,28 +59,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.codec.binary.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 public class HttpUtil{
@@ -97,11 +76,10 @@ public class HttpUtil{
 
     /**
      * 获取数据包版本信息
-     * @param context
      * @param application
      * @param url
      */
-    public void doVolleyPackage( final Context context, final BaseApplication application, String url ) {
+    public void doVolleyPackage( final BaseApplication application, String url ) {
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
@@ -132,16 +110,15 @@ public class HttpUtil{
 
 
         });
-        Volley.newRequestQueue ( context ).add( re);
+        VolleyUtil.getRequestQueue().add(re);
     }
 
     /**
      * 根据商户编号获取商户域名
-     * @param context
      * @param application
      * @param url
      */
-    public void doVolleySite( Context context, final BaseApplication application, String url )
+    public void doVolleySite( final BaseApplication application, String url )
     {
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
@@ -163,20 +140,16 @@ public class HttpUtil{
             @Override
             public void onErrorResponse(VolleyError error) {
 
-            }
-
-
-        });
-        Volley.newRequestQueue ( context ).add( re);
+            }});
+        VolleyUtil.getRequestQueue().add(re);
     }
 
     /**
      * 获取商户logo
-     * @param context
      * @param application
      * @param url
      */
-    public void doVolleyLogo(Context context, final BaseApplication application, String url)
+    public void doVolleyLogo( final BaseApplication application, String url)
     {
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
@@ -213,15 +186,14 @@ public class HttpUtil{
 
 
         });
-        Volley.newRequestQueue ( context ).add( re);
+        VolleyUtil.getRequestQueue().add( re);
     }
     /**
      * 获取支付信息
-     * @param context
      * @param application
      * @param url
      */
-    public void doVolley(Context context, final BaseApplication application, String url ){
+    public void doVolley( final BaseApplication application, String url ){
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
@@ -257,19 +229,20 @@ public class HttpUtil{
 
 
         });
-        Volley.newRequestQueue ( context ).add( re);
+        VolleyUtil.getRequestQueue().add( re);
     }
 
-    public void doVolley( final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, Map param, final AccountModel account ){
-        final GsonRequest re = new GsonRequest (Request.Method.POST, url, AuthMallModel.class, null, param, new Response.Listener<AuthMallModel >(){
-
-
+    public void doVolley( final Activity aty,  final Handler mHandler, final BaseApplication application, String url, Map param, final AccountModel account ){
+        final GsonRequest re = new GsonRequest (
+                Request.Method.POST, url, AuthMallModel.class, null, param,
+                new Response.Listener<AuthMallModel >(){
             @Override
             public void onResponse(AuthMallModel response) {
+                if( aty ==null )return;
 
                 AuthMallModel authMallModel = new AuthMallModel();
                 authMallModel = response;
-                if(200 == authMallModel.getCode ())
+                if( authMallModel !=null && 200 == authMallModel.getCode ())
                 {
                     AuthMallModel.AuthMall mall = authMallModel.getData ();
                     if(null != mall)
@@ -324,7 +297,7 @@ public class HttpUtil{
                     }
 
                 }
-                else if(403 == authMallModel.getCode ())
+                else if( authMallModel !=null && 403 == authMallModel.getCode ())
                 {
                     //授权失败
                     Message msg = new Message();
@@ -354,7 +327,7 @@ public class HttpUtil{
 
 
         });
-        Volley.newRequestQueue(context).add( re );
+        VolleyUtil.getRequestQueue().add(re);
     }
 
     public void doVolleyObtainUser(final Activity aty, final Context context, final BaseApplication application, String url, final View view, final WindowManager wManager, final Handler mHandler)
@@ -381,12 +354,9 @@ public class HttpUtil{
                         //关闭载入数据条
                         mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
                         //弹出切换用户面板
-                        SwitchUserPopWin userPop = new SwitchUserPopWin ( aty, sourceList,  application, wManager, mHandler, view );
+                        SwitchUserPopWin userPop = new SwitchUserPopWin ( aty, sourceList,  application, wManager, mHandler );
                         userPop.initView ( );
-                        userPop.showAtLocation (
-                                view,
-                                Gravity.CENTER, 0, 0
-                        );
+                        userPop.showAtLocation ( view, Gravity.CENTER, 0, 0 );
                         userPop.setOnDismissListener ( new PoponDismissListener ( aty ) );
                     }
                     else if((null != userList) && (!userList.isEmpty ()) && (userList.size () == 1))
@@ -428,9 +398,9 @@ public class HttpUtil{
 
 
         });
-        Volley.newRequestQueue ( context ).add( re);
+        VolleyUtil.getRequestQueue().add( re);
     }
-    public void doVolleyName(Context context, final BaseApplication application, String url, final TextView userType ){
+    public void doVolleyName( final BaseApplication application, String url, final TextView userType ){
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
@@ -470,10 +440,10 @@ public class HttpUtil{
 
 
         });
-        Volley.newRequestQueue ( context ).add( re);
+        VolleyUtil.getRequestQueue().add( re);
     }
 
-    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress, final TextView titleView, final WindowManager wManager ){
+    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress  ){
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
@@ -493,9 +463,7 @@ public class HttpUtil{
                             payProgress.dismissView ( );
                             NoticePopWindow noticePop = new NoticePopWindow ( aty, "获取订单信息失败。");
                             noticePop.showNotice ( );
-                            noticePop.showAtLocation (
-                                    titleView,
-                                    Gravity.CENTER, 0, 0
+                            noticePop.showAtLocation (  aty.getWindow().getDecorView() ,  Gravity.CENTER, 0, 0
                             );
                         }
                         else
@@ -507,10 +475,7 @@ public class HttpUtil{
                             if ( null != order ) {
                                 payProgress.dismissView ( );
                                 PayPopWindow payPopWindow = new PayPopWindow ( aty, context, mHandler, application, payModel );
-                                payPopWindow.showAtLocation (
-                                        titleView,
-                                        Gravity.BOTTOM, 0, 0
-                                );
+                                payPopWindow.showAtLocation ( aty.getWindow().getDecorView() , Gravity.BOTTOM, 0, 0 );
                                 //支付
                         /*if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))
                         {
@@ -539,10 +504,7 @@ public class HttpUtil{
                         payProgress.dismissView ( );
                         NoticePopWindow noticePop = new NoticePopWindow ( aty,  "获取订单信息失败。");
                         noticePop.showNotice ();
-                        noticePop.showAtLocation (
-                                titleView,
-                                Gravity.CENTER, 0, 0
-                        );
+                        noticePop.showAtLocation ( aty.getWindow().getDecorView() , Gravity.CENTER, 0, 0 );
                     }
                 }
                 else
@@ -551,10 +513,7 @@ public class HttpUtil{
                     payProgress.dismissView ( );
                     NoticePopWindow noticePop = new NoticePopWindow (  aty,  "获取订单信息失败。");
                     noticePop.showNotice ( );
-                    noticePop.showAtLocation (
-                            titleView,
-                            Gravity.CENTER, 0, 0
-                    );
+                    noticePop.showAtLocation ( aty.getWindow().getDecorView() , Gravity.CENTER, 0, 0 );
                 }
 
             }
@@ -563,10 +522,8 @@ public class HttpUtil{
             public void onErrorResponse(VolleyError error) {
                 payProgress.dismissView ( );
             }
-
-
         });
-        Volley.newRequestQueue ( context ).add( re);
+        VolleyUtil.getRequestQueue ().add( re);
     }
 
     /**

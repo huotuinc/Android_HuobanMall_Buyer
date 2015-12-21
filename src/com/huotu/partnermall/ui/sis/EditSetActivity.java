@@ -60,7 +60,7 @@ public class EditSetActivity extends BaseActivity implements View.OnClickListene
         header_back= (Button) findViewById(R.id.header_back);
         header_back.setOnClickListener(this);
         wManager = this.getWindowManager ( );
-        progress = new ProgressPopupWindow ( EditSetActivity.this, wManager );
+        progress = new ProgressPopupWindow ( EditSetActivity.this );
         header = (RelativeLayout)findViewById(R.id.header_bar);
         header.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
     }
