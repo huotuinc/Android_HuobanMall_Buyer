@@ -3,13 +3,12 @@ package com.huotu.partnermall.utils;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.google.gson.JsonObject;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.model.AccountModel;
 
 import org.json.JSONObject;
+import org.w3c.dom.ProcessingInstruction;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -26,15 +25,12 @@ import java.util.TreeMap;
  * 授权参数构建类
  */
 public class AuthParamUtils {
-
     private BaseApplication application;
-
     private String url;
-
     private long timestamp;
     private Context context;
 
-    public AuthParamUtils(BaseApplication application, long timestamp, String url, Context context)
+    public AuthParamUtils(BaseApplication application, long timestamp, String url, Context context )
     {
         this.application = application;
         this.timestamp = timestamp;
@@ -455,4 +451,5 @@ public class AuthParamUtils {
             return null;
         }
     }
+
 }

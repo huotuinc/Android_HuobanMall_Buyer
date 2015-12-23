@@ -22,11 +22,10 @@ android:padding="@dimen/menu_item_padding">
     android:id="@+id/menuText"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_toRightOf="@+id/menuIcon"
+    android:layout_toRightOf="@id/menuIcon"
     android:layout_centerVertical="true"
     android:layout_marginLeft="20dp"
-    android:textSize="@dimen/normal_label"
-    android:textColor="@color/sideslip_menu_text_color"/>
+    android:textSize="@dimen/normal_label"/>
 <ImageView
     android:layout_width="@dimen/info_arrow_width"
     android:layout_height="@dimen/info_arrow_height"

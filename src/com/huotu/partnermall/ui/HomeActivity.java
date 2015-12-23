@@ -251,7 +251,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         HttpUtil.getInstance().doVolleyName( application, nameUrl, userType);
 
         //动态加载侧滑菜单
-        UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am);
+        UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler);
         ui.loadMenus();
         //监听web控件
         pageWeb = refreshWebView.getRefreshableView();
@@ -468,7 +468,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             mUploadMessage.onReceiveValue(result);
             mUploadMessage = null;
         }else if( requestCode == BINDPHONE_REQUESTCODE && resultCode == RESULT_OK){
-            UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am);
+            UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler);
             ui.loadMenus();
         }
     }
@@ -755,7 +755,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 SisConstant.CATEGORY = null;
 
                 //动态加载侧滑菜单
-                UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am );
+                UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler );
                 ui.loadMenus();
 
                 dealUserid();
@@ -921,7 +921,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 application.writeMenus(menus);
                 //动态加载侧滑菜单
                 mainMenuLayout.removeAllViews();
-                UIUtils ui = new UIUtils ( application, ref.get() , resources, mainMenuLayout, wManager, mHandler, am );
+                UIUtils ui = new UIUtils ( application, ref.get() , resources, mainMenuLayout, wManager, mHandler );
                 ui.loadMenus();
             }
         }
@@ -1030,7 +1030,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             application.writeMemberLoginType( 1 );
             ref.get().application.writeMemberRelatedType( phoneLoginModel.getData().getRelatedType() );//重写 关联类型=2 已经绑定
             //动态加载侧滑菜单
-            UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler, am );
+            UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler );
             ui.loadMenus();
 
             initUserInfo();
@@ -1101,49 +1101,5 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         });
     }
 
-
-    //@JavascriptInterface
-    public class JSShare{
-        private WeakReference<HomeActivity> ref;
-        public JSShare(HomeActivity aty){
-            ref=new WeakReference<>(aty);
-        }
-        @JavascriptInterface
-        public void sendShare(String title,String desc,String link,String img_url){
-            if( ref.get()==null ) return;
-            if( ref.get().share ==null ) return;
-
-            //ToastUtils.showShortToast( ref.get() , title+desc+link+img_url);
-
-            String sTitle = title;
-            if( TextUtils.isEmpty( sTitle ) ){
-                sTitle = application.obtainMerchantName ()+"分享";
-            }
-            String sDesc = desc;
-            if( TextUtils.isEmpty( sDesc ) ){
-                sDesc = sTitle;
-            }
-            String imageUrl = img_url; //application.obtainMerchantLogo ();
-            if(TextUtils.isEmpty ( imageUrl )) {
-                imageUrl = Constants.COMMON_SHARE_LOGO;
-            }
-
-            String sLink = link;
-            if( TextUtils.isEmpty( sLink ) ){
-                sLink = application.obtainMerchantUrl();
-            }
-            sLink = SystemTools.shareUrl(application, sLink);
-            ShareModel msgModel = new ShareModel ();
-            msgModel.setImageUrl(imageUrl);
-            msgModel.setText(sDesc);
-            msgModel.setTitle(sTitle);
-            msgModel.setUrl(sLink);
-            msgModel.setImageData(BitmapFactory.decodeResource( ref.get().resources , R.drawable.ic_launcher ));
-            share.initShareParams(msgModel);
-            //share.showShareWindow();
-            WindowUtils.backgroundAlpha( ref.get() , 0.4f);
-            share.showAtLocation(ref.get().titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        }
-    }
 }
 

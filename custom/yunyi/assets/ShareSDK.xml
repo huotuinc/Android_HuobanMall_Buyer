@@ -27,29 +27,6 @@
 			腾讯微博        http://dev.t.qq.com
 			QQ空间          http://connect.qq.com/intro/login/
 			微信好友        http://open.weixin.qq.com
-			Facebook       https://developers.facebook.com
-			Twitter        https://dev.twitter.com
-			人人网          http://dev.renren.com
-			开心网          http://open.kaixin001.com
-			搜狐微博        http://open.t.sohu.com
-			网易微博        http://open.t.163.com
-			豆瓣           http://developers.douban.com
-			
-			有道云笔记      http://note.youdao.com/open/developguide.html#app
-			印象笔记        https://dev.evernote.com/
-			Linkedin       https://developer.linkedin.com
-			FourSquare     https://developer.foursquare.com/
-			搜狐随身看      https://open.sohu.com/
-			Flickr         http://www.flickr.com/services/
-			Pinterest      http://developers.pinterest.com/
-			Tumblr         http://www.tumblr.com/developers
-			Dropbox        https://www.dropbox.com/developers
-			Instagram      http://instagram.com/developer#
-			VKontakte      http://vk.com/dev
-			易信好友        http://open.yixin.im/
-			明道	           http://open.mingdao.com/
-			Line           http://media.line.me/zh-hant/
-			Pocket         http://getpocket.com/developer/apps/new
     -->
     
     <ShareSDK 
@@ -137,19 +114,6 @@
 		审核的应用也可以执行分享，但是仅限于分享文字或图片，不能分享其他类型，
 		默认值为false。
 	-->
-	<Yixin 
-    	Id="29"
-        SortId="29"
-        AppId="yx0d9a9f9088ea44d78680f3274da1765f"
-        BypassApproval="true"
-        Enable="false" />
-	
-	<YixinMoments
-    	Id="30"
-        SortId="30"
-        AppId="yx0d9a9f9088ea44d78680f3274da1765f"
-        BypassApproval="true"
-        Enable="false" />
 
      <Alipay
         Id="52"

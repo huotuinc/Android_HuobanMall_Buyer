@@ -85,7 +85,6 @@
         </activity>
         <activity
             android:name="com.huotu.partnermall.ui.HomeActivity"
-            android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

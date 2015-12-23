@@ -7,4 +7,16 @@
     -->
     <dimen name="activity_horizontal_margin">64dp</dimen>
 
+    <!--菜单高度-->
+    <dimen name="menu_layout_height">35dp</dimen>
+    <dimen name="menu_item_padding">10dp</dimen>
+
+    <!--侧滑菜单图标大小-->
+    <dimen name="sideslip_menu_icon_width">20dp</dimen>
+    <dimen name="sideslip_menu_icon_height">20dp</dimen>
+
+    <!-- 信息箭头大小 -->
+    <dimen name="info_arrow_width">8dp</dimen>
+    <dimen name="info_arrow_height">13dp</dimen>
+
 </resources>

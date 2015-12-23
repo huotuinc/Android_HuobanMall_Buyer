@@ -74,14 +74,15 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/menuLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/loginLayout"
         android:background="@color/sideslip_menu_bg">
 
         <com.huotu.partnermall.widgets.BounceScrollView
             android:layout_width="match_parent"
-            android:layout_height="fill_parent" >
+            android:scrollbars="none"
+            android:layout_height="match_parent" >
             <LinearLayout
                 android:id="@+id/mainMenuLayout"
                 android:layout_width="match_parent"

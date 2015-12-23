@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.huotu.partnermall.adapter.ViewPagerAdapter;
+import com.huotu.partnermall.image.ImageUtil;
+import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
@@ -64,13 +66,10 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected
     void initView ( ) {
-
     }
 
-    private
-    void initImage ( ) {
+    private void initImage ( ) {
         try {
-            //pics = this.getResources ( ).getAssets ( ).list ( "guide" );
             LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             pics = resources.getStringArray ( R.array.guide_icon );
 

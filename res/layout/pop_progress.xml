@@ -17,6 +17,7 @@
         style="?android:progressBarStyle"/>
     <TextView
         android:id="@+id/loadingText"
+        android:layout_toRightOf="@id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

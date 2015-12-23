@@ -2,9 +2,9 @@
 <resources>
     <!--程序信息-->
     <appinfo>
-        <app_version>1.0.1</app_version>
+        <app_version>1.0.3</app_version>
         <app_name>行装</app_name>
-        <app_build>2</app_build>
+        <app_build>3</app_build>
     </appinfo>
     <!--商家信息-->
     <merchant>
