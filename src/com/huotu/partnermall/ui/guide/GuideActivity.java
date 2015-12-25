@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,7 +37,7 @@ import butterknife.ButterKnife;
  * 引导界面
  */
 public class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, Handler.Callback {
-
+    static String TAG = GuideActivity.class.getName();
     @Bind(R.id.vp_activity)
     ViewPager mVPActivity;
     private ViewPagerAdapter vpAdapter;
@@ -106,7 +107,7 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
                 views.add(iv);
             }
         } catch (Exception e) {
-            KJLoger.e ( e.getMessage () );
+            Log.e( TAG , e.getMessage());
         }
     }
 

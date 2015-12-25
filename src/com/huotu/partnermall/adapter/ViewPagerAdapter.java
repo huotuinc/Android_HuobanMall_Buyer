@@ -10,34 +10,29 @@ import java.util.List;
 /**
  * Created by Administrator on 2015/10/12.
  */
-public
-class ViewPagerAdapter extends PagerAdapter {
+public class ViewPagerAdapter extends PagerAdapter {
 
     //界面列表
     private List< View > views;
 
-    public
-    ViewPagerAdapter ( List< View > views ) {
+    public ViewPagerAdapter ( List< View > views ) {
         this.views = views;
     }
 
     //销毁arg1位置的界面
     @Override
-    public
-    void destroyItem ( View arg0, int arg1, Object arg2 ) {
+    public void destroyItem ( View arg0, int arg1, Object arg2 ) {
         ( ( ViewPager ) arg0 ).removeView ( views.get ( arg1 ) );
     }
 
     @Override
-    public
-    void finishUpdate ( View arg0 ) {
+    public void finishUpdate ( View arg0 ) {
         arg0.postInvalidate ( );
     }
 
     //获得当前界面数
     @Override
-    public
-    int getCount ( ) {
+    public int getCount ( ) {
         if (views != null)
         {
             return views.size();

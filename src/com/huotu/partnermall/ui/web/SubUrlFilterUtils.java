@@ -28,14 +28,12 @@ import java.lang.ref.WeakReference;
 public class SubUrlFilterUtils {
     private Context  context;
     private WeakReference<Activity> ref;
-    //TextView titleView;
     private Handler mHandler;
     private BaseApplication application;
     public ProgressPopupWindow payProgress;
 
     public SubUrlFilterUtils ( Activity aty, Context context, Handler mHandler, BaseApplication application ) {
         this.context = context;
-        //this.titleView = titleView;
         this.mHandler = mHandler;
         this.application = application;
         this.ref = new WeakReference<>(aty);
@@ -127,7 +125,7 @@ public class SubUrlFilterUtils {
             builder.append ( "?orderid="+tradeNo );
             AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() , context, mHandler, application, orderUrl, payModel, payProgress );
+            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() , mHandler, application, orderUrl, payModel, payProgress );
             return true;
 
         }

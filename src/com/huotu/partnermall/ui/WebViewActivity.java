@@ -3,7 +3,6 @@ package com.huotu.partnermall.ui;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,17 +34,15 @@ import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
-import com.huotu.partnermall.ui.web.SubUrlFilterUtils;
+//import com.huotu.partnermall.ui.web.SubUrlFilterUtils;
+import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AliPayUtil;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
-
 import java.util.HashMap;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -60,8 +57,6 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     //获取资源文件对象
     private Resources  resources;
     private Handler  mHandler;
-    //application
-    //private BaseApplication application;
     //web视图
     private WebView viewPage;
     private String url;
@@ -91,7 +86,6 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        //application = ( BaseApplication ) this.getApplication ( );
         resources = this.getResources ( );
         this.setContentView(R.layout.new_load_page);
         ButterKnife.bind(this);
@@ -183,8 +177,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
                         if (titleText == null) return false;
 
-                        SubUrlFilterUtils filter = new SubUrlFilterUtils(WebViewActivity.this,
-                                WebViewActivity.this, mHandler, application);
+                        //SubUrlFilterUtils filter = new SubUrlFilterUtils(WebViewActivity.this, WebViewActivity.this, mHandler, application);
+                        UrlFilterUtils filter = new UrlFilterUtils(WebViewActivity.this , mHandler , application);
                         return filter.shouldOverrideUrlBySFriend(viewPage, url);
                     }
 
@@ -412,24 +406,24 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 }
             }
             break;
-            case AliPayUtil.SDK_PAY_FLAG: {
-                PayGoodBean payGoodBean = ( PayGoodBean ) msg.obj;
-                String tag = payGoodBean.getTag ( );
-                String[] tags = tag.split ( ";" );
-                for ( String str:tags )
-                {
-                    if(str.contains ( "resultStatus" ))
-                    {
-                        String code = str.substring ( str.indexOf ( "{" )+1, str.indexOf ( "}" ) );
-                        if(!"9000".equals ( code ))
-                        {
-                            //支付宝支付信息提示
-                            ToastUtils.showShortToast ( WebViewActivity.this, "支付宝支付失败，code:"+code );
-                        }
-                    }
-                }
-            }
-            break;
+//            case AliPayUtil.SDK_PAY_FLAG: {
+//                PayGoodBean payGoodBean = ( PayGoodBean ) msg.obj;
+//                String tag = payGoodBean.getTag ( );
+//                String[] tags = tag.split ( ";" );
+//                for ( String str:tags )
+//                {
+//                    if(str.contains ( "resultStatus" ))
+//                    {
+//                        String code = str.substring ( str.indexOf ( "{" )+1, str.indexOf ( "}" ) );
+//                        if(!"9000".equals ( code ))
+//                        {
+//                            //支付宝支付信息提示
+//                            ToastUtils.showShortToast ( WebViewActivity.this, "支付宝支付失败，code:"+code );
+//                        }
+//                    }
+//                }
+//            }
+//            break;
             case Constants.PAY_NET:
             {
                 PayModel payModel = ( PayModel ) msg.obj;
@@ -437,6 +431,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 viewPage.loadUrl ( "javascript:utils.Go2Payment("+payModel.getCustomId ()+","+ payModel.getTradeNo ()+","+ payModel.getPaymentType ()+", "
                                    + "false);\n" );
             }
+            break;
             default:
                 break;
         }

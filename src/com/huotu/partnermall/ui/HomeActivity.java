@@ -7,6 +7,7 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.MenuBean;
+import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.PhoneLoginModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.SwitchUserModel;
@@ -165,6 +167,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     protected void onResume() {
         super.onResume();
         initUserInfo();
+
     }
 
     protected void initUserInfo(){
@@ -357,11 +360,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     public boolean shouldOverrideUrlLoading( WebView view, String url ) {
                         UrlFilterUtils filter = new UrlFilterUtils(
                                 HomeActivity.this,
-                                HomeActivity.this,
-                                titleText, mHandler,
-                                application,
-                                wManager
-                        );
+                                 mHandler,
+                                application  );
                         return filter.shouldOverrideUrlBySFriend(pageWeb, url);
                     }
 
@@ -803,16 +803,22 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             case Constants.MSG_USERID_FOUND:
             {
                 progress.showProgress ( "已经获取微信的用户信息" );
-                progress.showAtLocation( this.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+                progress.showAtLocation(this.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
             }
             break;
             case Constants.MSG_LOGIN:
             {
                 progress.dismissView();
                 AccountModel account = ( AccountModel ) msg.obj;
-                bindWeiXin( account );
+                bindWeiXin(account);
             }
             break;
+            case Constants.PAY_NET:
+            {
+                PayModel payModel = ( PayModel ) msg.obj;
+                //调用JS
+                pageWeb.loadUrl("javascript:utils.Go2Payment(" + payModel.getCustomId() + "," + payModel.getTradeNo() + "," + payModel.getPaymentType() + ", " + "false);\n");
+            }
             default:
                 break;
         }

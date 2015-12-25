@@ -443,7 +443,7 @@ public class HttpUtil{
         VolleyUtil.getRequestQueue().add( re);
     }
 
-    public void doVolleyPay(final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress  ){
+    public void doVolleyPay(final Activity aty, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress  ){
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
 
@@ -474,7 +474,7 @@ public class HttpUtil{
 
                             if ( null != order ) {
                                 payProgress.dismissView ( );
-                                PayPopWindow payPopWindow = new PayPopWindow ( aty, context, mHandler, application, payModel );
+                                PayPopWindow payPopWindow = new PayPopWindow ( aty,  mHandler, application, payModel );
                                 payPopWindow.showAtLocation ( aty.getWindow().getDecorView() , Gravity.BOTTOM, 0, 0 );
                                 //支付
                         /*if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))

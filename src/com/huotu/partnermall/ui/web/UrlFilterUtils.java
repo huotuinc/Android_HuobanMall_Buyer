@@ -1,16 +1,12 @@
 package com.huotu.partnermall.ui.web;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
-import android.view.WindowManager;
 import android.webkit.WebView;
-import android.widget.TextView;
-
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.model.PayModel;
@@ -22,31 +18,21 @@ import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
-
 import java.lang.ref.WeakReference;
 
 /**
  * 拦截页面操作类
  */
 public class UrlFilterUtils {
-    private Context  context;
     private WeakReference<Activity> ref;
-    TextView titleView;
     private Handler mHandler;
     private BaseApplication application;
-    //windows类
-    private WindowManager wManager;
     public ProgressPopupWindow payProgress;
 
-    public UrlFilterUtils (
-            Activity aty, Context context, TextView titleView, Handler mHandler,
-            BaseApplication application, WindowManager wManager ) {
-        this.context = context;
-        this.titleView = titleView;
+    public UrlFilterUtils ( Activity aty, Handler mHandler, BaseApplication application  ) {
         this.mHandler = mHandler;
         this.application = application;
-        this.ref = new WeakReference<Activity>(aty);
-        this.wManager = wManager;
+        this.ref = new WeakReference<>(aty);
         payProgress = new ProgressPopupWindow ( aty );
     }
 
@@ -57,7 +43,7 @@ public class UrlFilterUtils {
      * @return
      */
     public boolean shouldOverrideUrlBySFriend ( WebView view, String url ) {
-        if( ref.get() ==null)return false;
+        if( ref.get() ==null) return false;
 
         if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
             String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
@@ -72,12 +58,12 @@ public class UrlFilterUtils {
             String qq = url.substring ( 0, url.indexOf ( "&version=" ));
             //调佣本地的QQ号码
             try{
-                context.startActivity ( new Intent ( Intent.ACTION_VIEW, Uri.parse ( qq ) ) );
+                ref.get().startActivity ( new Intent ( Intent.ACTION_VIEW, Uri.parse ( qq ) ) );
             } catch ( Exception e ){
                 if(e.getMessage ().contains ( "No Activity found to handle Intent" )){
                     NoticePopWindow noticePop = new NoticePopWindow ( ref.get() , "请安装QQ客户端");
                     noticePop.showNotice ();
-                    noticePop.showAtLocation ( titleView, Gravity.CENTER, 0, 0 );
+                    noticePop.showAtLocation ( ref.get().getWindow().getDecorView() , Gravity.CENTER, 0, 0 );
                 }
             }
             return true;
@@ -99,17 +85,12 @@ public class UrlFilterUtils {
         }else if(url.contains(Constants.WEB_TAG_FINISH)){
             if(view.canGoBack())
                 view.goBack();
-
         }
         else if(url.contains ( Constants.WEB_PAY ) )
         {
-
             //支付进度
             payProgress.showProgress ( "正在加载支付信息" );
-            payProgress.showAtLocation (
-                    titleView,
-                    Gravity.CENTER, 0, 0
-                                       );
+            payProgress.showAtLocation ( ref.get().getWindow().getDecorView(),  Gravity.CENTER, 0, 0 );
             //支付模块
             //获取信息
             //截取问号后面的
@@ -150,9 +131,9 @@ public class UrlFilterUtils {
             StringBuilder builder = new StringBuilder (  );
             builder.append ( Constants.getINTERFACE_PREFIX() + "order/GetOrderInfo" );
             builder.append ( "?orderid="+tradeNo );
-            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), context );
+            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), ref.get() );
             String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() , context, mHandler, application, orderUrl, payModel, payProgress );
+            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() ,  mHandler, application, orderUrl, payModel, payProgress );
             return true;
 
         }

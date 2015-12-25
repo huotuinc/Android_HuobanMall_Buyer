@@ -26,7 +26,6 @@ public abstract class BaseActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate ( savedInstanceState );
         application = ( BaseApplication ) this.getApplication ();
         //禁止横屏
@@ -70,7 +69,6 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
         MobclickAgent.onResume(this);
     }
 

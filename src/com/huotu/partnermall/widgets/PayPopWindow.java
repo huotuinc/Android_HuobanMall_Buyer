@@ -38,18 +38,18 @@ class PayPopWindow extends PopupWindow {
     private Handler  mHandler;
     private BaseApplication application;
     private PayModel payModel;
-    private Context context;
+    //private Context context;
     public ProgressPopupWindow progress;
 
 
     public
-    PayPopWindow ( final Activity aty, final Context context, final Handler mHandler, final BaseApplication application, final PayModel payModel ) {
+    PayPopWindow ( final Activity aty, final Handler mHandler, final BaseApplication application, final PayModel payModel ) {
         super ( );
         this.aty = aty;
         this.mHandler = mHandler;
         this.application = application;
         this.payModel = payModel;
-        this.context = context;
+        //this.context = context;
         progress = new ProgressPopupWindow ( aty );
         LayoutInflater inflater = ( LayoutInflater ) aty.getSystemService ( Context.LAYOUT_INFLATER_SERVICE );
 
@@ -84,7 +84,7 @@ class PayPopWindow extends PopupWindow {
                             payModel.setAttach ( payModel.getCustomId ( ) + "_0" );
                             //添加微信回调路径
                             payModel.setNotifyurl ( application.obtainMerchantUrl ( ) + application.readWeixinNotify ( ) );
-                            PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, progress );
+                            PayFunc payFunc = new PayFunc ( aty , payModel, application, mHandler, aty, progress );
                             payFunc.wxPay ( );
                             dismissView ( );
                         }
