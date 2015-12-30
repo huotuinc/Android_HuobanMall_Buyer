@@ -1154,6 +1154,7 @@ public class GoodManageActivity extends BaseActivity implements View.OnClickList
                     GoodManageActivity.this.finish();
                 }
             }, "提示", "你是否开通店中店功能?", true);
+            msgPopWindow.setWindowsStyle();
         }
         msgPopWindow.showAtLocation( getWindow().getDecorView() , Gravity.CENTER ,0,0 );
     }

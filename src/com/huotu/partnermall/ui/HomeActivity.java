@@ -23,6 +23,8 @@ import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -61,28 +63,20 @@ import com.huotu.partnermall.utils.SwitchUserPopWin;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
-import com.huotu.partnermall.utils.Util;
 import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
-import com.huotu.partnermall.widgets.UserInfoView;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 
 public class HomeActivity extends BaseActivity implements Handler.Callback {
@@ -150,7 +144,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        resources = HomeActivity.this.getResources ( );
+        resources = HomeActivity.this.getResources();
         mHandler = new Handler ( this );
         share = new SharePopupWindow ( HomeActivity.this );
         wManager = this.getWindowManager();
@@ -167,7 +161,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     protected void onResume() {
         super.onResume();
         initUserInfo();
-
     }
 
     protected void initUserInfo(){
@@ -190,6 +183,12 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         if( share !=null){
             share.dismiss();
             share=null;
+        }
+        if( pageWeb !=null ){
+            pageWeb.setVisibility(View.GONE);
+        }
+        if(menuView !=null){
+            menuView.setVisibility(View.GONE);
         }
     }
 
@@ -237,12 +236,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         //设置登录界面
         getAuthLayout.setVisibility(View.VISIBLE);
-        //渲染logo
-        //new LoadLogoImageAyscTask(resources, userLogo, application.getUserLogo(), R.drawable.ic_login_username).execute();
-        //渲染用户名
-        //userName.setText(application.getUserName());
-        //userName.setTextColor(resources.getColor(R.color.theme_color));
-        //userType.setTextColor(SystemTools.obtainColor(application.obtainMainColor()));
         //获取用户等级
         StringBuilder builder = new StringBuilder();
         builder.append(Constants.getINTERFACE_PREFIX() + "Weixin/GetUserLevelName");
@@ -254,7 +247,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         HttpUtil.getInstance().doVolleyName( application, nameUrl, userType);
 
         //动态加载侧滑菜单
-        UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler);
+        UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, mHandler);
         ui.loadMenus();
         //监听web控件
         pageWeb = refreshWebView.getRefreshableView();
@@ -295,7 +288,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 }
         );
         share.showShareWindow();
-        share.setOnDismissListener(new PoponDismissListener( this));
+        share.setOnDismissListener(new PoponDismissListener(this));
 
         loadPage();
         loadMainMenu();
@@ -304,6 +297,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     private void loadMainMenu() {
         menuView.getSettings().setJavaScriptEnabled(true);
         menuView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        //
+        String userAgent = menuView.getSettings().getUserAgentString();
+        if( TextUtils.isEmpty(userAgent) ) {
+            userAgent = "mobile";
+        }else{
+            userAgent +=";mobile";
+        }
+        menuView.getSettings().setUserAgentString( userAgent );
 
         //首页默认为商户站点 + index
         String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
@@ -335,6 +336,15 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         pageWeb.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         pageWeb.setVerticalScrollBarEnabled(false);
         pageWeb.setClickable(true);
+        //设置app标志
+        String userAgent = pageWeb.getSettings().getUserAgentString();
+        if( TextUtils.isEmpty(userAgent) ) {
+            userAgent = "mobile";
+        }else{
+            userAgent +=";mobile";
+        }
+        pageWeb.getSettings().setUserAgentString(userAgent);
+        //
         pageWeb.getSettings().setUseWideViewPort(true);
         //是否需要避免页面放大缩小操作
         pageWeb.getSettings().setSupportZoom(true);
@@ -358,10 +368,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 new WebViewClient() {
                     //重写此方法，浏览器内部跳转
                     public boolean shouldOverrideUrlLoading( WebView view, String url ) {
-                        UrlFilterUtils filter = new UrlFilterUtils(
-                                HomeActivity.this,
-                                 mHandler,
-                                application  );
+                        UrlFilterUtils filter = new UrlFilterUtils( HomeActivity.this, mHandler, application  );
                         return filter.shouldOverrideUrlBySFriend(pageWeb, url);
                     }
 
@@ -379,7 +386,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                         titleText.setText(view.getTitle());
 
                         //boolean r = url.startsWith( application.obtainMerchantUrl() );
-                        //KJLoger.i( "------>>>>" + url );
 
                         if(url.contains ( "&back" ) || url.contains ( "?back" )){
                             mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
@@ -400,6 +406,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                         if( refreshWebView ==null) return;
                         refreshWebView.onRefreshComplete();
                     }
+
+//                    @Override
+//                    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+//                        return super.shouldInterceptRequest(view, request);
+//                    }
                 }
         );
 
@@ -409,22 +420,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 if( titleText ==null) return;
-
                 titleText.setText(title);
-//                String url = view.getUrl();
-//                if(url.contains ( "&back" ) || url.contains ( "?back" ))
-//                {
-//                    mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
-//                }
-//                else {
-//
-//                    if ( pageWeb.canGoBack ( ) ) {
-//                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
-//                    }
-//                    else {
-//                        mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
-//                    }
-//                }
             }
 
             @Override
@@ -468,7 +464,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             mUploadMessage.onReceiveValue(result);
             mUploadMessage = null;
         }else if( requestCode == BINDPHONE_REQUESTCODE && resultCode == RESULT_OK){
-            UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler);
+            UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, mHandler);
             ui.loadMenus();
         }
     }
@@ -498,7 +494,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             return true;
         }
-        // TODO Auto-generated method stub
         return super.dispatchKeyEvent ( event );
     }
 
@@ -652,7 +647,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             {
                 //分享成功
                 Platform platform = ( Platform ) msg.obj;
-                //int action = msg.arg1;
                 if("WechatMoments".equals ( platform.getName () )) {
                     ToastUtils.showShortToast ( HomeActivity.this, "微信朋友圈分享成功" );
                 }
@@ -674,7 +668,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             {
                 //分享失败
                 Platform platform = ( Platform ) msg.obj;
-                //int action = msg.arg1;
                 if("WechatMoments".equals ( platform.getName () )) {
                     ToastUtils.showShortToast ( HomeActivity.this, "微信朋友圈分享失败" );
                 }
@@ -696,7 +689,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             {
                 //分享取消
                 Platform platform = ( Platform ) msg.obj;
-                //int action = msg.arg1;
                 if("WechatMoments".equals ( platform.getName () )) {
                     ToastUtils.showShortToast ( HomeActivity.this, "微信朋友圈分享取消" );
                 }
@@ -733,7 +725,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             case Constants.SWITCH_USER_NOTIFY:
             {
                 SwitchUserModel.SwitchUser user = ( SwitchUserModel.SwitchUser ) msg.obj;
-
                 //更新userId
                 application.writeMemberId(String.valueOf(user.getUserid()));
                 //更新昵称
@@ -755,7 +746,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 SisConstant.CATEGORY = null;
 
                 //动态加载侧滑菜单
-                UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler );
+                UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, mHandler );
                 ui.loadMenus();
 
                 dealUserid();
@@ -838,32 +829,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         SystemTools.loadBackground ( titleLeftImage, leftDraw );
 
         return;
-
-
-//        String url = pageWeb.getUrl();
-//        if( TextUtils.isEmpty( url )) return;
-//        String hurl = Util.UrlPage(url);
-//        Map<String,String> para = Util.URLRequest(url);
-//        if( para ==null || para.size()<1 ) return;
-//        boolean isexist = false;
-//        String p="";
-//        for( String k : para.keySet()){
-//            if(!TextUtils.isEmpty(p) ) {
-//                p+="&";
-//            }
-//
-//            if( k.toLowerCase().equals("userid") || k.toLowerCase().equals("buserid") ){
-//                p+= k+"="+ application.readMemberId();
-//                isexist=true;
-//            }else {
-//                p += k + "=" + para.get(k);
-//            }
-//        }
-//        if( !isexist) return;
-//
-//        String nurl = hurl+"?"+ p;
-//        pageWeb.loadUrl( nurl );
-
     }
 
     private void openSis(){
@@ -888,10 +853,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         VolleyUtil.getRequestQueue().add(request);
     }
 
-    class MyRefreshMenuListener implements Response.Listener<UpdateLeftInfoModel>{
-        WeakReference<Activity> ref;
-        public MyRefreshMenuListener(Activity aty){
-            ref= new WeakReference<Activity>(aty);
+    static class MyRefreshMenuListener implements Response.Listener<UpdateLeftInfoModel>{
+        WeakReference<HomeActivity> ref;
+        public MyRefreshMenuListener(HomeActivity aty){
+            ref= new WeakReference<>(aty);
         }
 
         @Override
@@ -900,15 +865,15 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             if( updateLeftInfoModel==null ) return;
 
             if( updateLeftInfoModel.getCode() != 200 ){
-                ToastUtils.showShortToast(application, updateLeftInfoModel.getMsg());
+                ToastUtils.showShortToast( ref.get().application , updateLeftInfoModel.getMsg());
                 return;
             }
 
             if( updateLeftInfoModel.getData()==null ) return;
             if( updateLeftInfoModel.getData().getMenusCode()==0) return;
 
-            application.writeMemberLevel( updateLeftInfoModel.getData().getLevelName() );
-            userType.setText(application.readMemberLevel());
+            ref.get().application.writeMemberLevel(updateLeftInfoModel.getData().getLevelName());
+            ref.get().userType.setText( ref.get().application.readMemberLevel());
 
             //设置侧滑栏菜单
             List<MenuBean > menus = new ArrayList< MenuBean >(  );
@@ -924,16 +889,16 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 menus.add ( menu );
             }
             if(null != menus && !menus.isEmpty ()) {
-                application.writeMenus(menus);
+                ref.get().application.writeMenus(menus);
                 //动态加载侧滑菜单
-                mainMenuLayout.removeAllViews();
-                UIUtils ui = new UIUtils ( application, ref.get() , resources, mainMenuLayout, wManager, mHandler );
+                ref.get().mainMenuLayout.removeAllViews();
+                UIUtils ui = new UIUtils (  ref.get().application, ref.get() ,  ref.get().resources,  ref.get().mainMenuLayout,  ref.get().mHandler );
                 ui.loadMenus();
             }
         }
     }
 
-    class MyRefreshMenuErrorListener implements Response.ErrorListener{
+    static class MyRefreshMenuErrorListener implements Response.ErrorListener{
         WeakReference<HomeActivity> ref;
         public MyRefreshMenuErrorListener(HomeActivity aty){
             ref = new WeakReference<HomeActivity>(aty);
@@ -951,7 +916,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         progress.showProgress("正在调用微信授权,请稍等");
         progress.showAtLocation( titleLeftImage , Gravity.CENTER, 0, 0);
         //微信授权登录
-        autnLogin = new AutnLogin(HomeActivity.this, mHandler, titleLeftImage, application);
+        autnLogin = new AutnLogin( mHandler);
         autnLogin.authorize(new Wechat(HomeActivity.this));
     }
 
@@ -994,7 +959,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         progress.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
     }
 
-    class MyBindWeiXinListener implements Response.Listener<PhoneLoginModel>{
+    static class MyBindWeiXinListener implements Response.Listener<PhoneLoginModel>{
         WeakReference<HomeActivity> ref;
         AccountModel weixinModel;
         MyBindWeiXinListener(HomeActivity act , AccountModel model ){
@@ -1026,24 +991,24 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             ToastUtils.showShortToast(ref.get(), "绑定操作成功");
 
-            application.writeMemberInfo (
+            ref.get().application.writeMemberInfo (
                     phoneLoginModel.getData().getNickName() , String.valueOf( phoneLoginModel.getData().getUserid() ),
                     phoneLoginModel.getData().getHeadImgUrl() , weixinModel.getAccountToken (),
                     weixinModel.getAccountUnionId ()
             );
-            application.writeMemberLevel( phoneLoginModel.getData().getLevelName());
+            ref.get().application.writeMemberLevel( phoneLoginModel.getData().getLevelName());
             //记录登录类型(1:微信登录，2：手机登录)
-            application.writeMemberLoginType( 1 );
+            ref.get().application.writeMemberLoginType( 1 );
             ref.get().application.writeMemberRelatedType( phoneLoginModel.getData().getRelatedType() );//重写 关联类型=2 已经绑定
             //动态加载侧滑菜单
-            UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, wManager, mHandler );
+            UIUtils ui = new UIUtils (  ref.get().application,  ref.get() ,  ref.get().resources,  ref.get().mainMenuLayout,  ref.get().mHandler );
             ui.loadMenus();
 
-            initUserInfo();
+            ref.get().initUserInfo();
         }
     }
 
-    class MyBindWeiXinErrorListener implements Response.ErrorListener{
+    static class MyBindWeiXinErrorListener implements Response.ErrorListener{
         WeakReference<HomeActivity> ref;
         public MyBindWeiXinErrorListener(HomeActivity act){
             ref=new WeakReference<HomeActivity>(act);

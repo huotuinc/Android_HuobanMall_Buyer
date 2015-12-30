@@ -157,6 +157,15 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         viewPage.setVerticalScrollBarEnabled(false);
         viewPage.setClickable(true);
         viewPage.getSettings().setUseWideViewPort(true);
+
+        String userAgent = viewPage.getSettings().getUserAgentString();
+        if( TextUtils.isEmpty(userAgent) ) {
+            userAgent = "mobile";
+        }else{
+            userAgent +=";mobile";
+        }
+        viewPage.getSettings().setUserAgentString(userAgent);
+
         //是否需要避免页面放大缩小操作
         viewPage.getSettings().setSupportZoom(true);
         viewPage.getSettings().setBuiltInZoomControls(true);
@@ -213,11 +222,9 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 super.onReceivedTitle(view, title);
 
                 if (titleText == null) {
-                    //KJLoger.e("titleText=null");
                     return;
                 }
                 if (title == null) {
-                    //KJLoger.e("title=null");
                     return;
                 }
 
@@ -258,12 +265,13 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     @OnClick(R.id.titleLeftImage)
     void doBack()
     {
-        if(viewPage.canGoBack ()){
-            viewPage.goBack ( );
-        }else{
-            //关闭界面
-            WebViewActivity.this.finish ();
-        }
+//        if(viewPage.canGoBack ()){
+//            viewPage.goBack ( );
+//        }else{
+//            //关闭界面
+//            WebViewActivity.this.finish ();
+//        }
+        WebViewActivity.this.finish ();
     }
 
     protected void getShareContentByJS(){
@@ -317,17 +325,20 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         if (event.getKeyCode () == KeyEvent.KEYCODE_BACK
             && event.getAction() == KeyEvent.ACTION_DOWN)
         {
-            if(viewPage.canGoBack ())
-            {
-                viewPage.goBack ( );
-            }
-            else {
-                //关闭当前页
-                closeSelf ( WebViewActivity.this );
-            }
+//            if(viewPage.canGoBack ())
+//            {
+//                viewPage.goBack ( );
+//            }
+//            else {
+//                //关闭当前页
+//                closeSelf ( WebViewActivity.this );
+//            }
+
+            closeSelf(WebViewActivity.this);
+
             return true;
         }
-        // TODO Auto-generated method stub
+
         return super.dispatchKeyEvent ( event );
     }
 
@@ -446,6 +457,9 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         ButterKnife.unbind(this);
         if( null != myBroadcastReceiver){
             myBroadcastReceiver.unregisterReceiver();
+        }
+        if( viewPage !=null ){
+            viewPage.setVisibility(View.GONE);
         }
     }
 

@@ -15,26 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.huotu.partnermall.BaseApplication;
-import com.huotu.partnermall.adapter.ShareAdapter;
 import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.image.LruImageCache;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ShareModel;
-import com.huotu.partnermall.utils.DensityUtils;
-import com.huotu.partnermall.utils.SystemTools;
-import com.huotu.partnermall.utils.WindowUtils;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
-import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;

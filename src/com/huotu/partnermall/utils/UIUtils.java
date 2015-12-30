@@ -40,17 +40,14 @@ public class UIUtils {
     private Context context;
     private Resources resources;
     private LinearLayout mainMenuLayout;
-    private WindowManager wManager;
     private Handler mHandler;
 
-    public UIUtils (  BaseApplication application, Context context, Resources resources, LinearLayout
-            mainMenuLayout, WindowManager wManager, Handler mHandler ) {
+    public UIUtils (  BaseApplication application, Context context, Resources resources, LinearLayout  mainMenuLayout,  Handler mHandler ) {
         this.application = application;
         this.context = context;
         this.resources = resources;
         this.mainMenuLayout = mainMenuLayout;
         this.mHandler = mHandler;
-        this.wManager = wManager;
     }
 
     /**
@@ -58,24 +55,24 @@ public class UIUtils {
      */
     public
     void loadMenus ( ) {
-        String menuStr = application.readMenus ( );
+        String menuStr = application.readMenus();
         //json格式转成list
         Gson gson = new Gson();
-        List<MenuBean> menuList = gson.fromJson( menuStr, new TypeToken< List< MenuBean > > () {}.getType());
+        List<MenuBean> menuList = gson.fromJson(menuStr, new TypeToken<List<MenuBean>>() {
+        }.getType());
         //
-        if ( null == menuList || menuList.isEmpty ( ) ) {
-            KJLoger.e ( "未加载商家定义的菜单" );
-        }
-        else {
+        if (null == menuList || menuList.isEmpty()) {
+            KJLoger.e("未加载商家定义的菜单");
+        } else {
             //根据登录类型，添加相关的绑定菜单
             addRelateTypeMenu(menuList);
             //按分组排序
-            menuSort ( menuList );
+            menuSort(menuList);
 
-            int size = menuList.size ( );
-            for ( int i = 0 ; i < size ; i++ ) {
+            int size = menuList.size();
+            for (int i = 0; i < size; i++) {
                 int leftWidth = Constants.SCREEN_WIDTH * 80 / 100;
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(leftWidth, (wManager.getDefaultDisplay().getHeight() / 15));
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(leftWidth, (Constants.SCREEN_HEIGHT / 15));
 
                 //取出分组
                 String menuGroup = menuList.get(i).getMenuGroup();
@@ -164,8 +161,6 @@ public class UIUtils {
                                     Message msg = mHandler.obtainMessage(Constants.LOAD_PAGE_MESSAGE_TAG, application.obtainMerchantUrl() + url);
                                     mHandler.sendMessage(msg);
                                 }
-                                //隐藏侧滑菜单
-                                //application.layDrag.closeDrawer ( Gravity.LEFT );
                             }
                         }
                 );
@@ -174,7 +169,6 @@ public class UIUtils {
 
             }
         }
-
     }
 
     /**
@@ -184,7 +178,6 @@ public class UIUtils {
      */
     private void menuSort(List<MenuBean> menus)
     {
-
         ComparatorMenu comparatorMenu = new ComparatorMenu ();
         Collections.sort ( menus, comparatorMenu );
     }
@@ -201,17 +194,6 @@ public class UIUtils {
             return menu01.getMenuGroup ( ).compareTo ( menu02.getMenuGroup () );
         }
     }
-
-
-    public void loadMainMenu(List<MainMenuModel> menuList, LinearLayout bottomMenuLayout)
-    {
-        if(null == menuList || menuList.isEmpty ())
-        {
-            KJLoger.i ( "商户底部菜单初始化失败。" );
-        }
-
-    }
-
 
     public void addRelateTypeMenu(List<MenuBean> menus){
         //int loginType = application.readMemberLoginType();

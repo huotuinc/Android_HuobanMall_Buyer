@@ -260,7 +260,6 @@ public class Constants {
 	public static final String WEB_TAG_USERINFO     = "partnermall520://userinfo?";
 	//联系客服
 	public static final String WEB_CONTACT          = "mqqwpa://im/chat";
-
 	//支付
 	public static final String WEB_PAY      = "/Mall/AppAlipay.aspx";
 	//鉴权失效

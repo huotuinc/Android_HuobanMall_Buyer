@@ -13,9 +13,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.AccountModel;
@@ -31,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 
 /**
@@ -46,10 +44,7 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
     public ProgressPopupWindow successProgress;
     //windows类
     WindowManager wManager;
-
     public NoticePopWindow noticePop;
-    @Bind(R.id.loginText)
-    TextView loginText;
     public AssetManager am;
     public Resources res;
     MsgPopWindow msgPopWindow;
@@ -109,16 +104,19 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
     @OnClick(R.id.loginL)
     void doLogin(){
         //
-        progress.showProgress ( null );
+        progress.showProgress(null);
         progress.showAtLocation ( loginL, Gravity.CENTER, 0, 0 );
         //微信授权登录
-        login = new AutnLogin ( LoginActivity.this, mHandler, loginL, application );
-        login.authorize(new Wechat(LoginActivity.this));
+        login = new AutnLogin (  mHandler );
+        //login.authorize(new Wechat(LoginActivity.this));
+        login.authorize(ShareSDK.getPlatform( Wechat.NAME ));
         loginL.setClickable(false);
     }
     
     @Override
     public boolean handleMessage ( Message msg ) {
+        loginL.setClickable(true);
+
         switch ( msg.what )
         {
             //授权登录
@@ -150,12 +148,6 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
                 //if("cn.sharesdk.wechat.utils.WechatClientNotExistException".equals ( throwable.toString () ))
                 if( throwable instanceof cn.sharesdk.wechat.utils.WechatClientNotExistException ){
                     //手机没有安装微信客户端
-//                    noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "手机没有安装微信客户端");
-//                    noticePop.showNotice ();
-//                    noticePop.showAtLocation (
-//                            findViewById ( R.id.loginL ),
-//                            Gravity.CENTER, 0, 0
-//                                             );
                     phoneLogin("您的设备没有安装微信客户端,是否通过手机登录?");
                 }
                 else {
@@ -170,15 +162,6 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
             break;
             case Constants.MSG_AUTH_CANCEL:
             {
-//                loginL.setClickable ( true );
-//                //提示取消授权
-//                progress.dismissView ();
-//                noticePop = new NoticePopWindow ( LoginActivity.this, LoginActivity.this, wManager, "微信授权被取消");
-//                noticePop.showNotice ( );
-//                noticePop.showAtLocation (
-//                        findViewById ( R.id.loginL ),
-//                        Gravity.CENTER, 0, 0
-//                                         );
                 phoneLogin("你已经取消微信授权,是否通过手机登录?");
             }
             break;

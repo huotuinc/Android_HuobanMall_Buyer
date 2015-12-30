@@ -2,7 +2,6 @@ package com.huotu.partnermall;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
@@ -13,6 +12,7 @@ import android.os.Build;
 import android.support.v4.widget.DrawerLayout;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -21,6 +21,7 @@ import com.baidu.location.LocationClient;
 import com.google.gson.Gson;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
+import com.huotu.partnermall.inner.BuildConfig;
 import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
@@ -28,6 +29,7 @@ import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.utils.CrashHandler;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
+import com.squareup.leakcanary.LeakCanary;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import java.util.List;
 import cn.sharesdk.framework.Platform;
@@ -39,8 +41,6 @@ import cn.sharesdk.wechat.friends.Wechat;
  * Application
  */
 public class BaseApplication extends Application {
-
-    //public DrawerLayout layDrag;
     //定位句柄
     //public Intent locationI = new Intent ( );
     //定位类型
@@ -56,15 +56,14 @@ public class BaseApplication extends Application {
     //城市
     public String             city;
     public LocationClient     mLocationClient;
-    public GeofenceClient     mGeofenceClient;
+    //public GeofenceClient     mGeofenceClient;
     public MyLocationListener mMyLocationListener;
     //底部菜单是否隐藏 true显示， false隐藏
     public boolean isMenuHide = false;
 
-    public  AssetManager am;
-    //public Typeface font;
+    //public  AssetManager am;
 
-    public Platform plat;
+    //public Platform plat;
 
     /**
      * 是否是左划或者返回
@@ -72,8 +71,6 @@ public class BaseApplication extends Application {
      * false 返回
      */
     public boolean isLeftImg = true;
-
-    public IWXAPI wApi;
 
     @Override
     public void onConfigurationChanged ( Configuration newConfig ) {
@@ -84,13 +81,17 @@ public class BaseApplication extends Application {
     public
     void onCreate ( ) {
         super.onCreate ( );
+
+        if(BuildConfig.DEBUG){
+            LeakCanary.install(this);//内存检测工具
+        }
+
         mLocationClient = new LocationClient ( this.getApplicationContext ( ) );
         mMyLocationListener = new MyLocationListener ( );
         mLocationClient.registerLocationListener ( mMyLocationListener );
-        mGeofenceClient = new GeofenceClient ( getApplicationContext ( ) );
-        am = this.getAssets ( );
+        //mGeofenceClient = new GeofenceClient ( getApplicationContext ( ) );
+        //am = this.getAssets ( );
 
-        //font = Typeface.createFromAsset ( am, "fonts/font.TTF" );
         // 初始化Volley实例
         VolleyUtil.init ( this );
         // 极光初始化
@@ -100,7 +101,6 @@ public class BaseApplication extends Application {
         ShareSDK.initSDK ( getApplicationContext ( ) );
         solveAsyncTaskOnPostExecuteBug ( );
 
-        //titleStack = new Stack< PageInfoModel > ( );
         //加载异常处理模块
         CrashHandler crashHandler = CrashHandler.getInstance ( );
         crashHandler.init ( getApplicationContext ( ) );
@@ -115,7 +115,7 @@ public class BaseApplication extends Application {
     @Override
     public
     void onTerminate ( ) {
-        super.onTerminate ( );
+        super.onTerminate();
     }
 
     /**
@@ -150,13 +150,6 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString( getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID  );
     }
 
-//    public String readCurrentUrl(){
-//        return PreferenceHelper.readString (
-//                getApplicationContext ( ), Constants.BASE_INFO,
-//                Constants.CURRENT_URL
-//                                           );
-//    }
-
     public void writeMemberId(String userId){
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_ID, userId );
     }
@@ -164,28 +157,11 @@ public class BaseApplication extends Application {
     /**
      * 判断网络是否连接
      */
-    public static boolean checkNet(Context context)
-    {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean checkNet(Context context){
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo ( );
         return info != null;// 网络是否连接
     }
-
-//    /**
-//     * 判断是否为wifi联网
-//     */
-//    public static boolean isWiFi(Context cxt)
-//    {
-//        ConnectivityManager cm = (ConnectivityManager) cxt
-//                .getSystemService(Context.CONNECTIVITY_SERVICE);
-//        // wifi的状态：ConnectivityManager.TYPE_WIFI
-//        // 3G的状态：ConnectivityManager.TYPE_MOBILE
-//        NetworkInfo.State state = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-//                                    .getState ( );
-//        return NetworkInfo.State.CONNECTED == state;
-//    }
-
     /**
      * 获取当前应用程序的版本号
      */
@@ -198,12 +174,10 @@ public class BaseApplication extends Application {
                     context.getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e)
         {
-            KJLoger.e ( e.getMessage ( ) );
+            Log.e( BaseApplication.class.getName() ,e.getMessage());
         }
         return version;
     }
-
-
     /**
      * 检测APP端是否已经设置商户信息
      * @return
@@ -245,32 +219,6 @@ public class BaseApplication extends Application {
             return false;
         }
     }
-
-//    public String createUrl(String suffix)
-//    {
-//        return obtainMerchantUrl() + suffix;
-//    }
-
-    /**
-     * 判断是否配置菜单信息
-     * @return
-     */
-//    public boolean checkMenuInfo()
-//    {
-//        //菜单信息
-//        String menuStr = PreferenceHelper.readString ( getApplicationContext ( ), Constants
-//                                                               .MERCHANT_INFO, Constants
-//                                                               .MERCHANT_INFO_MENUS );
-//        if(null != menuStr && !"".equals ( menuStr.trim () ))
-//        {
-//            return  true;
-//        }
-//        else
-//        {
-//            return false;
-//        }
-//    }
-
     /**
      * 写入商户信息到文件
      * @param merchant
@@ -428,15 +376,16 @@ public class BaseApplication extends Application {
     //登出
     public void logout()
     {
-        if( plat ==null ) {
-            plat = ShareSDK.getPlatform(Wechat.NAME);
+//        if( plat ==null ) {
+//            plat = ShareSDK.getPlatform(Wechat.NAME);
+//        }
+
+        Platform platform =ShareSDK.getPlatform(Wechat.NAME);
+        //取消授权
+        if(null != platform) {
+            platform.removeAccount();
         }
 
-        //取消授权
-        if(null != plat)
-        {
-            plat.removeAccount ();
-        }
         PreferenceHelper.clean ( getApplicationContext (), Constants.MEMBER_INFO );
 
         SisConstant.CATEGORY = null;
@@ -507,19 +456,6 @@ public class BaseApplication extends Application {
         }
     }
 
-//    public boolean checkSysInfo()
-//    {
-//        String packageStr = PreferenceHelper.readString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE );
-//        if(TextUtils.isEmpty ( packageStr ))
-//        {
-//            return false;
-//        }
-//        else
-//        {
-//            return true;
-//        }
-//    }
-
     public void writeInitInfo(String initStr)
     {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.FIRST_OPEN, initStr );
@@ -572,24 +508,6 @@ public class BaseApplication extends Application {
 //        return PreferenceHelper.readString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_SECOND );
 //    }
 
-//    public void writeSysInfo(SysModel sysModel)
-//    {
-//        if(null != sysModel)
-//        {
-//            PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE, sysModel.getPackageStr () );
-//            PreferenceHelper.writeString ( getApplicationContext (), Constants.SYS_INFO, Constants.SYS_MENU, sysModel.getSysMenu () );
-//        }
-//    }
-
-//    public String readSysInfo()
-//    {
-//        return PreferenceHelper.readString (  getApplicationContext (), Constants.SYS_INFO, Constants.SYS_PACKAGE );
-//    }
-
-//    public String readSysMenu()
-//    {
-//        return PreferenceHelper.readString (  getApplicationContext (), Constants.SYS_INFO, Constants.SYS_MENU );
-//    }
 
     //获取微信key
     public String readWeixinKey()

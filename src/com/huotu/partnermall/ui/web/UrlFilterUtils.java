@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.webkit.WebView;
 import com.huotu.partnermall.BaseApplication;
@@ -124,7 +125,7 @@ public class UrlFilterUtils {
                 }
                 else
                 {
-                    KJLoger.i ( "支付参数出错." );
+                    Log.i( UrlFilterUtils.class.getName() ,"支付参数出错.");
                 }
             }
             //获取用户等级
