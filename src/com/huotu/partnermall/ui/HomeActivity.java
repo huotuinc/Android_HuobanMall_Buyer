@@ -237,14 +237,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         //设置登录界面
         getAuthLayout.setVisibility(View.VISIBLE);
         //获取用户等级
-        StringBuilder builder = new StringBuilder();
-        builder.append(Constants.getINTERFACE_PREFIX() + "Weixin/GetUserLevelName");
-        builder.append("?customerId=" + application.readMerchantId());
-        builder.append("&unionId=" + application.readUserUnionId());
-        builder.append("&userId=" + application.readMemberId());
-        AuthParamUtils param = new AuthParamUtils(application, System.currentTimeMillis(), builder.toString(), HomeActivity.this);
-        String nameUrl = param.obtainUrlName();
-        HttpUtil.getInstance().doVolleyName( application, nameUrl, userType);
+//        StringBuilder builder = new StringBuilder();
+//        builder.append(Constants.getINTERFACE_PREFIX() + "Weixin/GetUserLevelName");
+//        builder.append("?customerId=" + application.readMerchantId());
+//        builder.append("&unionId=" + application.readUserUnionId());
+//        builder.append("&userId=" + application.readMemberId());
+//        AuthParamUtils param = new AuthParamUtils(application, System.currentTimeMillis(), builder.toString(), HomeActivity.this);
+//        String nameUrl = param.obtainUrlName();
+//        HttpUtil.getInstance().doVolleyName( application, nameUrl, userType);
 
         //动态加载侧滑菜单
         UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, mHandler);
@@ -515,7 +515,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url, HomeActivity.this );
         final String rootUrls = paramUtil.obtainUrls ( );
         HttpUtil.getInstance().doVolleyObtainUser(
-                HomeActivity.this, HomeActivity.this, application,
+                HomeActivity.this, application,
                 rootUrls, titleRightImage, wManager, mHandler
         );
 

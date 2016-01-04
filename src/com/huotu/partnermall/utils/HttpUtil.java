@@ -330,7 +330,7 @@ public class HttpUtil{
         VolleyUtil.getRequestQueue().add(re);
     }
 
-    public void doVolleyObtainUser(final Activity aty, final Context context, final BaseApplication application, String url, final View view, final WindowManager wManager, final Handler mHandler)
+    public void doVolleyObtainUser(final Activity aty,  final BaseApplication application, String url, final View view, final WindowManager wManager, final Handler mHandler)
     {
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
