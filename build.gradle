@@ -66,11 +66,18 @@ android {
             res.srcDirs = ['custom/yunyi/res']
             assets.srcDirs = ['custom/yunyi/assets']
         }
-        yingyan{
+        yingyan{//
             manifest.srcFile 'custom/yingyan/AndroidManifest.xml'
             java.srcDirs = ['custom/yingyan/src']
             res.srcDirs = ['custom/yingyan/res']
             assets.srcDirs = ['custom/yingyan/assets']
+        }
+
+        olquan{//OL圈
+            manifest.srcFile 'custom/olquan/AndroidManifest.xml'
+            java.srcDirs = ['custom/olquan/src']
+            res.srcDirs = ['custom/olquan/res']
+            assets.srcDirs = ['custom/olquan/assets']
         }
 
         // Move the tests to tests/java, tests/res, etc...
@@ -101,8 +108,8 @@ android {
 
         yunyi{//乔基
             applicationId 'com.huotu.mall.yunyi'
-            versionCode BUYER_VERSIONCODE.toInteger()
-            versionName "${BUYER_VERSIONNAME}"
+            versionCode YUNYI_VERSIONCODE.toInteger()
+            versionName "${YUNYI_VERSIONNAME}"
             buildConfigField 'String','INTERFACE_URL','\"http://mallapi.acclife.cn/\"'
             buildConfigField 'String','APP_ID', '\"'+"${YUNYI_APP_ID}"+'\"'
             buildConfigField 'String','APP_SECRET','\"'+"${YUNYI_APP_SECRET}"+'\"'
@@ -117,6 +124,16 @@ android {
             buildConfigField 'String','APP_ID','\"app\"'
             buildConfigField 'String','APP_SECRET','\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
             buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.huobanplus.com/\"'
+        }
+
+        olquan{//OL圈
+            applicationId 'com.olquanapp.ttds.android'
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.olquan.cn/\"'
+            buildConfigField 'String','APP_ID', '\"'+"${OLQUAN_APP_ID}"+'\"'
+            buildConfigField 'String','APP_SECRET', '\"'+"${OLQUAN_APP_SECRET}"+'\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
         }
     }
 
