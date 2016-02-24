@@ -20,23 +20,19 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshWebView;
-import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
-import com.huotu.partnermall.model.PayGoodBean;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
-//import com.huotu.partnermall.ui.web.SubUrlFilterUtils;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
-import com.huotu.partnermall.utils.AliPayUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WindowUtils;
@@ -53,7 +49,6 @@ import cn.sharesdk.framework.PlatformActionListener;
  * 单张展示web页面
  */
 public class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadcastReceiver.BroadcastListener {
-
     //获取资源文件对象
     private Resources  resources;
     private Handler  mHandler;
@@ -62,7 +57,6 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     private String url;
     private SharePopupWindow share;
     private MyBroadcastReceiver myBroadcastReceiver;
-
     //tilte组件
     @Bind(R.id.newtitleLayout)
     RelativeLayout newtitleLayout;
@@ -80,12 +74,13 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 
     ProgressPopupWindow progress;
 
+    @Bind(R.id.main_pgbar)
+    ProgressBar pgBar;
+
     @Override
-    protected
-    void onCreate ( Bundle savedInstanceState ) {
+    protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         resources = this.getResources ( );
         this.setContentView(R.layout.new_load_page);
         ButterKnife.bind(this);
@@ -100,8 +95,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     }
 
     @Override
-    protected
-    void initView() {
+    protected void initView() {
         //设置title背景
         newtitleLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         //设置左侧图标
@@ -146,13 +140,10 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                         msg.obj = platform;
                         mHandler.sendMessage(msg);
                     }});
-        share.setOnDismissListener(new PoponDismissListener(WebViewActivity.this ) );
-
-
+        share.setOnDismissListener(new PoponDismissListener(WebViewActivity.this));
     }
 
-    private void loadPage()
-    {
+    private void loadPage(){
         viewPage.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         viewPage.setVerticalScrollBarEnabled(false);
         viewPage.setClickable(true);
@@ -181,20 +172,16 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 
         viewPage.setWebViewClient(
                 new WebViewClient() {
-
                     //重写此方法，浏览器内部跳转
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
                         if (titleText == null) return false;
-
-                        //SubUrlFilterUtils filter = new SubUrlFilterUtils(WebViewActivity.this, WebViewActivity.this, mHandler, application);
-                        UrlFilterUtils filter = new UrlFilterUtils(WebViewActivity.this , mHandler , application);
+                        UrlFilterUtils filter = new UrlFilterUtils(WebViewActivity.this, mHandler, application);
                         return filter.shouldOverrideUrlBySFriend(viewPage, url);
                     }
 
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
                         super.onPageStarted(view, url, favicon);
-
                     }
 
                     @Override
@@ -204,14 +191,17 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                         titleText.setText(view.getTitle());
                     }
 
-
                     @Override
-                    public void onReceivedError(
-                            WebView view, int errorCode, String description,
-                            String failingUrl) {
+                    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                         super.onReceivedError(view, errorCode, description, failingUrl);
-                        if( refreshWebView ==null ) return;
+                        if (refreshWebView == null) return;
                         refreshWebView.onRefreshComplete();
+
+                        if (pgBar == null) return;
+                        pgBar.setVisibility(View.GONE);
+
+                        if( progress ==null) return;
+                        progress.dismissView();
                     }
                 }
         );
@@ -233,9 +223,13 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if (refreshWebView == null) return;
+                if (refreshWebView == null || pgBar == null) return;
                 if (100 == newProgress) {
                     refreshWebView.onRefreshComplete();
+                    pgBar.setVisibility(View.GONE);
+                } else {
+                    if (pgBar.getVisibility() == View.GONE) pgBar.setVisibility(View.VISIBLE);
+                    pgBar.setProgress(newProgress);
                 }
                 super.onProgressChanged(view, newProgress);
             }
@@ -254,38 +248,33 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 
             //For Android 4.1
             public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-
                 openFileChooser(uploadMsg);
-
             }
         });
-
     }
 
     @OnClick(R.id.titleLeftImage)
-    void doBack()
-    {
-//        if(viewPage.canGoBack ()){
-//            viewPage.goBack ( );
-//        }else{
-//            //关闭界面
-//            WebViewActivity.this.finish ();
-//        }
+    void doBack(){
         WebViewActivity.this.finish ();
     }
 
+    /**
+     * 通过调用javascript代码获得 分享的相关内容
+     */
     protected void getShareContentByJS(){
         viewPage.loadUrl("javascript:__getShareStr();");
     }
 
     @OnClick(R.id.titleRightImage)
-    void doShare()
-    {
+    void doShare(){
         String sourceUrl = viewPage.getUrl();
         if( !TextUtils.isEmpty( sourceUrl )) {
             Uri u = Uri.parse( sourceUrl );
             String path = u.getPath().toLowerCase().trim();
-            if( path.endsWith("view.aspx") ) {
+            int idx = path.lastIndexOf("/");
+            String fileName = path.substring(idx + 1);
+
+            if( fileName.equals("view.aspx") ) {//商品详细界面
                 progress.showProgress("请稍等...");
                 progress.showAtLocation( getWindow().getDecorView() , Gravity.CENTER, 0, 0);
                 getShareContentByJS();
@@ -313,39 +302,20 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         msgModel.setTitle(title);
         msgModel.setUrl(url);
         share.initShareParams(msgModel);
-        //share.showShareWindow ( );
         share.showAtLocation(titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-
     }
 
     @Override
-    public boolean dispatchKeyEvent(KeyEvent event)
-    {
-        // 2秒以内按两次推出程序
-        if (event.getKeyCode () == KeyEvent.KEYCODE_BACK
-            && event.getAction() == KeyEvent.ACTION_DOWN)
-        {
-//            if(viewPage.canGoBack ())
-//            {
-//                viewPage.goBack ( );
-//            }
-//            else {
-//                //关闭当前页
-//                closeSelf ( WebViewActivity.this );
-//            }
-
+    public boolean dispatchKeyEvent(KeyEvent event){
+        if (event.getKeyCode () == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             closeSelf(WebViewActivity.this);
-
             return true;
         }
-
         return super.dispatchKeyEvent ( event );
     }
 
     @Override
-    public
-    boolean handleMessage ( Message msg )
-    {
+    public boolean handleMessage ( Message msg ){
         switch ( msg.what )
         {
             //分享
@@ -353,7 +323,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             {
                 //分享成功
                 Platform platform = ( Platform ) msg.obj;
-                int action = msg.arg1;
+                //int action = msg.arg1;
                 if("WechatMoments".equals ( platform.getName () ))
                 {
                     ToastUtils.showShortToast ( WebViewActivity.this, "微信朋友圈分享成功" );
@@ -368,7 +338,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 }
                 else if("SinaWeibo".equals ( platform.getName () ))
                 {
-                    //ToastUtils.showShortToast ( WebViewActivity.this, "sina微博分享成功" );
+                    ToastUtils.showShortToast ( WebViewActivity.this, "新浪微博分享成功" );
                 }
 
             }
@@ -377,7 +347,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             {
                 //分享失败
                 Platform platform = ( Platform ) msg.obj;
-                int action = msg.arg1;
+                //int action = msg.arg1;
                 if("WechatMoments".equals ( platform.getName () )) {
                     ToastUtils.showShortToast ( WebViewActivity.this, "微信朋友圈分享失败" );
                 }
@@ -391,7 +361,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 }
                 else if("SinaWeibo".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( WebViewActivity.this, "sina微博分享失败" );
+                    ToastUtils.showShortToast ( WebViewActivity.this, "新浪微博分享失败" );
                 }
             }
             break;
@@ -413,7 +383,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 }
                 else if("SinaWeibo".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( WebViewActivity.this, "sina微博分享取消" );
+                    ToastUtils.showShortToast ( WebViewActivity.this, "新浪微博分享取消" );
                 }
             }
             break;
@@ -447,12 +417,10 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 break;
         }
         return false;
-
     }
 
     @Override
-    protected
-    void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy ( );
         ButterKnife.unbind(this);
         if( null != myBroadcastReceiver){
@@ -461,17 +429,17 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         if( viewPage !=null ){
             viewPage.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public
-    void onFinishReceiver ( MyBroadcastReceiver.ReceiverType type, Object msg ) {
-        if(type == MyBroadcastReceiver.ReceiverType.wxPaySuccess)
-        {
-            viewPage.goBack ( );
+        if( progress !=null){
+            progress.dismissView();
         }
     }
 
+    @Override
+    public void onFinishReceiver ( MyBroadcastReceiver.ReceiverType type, Object msg ) {
+        if(type == MyBroadcastReceiver.ReceiverType.wxPaySuccess){
+            viewPage.goBack();
+        }
+    }
 
     @JavascriptInterface
     public void sendShare(final String title, final String desc, final String link, final String img_url) {
@@ -511,13 +479,10 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 msgModel.setUrl(sLink);
                 //msgModel.setImageData(BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ));
                 share.initShareParams(msgModel);
-                //share.showShareWindow();
                 WindowUtils.backgroundAlpha( WebViewActivity.this , 0.4f);
                 share.showAtLocation( WebViewActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
             }
         });
-
     }
-
 }

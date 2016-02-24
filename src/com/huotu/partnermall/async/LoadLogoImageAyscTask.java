@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.huotu.partnermall.utils.KJLoger;
@@ -82,12 +83,12 @@ class LoadLogoImageAyscTask extends AsyncTask<Void, Void, Bitmap> {
             catch ( MalformedURLException e ) {
 
                 bitmap = BitmapFactory.decodeResource ( resources, defaultImg );
-                KJLoger.e ( e.getMessage () );
+                Log.e( "LoadLogoImageAyscTask" , e.getMessage());
             }
             catch ( IOException e )
             {
                 bitmap = BitmapFactory.decodeResource ( resources, defaultImg );
-                KJLoger.e ( e.getMessage () );
+                Log.e ("LoadLogoImageAyscTask", e.getMessage () );
             }
             finally {
                 if(null != is)
@@ -97,7 +98,7 @@ class LoadLogoImageAyscTask extends AsyncTask<Void, Void, Bitmap> {
                     }
                     catch ( IOException e ) {
                         bitmap = BitmapFactory.decodeResource ( resources, defaultImg );
-                        KJLoger.e ( e.getMessage ( ) );
+                        Log.e ( "LoadLogoImageAyscTask" , e.getMessage ( ) );
                     }
                 }
             }

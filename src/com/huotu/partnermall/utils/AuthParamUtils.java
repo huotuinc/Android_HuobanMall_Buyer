@@ -432,7 +432,7 @@ public class AuthParamUtils {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 String key = entry.getKey().toString();
                 String value = entry.getValue() ==null? "" : entry.getValue().toString();
-                //System.out.println("key=" + key + " value=" + value);
+
                 try {
                     String valueEncode= URLEncoder.encode( value,"utf-8");
                     builder.append("&" + key + "=" + valueEncode);

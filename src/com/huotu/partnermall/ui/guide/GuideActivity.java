@@ -91,17 +91,17 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
                     @Override
                     public void onClick(View v) {
                         //延时2秒后跳入新界面
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
+                        //mHandler.postDelayed(new Runnable() {
+                        //    @Override
+                        //    public void run() {
                                 //判断是否登录
                                 if (application.isLogin()) {
                                     ActivityUtils.getInstance().skipActivity(GuideActivity.this, HomeActivity.class);
                                 } else {
                                     ActivityUtils.getInstance().skipActivity( GuideActivity.this, LoginActivity.class);
                                 }
-                            }
-                        }, 1000);
+                        //    }
+                        //}, 1000);
                     }
                 });
                 views.add(iv);

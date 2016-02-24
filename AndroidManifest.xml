@@ -199,14 +199,7 @@
                 <!--<category android:name="android.intent.category.DEFAULT"/>-->
             <!--</intent-filter>-->
         <!--</activity>-->
-        <!-- 微信分享回调 -->
-        <!--<activity-->
-            <!--android:name=".wxapi.WXEntryActivity"-->
-            <!--android:configChanges="keyboardHidden|orientation|screenSize"-->
-            <!--android:exported="true"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@android:style/Theme.Translucent.NoTitleBar">-->
-        <!--</activity>-->
+
         <!-- ShareSDK分享 -->
         <!-- 支付宝钱包支付 -->
         <activity
@@ -222,12 +215,6 @@
             android:exported="false"
             android:screenOrientation="behind">
         </activity>
-
-        <!-- 微信支付回调 -->
-        <!--<activity-->
-            <!--android:name=".wxapi.WXPayEntryActivity"-->
-            <!--android:exported="true"-->
-            <!--android:launchMode="singleTop"/>-->
 
         <receiver android:name="com.huotu.partnermall.receiver.AppRegister">
             <intent-filter>

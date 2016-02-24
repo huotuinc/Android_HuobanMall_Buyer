@@ -14,26 +14,21 @@ import com.huotu.partnermall.widgets.ProgressPopupWindow;
 /**
  * 异步执行微信支付
  */
-public
-class WXPayAsyncTask extends AsyncTask<Void, Void, WXPayResult > {
+public class WXPayAsyncTask extends AsyncTask<Void, Void, WXPayResult > {
 
     private Handler handler;
     private String  body;
     private String  price;
     private int     productType;
     private long    productId;
-    private
-    Context         context;
-    private
-    FMPrepareBuy    prepareBuy;
-    private
-    BaseApplication application;
-    private String              notifyUrl;
+    private Context context;
+    private FMPrepareBuy prepareBuy;
+    private BaseApplication application;
+    private String notifyUrl;
     private String attach;
     private String orderId;
 
-    public
-    WXPayAsyncTask ( Handler handler, String body, String price, int productType, long productId,
+    public WXPayAsyncTask ( Handler handler, String body, String price, int productType, long productId,
                      Context context, FMPrepareBuy prepareBuy, BaseApplication application,
                      String notifyUrl, String attach, String orderId) {
 

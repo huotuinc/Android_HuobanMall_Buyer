@@ -3,10 +3,12 @@
         android:fromDegrees="0"
         android:pivotX="50%"
         android:pivotY="50%"
+        android:antialias="true"
         android:toDegrees="360" >
     <shape
         android:innerRadiusRatio="3"
         android:shape="ring"
+        android:antialias="true"
         android:thicknessRatio="8"
         android:useLevel="false" >
         <gradient

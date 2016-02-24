@@ -20,18 +20,13 @@ import org.w3c.dom.Text;
  * 消息显示框
  */
 public class NoticePopWindow extends PopupWindow {
-
-    //private Context context;
     private Activity aty;
-    //private WindowManager wManager;
     private ImageView closeImg;
     private TextView notice;
     private String msg;
 
     public NoticePopWindow (  Activity aty, String msg ) {
-        //this.context = context;
         this.aty = aty;
-        //this.wManager = wManager;
         this.msg = msg;
     }
 

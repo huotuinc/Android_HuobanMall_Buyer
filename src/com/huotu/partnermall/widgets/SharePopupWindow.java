@@ -2,6 +2,8 @@ package com.huotu.partnermall.widgets;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -32,25 +34,13 @@ import cn.sharesdk.wechat.moments.WechatMoments;
  * 分享弹出框
  */
 public class SharePopupWindow extends PopupWindow implements View.OnClickListener {
-
-    private Context                context;
+    private Context context;
     private PlatformActionListener platformActionListener;
     private Platform.ShareParams   shareParams;
-    //private Activity               aty;
-    //private AssetManager am;
-    //private BaseApplication application;
 
-    public
-    SharePopupWindow ( Context cx) {
+    public SharePopupWindow ( Context cx) {
         this.context = cx;
-        //this.aty = aty;
-        //this.application = application;
     }
-
-//    public
-//    PlatformActionListener getPlatformActionListener ( ) {
-//        return platformActionListener;
-//    }
 
     public void setPlatformActionListener ( PlatformActionListener platformActionListener ) {
         this.platformActionListener = platformActionListener;
@@ -60,9 +50,7 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
         View view = LayoutInflater.from ( context ).inflate (  R.layout.share_layout, null  );
         LinearLayout shareItems = ( LinearLayout ) view.findViewById ( R.id.shareItem );
         initShareItems(shareItems);
-
         Button btn_cancel = ( Button ) view.findViewById ( R.id.btn_cancel );
-        //SystemTools.setFontStyle ( btn_cancel, application );
         // 取消按钮
         btn_cancel.setOnClickListener (
                 new View.OnClickListener ( ) {
@@ -71,12 +59,11 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
                         dismiss ( );
                     }});
         //TextView shareTitle = ( TextView ) view.findViewById ( R.id.share_title );
-        //SystemTools.setFontStyle ( shareTitle, application );
 
         // 设置SelectPicPopupWindow的View
         this.setContentView ( view);
         // 设置SelectPicPopupWindow弹出窗体的宽
-        this.setWidth( LinearLayout.LayoutParams.FILL_PARENT);
+        this.setWidth( LinearLayout.LayoutParams.MATCH_PARENT);
         // 设置SelectPicPopupWindow弹出窗体的高
         this.setHeight( LinearLayout.LayoutParams.WRAP_CONTENT);
         // 设置SelectPicPopupWindow弹出窗体可点击
@@ -92,7 +79,6 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
     }
 
     private void initShareItems(LinearLayout shareItems) {
-
         List<ShareItem> items = new ArrayList<ShareItem>();
         //微信好友
         ShareItem wechat = new ShareItem(1, "微信好友", R.drawable.logo_wechat);
@@ -109,20 +95,18 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
 
         int itemWidth = Constants.SCREEN_WIDTH/4*80/100; //DensityUtils.dip2px( context , 58 );
         int itemHeight = itemWidth; //DensityUtils.dip2px(context , 58);
-        int itemspace = (Constants.SCREEN_WIDTH - itemWidth * 4 ) /5;
+        int itemspace = (Constants.SCREEN_WIDTH - itemWidth * 4 ) /8;
         //构建ui
-        for(ShareItem item:items)
-        {
+        for(ShareItem item:items){
             View view = LayoutInflater.from ( context ).inflate ( R.layout.share_item, null);
             view.setOnClickListener(this);
             view.setId(item.getId());
             ImageView img = (ImageView) view.findViewById(R.id.share_icon);
             img.setImageResource(item.getShareIcon());
             RelativeLayout.LayoutParams params =(RelativeLayout.LayoutParams) img.getLayoutParams();
-            params.rightMargin = itemspace ;
-            params.leftMargin = itemspace ;
+            params.rightMargin = itemspace;
+            params.leftMargin = itemspace;
             params.width = itemWidth;
-
             params.height = itemHeight;
             img.setLayoutParams(params);
 
@@ -177,8 +161,6 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
            plat.share(shareParams);
        }
     }
-
-
 
     /**
      * 初始化分享参数
@@ -241,8 +223,7 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
     /**
      * 分享到sina微博
      */
-    public void sinaWeibo()
-    {
+    public void sinaWeibo() {
         Platform.ShareParams sp = new Platform.ShareParams ( );
         sp.setShareType(Platform.SHARE_WEBPAGE);
         sp.setText(shareParams.getText() + shareParams.getUrl());
@@ -257,8 +238,7 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
     /**
      * 分享单元实体
      */
-    public class ShareItem
-    {
+    public class ShareItem{
         private String shareName;
         private int shareIcon;
         private int id;
@@ -293,5 +273,25 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
         public void setShareIcon(int shareIcon) {
             this.shareIcon = shareIcon;
         }
+    }
+
+    /**
+     * 判断微博客户端是否可用
+     *
+     * @param context
+     * @return
+     */
+    public boolean isWeiBoClientAvailable(Context context) {
+        final PackageManager packageManager = context.getPackageManager();
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+        if (pinfo != null) {
+            for (int i = 0; i < pinfo.size(); i++) {
+                String pn = pinfo.get(i).packageName;
+                if (pn.equals("com.sina.weibo")) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

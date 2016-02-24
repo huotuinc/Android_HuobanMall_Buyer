@@ -16,7 +16,6 @@ import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import java.lang.ref.WeakReference;

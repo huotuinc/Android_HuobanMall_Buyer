@@ -4,19 +4,21 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@color/theme_color">
-
+    android:padding="3dp"
+    android:background="@drawable/btn_common">
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="15dp"
+
         android:background="@drawable/progress_small"
         style="?android:progressBarStyle"/>
     <TextView
         android:id="@+id/loadingText"
+        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

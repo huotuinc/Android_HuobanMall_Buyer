@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.alipay.sdk.app.PayTask;
@@ -24,23 +25,19 @@ import java.util.Random;
 /**
  * 支付宝支付界面
  */
-public
-class AlipayActivity extends FragmentActivity implements Handler.Callback {
-
+public class AlipayActivity extends FragmentActivity implements Handler.Callback {
+    private static String TAG = AlipayActivity.class.getName();
     private Handler mHandler;
 
-
     @Override
-    protected
-    void onCreate ( Bundle savedInstanceState ) {
+    protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
 
         mHandler = new Handler ( this );
     }
 
     @Override
-    public
-    boolean handleMessage ( Message msg ) {
+    public boolean handleMessage ( Message msg ) {
 
         switch (msg.what) {
             case  Constants.SDK_PAY_FLAG: {
@@ -109,7 +106,7 @@ class AlipayActivity extends FragmentActivity implements Handler.Callback {
             // 仅需对sign 做URL编码
             sign = URLEncoder.encode ( sign, "UTF-8" );
         } catch (UnsupportedEncodingException e) {
-            KJLoger.e ( e.getMessage () );
+            Log.e( TAG, e.getMessage());
         }
 
         // 完整的符合支付宝参数规范的订单信息

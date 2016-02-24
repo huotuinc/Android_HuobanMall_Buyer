@@ -1,13 +1,9 @@
 package com.huotu.partnermall.ui;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,16 +16,14 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
-import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.volley.Request;
@@ -58,8 +52,6 @@ import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
-import com.huotu.partnermall.utils.KJLoger;
-import com.huotu.partnermall.utils.SwitchUserPopWin;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
@@ -77,6 +69,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.wechat.friends.Wechat;
 
 public class HomeActivity extends BaseActivity implements Handler.Callback {
@@ -137,10 +130,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     PullToRefreshWebView refreshWebView;
     @Bind(R.id.layDrag)
     DrawerLayout layDrag;
+    @Bind(R.id.main_pgbar)
+    ProgressBar pgBar;
 
     @Override
-    protected
-    void onCreate ( Bundle savedInstanceState ) {
+    protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -166,7 +160,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     protected void initUserInfo(){
         new LoadLogoImageAyscTask ( resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username ).execute();
         //渲染用户名
-        userName.setText ( application.getUserName ( ) );
+        userName.setText(application.getUserName());
         userName.setTextColor(resources.getColor(R.color.theme_color));
         userType.setTextColor(SystemTools.obtainColor(application.obtainMainColor()));
         userType.setText(application.readMemberLevel());
@@ -236,15 +230,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         //设置登录界面
         getAuthLayout.setVisibility(View.VISIBLE);
-        //获取用户等级
-//        StringBuilder builder = new StringBuilder();
-//        builder.append(Constants.getINTERFACE_PREFIX() + "Weixin/GetUserLevelName");
-//        builder.append("?customerId=" + application.readMerchantId());
-//        builder.append("&unionId=" + application.readUserUnionId());
-//        builder.append("&userId=" + application.readMemberId());
-//        AuthParamUtils param = new AuthParamUtils(application, System.currentTimeMillis(), builder.toString(), HomeActivity.this);
-//        String nameUrl = param.obtainUrlName();
-//        HttpUtil.getInstance().doVolleyName( application, nameUrl, userType);
 
         //动态加载侧滑菜单
         UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, mHandler);
@@ -405,12 +390,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                         super.onReceivedError(view, errorCode, description, failingUrl);
                         if( refreshWebView ==null) return;
                         refreshWebView.onRefreshComplete();
-                    }
 
-//                    @Override
-//                    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-//                        return super.shouldInterceptRequest(view, request);
-//                    }
+                        if( pgBar == null) return;
+                        pgBar.setVisibility(View.GONE);
+                    }
                 }
         );
 
@@ -425,11 +408,17 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if( refreshWebView ==null ) return;
+                if( refreshWebView ==null || pgBar ==null ) return;
 
                 if(100 == newProgress) {
                     refreshWebView.onRefreshComplete();
+
+                    pgBar.setVisibility(View.GONE);
+                }else {
+                    if (pgBar.getVisibility() == View.GONE) pgBar.setVisibility(View.VISIBLE);
+                    pgBar.setProgress(newProgress);
                 }
+
                 super.onProgressChanged(view, newProgress);
             }
 
@@ -537,7 +526,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             try {
                 URI u = URI.create(sourceUrl);
                 String path = u.getPath().toLowerCase().trim();
-                if (path.endsWith("view.aspx")) {
+
+                int idx = path.lastIndexOf("/");
+                String fileName = path.substring( idx + 1);
+
+                if (fileName.equals("view.aspx")) {
                     progress.showProgress("请稍等...");
                     progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
                     getShareContentByJS();
@@ -572,39 +565,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         msgModel.setTitle(title);
         msgModel.setUrl(url);
         share.initShareParams(msgModel);
-        //share.showShareWindow();
         WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f );
         share.showAtLocation(titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-//        share.setPlatformActionListener(
-//                new PlatformActionListener() {
-//                    @Override
-//                    public void onComplete(
-//                            Platform platform, int i, HashMap<String, Object> hashMap
-//                    ) {
-//                        Message msg = Message.obtain();
-//                        msg.what = Constants.SHARE_SUCCESS;
-//                        msg.obj = platform;
-//                        mHandler.sendMessage(msg);
-//                    }
-//
-//                    @Override
-//                    public void onError(Platform platform, int i, Throwable throwable) {
-//                        Message msg = Message.obtain();
-//                        msg.what = Constants.SHARE_ERROR;
-//                        msg.obj = platform;
-//                        mHandler.sendMessage(msg);
-//                    }
-//
-//                    @Override
-//                    public void onCancel(Platform platform, int i) {
-//                        Message msg = Message.obtain();
-//                        msg.what = Constants.SHARE_CANCEL;
-//                        msg.obj = platform;
-//                        mHandler.sendMessage(msg);
-//                    }
-//                }
-//        );
-//        share.setOnDismissListener(new PoponDismissListener(HomeActivity.this));
     }
 
     @Override
@@ -658,9 +620,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 {
                     ToastUtils.showShortToast ( HomeActivity.this, "QQ空间分享成功" );
                 }
-                else if("SinaWeibo".equals ( platform.getName () ))
+                else if( platform.getName ().equals(SinaWeibo.NAME))
                 {
-                    //ToastUtils.showShortToast ( HomeActivity.this, "sina微博分享成功" );
+                    ToastUtils.showShortToast ( HomeActivity.this, "新浪微博分享成功" );
                 }
             }
             break;
@@ -679,9 +641,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 {
                     ToastUtils.showShortToast ( HomeActivity.this, "QQ空间分享失败" );
                 }
-                else if("SinaWeibo".equals ( platform.getName () ))
+                else if(  platform.getName ().equals( SinaWeibo.NAME ))
                 {
-                    ToastUtils.showShortToast ( HomeActivity.this, "sina微博分享失败" );
+                    ToastUtils.showShortToast ( HomeActivity.this, "新浪微博分享失败" );
                 }
             }
             break;
@@ -702,7 +664,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 }
                 else if("SinaWeibo".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( HomeActivity.this, "sina微博分享取消" );
+                    ToastUtils.showShortToast ( HomeActivity.this, "新浪微博分享取消" );
                 }
             }
             break;

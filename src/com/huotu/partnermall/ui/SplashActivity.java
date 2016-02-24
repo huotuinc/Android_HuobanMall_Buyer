@@ -1,12 +1,12 @@
 package com.huotu.partnermall.ui;
 
-import android.app.DownloadManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -14,14 +14,11 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MerchantBean;
-import com.huotu.partnermall.model.SysModel;
 import com.huotu.partnermall.service.LocationService;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.guide.GuideActivity;
@@ -37,7 +34,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cn.jpush.android.api.JPushInterface;
 
 public class SplashActivity extends BaseActivity {
     public static final String TAG = SplashActivity.class.getSimpleName();
@@ -49,24 +45,23 @@ public class SplashActivity extends BaseActivity {
     private boolean isConnection = false;// 假定无网络连接
     private MsgPopWindow popWindow;
 
-    protected
-    void onCreate ( Bundle savedInstanceState ) {
-        super.onCreate ( savedInstanceState );
+    protected void onCreate ( Bundle savedInstanceState ) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        DisplayMetrics metrics = new DisplayMetrics ( );
-        getWindowManager ( ).getDefaultDisplay ( ).getMetrics ( metrics );
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
         Constants.SCREEN_DENSITY = metrics.density;
         Constants.SCREEN_HEIGHT = metrics.heightPixels;
         Constants.SCREEN_WIDTH = metrics.widthPixels;
-        mHandler = new Handler ( getMainLooper ( ) );
+        mHandler = new Handler(getMainLooper());
         initView();
     }
 
     @Override
     protected void initView() {
-        String verison = getString( R.string.app_name) + application.getAppVersion( this );
-        tvVersion.setText( verison );
+        String version = getString( R.string.app_name) + application.getAppVersion( this );
+        tvVersion.setText( version );
 
         AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
         anima.setDuration(Constants.ANIMATION_COUNT);// 设置动画显示时间
@@ -93,12 +88,12 @@ public class SplashActivity extends BaseActivity {
                             if (!application.checkMerchantInfo()) {
                                 //设置商户信息
                                 MerchantBean merchant = XMLParserUtils.getInstance().readMerchantInfo(SplashActivity.this);
-                                KJLoger.i("商户信息获取成功。");
+                                //Log.i( TAG , "商户信息获取成功。");
                                 //写入文件
                                 if (null != merchant) {
                                     application.writeMerchantInfo(merchant);
                                 } else {
-                                    KJLoger.e("载入商户信息失败。");
+                                    Log.e(TAG,"载入商户信息失败。");
                                 }
                             }
                                                    /*if(!application.checkMenuInfo ())
@@ -123,9 +118,9 @@ public class SplashActivity extends BaseActivity {
                                     ColorBean color = PropertiesUtil.getInstance().readProperties(is);
                                     application.writeColorInfo(color);
                                     //记录颜色值
-                                    KJLoger.i("记录颜色值.");
+                                    //Log.i(TAG,"记录颜色值.");
                                 } catch (IOException e) {
-                                    KJLoger.e(e.getMessage());
+                                    Log.e(TAG,e.getMessage());
                                 }
                             }
                             //配置SYS信息

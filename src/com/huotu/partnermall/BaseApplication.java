@@ -3,20 +3,15 @@ package com.huotu.partnermall;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.support.v4.widget.DrawerLayout;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.location.GeofenceClient;
 import com.baidu.location.LocationClient;
 import com.google.gson.Gson;
 import com.huotu.partnermall.config.Constants;
@@ -27,10 +22,8 @@ import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.utils.CrashHandler;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PreferenceHelper;
 import com.squareup.leakcanary.LeakCanary;
-import com.tencent.mm.sdk.openapi.IWXAPI;
 import java.util.List;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -44,7 +37,7 @@ public class BaseApplication extends Application {
     //定位句柄
     //public Intent locationI = new Intent ( );
     //定位类型
-    public int    localType;
+    public int localType;
     //地址
     public String address;
     //纬度
@@ -60,11 +53,6 @@ public class BaseApplication extends Application {
     public MyLocationListener mMyLocationListener;
     //底部菜单是否隐藏 true显示， false隐藏
     public boolean isMenuHide = false;
-
-    //public  AssetManager am;
-
-    //public Platform plat;
-
     /**
      * 是否是左划或者返回
      * true 左划
@@ -78,8 +66,7 @@ public class BaseApplication extends Application {
     }
 
     @Override
-    public
-    void onCreate ( ) {
+    public void onCreate ( ) {
         super.onCreate ( );
 
         if(BuildConfig.DEBUG){
@@ -107,14 +94,12 @@ public class BaseApplication extends Application {
     }
 
     @Override
-    public
-    void onLowMemory ( ) {
+    public void onLowMemory ( ) {
         super.onLowMemory();
     }
 
     @Override
-    public
-    void onTerminate ( ) {
+    public void onTerminate ( ) {
         super.onTerminate();
     }
 
@@ -165,8 +150,7 @@ public class BaseApplication extends Application {
     /**
      * 获取当前应用程序的版本号
      */
-    public static String getAppVersion(Context context)
-    {
+    public static String getAppVersion(Context context){
         String version = "0";
         try
         {
