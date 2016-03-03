@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:id="@+id/lay"
+    android:background="#000000"
+    android:orientation="vertical" >
+
+    <com.huotu.partnermall.widgets.CircleProgressBar
+        android:id="@+id/progressWithArrow"
+        app:mlpb_show_arrow="true"
+        app:mlpb_arrow_height="5dp"
+        app:mlpb_arrow_width="10dp"
+        app:mlpb_progress_stoke_width="20dp"
+        app:mlpb_progress_text_visibility="visible"
+        app:mlpb_background_color="@color/circle_color"
+        app:mlpb_progress_color="@color/ring_color"
+        app:mlpb_progress_text_size="25sp"
+        app:mlpb_progress_text_color="@color/white"
+        app:mlpb_inner_radius="100dip"
+        android:layout_gravity="center"
+        android:layout_width="240dp"
+        android:layout_height="240dp" />
+
+    <TextView
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_marginTop="5dp"
+        android:text="更新内容" />
+    <TextView
+        android:padding="10dp"
+        android:id="@+id/txtTips"
+        android:gravity="left"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
+
+
+</LinearLayout>

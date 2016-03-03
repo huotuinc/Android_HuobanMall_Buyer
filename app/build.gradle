@@ -1,0 +1,171 @@
+apply plugin: 'com.android.application'
+
+android {
+    //Android6.0找不到org.apache.http.Header 的解决方法
+    useLibrary 'org.apache.http.legacy'
+
+    signingConfigs {
+        huotu {
+            storeFile file('../keystore/huotu_fm.keystore')
+            storePassword "huotuheyun"
+            keyAlias "huotu_fm.keystore"
+            keyPassword "huotuheyun"
+        }
+    }
+
+    compileSdkVersion COMPILE_SDK_VERSION.toInteger()
+    buildToolsVersion "${BUILD_TOOLS_VERSION}"
+
+    defaultConfig{
+        applicationId "com.huotu.partnermall.inner"
+        minSdkVersion MINSDKVERSION.toInteger()
+        targetSdkVersion TARGETSDKVERSION.toInteger()
+        versionCode BUYER_VERSIONCODE.toInteger()
+        versionName "${BUYER_VERSIONNAME}"
+        signingConfig signingConfigs.huotu
+        buildConfigField 'int','NATIVE_UI_CONFIG_VERSION', '1'
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+        }
+
+        morefan {
+            manifest.srcFile 'custom/morefan/AndroidManifest.xml'
+            java.srcDirs = ['custom/morefan/src']
+            res.srcDirs = ['custom/morefan/res']
+            assets.srcDirs = ['custom/morefan/assets']
+        }
+
+        yunyi{
+            manifest.srcFile 'custom/yunyi/AndroidManifest.xml'
+            java.srcDirs = ['custom/yunyi/src']
+            res.srcDirs = ['custom/yunyi/res']
+            assets.srcDirs = ['custom/yunyi/assets']
+        }
+
+        yingyan{
+            manifest.srcFile 'custom/yingyan/AndroidManifest.xml'
+            java.srcDirs = ['custom/yingyan/src']
+            res.srcDirs = ['custom/yingyan/res']
+            assets.srcDirs = ['custom/yingyan/assets']
+        }
+
+        olquan{
+            manifest.srcFile 'custom/olquan/AndroidManifest.xml'
+            java.srcDirs = ['custom/olquan/src']
+            res.srcDirs = ['custom/olquan/res']
+            assets.srcDirs = ['custom/olquan/assets']
+        }
+
+        // Move the tests to tests/java, tests/res, etc...
+        instrumentTest.setRoot('tests')
+
+        // Move the build types to build-types/<type>
+        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
+        // This moves them out of them default location under src/<type>/... which would
+        // conflict with src/ being used by the main source set.
+        // Adding new build types or product flavors should be accompanied
+        // by a similar customization.
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+
+    }
+
+    //打包渠道
+    productFlavors {
+        morefan{
+            applicationId 'cy.com.morefan'
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanj.cn/\"'
+            buildConfigField 'String','APP_ID','\"huotu686ad1fe2bd8a02bb\"'
+            buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
+        }
+
+        yunyi{//乔基
+            applicationId 'com.huotu.mall.yunyi'
+            versionCode YUNYI_VERSIONCODE.toInteger()
+            versionName "${YUNYI_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.acclife.cn/\"'
+            buildConfigField 'String','APP_ID', '\"'+"${YUNYI_APP_ID}"+'\"'
+            buildConfigField 'String','APP_SECRET','\"'+"${YUNYI_APP_SECRET}"+'\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.acclife.cn:8081/\"'
+        }
+
+        yingyan{//行装
+            applicationId 'com.huotu.mall.yingyan'
+            versionCode YINGYAN_VERSIONCODE.toInteger()
+            versionName "${YINGYAN_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanmall.com/\"'
+            buildConfigField 'String','APP_ID','\"app\"'
+            buildConfigField 'String','APP_SECRET','\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.huobanplus.com/\"'
+        }
+
+        olquan{//OL圈
+            applicationId 'com.olquanapp.ttds.android'
+            versionCode OLQUAN_VERSIONCODE.toInteger()
+            versionName "${OLQUAN_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.olquan.cn/\"'
+            buildConfigField 'String','APP_ID', '\"'+"${OLQUAN_APP_ID}"+'\"'
+            buildConfigField 'String','APP_SECRET', '\"'+"${OLQUAN_APP_SECRET}"+'\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
+        }
+    }
+
+    buildTypes{
+        debug{
+            signingConfig signingConfigs.huotu
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanj.cn/\"'
+            buildConfigField 'String','APP_ID','\"huotu686ad1fe2bd8a02bb\"'
+            buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
+        }
+
+        release{
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.huotu
+//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanmall.com/\"'
+//            buildConfigField 'String','APP_ID','\"app\"'
+//            buildConfigField 'String','APP_SECRET','\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.huobanplus.com/\"'
+
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each {
+            output ->
+                output.outputFile = new File(output.outputFile.parent + "\\" + project.name + "_" + variant.flavorName + "_" + variant.buildType.name + "_" + variant.versionName + ".apk")
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.huotu.android.library:libcropper:1.0'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.handmark.library:pulltorefresh:1.1'
+    compile 'com.huotu.android.library:libCoverFlow:1.1'
+    //    compile('com.huotu.android.library:libCoverFlow:1.1') {
+    //        exclude module:'appcompat-v7', group:'com.android.support'
+    //    }
+    compile 'com.github.mikephil.charting:MPAndroidChart:1.1'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.umeng.analytics:analytics:5.6.1'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+    compile project(':jlibrary')
+    compile 'com.google.zxing:core:3.2.1'
+}
+
