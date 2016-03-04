@@ -27,7 +27,7 @@ public class AdThreeWidget extends LinearLayout {
         this.config = config;
 
         this.setOrientation(HORIZONTAL);
-        this.setBackgroundColor(Color.parseColor( config.getWidgetBackColor() ));
+        this.setBackgroundColor(Color.parseColor( config.getBackcolor() ));
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(layoutParams);
 
@@ -41,10 +41,10 @@ public class AdThreeWidget extends LinearLayout {
         iv3 = new SimpleDraweeView(context);
 
 
-        int leftPx = DensityUtils.dip2px(context, config.getLeftDistance());
-        int rightPx = DensityUtils.dip2px( context , config.getRightDistance());
-        int topPx = DensityUtils.dip2px( context, config.getTopDistance());
-        int bottomPx = DensityUtils.dip2px( context , config.getBottomDistance());
+        int leftPx = DensityUtils.dip2px(context, config.getPaddingLeft());
+        int rightPx = DensityUtils.dip2px( context , config.getPaddingRight());
+        int topPx = DensityUtils.dip2px( context, config.getPaddingTop());
+        int bottomPx = DensityUtils.dip2px( context , config.getPaddingBottom());
         this.setPadding(leftPx, topPx, rightPx, bottomPx);
 
         layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT , ViewGroup.LayoutParams.WRAP_CONTENT,1.0f);

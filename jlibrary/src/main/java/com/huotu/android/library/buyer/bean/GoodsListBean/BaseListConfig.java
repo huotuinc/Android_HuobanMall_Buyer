@@ -1,10 +1,9 @@
 package com.huotu.android.library.buyer.bean.GoodsListBean;
 
-
 import com.huotu.android.library.buyer.bean.BaseConfig;
 
 /**
- * Created by Administrator on 2016/1/6.
+ * Created by jinxiangdong on 2016/1/6.
  */
 public class BaseListConfig extends BaseConfig {
     /**
@@ -16,46 +15,51 @@ public class BaseListConfig extends BaseConfig {
      */
     private boolean filterRule=false;
     /**
+     * 是否瀑布
+     */
+    private boolean styleLayout=false;
+    /**
     * 每一页显示个数
      */
-    private int pagesize = 3;
+    private int pagesize = 5;
     /**
      * 列表布局
      * size-2  一大两小
      * size-3  详细列表
      */
-    private String widgetLayout;
+    private String goods_layout;
     /**
      * 列表样式
      * card  -卡片样式
      * normal -极简样式
      */
-    private String gridStyle;
+    private String goods_layer;
     /**
-     * 是否显示商品名show  -显示
+     * 是否显示商品名
+     * show-显示
      * hide–不显示
      */
-    private boolean isShowName;
+    private boolean product_showname;
     /**
-     * 是否显示价格show  -显示
+     * 是否显示价格
+     * show-显示
      * hide–不显示
      */
-    private boolean isShowPrices;
+    private boolean product_showprices;
     /**
      * 是否显示返利积分
-     * show  -显示
+     * show-显示
      * hide–不显示
      */
-    private boolean isShowUserInteger;
+    private boolean product_userInteger;
     /**
      * 商品分类ID,为0时则是全部商品的下拉列表
      */
     private  String bindDataID;
-
     /**
      * 返利图标(该图标资源存储的是相对地址，需要app配置一个资源地址拼接出资源绝对地址)。
      */
-    private String rebateIcon;
+    private String background;
 
     public boolean isOrderRule() {
         return orderRule;
@@ -63,6 +67,14 @@ public class BaseListConfig extends BaseConfig {
 
     public void setOrderRule(boolean orderRule) {
         this.orderRule = orderRule;
+    }
+
+    public boolean isStyleLayout() {
+        return styleLayout;
+    }
+
+    public void setStyleLayout(boolean styleLayout) {
+        this.styleLayout = styleLayout;
     }
 
     public boolean isFilterRule() {
@@ -81,44 +93,44 @@ public class BaseListConfig extends BaseConfig {
         this.pagesize = pagesize;
     }
 
-    public String getWidgetLayout() {
-        return widgetLayout;
+    public String getGoods_layout() {
+        return goods_layout;
     }
 
-    public void setWidgetLayout(String widgetLayout) {
-        this.widgetLayout = widgetLayout;
+    public void setGoods_layout(String goods_layout) {
+        this.goods_layout = goods_layout;
     }
 
-    public String getGridStyle() {
-        return gridStyle;
+    public String getGoods_layer() {
+        return goods_layer;
     }
 
-    public void setGridStyle(String gridStyle) {
-        this.gridStyle = gridStyle;
+    public void setGoods_layer(String goods_layer) {
+        this.goods_layer = goods_layer;
     }
 
-    public boolean isShowName() {
-        return isShowName;
+    public boolean isProduct_showname() {
+        return product_showname;
     }
 
-    public void setIsShowName(boolean isShowName) {
-        this.isShowName = isShowName;
+    public void setProduct_showname(boolean product_showname) {
+        this.product_showname = product_showname;
     }
 
-    public boolean isShowPrices() {
-        return isShowPrices;
+    public boolean isProduct_showprices() {
+        return product_showprices;
     }
 
-    public void setIsShowPrices(boolean isShowPrices) {
-        this.isShowPrices = isShowPrices;
+    public void setProduct_showprices(boolean product_showprices) {
+        this.product_showprices = product_showprices;
     }
 
-    public boolean isShowUserInteger() {
-        return isShowUserInteger;
+    public boolean isProduct_userInteger() {
+        return product_userInteger;
     }
 
-    public void setIsShowUserInteger(boolean isShowUserInteger) {
-        this.isShowUserInteger = isShowUserInteger;
+    public void setProduct_userInteger(boolean product_userInteger) {
+        this.product_userInteger = product_userInteger;
     }
 
     public String getBindDataID() {
@@ -129,11 +141,11 @@ public class BaseListConfig extends BaseConfig {
         this.bindDataID = bindDataID;
     }
 
-    public String getRebateIcon() {
-        return rebateIcon;
+    public String getBackground() {
+        return background;
     }
 
-    public void setRebateIcon(String rebateIcon) {
-        this.rebateIcon = rebateIcon;
+    public void setBackground(String background) {
+        this.background = background;
     }
 }

@@ -156,18 +156,18 @@ public class GoodsOneCardWidget extends LinearLayout {
     }
 
     protected void setStyle( GoodsBean good ){
-        if( this.goodsOneConfig.getIsShowName().equals( Constant.GOODS_SHOW )){
+        if( this.goodsOneConfig.getProduct_showname().equals( Constant.GOODS_SHOW )){
             tvName.setVisibility(VISIBLE);
         }else {
             tvName.setVisibility(GONE);
         }
 
-        if( this.goodsOneConfig.getIsShowPrices().equals(Constant.GOODS_SHOW) ){
+        if( this.goodsOneConfig.getProduct_showprices().equals(Constant.GOODS_SHOW) ){
             tvPrice.setVisibility(VISIBLE);
         }else {
             tvPrice.setVisibility(GONE);
         }
-        if( this.goodsOneConfig.getIsShowUserInteger().contains(Constant.GOODS_SHOW) ){
+        if( this.goodsOneConfig.getProduct_userInteger().contains(Constant.GOODS_SHOW) ){
             tvJifen.setVisibility(VISIBLE);
         }else {
             tvJifen.setVisibility(GONE);
@@ -219,9 +219,9 @@ public class GoodsOneCardWidget extends LinearLayout {
         //-----------------------------------------------------
 
         for( GoodsBean item : goods) {
-            if (goodsOneConfig.getGridStyle().equals(Constant.GRIDSTYLE_CARD)) {
+            if (goodsOneConfig.getGoods_layer().equals(Constant.LAYER_STYLE_CARD)) {
                 create_card(item);
-            } else if (goodsOneConfig.getGridStyle().equals(Constant.GRIDSTYLE_NORMAL)) {
+            } else if (goodsOneConfig.getGoods_layer().equals(Constant.LAYER_STYLE_NORMAL)) {
                 create_jijian(item);
             }
         }

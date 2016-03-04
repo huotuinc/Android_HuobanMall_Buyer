@@ -21,12 +21,12 @@ public class BillBoardWidget extends TextView {
         this.billBoardConfig=billBoardConfig;
 
         try {
-            this.setBackgroundColor(Color.parseColor( this.billBoardConfig.getWidgetBackColor()));
+            this.setBackgroundColor(Color.parseColor( this.billBoardConfig.getText_background()));
         }catch (Exception ex){
             Logger.e(ex.getMessage(), ex);
         }
         try{
-            this.setTextColor( Color.parseColor( this.billBoardConfig.getWidgetFontColor() ) );
+            this.setTextColor( Color.parseColor( this.billBoardConfig.getText_color() ) );
         }catch (Exception ex){
             Logger.e(ex.getMessage(),ex);
         }
@@ -43,7 +43,7 @@ public class BillBoardWidget extends TextView {
         int bottomPadding = topPadding;
         this.setPadding(leftPadding, topPadding,rightPadding,bottomPadding);
 
-        this.setText( this.billBoardConfig.getContent() );
+        this.setText( this.billBoardConfig.getText_content() );
     }
 
     @Override

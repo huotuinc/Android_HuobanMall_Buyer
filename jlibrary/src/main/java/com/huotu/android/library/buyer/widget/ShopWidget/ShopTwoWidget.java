@@ -10,6 +10,7 @@ import com.huotu.android.library.buyer.utils.DensityUtils;
 
 
 /**
+ *
  * Created by Administrator on 2016/1/15.
  */
 public class ShopTwoWidget extends RelativeLayout {
@@ -46,10 +47,10 @@ public class ShopTwoWidget extends RelativeLayout {
         ivRight.setLayoutParams(layoutParams);
         this.addView(ivRight);
 
-        int topPx = DensityUtils.dip2px( getContext() , config.getVerticalDistance());
-        int leftPx = DensityUtils.dip2px(getContext(), config.getAroundDistance());
+        int topPx = DensityUtils.dip2px( getContext() , config.getPaddingTop());
+        int leftPx = DensityUtils.dip2px(getContext(), config.getPaddingLeft());
         this.setPadding( leftPx , topPx ,leftPx,topPx );
-        this.setBackgroundColor(Color.parseColor(this.config.getWidgetBackColor()));
+        this.setBackgroundColor(Color.parseColor(this.config.getBackColor()));
 
         //TODO 通过API接口 获得图标信息
 //        FrescoDraweeController.loadImage(ivLeft, widthPx, this.config.getImageLeft().getImageUrl());

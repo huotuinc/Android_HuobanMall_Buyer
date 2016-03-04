@@ -23,14 +23,14 @@ public class AdAverageWidget extends com.huotu.android.library.buyer.widget.Good
 
         this.config = config;
 
-        int outLeftPx = DensityUtils.dip2px(context, this.config.getLeftDistance());
-        int outRightPx= DensityUtils.dip2px(context,this.config.getRightDistance());
-        int topPx = DensityUtils.dip2px( context , this.config.getUpDownDistance());
-        int bottomPx = DensityUtils.dip2px(context,this.config.getUpDownDistance());
-        int leftPx = DensityUtils.dip2px(context,this.config.getLeftRightDistance());
-        int rightPx = DensityUtils.dip2px(context,this.config.getLeftRightDistance());
+        int outLeftPx = DensityUtils.dip2px(context, this.config.getPaddingOutLeft());
+        int outRightPx= DensityUtils.dip2px(context,this.config.getPaddingOutRight());
+        int topPx = DensityUtils.dip2px( context , this.config.getPaddingTop());
+        int bottomPx = DensityUtils.dip2px(context,this.config.getPaddingTop());
+        int leftPx = DensityUtils.dip2px(context,this.config.getPaddingLeft());
+        int rightPx = DensityUtils.dip2px(context,this.config.getPaddingLeft());
         //this.setPadding( leftPx+outLeftPx , topPx , rightPx+outRightPx , bottomPx );
-        this.setBackgroundColor(Color.parseColor( this.config.getWidgetBackColor()));
+        this.setBackgroundColor(Color.parseColor( this.config.getBackcolor()));
 
         //TODO
         if( this.config.getImages() ==null )return;

@@ -1,0 +1,18 @@
+
+// URI  /smartPages/{id}/nativeCode?platform={platform}&version={version}
+        // success code:200
+        // illegal version:420 (必须更新到最新版本，然后关闭app)
+
+// platform version
+{
+  "title":"标题",
+  // other page attributes
+  "widgets":[
+    {
+      "type":0,
+      "properties":{
+        // see SmartUI组件协议
+      }
+    }
+  ]
+}

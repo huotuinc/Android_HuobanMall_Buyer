@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/1/11.
+ * 商品列表-三方格组件
+ * Created by jinxiangdong on 2016/1/11.
  */
 public class ListViewThreeWidget extends BaseLinearLayoutWidget implements IListView {
     ListViewThreeConfig listViewThreeConfig;

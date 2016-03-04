@@ -26,10 +26,10 @@ public class ShopOneWidget extends RelativeLayout{
         super(context);
         this.config = config;
 
-        int leftRight = DensityUtils.dip2px(context, config.getAroundDistance());
-        int topBottom = DensityUtils.dip2px(context, config.getVerticalDistance());
+        int leftRight = DensityUtils.dip2px(context, config.getPaddingLeft());
+        int topBottom = DensityUtils.dip2px(context, config.getPaddingTop());
         this.setPadding(leftRight, topBottom, leftRight, topBottom);
-        this.setBackgroundColor(Color.parseColor(config.getWidgetBackColor()));
+        this.setBackgroundColor(Color.parseColor(config.getBackColor()));
 
         SimpleDraweeView leftImage = new SimpleDraweeView(context);
         id1 = leftImage.hashCode();
@@ -46,7 +46,7 @@ public class ShopOneWidget extends RelativeLayout{
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         tvLeftTitle.setLayoutParams(layoutParams);
         tvLeftTitle.setGravity(Gravity.CENTER_VERTICAL);
-        tvLeftTitle.setTextColor(Color.parseColor(config.getWidgetFontColor()));
+        tvLeftTitle.setTextColor(Color.parseColor(config.getFontColor()));
         this.addView(tvLeftTitle);
 
         TextView tvRighTitle = new TextView(context);
@@ -58,7 +58,7 @@ public class ShopOneWidget extends RelativeLayout{
         layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
         tvRighTitle.setLayoutParams(layoutParams);
         tvRighTitle.setGravity(Gravity.CENTER_VERTICAL);
-        tvRighTitle.setTextColor(Color.parseColor(config.getWidgetFontColor()));
+        tvRighTitle.setTextColor(Color.parseColor(config.getFontColor()));
         this.addView(tvRighTitle);
 
         SimpleDraweeView rightImage = new SimpleDraweeView(context);
@@ -70,12 +70,12 @@ public class ShopOneWidget extends RelativeLayout{
         this.addView(rightImage);
 
         int imageWidthPx = DensityUtils.dip2px(context, 30 );
-        if( config.getType() == Constant.LOGO_1 ) {
+        if( config.getShow_type() == Constant.LOGO_1 ) {
 
-            FrescoDraweeController.loadImage(leftImage, imageWidthPx, config.getLeftImageUrl());
-            tvLeftTitle.setText(config.getLeftLinkName());
-            tvRighTitle.setText(config.getRightLinkName());
-            FrescoDraweeController.loadImage(rightImage, imageWidthPx, config.getRightImageUrl());
+            FrescoDraweeController.loadImage(leftImage, imageWidthPx, config.getImageUrl1());
+            tvLeftTitle.setText(config.getTitle_linkname1());
+            tvRighTitle.setText(config.getTitle_linkname());
+            FrescoDraweeController.loadImage(rightImage, imageWidthPx, config.getImageUrl());
         }else{
             //TODO 通过API接口获得信息
 

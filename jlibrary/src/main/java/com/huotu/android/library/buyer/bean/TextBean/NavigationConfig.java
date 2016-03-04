@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * 文本导航组件
  * Created by jinxiangdong on 2016/1/7.
+ * Done
  */
 public class NavigationConfig {
     /**

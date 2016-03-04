@@ -3,12 +3,14 @@ package com.huotu.android.library.buyer.bean.TextBean;
 /**
  * Created by jinxiangdong on 2016/1/7.
  * 公告组件
+ * Done
+ *
  */
 public class BillBoardConfig extends BaseTextConfig{
     /**
      * 公告内容
      */
-    private String content;
+    private String text_content;
     /**
      * 字体大小
      */
@@ -16,19 +18,11 @@ public class BillBoardConfig extends BaseTextConfig{
     /**
      * 背景颜色 #FFFFF格式(Hex color)
      */
-    private String widgetBackColor;
+    private String text_background;
     /**
      * 字体颜色 #FFFFF格式(Hex color)
      */
-    private String widgetFontColor;
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
+    private String text_color;
 
     public Integer getFontSize() {
         return fontSize;
@@ -38,19 +32,27 @@ public class BillBoardConfig extends BaseTextConfig{
         this.fontSize = fontSize;
     }
 
-    public String getWidgetBackColor() {
-        return widgetBackColor;
+    public String getText_content() {
+        return text_content;
     }
 
-    public void setWidgetBackColor(String widgetBackColor) {
-        this.widgetBackColor = widgetBackColor;
+    public void setText_content(String text_content) {
+        this.text_content = text_content;
     }
 
-    public String getWidgetFontColor() {
-        return widgetFontColor;
+    public String getText_background() {
+        return text_background;
     }
 
-    public void setWidgetFontColor(String widgetFontColor) {
-        this.widgetFontColor = widgetFontColor;
+    public void setText_background(String text_background) {
+        this.text_background = text_background;
+    }
+
+    public String getText_color() {
+        return text_color;
+    }
+
+    public void setText_color(String text_color) {
+        this.text_color = text_color;
     }
 }

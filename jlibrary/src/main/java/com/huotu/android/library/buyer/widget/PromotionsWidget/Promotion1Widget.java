@@ -59,7 +59,7 @@ public class Promotion1Widget extends LinearLayout {
         layoutParams.setMargins(0, topPx , 0, topPx);
         layoutParams.gravity = Gravity.CENTER;
         tvPrice.setLayoutParams(layoutParams);
-        tvPrice.setText(bean.getCoupnPrices());
+        tvPrice.setText(bean.getPrices());
         tvPrice.setTextColor(Color.parseColor(fontColor));
         tvPrice.setGravity(Gravity.CENTER_HORIZONTAL);
         tvPrice.setSingleLine();
@@ -74,7 +74,7 @@ public class Promotion1Widget extends LinearLayout {
         layoutParams.gravity = Gravity.CENTER;
         tvName.setLayoutParams(layoutParams);
         tvName.setGravity(Gravity.CENTER_HORIZONTAL);
-        tvName.setText(bean.getCoupnName());
+        tvName.setText(bean.getName());
         tvName.setTextColor( Color.parseColor( fontColor));
         tvName.setSingleLine();
         tvName.setTextSize(14);

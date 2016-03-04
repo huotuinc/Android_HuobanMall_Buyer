@@ -7,45 +7,47 @@ import java.util.List;
 /**
  * 橱窗组件
  * Created by jinxiangdong on 2016/1/12.
+ * Done
  */
 public class AdWindowConfig extends BaseConfig {
     /**
      * 标题名
      */
-    private String title;
+    private String text_name;
     /**
      * 内容区标题
      */
-    private String contentTitle;
+    private String text_contentName;
     /**
      * 内容区说明
      */
-    private String contentCaption;
+    private String text_description;
 
     private List<AdImageBean> images;
 
-    public String getTitle() {
-        return title;
+
+    public String getText_name() {
+        return text_name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setText_name(String text_name) {
+        this.text_name = text_name;
     }
 
-    public String getContentTitle() {
-        return contentTitle;
+    public String getText_contentName() {
+        return text_contentName;
     }
 
-    public void setContentTitle(String contentTitle) {
-        this.contentTitle = contentTitle;
+    public void setText_contentName(String text_contentName) {
+        this.text_contentName = text_contentName;
     }
 
-    public String getContentCaption() {
-        return contentCaption;
+    public String getText_description() {
+        return text_description;
     }
 
-    public void setContentCaption(String contentCaption) {
-        this.contentCaption = contentCaption;
+    public void setText_description(String text_description) {
+        this.text_description = text_description;
     }
 
     public List<AdImageBean> getImages() {

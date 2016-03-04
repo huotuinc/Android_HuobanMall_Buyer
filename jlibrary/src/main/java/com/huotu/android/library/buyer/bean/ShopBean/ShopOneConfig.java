@@ -4,153 +4,192 @@ package com.huotu.android.library.buyer.bean.ShopBean;
 import com.huotu.android.library.buyer.bean.BaseConfig;
 
 /**
+ * 店铺头部组件一
  * Created by jinxiangdong on 2016/1/18.
+ * Done
  */
 public class ShopOneConfig extends BaseConfig {
     /**
      * 类型：
      * 0 –默认(默认时则根据api获得logo)
-     * 1  -自定义(自定义则不同过api获得logo,使用用户上传的配置信息)
+     * 1 -自定义(自定义则不同过api获得logo,使用用户上传的配置信息)
      */
-    private int type;
+    private int show_type;
     /**
      * 背景颜色,颜色值统一用hex color格式,比如#ffffff
      */
-    private String widgetBackColor;
+    private String backColor;
     /**
      * 字体颜色,按照hex color格式来,比如:#ffffff
      */
-    private String widgetFontColor;
-    private int aroundDistance;
-    private int verticalDistance;
-    private String leftImageUrl;
-    private String leftLinkName;
-    private String leftLinkType;
-    private String leftLinkTypeName;
-    private String leftLinkUrl;
-    private String rightImageUrl;
-    private String rightLinkName;
-    private String rightLinkType;
-    private String rightLinkTypeName;
-    private String rightLinkUrl;
+    private String fontColor;
+    /**
+     * 上下距离
+     */
+    private int paddingTop;
+    /**
+     * 左右距离
+     */
+    private int paddingLeft;
+    /**
+     * 左边图片
+     */
+    private String imageUrl1;
+    /**
+     * 文字
+     */
+    private String title_linkname1;
+    /**
+     *链接类型(app忽略)
+     */
+    private String linkType1;
+    /**
+     * 链接名称(app忽略)
+     */
+    private String linkName1;
+    /**
+     * 链接地址
+     */
+    private String linkUrl1;
+    /**
+     * 右边图标
+     */
+    private String imageUrl;
+    /**
+     * 右边图标名称
+     */
+    private String title_linkname;
+    /**
+     * 链接类型(app忽略)
+     */
+    private String linkType;
+    /**
+     * 链接名称(app忽略)
+     */
+    private String linkName;
+    /**
+     * 右边图标链接地址(默认提供搜索链接)
+     */
+    private String linkUrl;
 
-    public int getType() {
-        return type;
+
+    public int getShow_type() {
+        return show_type;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setShow_type(int show_type) {
+        this.show_type = show_type;
     }
 
-    public String getWidgetBackColor() {
-        return widgetBackColor;
+    public String getBackColor() {
+        return backColor;
     }
 
-    public void setWidgetBackColor(String widgetBackColor) {
-        this.widgetBackColor = widgetBackColor;
+    public void setBackColor(String backColor) {
+        this.backColor = backColor;
     }
 
-    public String getWidgetFontColor() {
-        return widgetFontColor;
+    public String getFontColor() {
+        return fontColor;
     }
 
-    public void setWidgetFontColor(String widgetFontColor) {
-        this.widgetFontColor = widgetFontColor;
+    public void setFontColor(String fontColor) {
+        this.fontColor = fontColor;
     }
 
-    public int getAroundDistance() {
-        return aroundDistance;
+    public int getPaddingTop() {
+        return paddingTop;
     }
 
-    public void setAroundDistance(int aroundDistance) {
-        this.aroundDistance = aroundDistance;
+    public void setPaddingTop(int paddingTop) {
+        this.paddingTop = paddingTop;
     }
 
-    public int getVerticalDistance() {
-        return verticalDistance;
+    public int getPaddingLeft() {
+        return paddingLeft;
     }
 
-    public void setVerticalDistance(int verticalDistance) {
-        this.verticalDistance = verticalDistance;
+    public void setPaddingLeft(int paddingLeft) {
+        this.paddingLeft = paddingLeft;
     }
 
-    public String getLeftImageUrl() {
-        return leftImageUrl;
+    public String getImageUrl1() {
+        return imageUrl1;
     }
 
-    public void setLeftImageUrl(String leftImageUrl) {
-        this.leftImageUrl = leftImageUrl;
+    public void setImageUrl1(String imageUrl1) {
+        this.imageUrl1 = imageUrl1;
     }
 
-    public String getLeftLinkName() {
-        return leftLinkName;
+    public String getTitle_linkname1() {
+        return title_linkname1;
     }
 
-    public void setLeftLinkName(String leftLinkName) {
-        this.leftLinkName = leftLinkName;
+    public void setTitle_linkname1(String title_linkname1) {
+        this.title_linkname1 = title_linkname1;
     }
 
-    public String getLeftLinkType() {
-        return leftLinkType;
+    public String getLinkType1() {
+        return linkType1;
     }
 
-    public void setLeftLinkType(String leftLinkType) {
-        this.leftLinkType = leftLinkType;
+    public void setLinkType1(String linkType1) {
+        this.linkType1 = linkType1;
     }
 
-    public String getLeftLinkTypeName() {
-        return leftLinkTypeName;
+    public String getLinkName1() {
+        return linkName1;
     }
 
-    public void setLeftLinkTypeName(String leftLinkTypeName) {
-        this.leftLinkTypeName = leftLinkTypeName;
+    public void setLinkName1(String linkName1) {
+        this.linkName1 = linkName1;
     }
 
-    public String getLeftLinkUrl() {
-        return leftLinkUrl;
+    public String getLinkUrl1() {
+        return linkUrl1;
     }
 
-    public void setLeftLinkUrl(String leftLinkUrl) {
-        this.leftLinkUrl = leftLinkUrl;
+    public void setLinkUrl1(String linkUrl1) {
+        this.linkUrl1 = linkUrl1;
     }
 
-    public String getRightImageUrl() {
-        return rightImageUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setRightImageUrl(String rightImageUrl) {
-        this.rightImageUrl = rightImageUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public String getRightLinkName() {
-        return rightLinkName;
+    public String getTitle_linkname() {
+        return title_linkname;
     }
 
-    public void setRightLinkName(String rightLinkName) {
-        this.rightLinkName = rightLinkName;
+    public void setTitle_linkname(String title_linkname) {
+        this.title_linkname = title_linkname;
     }
 
-    public String getRightLinkType() {
-        return rightLinkType;
+    public String getLinkType() {
+        return linkType;
     }
 
-    public void setRightLinkType(String rightLinkType) {
-        this.rightLinkType = rightLinkType;
+    public void setLinkType(String linkType) {
+        this.linkType = linkType;
     }
 
-    public String getRightLinkTypeName() {
-        return rightLinkTypeName;
+    public String getLinkName() {
+        return linkName;
     }
 
-    public void setRightLinkTypeName(String rightLinkTypeName) {
-        this.rightLinkTypeName = rightLinkTypeName;
+    public void setLinkName(String linkName) {
+        this.linkName = linkName;
     }
 
-    public String getRightLinkUrl() {
-        return rightLinkUrl;
+    public String getLinkUrl() {
+        return linkUrl;
     }
 
-    public void setRightLinkUrl(String rightLinkUrl) {
-        this.rightLinkUrl = rightLinkUrl;
+    public void setLinkUrl(String linkUrl) {
+        this.linkUrl = linkUrl;
     }
 }

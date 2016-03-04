@@ -67,9 +67,9 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget {
     根据配置，设置布局样式
      */
     private void create_Layout(){
-        if( this.listViewThreeConfig.getWidgetLayout().equals(Constant.WIDGETLAYOUT_SIZE_2) ){
+        if( this.listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_2) ){
             create_YIDALIANGXIAO();
-        }else if( this.listViewThreeConfig.getWidgetLayout().equals(Constant.WIDGETLAYOUT_SIZE_3) ){
+        }else if( this.listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_3) ){
             create_XIANGXILIEBIAO();
         }else{
             Logger.e("未知布局样式");
@@ -79,9 +79,9 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget {
     private void create_YIDALIANGXIAO(){
         this.layoutInflater.inflate(R.layout.listview_three_item1, this, true);
 
-        if( this.listViewThreeConfig.getGridStyle().equals(Constant.GRIDSTYLE_CARD)){
+        if( this.listViewThreeConfig.getGoods_layer().equals(Constant.LAYER_STYLE_CARD)){
             setStyle_YIDALIANGXIAO_KAPINGBUJU();
-        }else if(this.listViewThreeConfig.getGridStyle().equals(Constant.GRIDSTYLE_NORMAL) ){
+        }else if(this.listViewThreeConfig.getGoods_layer().equals(Constant.LAYER_STYLE_NORMAL) ){
             setStyle_YIDALIANGXIAO_JIJIANBUJU();
         }else{
             Logger.e("未知布局样式");
@@ -113,7 +113,7 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget {
         rl2.setBackgroundResource(R.drawable.gray_border_style);
         rl3.setBackgroundResource(R.drawable.gray_border_style);
 
-        if( !this.listViewThreeConfig.isShowName() ){
+        if( !this.listViewThreeConfig.isProduct_showname() ){
             tvName1.setVisibility(View.GONE);
             tvName2.setVisibility(View.GONE);
             tvName3.setVisibility(View.GONE);
@@ -123,7 +123,7 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget {
             tvName3.setVisibility(View.VISIBLE);
         }
 
-        if( !this.listViewThreeConfig.isShowPrices() ){
+        if( !this.listViewThreeConfig.isProduct_showprices() ){
             tvPrice1.setVisibility(View.GONE);
             tvPrice2.setVisibility(View.GONE);
             tvPrice3.setVisibility(View.GONE);
@@ -133,7 +133,7 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget {
             tvPrice3.setVisibility(View.VISIBLE);
         }
 
-        if( !this.listViewThreeConfig.isShowUserInteger() ){
+        if( !this.listViewThreeConfig.isProduct_userInteger() ){
             tvJiFen1.setVisibility(View.GONE);
             tvJiFen2.setVisibility(View.GONE);
             tvJiFen3.setVisibility(View.GONE);
@@ -297,9 +297,9 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget {
     private void create_XIANGXILIEBIAO(){
         this.layoutInflater.inflate(R.layout.listview_three_item2, this, true);
 
-        if( this.listViewThreeConfig.getGridStyle().equals(Constant.GRIDSTYLE_CARD) ){
+        if( this.listViewThreeConfig.getGoods_layer().equals(Constant.LAYER_STYLE_CARD) ){
             setStyle_XIANGXILIEBIAO_KAPINGBUJU();
-        }else if( this.listViewThreeConfig.getGridStyle().equals(Constant.GRIDSTYLE_NORMAL)){
+        }else if( this.listViewThreeConfig.getGoods_layer().equals(Constant.LAYER_STYLE_NORMAL)){
             setStyle_XIANGXILIEBIAO_JIJIANBUJU();
         }
     }
@@ -381,26 +381,26 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget {
     }
 
     private void set_Image_Height( SimpleDraweeView iv , int width , GoodsBean item){
-        if( listViewThreeConfig.getWidgetLayout().equals( Constant.WIDGETLAYOUT_SIZE_2) ){
+        if( listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_2) ){
             //int width = iv.getMeasuredWidth();
             FrescoDraweeController.loadImage(iv, width, item.getThumbnailPic());
         }
-        if( listViewThreeConfig.getWidgetLayout().equals( Constant.WIDGETLAYOUT_SIZE_3) ) {
+        if( listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_3) ) {
             //int width = MyApplication.ScreenWidth * 2 / 5;
             FrescoDraweeController.loadImage(iv, width, item.getThumbnailPic());
         }
     }
 
     private void set_Price_Style( TextView tv , GoodsBean item ){
-        if( listViewThreeConfig.getWidgetLayout().equals( Constant.WIDGETLAYOUT_SIZE_2) ) {
-            if (listViewThreeConfig.getGridStyle().equals(Constant.GRIDSTYLE_CARD)) {
+        if( listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_2) ) {
+            if (listViewThreeConfig.getGoods_layer().equals(Constant.LAYER_STYLE_CARD)) {
                 String priceStr = CommonUtil.FormatDouble(item.getMarketPrice());
                 String zPriceStr = CommonUtil.FormatDouble( item.getPrice());
                 SpanningUtil.set_Price_Format2(tv, priceStr, zPriceStr, Color.RED, Color.GRAY);
-            } else if (listViewThreeConfig.getGridStyle().equals( Constant.GRIDSTYLE_NORMAL )) {
+            } else if (listViewThreeConfig.getGoods_layout().equals( Constant.LAYER_STYLE_NORMAL )) {
                 tv.setTextColor(Color.WHITE);
             }
-        }else if( listViewThreeConfig.getWidgetLayout().equals(Constant.WIDGETLAYOUT_SIZE_3)) {
+        }else if( listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_3)) {
             String priceStr = CommonUtil.FormatDouble(item.getMarketPrice());
             String zPriceStr = CommonUtil.FormatDouble(item.getPrice());
             SpanningUtil.set_Price_Format1(tv, priceStr, zPriceStr, Color.RED , Color.GRAY);

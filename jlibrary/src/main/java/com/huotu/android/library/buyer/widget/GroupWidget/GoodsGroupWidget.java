@@ -296,9 +296,9 @@ public class GoodsGroupWidget extends LinearLayout implements View.OnClickListen
 
         rightMenu.addView(rlGroup);
 
-        if( config.getGirdLayout().equals(Constant.GRIDSTYLE_CARD)) {
+        if( config.getGoods_layout().equals(Constant.LAYER_STYLE_CARD)) {
             create_card( rightMenu  );
-        }else if(config.getGirdLayout().equals(Constant.GRIDSTYLE_NORMAL)){
+        }else if(config.getGoods_layout().equals(Constant.LAYER_STYLE_NORMAL)){
             create_normal();
         }
     }
@@ -357,7 +357,7 @@ public class GoodsGroupWidget extends LinearLayout implements View.OnClickListen
             TextView tvJifen = (TextView) view.findViewById(R.id.group_goods_card_jifen);
 
             tvName.setText(bean.getGoodname());
-            if( config.getIsShowUserInteger().equals(Constant.GOODS_SHOW) ){
+            if( config.getProduct_userInteger().equals(Constant.GOODS_SHOW) ){
                 tvJifen.setText( bean.getJifen() );
             }
 

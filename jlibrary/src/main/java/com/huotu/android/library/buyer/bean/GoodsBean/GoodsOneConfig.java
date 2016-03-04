@@ -5,6 +5,7 @@ import com.huotu.android.library.buyer.bean.BaseConfig;
 /**
  * 单方格(默认样式)
  * Created by jinxiangdong on 2016/1/25.
+ * Done
  */
 public class GoodsOneConfig extends BaseConfig {
     /**
@@ -12,31 +13,31 @@ public class GoodsOneConfig extends BaseConfig {
      * card   -卡片样式
      * normal –极简样式
      */
-    private String gridStyle;
+    private String goods_layer;
     /**
      * 是否显示商品名
      * show  -显示
      * hide–不显示
      */
-    private String isShowName;
+    private String product_showname;
     /**
      * 是否显商品简介
      * show  -显示
      * hide –不显示
      */
-    private String isShowSyno;
+    private String product_showsyno;
     /**
      * 是否显示价格
      * show  -显示
      * hide–不显示
      */
-    private String isShowPrices;
+    private String product_showprices;
     /**
      * 是否显示返利积分
      * show  -显示
      * hide–不显示
      */
-    private String isShowUserInteger;
+    private String product_userInteger;
     /**
      * 多个商品，ID用逗号隔开,如:1,2,3,4
      */
@@ -44,15 +45,9 @@ public class GoodsOneConfig extends BaseConfig {
     /**
      * 返利图标(该图标资源存储的是相对地址，需要app配置一个资源地址拼接出资源绝对地址)。
      */
-    private String rebateIcon;
+    private String background;
 
-//    private String imageUrl;
-//    private String name;
-//    private String desc;
-//    private String price;
-//    private String zPrice;
-//    private String jifen;
-//    private String jifenUrl;
+
     private int iconWidth;
     private int iconHeight;
 
@@ -61,52 +56,52 @@ public class GoodsOneConfig extends BaseConfig {
     private int topMargion;
     private int bottomMargion;
 
-    public String getGridStyle() {
-        return gridStyle;
+    public String getGoods_layer() {
+        return goods_layer;
     }
 
-    public void setGridStyle(String gridStyle) {
-        this.gridStyle = gridStyle;
+    public void setGoods_layer(String goods_layer) {
+        this.goods_layer = goods_layer;
     }
 
-    public String getIsShowName() {
-        return isShowName;
+    public String getProduct_showname() {
+        return product_showname;
     }
 
-    public void setIsShowName(String isShowName) {
-        this.isShowName = isShowName;
+    public void setProduct_showname(String product_showname) {
+        this.product_showname = product_showname;
     }
 
-    public String getIsShowSyno() {
-        return isShowSyno;
+    public String getProduct_showsyno() {
+        return product_showsyno;
     }
 
-    public void setIsShowSyno(String isShowSyno) {
-        this.isShowSyno = isShowSyno;
+    public void setProduct_showsyno(String product_showsyno) {
+        this.product_showsyno = product_showsyno;
     }
 
-    public String getIsShowPrices() {
-        return isShowPrices;
+    public String getProduct_showprices() {
+        return product_showprices;
     }
 
-    public void setIsShowPrices(String isShowPrices) {
-        this.isShowPrices = isShowPrices;
+    public void setProduct_showprices(String product_showprices) {
+        this.product_showprices = product_showprices;
     }
 
-    public String getIsShowUserInteger() {
-        return isShowUserInteger;
+    public String getProduct_userInteger() {
+        return product_userInteger;
     }
 
-    public void setIsShowUserInteger(String isShowUserInteger) {
-        this.isShowUserInteger = isShowUserInteger;
+    public void setProduct_userInteger(String product_userInteger) {
+        this.product_userInteger = product_userInteger;
     }
 
-    public String getRebateIcon() {
-        return rebateIcon;
+    public String getBackground() {
+        return background;
     }
 
-    public void setRebateIcon(String rebateIcon) {
-        this.rebateIcon = rebateIcon;
+    public void setBackground(String background) {
+        this.background = background;
     }
 
     public String getBindDataID() {
@@ -116,72 +111,6 @@ public class GoodsOneConfig extends BaseConfig {
     public void setBindDataID(String bindDataID) {
         this.bindDataID = bindDataID;
     }
-
-
-//
-//    public List<String> getDisplayItems() {
-//        return displayItems;
-//    }
-//
-//    public void setDisplayItems(List<String> displayItems) {
-//        this.displayItems = displayItems;
-//    }
-
-//    public String getImageUrl() {
-//        return imageUrl;
-//    }
-//
-//    public void setImageUrl(String imageUrl) {
-//        this.imageUrl = imageUrl;
-//    }
-//
-//    public String getJifen() {
-//        return jifen;
-//    }
-//
-//    public void setJifen(String jifen) {
-//        this.jifen = jifen;
-//    }
-
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public String getDesc() {
-//        return desc;
-//    }
-//
-//    public void setDesc(String desc) {
-//        this.desc = desc;
-//    }
-//
-//    public String getPrice() {
-//        return price;
-//    }
-
-//    public void setPrice(String price) {
-//        this.price = price;
-//    }
-//
-//    public String getzPrice() {
-//        return zPrice;
-//    }
-//
-//    public void setzPrice(String zPrice) {
-//        this.zPrice = zPrice;
-//    }
-//
-//    public String getJifenUrl() {
-//        return jifenUrl;
-//    }
-//
-//    public void setJifenUrl(String jifenUrl) {
-//        this.jifenUrl = jifenUrl;
-//    }
 
     public int getIconWidth() {
         return iconWidth;

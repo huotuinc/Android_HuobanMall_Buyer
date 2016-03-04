@@ -95,7 +95,7 @@ public class NavigationWidget extends LinearLayout implements View.OnClickListen
         tvTitle.setEllipsize(TextUtils.TruncateAt.END);
         tvTitle.setTextColor(Color.BLACK);
         tvTitle.setTextSize( 18 );
-        tvTitle.setText(item.getLinkName());
+        tvTitle.setText(item.getText_Name());
         layoutParams1 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams1.addRule(RelativeLayout.CENTER_VERTICAL);
         layoutParams1.addRule(RelativeLayout.LEFT_OF, tvArrow_id);

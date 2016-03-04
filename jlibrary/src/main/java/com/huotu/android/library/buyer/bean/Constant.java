@@ -1,7 +1,8 @@
 package com.huotu.android.library.buyer.bean;
 
 /**
- * Created by Administrator on 2016/1/27.
+ *
+ * Created by jinxiangdong on 2016/1/27.
  */
 public class Constant {
     /**
@@ -52,15 +53,15 @@ public class Constant {
     /**
      * 列表样式: card -卡片样式
      */
-    public static String GRIDSTYLE_CARD ="gridStyle_card";
+    public static String LAYER_STYLE_CARD ="card";
     /**
      * 列表样式:极简样式
      */
-    public static String GRIDSTYLE_NORMAL ="gridStyle_normal";
+    public static String LAYER_STYLE_NORMAL ="normal";
     /**
      * 列表样式: 促销样式
      */
-    public static String GRIDSTYLE_PROMOTION ="gridStyle_promotion";
+    public static String LAYER_STYLE_PROMOTION ="promotion";
     /**
      * 是否显示商品名
      * show  -显示

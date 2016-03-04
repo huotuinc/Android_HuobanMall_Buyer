@@ -30,10 +30,10 @@ public class Guides2Widget extends FrameLayout {
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,1);
 
         tvBg.setBackgroundResource(R.color.gray);
-        int top = config.getVerticalDistance();
-        int bottom = config.getVerticalDistance();
-        int left = config.getAroundDistance();
-        int right = config.getAroundDistance();
+        int top = config.getPaddingTop();
+        int bottom = config.getPaddingTop();
+        int left = config.getPaddingLeft();
+        int right = config.getPaddingLeft();
         int leftpx = DensityUtils.dip2px(getContext(), left);
         int toppx = DensityUtils.dip2px( getContext() , top );
         layoutParams.setMargins(leftpx, toppx, leftpx, toppx);
@@ -50,14 +50,14 @@ public class Guides2Widget extends FrameLayout {
         layoutParams.gravity = Gravity.CENTER;
         tvTitle.setLayoutParams(layoutParams);
         tvTitle.setGravity(Gravity.CENTER);
-        tvTitle.setBackgroundColor(Color.parseColor( config.getWidgetBackColor()));
+        tvTitle.setBackgroundColor(Color.parseColor( config.getBackColor()));
         int px = DensityUtils.dip2px(getContext() , 8);
         tvTitle.setPadding( px ,0, px ,0);
-        tvTitle.setTextColor(Color.parseColor(  config.getWidgetFontColor()));
+        tvTitle.setTextColor(Color.parseColor(  config.getFontColor()));
         tvTitle.setText(config.getName());
         tvTitle.setTextSize(18);
 
-        this.setBackgroundColor(Color.parseColor(  config.getWidgetBackColor()));
+        this.setBackgroundColor(Color.parseColor(  config.getBackColor()));
 
         this.addView(tvBg);
         this.addView(tvTitle);

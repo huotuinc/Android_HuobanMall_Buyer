@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * 单一图片组件
  * Created by jinxiangdong on 2016/1/12.
+ * Done
  */
 public class AdOneConfig extends AdBaseConfig {
     private List<AdImageBean> images;

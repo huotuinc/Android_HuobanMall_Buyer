@@ -1,4 +1,4 @@
-package com.huotu.android.library.widget.GoodsListWidget;
+package com.huotu.android.library.buyer.widget.GoodsListWidget;
 
 import android.widget.LinearLayout;
 import android.content.Context;

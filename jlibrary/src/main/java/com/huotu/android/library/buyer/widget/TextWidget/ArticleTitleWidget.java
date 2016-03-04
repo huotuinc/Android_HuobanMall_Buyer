@@ -34,15 +34,15 @@ public class ArticleTitleWidget extends LinearLayout{
         View view =layoutInflater.inflate(R.layout.text_articletitle, this, true);
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.text_articletitle_rl);
-        rl.setPadding( articleTitleConfig.getLeftMargion() , articleTitleConfig.getTopMargion() , articleTitleConfig.getRightMargion() , articleTitleConfig.getBottomMargion() );
+        //rl.setPadding( articleTitleConfig.getLeftMargion() , articleTitleConfig.getTopMargion() , articleTitleConfig.getRightMargion() , articleTitleConfig.getBottomMargion() );
         tvTitle = (TextView)findViewById(R.id.text_articletitle_title);
         tvDateAuthorLink = (TextView) findViewById(R.id.text_articletitle_date_author_link);
 
-        tvTitle.setText( articleTitleConfig.getSubjectName() );
+        tvTitle.setText( articleTitleConfig.getTitle_name() );
 
-        String content = articleTitleConfig.getDate() + " " + articleTitleConfig.getAuthor() +" " + articleTitleConfig.getLinkName();
+        String content = articleTitleConfig.getTitle_time() + " " + articleTitleConfig.getTitle_author() +" " + articleTitleConfig.getLinkName();
         SpannableString spannableString = new SpannableString( content );
-        int startIndex = articleTitleConfig.getDate().length() + 1 + articleTitleConfig.getAuthor().length() +1;
+        int startIndex = articleTitleConfig.getTitle_time().length() + 1 + articleTitleConfig.getTitle_author().length() +1;
         int endIndex = content.length();
         //spannableString.setSpan( new ForegroundColorSpan( getResources().getColor( R.color.steelblue )), startIndex , endIndex , Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         spannableString.setSpan( new LinkClickableSpan( articleTitleConfig.getLinkName() ) ,startIndex , endIndex , Spanned.SPAN_INCLUSIVE_INCLUSIVE );

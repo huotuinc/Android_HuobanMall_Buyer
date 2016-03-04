@@ -236,11 +236,11 @@ public class GoodsTwoWidget extends LinearLayout {
             LinearLayout llItem = lls.get(position);
             count++;
             RelativeLayout oneWidget=null;
-            if( goodsTwoConfig.getGridStyle().equals(Constant.GRIDSTYLE_CARD)) {
+            if( goodsTwoConfig.getGoods_layer().equals(Constant.LAYER_STYLE_CARD)) {
                 oneWidget = create_card(item);
-            }else if(goodsTwoConfig.getGridStyle().equals(Constant.GRIDSTYLE_NORMAL)){
+            }else if(goodsTwoConfig.getGoods_layer().equals(Constant.LAYER_STYLE_NORMAL)){
                 oneWidget = create_jijian(item);
-            }else if(goodsTwoConfig.getGridStyle().equals(Constant.GRIDSTYLE_PROMOTION)){
+            }else if(goodsTwoConfig.getGoods_layer().equals(Constant.LAYER_STYLE_PROMOTION)){
                 oneWidget=create_chuxiao(item);
             }
             llItem.addView(oneWidget);
@@ -265,7 +265,7 @@ public class GoodsTwoWidget extends LinearLayout {
         ll.setOrientation(HORIZONTAL);
         RelativeLayout rlOne=null;
         RelativeLayout rlTwo=null;
-        if( goodsTwoConfig.getGridStyle().equals(Constant.GRIDSTYLE_CARD) ) {
+        if( goodsTwoConfig.getGoods_layer().equals(Constant.LAYER_STYLE_CARD) ) {
             rlOne = create_card(item1);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) rlOne.getLayoutParams();//new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1.0f);
             layoutParams.weight = 1.0f;
@@ -282,7 +282,7 @@ public class GoodsTwoWidget extends LinearLayout {
 
                 rlTwo.setLayoutParams(layoutParams);
             }
-        }else if( goodsTwoConfig.getGridStyle().equals(Constant.GRIDSTYLE_NORMAL)){
+        }else if( goodsTwoConfig.getGoods_layer().equals(Constant.LAYER_STYLE_NORMAL)){
             rlOne = create_jijian(item1);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1.0f);
             rlOne.setLayoutParams(layoutParams);
@@ -296,7 +296,7 @@ public class GoodsTwoWidget extends LinearLayout {
                 layoutParams.setMargins(2,2,2,2);
                 rlTwo.setLayoutParams(layoutParams);
             }
-        }else if( goodsTwoConfig.getGridStyle().equals(Constant.GRIDSTYLE_PROMOTION)){
+        }else if( goodsTwoConfig.getGoods_layer().equals(Constant.LAYER_STYLE_PROMOTION)){
             rlOne = create_chuxiao(item1);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1.0f);
             rlOne.setLayoutParams(layoutParams);
@@ -365,7 +365,7 @@ public class GoodsTwoWidget extends LinearLayout {
         tvJifen = new TextView( getContext() );
         tvJifen.setId( tvJifen.hashCode());
 
-        if(  TextUtils.isEmpty( goodsTwoConfig.getRebateIcon()) ) {
+        if(  TextUtils.isEmpty( goodsTwoConfig.getBackground()) ) {
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.ALIGN_TOP, tvPrice.getId());
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -398,7 +398,7 @@ public class GoodsTwoWidget extends LinearLayout {
 
 
     protected void setStyle( GoodsBean good ){
-        if( this.goodsTwoConfig.getIsShowName().equals( Constant.GOODS_SHOW )){
+        if( this.goodsTwoConfig.getProduct_showname().equals( Constant.GOODS_SHOW )){
             tvName.setVisibility(VISIBLE);
         }else {
             tvName.setVisibility(GONE);
@@ -408,12 +408,12 @@ public class GoodsTwoWidget extends LinearLayout {
 //        }else {
 //            tvDesc.setVisibility(GONE);
 //        }
-        if( this.goodsTwoConfig.getIsShowPrices().equals(Constant.GOODS_SHOW) ){
+        if( this.goodsTwoConfig.getProduct_showprices().equals(Constant.GOODS_SHOW) ){
             tvPrice.setVisibility(VISIBLE);
         }else {
             tvPrice.setVisibility(GONE);
         }
-        if( this.goodsTwoConfig.getIsShowUserInteger().contains(Constant.GOODS_SHOW) ){
+        if( this.goodsTwoConfig.getProduct_userInteger().contains(Constant.GOODS_SHOW) ){
             tvJifen.setVisibility(VISIBLE);
         }else {
             tvJifen.setVisibility(GONE);
@@ -431,9 +431,9 @@ public class GoodsTwoWidget extends LinearLayout {
         String jifenStr = String.valueOf( good.getRebate() );
         tvJifen.setText( jifenStr +"积分" );
 
-        if( ivJifen!=null && TextUtils.isEmpty(goodsTwoConfig.getRebateIcon()) ==false ){
+        if( ivJifen!=null && TextUtils.isEmpty(goodsTwoConfig.getBackground()) ==false ){
             int iconWidth = DensityUtils.dip2px( getContext() , goodsTwoConfig.getIconWidth());
-            FrescoDraweeController.loadImage(ivJifen, iconWidth, goodsTwoConfig.getRebateIcon());
+            FrescoDraweeController.loadImage(ivJifen, iconWidth, goodsTwoConfig.getBackground());
         }
     }
 

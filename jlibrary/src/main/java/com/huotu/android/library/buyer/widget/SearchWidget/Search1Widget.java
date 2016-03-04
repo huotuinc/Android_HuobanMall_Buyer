@@ -27,9 +27,9 @@ public class Search1Widget  extends LinearLayout {
 
         this.config = config;
 
-        if( this.config.getSearchStyle().equals(Constant.CUSTOM_SEARCH_STYLE_A )){
+        if( this.config.getSearch_style().equals(Constant.CUSTOM_SEARCH_STYLE_A )){
             setStyle1();
-        }else if(this.config.getSearchStyle().equals(Constant.CUSTOM_SEARCH_STYLE_B)){
+        }else if(this.config.getSearch_style().equals(Constant.CUSTOM_SEARCH_STYLE_B)){
             setStyle2();
         }
     }
@@ -38,11 +38,11 @@ public class Search1Widget  extends LinearLayout {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         layoutInflater.inflate(R.layout.search_one_2,this,true);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        int leftpx = DensityUtils.dip2px(getContext(), config.getAroundDistance());
-        int toppx = DensityUtils.dip2px(getContext(), config.getVerticalDistance());
+        int leftpx = DensityUtils.dip2px(getContext(), config.getPaddingLeft());
+        int toppx = DensityUtils.dip2px(getContext(), config.getPaddingTop());
         //layoutParams.setMargins(leftpx, toppx, leftpx, toppx);
         this.setPadding( leftpx , toppx , leftpx , toppx );
-        this.setBackgroundColor( Color.parseColor( config.getWidgetBackColor() ) );
+        this.setBackgroundColor( Color.parseColor( config.getSearch_background() ) );
         this.setLayoutParams(layoutParams);
 
         tvSearch = (TextView)findViewById(R.id.search_one_search);
@@ -59,11 +59,11 @@ public class Search1Widget  extends LinearLayout {
         layoutInflater.inflate(R.layout.search_one,this,true);
 
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        int leftpx = DensityUtils.dip2px( getContext() , config.getAroundDistance());
-        int toppx = DensityUtils.dip2px( getContext() , config.getVerticalDistance());
+        int leftpx = DensityUtils.dip2px( getContext() , config.getPaddingLeft());
+        int toppx = DensityUtils.dip2px( getContext() , config.getPaddingTop());
         //layoutParams.setMargins( leftpx , toppx , leftpx , toppx );
         this.setPadding( leftpx , toppx , leftpx , toppx );
-        this.setBackgroundColor(Color.parseColor(config.getWidgetBackColor()));
+        this.setBackgroundColor(Color.parseColor(config.getSearch_background()));
 
         this.setLayoutParams(layoutParams);
 

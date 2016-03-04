@@ -3,33 +3,34 @@ package com.huotu.android.library.buyer.bean.TextBean;
 /**
  * 标题组件 配置信息
  * Created by jinxiangdong on 2016/1/7.
+ * Done
  */
 public class TitleConfig extends BaseTextConfig {
     /**
      * 标题名称
      */
-    private String subjectName;
+    private String title_name;
     /**
      * 标题字体大小
      */
-    private int subjectFontSize;
+    private int fontSize;
     /**
      * 子标题
      */
-    private String subTitle;
+    private String title_subname;
     /**
      * 组件显示位置
      * （text-left,text-center,text-right）左、中、右对齐。
      */
-    private String widgetAlign;
+    private String title_position;
     /**
      * 背景颜色 #ffffff格式(Hex color)
      */
-    private String widgetBackColor;
+    private String title_background;
     /**
      * 链接名称
      */
-    private String linkName;
+    private String title_linkname;
     /**
      * 链接地址
      */
@@ -41,47 +42,47 @@ public class TitleConfig extends BaseTextConfig {
     /**
      * 链接类型名称(目前可以忽略, 只用于服务端编辑时使用)
      */
-    private String linkTypeName;
+    private String linkName;
 
 
-    public String getSubjectName() {
-        return subjectName;
+    public String getTitle_name() {
+        return title_name;
     }
 
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
+    public void setTitle_name(String title_name) {
+        this.title_name = title_name;
     }
 
-    public int getSubjectFontSize() {
-        return subjectFontSize;
+    public int getFontSize() {
+        return fontSize;
     }
 
-    public void setSubjectFontSize(int subjectFontSize) {
-        this.subjectFontSize = subjectFontSize;
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
     }
 
-    public String getWidgetAlign() {
-        return widgetAlign;
+    public String getTitle_position() {
+        return title_position;
     }
 
-    public void setWidgetAlign(String widgetAlign) {
-        this.widgetAlign = widgetAlign;
+    public void setTitle_position(String title_position) {
+        this.title_position = title_position;
     }
 
-    public String getWidgetBackColor() {
-        return widgetBackColor;
+    public String getTitle_background() {
+        return title_background;
     }
 
-    public void setWidgetBackColor(String widgetBackColor) {
-        this.widgetBackColor = widgetBackColor;
+    public void setTitle_background(String title_background) {
+        this.title_background = title_background;
     }
 
-    public String getLinkName() {
-        return linkName;
+    public String getTitle_linkname() {
+        return title_linkname;
     }
 
-    public void setLinkName(String linkName) {
-        this.linkName = linkName;
+    public void setTitle_linkname(String title_linkname) {
+        this.title_linkname = title_linkname;
     }
 
     public String getLinkUrl() {
@@ -100,19 +101,19 @@ public class TitleConfig extends BaseTextConfig {
         this.linkType = linkType;
     }
 
-    public String getLinkTypeName() {
-        return linkTypeName;
+    public String getLinkName() {
+        return linkName;
     }
 
-    public void setLinkTypeName(String linkTypeName) {
-        this.linkTypeName = linkTypeName;
+    public void setLinkName(String linkName) {
+        this.linkName = linkName;
     }
 
-    public String getSubTitle() {
-        return subTitle;
+    public String getTitle_subname() {
+        return title_subname;
     }
 
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
+    public void setTitle_subname(String title_subname) {
+        this.title_subname = title_subname;
     }
 }

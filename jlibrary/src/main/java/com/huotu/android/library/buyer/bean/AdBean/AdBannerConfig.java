@@ -5,7 +5,9 @@ import com.huotu.android.library.buyer.bean.BaseConfig;
 import java.util.List;
 
 /**
+ * Banner图组件 可以添加多张Banner图片，同时图片大小上传的时候一般为相同大小
  * Created by jinxiangdong on 2016/1/13.
+ * Done
  */
 public class AdBannerConfig extends BaseConfig {
     private List<AdImageBean> images;

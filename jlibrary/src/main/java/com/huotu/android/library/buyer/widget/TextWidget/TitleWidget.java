@@ -14,7 +14,6 @@ import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.TextBean.TitleConfig;
 import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.android.library.buyer.widget.LinkClickListener;
-import com.huotu.android.library.buyer.widget.LinkClickListener;
 
 /**
  * 标题组件
@@ -40,33 +39,33 @@ public class TitleWidget extends LinearLayout implements View.OnClickListener{
         tvTitle= (TextView)findViewById(R.id.text_title_title);
         tvSubTitle = (TextView)findViewById(R.id.text_title_subTitle);
 
-        if( this.config.getWidgetAlign().equals(Constant.TEXT_LEFT) ){
+        if( this.config.getTitle_position().equals(Constant.TEXT_LEFT) ){
             tvTitle.setGravity(Gravity.LEFT);
             tvSubTitle.setGravity(Gravity.LEFT);
-        }else if( this.config.getWidgetAlign().equals( Constant.TEXT_CENTER)){
+        }else if( this.config.getTitle_position().equals( Constant.TEXT_CENTER)){
             tvTitle.setGravity(Gravity.CENTER_HORIZONTAL);
             tvSubTitle.setGravity(Gravity.CENTER_HORIZONTAL);
-        }else if( this.config.getWidgetAlign().equals(Constant.TEXT_RIGHT )){
+        }else if( this.config.getTitle_position().equals(Constant.TEXT_RIGHT )){
             tvTitle.setGravity(Gravity.RIGHT);
             tvSubTitle.setGravity(Gravity.RIGHT);
         }
 
-        tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, config.getSubjectFontSize() );
+        tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, config.getFontSize() );
         try {
-            int bgColor = Color.parseColor( "#"+ this.config.getWidgetBackColor());
+            int bgColor = Color.parseColor( "#"+ this.config.getTitle_background());
             ll.setBackgroundColor(bgColor);
         }catch (Exception ex){
             Logger.e(ex.getMessage(), ex);
         }
 
-        String title = this.config.getSubTitle();
-        if(!TextUtils.isEmpty(this.config.getLinkName())){
-            title += " - " + this.config.getLinkName();
+        String title = this.config.getTitle_name();
+        if(!TextUtils.isEmpty(this.config.getTitle_linkname())){
+            title += " - " + this.config.getTitle_linkname();
         }
 
         tvTitle.setText( title );
         this.tvTitle.setOnClickListener(this);
-        tvSubTitle.setText( this.config.getSubTitle() );
+        tvSubTitle.setText( this.config.getTitle_subname() );
 
 
     }

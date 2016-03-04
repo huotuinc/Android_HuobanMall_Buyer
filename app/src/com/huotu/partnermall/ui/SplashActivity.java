@@ -253,21 +253,21 @@ public class SplashActivity extends BaseActivity {
         item.setLinkUrl("http://res.olquan.cn/resource/images/photo/4471/20160120101325.jpg");
         item.setLinkName("sdf");
         item.setImageUrl("http://res.olquan.cn/resource/images/photo/4471/20160120101325.jpg");
-        item.setImageTitle("sdf");
+        item.setTitle("sdf");
         urls.add(item);
         item = new AdImageBean();
         item.setLinkType("");
         item.setLinkUrl("http://res.olquan.cn/resource/images/photo/4471/20160120101325.jpg");
         item.setLinkName("sdf");
         item.setImageUrl("http://res.olquan.cn/resource/images/photo/4471/20160120101325.jpg");
-        item.setImageTitle("sdf");
+        item.setTitle("sdf");
         urls.add(item);
         item = new AdImageBean();
         item.setLinkType("");
         item.setLinkUrl("http://res.olquan.cn/resource/images/photo/4471/20160120101325.jpg");
         item.setLinkName("sdf");
         item.setImageUrl("http://res.olquan.cn/resource/images/photo/4471/20160120101325.jpg");
-        item.setImageTitle("sdf");
+        item.setTitle("sdf");
         GsonUtil<AdBannerConfig> gsonUtil=new GsonUtil<>();
         String j = gsonUtil.toJson(config);
 

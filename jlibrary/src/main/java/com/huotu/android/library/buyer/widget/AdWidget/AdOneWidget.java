@@ -28,10 +28,10 @@ public class AdOneWidget extends LinearLayout {
 
         LayoutParams llLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        int leftPx = DensityUtils.dip2px(getContext(), config.getLeftDistance());
-        int rightPx = DensityUtils.dip2px( getContext() , config.getRightDistance() );
-        int topPx = DensityUtils.dip2px( getContext() , config.getTopDistance() );
-        int bottomPx = DensityUtils.dip2px( getContext(),config.getBottomDistance() );
+        int leftPx = DensityUtils.dip2px(getContext(), config.getPaddingLeft());
+        int rightPx = DensityUtils.dip2px( getContext() , config.getPaddingRight() );
+        int topPx = DensityUtils.dip2px( getContext() , config.getPaddingTop() );
+        int bottomPx = DensityUtils.dip2px( getContext(),config.getPaddingBottom() );
 
         llLayoutParams.setMargins( leftPx , topPx , rightPx  , bottomPx );
         this.setLayoutParams(llLayoutParams);

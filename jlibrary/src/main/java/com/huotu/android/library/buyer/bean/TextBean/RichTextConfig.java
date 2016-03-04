@@ -3,54 +3,55 @@ package com.huotu.android.library.buyer.bean.TextBean;
 /**
  * 富文本组件
  * Created by jinxiangdong on 2016/1/7.
+ * Done
  */
 public class RichTextConfig extends BaseTextConfig {
     /**
      * 富文本内容(包含html)
      */
-    private String content;
+    private String ueditorValue;
     /**
      * 左右距离
      */
-    private  int aroundDistance;
+    private  int paddingLeft;
     /**
      * 上下距离
      */
-    private int vertialDistance;
+    private int paddingTop;
     /**
      * 背景颜色 #FFFFF格式(Hex color)
      */
-    private String widgetBackColor;
+    private String ueditorBackColor;
 
-    public String getContent() {
-        return content;
+    public String getUeditorValue() {
+        return ueditorValue;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setUeditorValue(String ueditorValue) {
+        this.ueditorValue = ueditorValue;
     }
 
-    public int getAroundDistance() {
-        return aroundDistance;
+    public int getPaddingLeft() {
+        return paddingLeft;
     }
 
-    public void setAroundDistance(int aroundDistance) {
-        this.aroundDistance = aroundDistance;
+    public void setPaddingLeft(int paddingLeft) {
+        this.paddingLeft = paddingLeft;
     }
 
-    public int getVertialDistance() {
-        return vertialDistance;
+    public int getPaddingTop() {
+        return paddingTop;
     }
 
-    public void setVertialDistance(int vertialDistance) {
-        this.vertialDistance = vertialDistance;
+    public void setPaddingTop(int paddingTop) {
+        this.paddingTop = paddingTop;
     }
 
-    public String getWidgetBackColor() {
-        return widgetBackColor;
+    public String getUeditorBackColor() {
+        return ueditorBackColor;
     }
 
-    public void setWidgetBackColor(String widgetBackColor) {
-        this.widgetBackColor = widgetBackColor;
+    public void setUeditorBackColor(String ueditorBackColor) {
+        this.ueditorBackColor = ueditorBackColor;
     }
 }

@@ -8,8 +8,15 @@ import java.util.List;
 public class PageConfig {
     private int version;
     private List<WidgetConfig> widgets;
+    private String title;
 
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public int getVersion() {
         return version;

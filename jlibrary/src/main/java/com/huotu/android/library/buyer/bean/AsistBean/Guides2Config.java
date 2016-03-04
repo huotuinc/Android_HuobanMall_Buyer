@@ -6,44 +6,60 @@ import com.huotu.android.library.buyer.bean.BaseConfig;
 /**
  * 辅助线标题组件
  * Created by jinxiangdong on 2016/1/14.
+ * Done
  */
 public class Guides2Config extends BaseConfig {
-    private int verticalDistance =0;
-    private int aroundDistance = 0;
-    private String widgetBackColor;
-    private String widgetFontColor;
+    /**
+     * 上下距离
+     */
+    private int paddingTop =0;
+    /**
+     * 左右距离
+     */
+    private int paddingLeft = 0;
+    /**
+     * 背景颜色
+     */
+    private String backColor;
+    /**
+     * 字体颜色
+     */
+    private String fontColor;
+    /**
+     * 文字标题
+     */
     private String name;
 
-    public int getVerticalDistance() {
-        return verticalDistance;
+    public int getPaddingTop() {
+        return paddingTop;
     }
 
-    public void setVerticalDistance(int verticalDistance) {
-        this.verticalDistance = verticalDistance;
+    public void setPaddingTop(int paddingTop) {
+        this.paddingTop = paddingTop;
     }
 
-    public int getAroundDistance() {
-        return aroundDistance;
+    public int getPaddingLeft() {
+        return paddingLeft;
     }
 
-    public void setAroundDistance(int aroundDistance) {
-        this.aroundDistance = aroundDistance;
+    public void setPaddingLeft(int paddingLeft) {
+        this.paddingLeft = paddingLeft;
     }
 
-    public String getWidgetBackColor() {
-        return widgetBackColor;
+    public String getBackColor() {
+        return backColor;
     }
 
-    public void setWidgetBackColor(String widgetBackColor) {
-        this.widgetBackColor = widgetBackColor;
+    public void setBackColor(String backColor) {
+        this.backColor = backColor;
     }
 
-    public String getWidgetFontColor() {
-        return widgetFontColor;
+    public String getFontColor() {
+        return fontColor;
     }
 
-    public void setWidgetFontColor(String widgetFontColor) {
-        this.widgetFontColor = widgetFontColor;
+    public void setFontColor(String fontColor) {
+        this.fontColor = fontColor;
     }
 
     public String getName() {

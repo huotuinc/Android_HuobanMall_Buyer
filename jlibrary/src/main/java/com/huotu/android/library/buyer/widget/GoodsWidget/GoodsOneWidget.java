@@ -99,7 +99,7 @@ public class GoodsOneWidget extends LinearLayout {
         tvJifen.setTextColor(Color.BLACK);
         rlGoods.addView(tvJifen);
 
-        if(  TextUtils.isEmpty( goodsOneConfig.getRebateIcon()) ==false) {
+        if(  TextUtils.isEmpty( goodsOneConfig.getBackground()) ==false) {
             ivJifen = new SimpleDraweeView(getContext());
             ivJifen.setId( ivJifen.hashCode());
             int widthPx= DensityUtils.dip2px(getContext() , goodsOneConfig.getIconWidth());
@@ -180,30 +180,30 @@ public class GoodsOneWidget extends LinearLayout {
     }
 
     protected void setStyle( GoodsBean good ){
-        if( this.goodsOneConfig.getIsShowName().equals( Constant.GOODS_SHOW )){
+        if( this.goodsOneConfig.getProduct_showname().equals( Constant.GOODS_SHOW )){
             tvName.setVisibility(VISIBLE);
         }else {
             tvName.setVisibility(GONE);
         }
-        if( this.goodsOneConfig.getIsShowSyno().equals( Constant.GOODS_SHOW ) ){
+        if( this.goodsOneConfig.getProduct_showsyno().equals( Constant.GOODS_SHOW ) ){
             tvDesc.setVisibility(VISIBLE);
         }else {
             tvDesc.setVisibility(GONE);
         }
-        if( this.goodsOneConfig.getIsShowPrices().equals( Constant.GOODS_SHOW ) ){
+        if( this.goodsOneConfig.getProduct_showprices().equals( Constant.GOODS_SHOW ) ){
             tvPrice.setVisibility(VISIBLE);
         }else {
             tvPrice.setVisibility(GONE);
         }
-        if( this.goodsOneConfig.getIsShowUserInteger().contains(Constant.GOODS_SHOW) ){
+        if( this.goodsOneConfig.getProduct_userInteger().contains(Constant.GOODS_SHOW) ){
             tvJifen.setVisibility(VISIBLE);
         }else {
             tvJifen.setVisibility(GONE);
         }
 
-        if( ivJifen !=null && TextUtils.isEmpty( goodsOneConfig.getRebateIcon() ) == false){
+        if( ivJifen !=null && TextUtils.isEmpty( goodsOneConfig.getBackground() ) == false){
             int widthPx=DensityUtils.dip2px( getContext() , goodsOneConfig.getIconWidth());
-            FrescoDraweeController.loadImage(ivJifen, widthPx, goodsOneConfig.getRebateIcon());
+            FrescoDraweeController.loadImage(ivJifen, widthPx, goodsOneConfig.getBackground());
         }
 
         int picWidth = getContext().getResources().getDisplayMetrics().widthPixels;
@@ -249,9 +249,9 @@ public class GoodsOneWidget extends LinearLayout {
         //-----------------------------------------------------
 
         for( GoodsBean item : goods) {
-            if (goodsOneConfig.getGridStyle().equals(Constant.GRIDSTYLE_CARD)) {
+            if (goodsOneConfig.getGoods_layer().equals(Constant.LAYER_STYLE_CARD)) {
                 create_card(item);
-            } else if (goodsOneConfig.getGridStyle().equals(Constant.GRIDSTYLE_NORMAL)) {
+            } else if (goodsOneConfig.getGoods_layer().equals(Constant.LAYER_STYLE_NORMAL)) {
                 create_jijian(item);
             }
         }

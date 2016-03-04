@@ -55,11 +55,11 @@ public class ShopDefaultWidget extends RelativeLayout {
         //tvGoodsCount.setText(String.valueOf(config.getGoodsCount()));
         //tvShopName.setText( config.getShopName());
 
-        if(  config.getWidgetBackType() == Constant.WIDGETBACKTYPE_COLOR ){
-            ivBg.setBackgroundColor(Color.parseColor( config.getWidgetBackColor()) );
-        }else if( config.getWidgetBackType() == Constant.WIDGETBACKTYPE_IMAGE ) {
+        if(  config.getShow_type() == Constant.WIDGETBACKTYPE_COLOR ){
+            ivBg.setBackgroundColor(Color.parseColor( config.getColor()) );
+        }else if( config.getShow_type() == Constant.WIDGETBACKTYPE_IMAGE ) {
             int width = getResources().getDisplayMetrics().widthPixels;
-            FrescoDraweeController.loadImage(ivBg, width, config.getWidgetBackImage());
+            FrescoDraweeController.loadImage(ivBg, width, config.getBackground());
         }
 
 //        if( TextUtils.isEmpty(config.getAvatarUrl())==false){

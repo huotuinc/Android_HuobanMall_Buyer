@@ -52,9 +52,9 @@ public class AdWindowWidget extends LinearLayout implements View.OnClickListener
         TextView tvSubTitle = (TextView)findViewById(R.id.ad_window_subtitle);
         TextView tvDescription = (TextView)findViewById(R.id.ad_window_description);
 
-        tvTitle.setText(adWindowConfig.getTitle());
-        tvSubTitle.setText(adWindowConfig.getContentTitle());
-        tvDescription.setText(adWindowConfig.getContentCaption());
+        tvTitle.setText(adWindowConfig.getText_name());
+        tvSubTitle.setText(adWindowConfig.getText_contentName());
+        tvDescription.setText(adWindowConfig.getText_description());
 
         if( adWindowConfig.getImages()==null || adWindowConfig.getImages().size()<1 )return;
 

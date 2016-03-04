@@ -19,7 +19,7 @@ import com.huotu.android.library.buyer.bean.FooterBean.FooterOneConfig;
 import com.huotu.android.library.buyer.bean.GoodsBean.GoodsOneConfig;
 import com.huotu.android.library.buyer.bean.GoodsBean.GoodsTwoConfig;
 import com.huotu.android.library.buyer.bean.GoodsListBean.ListViewThreeConfig;
-import com.huotu.android.library.buyer.bean.GoodsListBean.PubuConfig;
+import com.huotu.android.library.buyer.bean.GoodsListBean.ListViewTwoConfig;
 import com.huotu.android.library.buyer.bean.GroupBean.GoodsGroupConfig;
 import com.huotu.android.library.buyer.bean.PromotionsBean.Promotion1Config;
 import com.huotu.android.library.buyer.bean.SearchBean.Search1Config;
@@ -46,7 +46,7 @@ import com.huotu.android.library.buyer.widget.AssistWidget.Guides2Widget;
 import com.huotu.android.library.buyer.widget.AssistWidget.GuidesShopWidget;
 import com.huotu.android.library.buyer.widget.FooterWidget.FooterOneWidget;
 import com.huotu.android.library.buyer.widget.GoodsListWidget.ListViewThreeWidget;
-import com.huotu.android.library.buyer.widget.GoodsListWidget.PubuWidget;
+import com.huotu.android.library.buyer.widget.GoodsListWidget.ListViewTwoWidget;
 import com.huotu.android.library.buyer.widget.GoodsWidget.GoodsOneCardWidget;
 import com.huotu.android.library.buyer.widget.GoodsWidget.GoodsOneWidget;
 import com.huotu.android.library.buyer.widget.GoodsWidget.GoodsTwoWidget;
@@ -118,12 +118,12 @@ public class WidgetBuilder {
             listViewThreeConfig = gsonUtil.toBean( widgetConfig.getJsonString() , listViewThreeConfig);
             ListViewThreeWidget listViewThreeWidget = new ListViewThreeWidget(activity, listViewThreeConfig);
             return listViewThreeWidget;
-        }else if( widgetConfig.getWidgetTypeEnum() == WidgetTypeEnum.LISTVIEW_PUBU ){
-            GsonUtil<PubuConfig> gsonUtil = new GsonUtil<>();
-            PubuConfig pubuConfig = new PubuConfig();
-            pubuConfig = gsonUtil.toBean( widgetConfig.getJsonString() , pubuConfig );
-            PubuWidget pubuWidget =new PubuWidget(activity, pubuConfig );
-            return pubuWidget;
+        }else if( widgetConfig.getWidgetTypeEnum() == WidgetTypeEnum.LISTVIEW_TWO ){
+            GsonUtil<ListViewTwoConfig> gsonUtil = new GsonUtil<>();
+            ListViewTwoConfig listViewTwoConfig = new ListViewTwoConfig();
+            listViewTwoConfig = gsonUtil.toBean( widgetConfig.getJsonString() , listViewTwoConfig );
+            ListViewTwoWidget listViewTwoWidget =new ListViewTwoWidget(activity, listViewTwoConfig );
+            return listViewTwoWidget;
         }else if( widgetConfig.getWidgetTypeEnum() == WidgetTypeEnum.AD_WINDOW){
             GsonUtil<AdWindowConfig> gsonUtil = new GsonUtil<>();
             AdWindowConfig config = new AdWindowConfig();

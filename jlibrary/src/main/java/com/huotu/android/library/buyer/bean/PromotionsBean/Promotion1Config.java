@@ -5,7 +5,9 @@ import com.huotu.android.library.buyer.bean.BaseConfig;
 import java.util.List;
 
 /**
+ * 优惠价组件
  * Created by jinxiangdong on 2016/1/29.
+ * Done
  */
 public class Promotion1Config extends BaseConfig {
     private List<PromotionBean> coupns;

@@ -4,12 +4,14 @@ package com.huotu.android.library.buyer.bean;
  * Created by jinxiangdong on 2016/1/7.
  */
 public enum  WidgetTypeEnum {
-    HEADER(1,"HEADER"),
-    FOOTER(2,"FOOTER"),
-    SLIDER(3,"SLIDER"),
-    HORIZONTAL(4,"HORIZONTAL"),
+    /**
+     *
+     */
     LISTVIEW_THREE(150,"LISTVIEW_THREE"),
-    LISTVIEW_PUBU(151,"LISTVIEW_PUBU"),
+    /**
+     *
+     */
+    LISTVIEW_TWO(151,"LISTVIEW_TWO"),
     TEXT_TITLE(100,"TEXT_TITLE"),
     TEXT_RICHTEXT(101,"TEXT_RICHTEXT"),
     TEXT_ARTICLETITLE(102,"TEXT_ARTICLETITLE"),
@@ -35,7 +37,7 @@ public enum  WidgetTypeEnum {
     FOOTER_ONE(450,"FOOTER_ONE"),
     GOODS_ONE(500,"GOODS_ONE"),
     GOODS_ONE_CARD(501,"GOODS_ONE_CARD"),
-    GOODS_TWO(501,"GOODS_TWO"),
+    GOODS_TWO(502,"GOODS_TWO"),
     PROMOTION_ONE(550,"PROMOTION_ONE"),
     GROUP_GOODS(600,"GROUP_GOODS"),
     GROUP_Class(601,"GROUP_CLASS");

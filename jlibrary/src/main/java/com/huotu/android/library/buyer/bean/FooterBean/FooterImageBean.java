@@ -4,9 +4,21 @@ package com.huotu.android.library.buyer.bean.FooterBean;
  * Created by Administrator on 2016/1/22.
  */
 public class FooterImageBean {
+    /**
+     * 链接地址
+     */
     private String linkUrl;
+    /**
+     * 链接名称（app忽略）
+     */
     private String linkName;
+    /**
+     * 图标地址,需要通过app配置的根地址拼接拿到绝对地址
+     */
     private String imageUrl;
+    /**
+     * 导航名称
+     */
     private String name;
     /**
      * 高亮图标地址, 需要通过app配置的根地址拼接拿到绝对地址

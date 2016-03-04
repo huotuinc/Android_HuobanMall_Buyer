@@ -26,7 +26,7 @@ public class Guides1Widget extends LinearLayout {
 
         this.config = config;
 
-        this.setBackgroundColor(Color.parseColor( config.getWidgetBackColor() ) );
+        this.setBackgroundColor(Color.parseColor( config.getBackColor() ) );
         int topPadding = DensityUtils.dip2px(getContext(), 15);
         int leftPadding = DensityUtils.dip2px(getContext(),15);
         this.setPadding( leftPadding , topPadding,leftPadding,topPadding);

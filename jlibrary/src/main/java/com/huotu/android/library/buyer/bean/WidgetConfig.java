@@ -1,6 +1,7 @@
 package com.huotu.android.library.buyer.bean;
 
 /**
+ * 组件配置
  * Created by jinxiangdong on 2016/1/7.
  */
 public class WidgetConfig {

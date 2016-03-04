@@ -5,45 +5,62 @@ import com.huotu.android.library.buyer.bean.BaseConfig;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/2/18.
+ * 按钮布局组件
+ * Created by jinxiangdong on 2016/2/18.
+ * Done
  */
 public class ButtonConfig extends BaseConfig {
-    private String widgetBackColor;
-    private int widgetHeight;
-    private String widgetBorderColor;
-    private int widgetBorderRadius;
+    /**
+     *背景颜色
+     */
+    private String backColor;
+    /**
+     * 高度
+     */
+    private int height;
+    /**
+     * 边框颜色
+     */
+    private String borderColor;
+    /**
+     * 边框圆边度
+     */
+    private int radius;
+    /**
+     * 按钮数组
+     */
     private List<LinkBean> links;
 
-    public String getWidgetBackColor() {
-        return widgetBackColor;
+    public String getBackColor() {
+        return backColor;
     }
 
-    public void setWidgetBackColor(String widgetBackColor) {
-        this.widgetBackColor = widgetBackColor;
+    public void setBackColor(String backColor) {
+        this.backColor = backColor;
     }
 
-    public int getWidgetHeight() {
-        return widgetHeight;
+    public int getHeight() {
+        return height;
     }
 
-    public void setWidgetHeight(int widgetHeight) {
-        this.widgetHeight = widgetHeight;
+    public void setHeight(int height) {
+        this.height = height;
     }
 
-    public String getWidgetBorderColor() {
-        return widgetBorderColor;
+    public String getBorderColor() {
+        return borderColor;
     }
 
-    public void setWidgetBorderColor(String widgetBorderColor) {
-        this.widgetBorderColor = widgetBorderColor;
+    public void setBorderColor(String borderColor) {
+        this.borderColor = borderColor;
     }
 
-    public int getWidgetBorderRadius() {
-        return widgetBorderRadius;
+    public int getRadius() {
+        return radius;
     }
 
-    public void setWidgetBorderRadius(int widgetBorderRadius) {
-        this.widgetBorderRadius = widgetBorderRadius;
+    public void setRadius(int radius) {
+        this.radius = radius;
     }
 
     public List<LinkBean> getLinks() {

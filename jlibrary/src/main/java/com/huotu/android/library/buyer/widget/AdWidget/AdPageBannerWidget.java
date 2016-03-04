@@ -34,11 +34,11 @@ public class AdPageBannerWidget extends LinearLayout {
 
         this.config = config;
 
-        this.setBackgroundColor(Color.parseColor( config.getWidgetBackColor()));
-        int leftPx = DensityUtils.dip2px(getContext(), config.getLeftDistance());
-        int topPx = DensityUtils.dip2px(getContext(), config.getTopDistance());
-        int rightPx = DensityUtils.dip2px(getContext(),config.getRightDistance());
-        int bottomPx= DensityUtils.dip2px(getContext(),config.getBottomDistance());
+        this.setBackgroundColor(Color.parseColor( config.getBackcolor()));
+        int leftPx = DensityUtils.dip2px(getContext(), config.getPaddingLeft());
+        int topPx = DensityUtils.dip2px(getContext(), config.getPaddingTop());
+        int rightPx = DensityUtils.dip2px(getContext(),config.getPaddingRight());
+        int bottomPx= DensityUtils.dip2px(getContext(),config.getPaddingBottom());
         this.setPadding( leftPx,topPx,rightPx,bottomPx);
 
         LayoutInflater layoutInflater = LayoutInflater.from(context);
@@ -47,7 +47,8 @@ public class AdPageBannerWidget extends LinearLayout {
         ll = (LinearLayout)findViewById(R.id.ad_pagebanner_ll);
 
        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-       this.itemWidth = screenWidth/ config.getPageSize();
+        int pagecount = (int)config.getSwiperPage();
+       this.itemWidth = screenWidth/pagecount ;
         ll.removeAllViews();
 
         if( config.getImages()==null || config.getImages().size()<1) return;
@@ -60,8 +61,8 @@ public class AdPageBannerWidget extends LinearLayout {
             ll.addView(iv);
         }
 
-        if( !config.isAutoPlay()) return;
-        if( config.getImages().size() <= config.getPageSize()) return;
+        if( !config.isSwiperStop()) return;
+        if( config.getImages().size() <= pagecount) return;
 
         timerhandler = new Handler();
         runnable = new Runnable() {

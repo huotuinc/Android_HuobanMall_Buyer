@@ -27,10 +27,10 @@ public class ButtonWidget extends LinearLayout {
 
         this.setOrientation(HORIZONTAL);
 
-        int heightPx = DensityUtils.dip2px(getContext(), config.getWidgetHeight());
+        int heightPx = DensityUtils.dip2px(getContext(), config.getHeight());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
         this.setLayoutParams(layoutParams);
-        this.setBackgroundColor(Color.parseColor(config.getWidgetBackColor()));
+        this.setBackgroundColor(Color.parseColor(config.getBackColor()));
 
 //        RoundRectShape roundRectShape2 = new RoundRectShape( outR,null, null);
 //        ShapeDrawable shapeDrawable2 = new ShapeDrawable(roundRectShape2);
@@ -48,7 +48,7 @@ public class ButtonWidget extends LinearLayout {
     protected void createButton(){
         if( this.config.getLinks()==null || this.config.getLinks().size()<1) return;
 
-        int radius = DensityUtils.dip2px(getContext(), config.getWidgetBorderRadius());
+        int radius = DensityUtils.dip2px(getContext(), config.getRadius());
 
         for(LinkBean bean : this.config.getLinks()){
             Button btn = new Button(getContext());
@@ -73,7 +73,7 @@ public class ButtonWidget extends LinearLayout {
             RoundRectShape roundRectShape2 = new RoundRectShape( outR, inRect , inR);
             ShapeDrawable shapeDrawable2 = new ShapeDrawable(roundRectShape2);
             //shapeDrawable2.setPadding(6, 6, 6, 6);
-            shapeDrawable2.getPaint().setColor(Color.parseColor(config.getWidgetBorderColor()));
+            shapeDrawable2.getPaint().setColor(Color.parseColor(config.getBorderColor()));
             shapeDrawable2.getPaint().setStyle(Paint.Style.STROKE);
 
             Drawable[] drawables = new Drawable[]{shapeDrawable1,shapeDrawable2};

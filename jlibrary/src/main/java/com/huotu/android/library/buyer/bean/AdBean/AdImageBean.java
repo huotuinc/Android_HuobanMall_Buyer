@@ -11,7 +11,7 @@ public class AdImageBean {
     /**
      * 广告图片名称(app端可以忽略)
      */
-    private String imageTitle;
+    private String title;
     /**
      * 链接类型（app端可以忽略）
      */
@@ -33,12 +33,12 @@ public class AdImageBean {
         this.imageUrl = imageUrl;
     }
 
-    public String getImageTitle() {
-        return imageTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setImageTitle(String imageTitle) {
-        this.imageTitle = imageTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getLinkType() {

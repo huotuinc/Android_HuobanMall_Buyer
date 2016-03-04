@@ -4,11 +4,29 @@ package com.huotu.android.library.buyer.bean.AsistBean;
  * Created by Administrator on 2016/2/18.
  */
 public class LinkBean {
+    /**
+     *按钮名称
+     */
     private String name;
+    /**
+     *按钮背景颜色
+     */
     private String backColor;
+    /**
+     *字体颜色
+     */
     private String fontColor;
+    /**
+     *链接类型（app端可以忽略）
+     */
     private String linkType;
+    /**
+     *链接名称（app端可以忽略）
+     */
     private String linkName;
+    /**
+     *链接地址
+     */
     private String linkUrl;
 
     public String getName() {

@@ -5,7 +5,9 @@ import com.huotu.android.library.buyer.bean.BaseConfig;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/2/19.
+ * 商品分组系列组件
+ * Created by jinxiangdong on 2016/2/19.
+ * Done
  */
 public class GoodsGroupConfig extends BaseConfig{
     /**
@@ -13,39 +15,39 @@ public class GoodsGroupConfig extends BaseConfig{
      * card –卡片布局
      * normal –方格布局
      */
-    private String girdLayout;
+    private String goods_layout;
     /**
      * 是否显示积分：
      * show –显示积分
      * hide  -不显示
      */
-    private String isShowUserInteger;
+    private String product_userInteger;
     /**
      * 分类列表集合
      */
-    private List<GroupBean> groups;
+    private List<GroupBean> Groups;
 
-    public String getGirdLayout() {
-        return girdLayout;
+    public String getGoods_layout() {
+        return goods_layout;
     }
 
-    public void setGirdLayout(String girdLayout) {
-        this.girdLayout = girdLayout;
+    public void setGoods_layout(String goods_layout) {
+        this.goods_layout = goods_layout;
     }
 
-    public String getIsShowUserInteger() {
-        return isShowUserInteger;
+    public String getProduct_userInteger() {
+        return product_userInteger;
     }
 
-    public void setIsShowUserInteger(String isShowUserInteger) {
-        this.isShowUserInteger = isShowUserInteger;
+    public void setProduct_userInteger(String product_userInteger) {
+        this.product_userInteger = product_userInteger;
     }
 
     public List<GroupBean> getGroups() {
-        return groups;
+        return Groups;
     }
 
     public void setGroups(List<GroupBean> groups) {
-        this.groups = groups;
+        Groups = groups;
     }
 }

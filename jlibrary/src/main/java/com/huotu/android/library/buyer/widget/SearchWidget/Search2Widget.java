@@ -25,7 +25,7 @@ public class Search2Widget extends RelativeLayout {
         int topPx= DensityUtils.dip2px(getContext(), 10);
         int leftPx = DensityUtils.dip2px( getContext() , 10);
         this.setPadding( leftPx ,topPx ,leftPx,topPx );
-        this.setBackgroundColor( Color.parseColor( config.getWidgetBackColor()) );
+        this.setBackgroundColor( Color.parseColor( config.getSearch_background()) );
 
         TextView tvSearch = new TextView(getContext());
         int tvSearch_id = tvSearch.hashCode();

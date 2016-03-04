@@ -1,7 +1,6 @@
 package com.huotu.android.library.buyer.bean.FooterBean;
 
 import com.huotu.android.library.buyer.bean.BaseConfig;
-
 import java.util.List;
 
 /**
@@ -9,14 +8,23 @@ import java.util.List;
  * Created by jinxiangdong on 2016/1/22.
  */
 public class FooterOneConfig extends BaseConfig {
+    /**
+     * 背景颜色，hex color颜色格式
+     */
     private String backgroundColor;
+    /**
+     * 字体颜色,hex color颜色格式
+     */
     private String fontColor;
+    /**
+     * 导航项集合,由以下标注颜色的属性组成
+     */
     private List<FooterImageBean> Rows;
+
     private int leftMargion;
     private int rightMargion;
     private int topMargion;
     private int bottomMargion;
-
 
     public int getLeftMargion() {
         return leftMargion;

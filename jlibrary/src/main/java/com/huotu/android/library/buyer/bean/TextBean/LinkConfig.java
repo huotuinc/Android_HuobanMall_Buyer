@@ -2,12 +2,13 @@ package com.huotu.android.library.buyer.bean.TextBean;
 
 /**
  * Created by Administrator on 2016/1/28.
+ * Done
  */
 public class LinkConfig {
     /**
      * 链接名称（导航名称）
      */
-    private String linkName;
+    private String text_Name;
     /**
      * 链接地址
      */
@@ -19,7 +20,7 @@ public class LinkConfig {
     /**
      * 链接类型名称(目前可以忽略, 只用于服务端编辑时使用)
      */
-    private String linkTypeName;
+    private String linkName;
 
     public String getLinkName() {
         return linkName;
@@ -45,12 +46,11 @@ public class LinkConfig {
         this.linkType = linkType;
     }
 
-    public String getLinkTypeName() {
-        return linkTypeName;
+    public String getText_Name() {
+        return text_Name;
     }
 
-    public void setLinkTypeName(String linkTypeName) {
-        this.linkTypeName = linkTypeName;
+    public void setText_Name(String text_Name) {
+        this.text_Name = text_Name;
     }
-
 }

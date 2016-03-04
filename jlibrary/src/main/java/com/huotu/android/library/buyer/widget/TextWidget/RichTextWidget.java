@@ -23,6 +23,6 @@ public class RichTextWidget extends LinearLayout {
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         wbHtmlText.setLayoutParams(layoutParams);
 
-        wbHtmlText.loadData( this.richTextConfig.getContent() , "text/html;charset=UTF-8", null );
+        wbHtmlText.loadData( this.richTextConfig.getUeditorValue() , "text/html;charset=UTF-8", null );
     }
 }

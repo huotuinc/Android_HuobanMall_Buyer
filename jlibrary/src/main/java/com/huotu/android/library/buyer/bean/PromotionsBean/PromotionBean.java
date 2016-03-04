@@ -7,49 +7,49 @@ public class PromotionBean {
     /**
      * 优惠卷名称
      */
-    private String coupnName;
+    private String name;
     /**
      * 优惠卷ID
      */
-    private String coupnId;
+    private String id;
     /**
      * 优惠券价格，或者是折扣百分比
      */
-    private String coupnPrices;
+    private String prices;
     /**
      * 优惠卷链接地址
      */
-    private String coupnPageUrl;
+    private String pageUrl;
 
-    public String getCoupnName() {
-        return coupnName;
+    public String getName() {
+        return name;
     }
 
-    public void setCoupnName(String coupnName) {
-        this.coupnName = coupnName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getCoupnId() {
-        return coupnId;
+    public String getId() {
+        return id;
     }
 
-    public void setCoupnId(String coupnId) {
-        this.coupnId = coupnId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getCoupnPrices() {
-        return coupnPrices;
+    public String getPrices() {
+        return prices;
     }
 
-    public void setCoupnPrices(String coupnPrices) {
-        this.coupnPrices = coupnPrices;
+    public void setPrices(String prices) {
+        this.prices = prices;
     }
 
-    public String getCoupnPageUrl() {
-        return coupnPageUrl;
+    public String getPageUrl() {
+        return pageUrl;
     }
 
-    public void setCoupnPageUrl(String coupnPageUrl) {
-        this.coupnPageUrl = coupnPageUrl;
+    public void setPageUrl(String pageUrl) {
+        this.pageUrl = pageUrl;
     }
 }
