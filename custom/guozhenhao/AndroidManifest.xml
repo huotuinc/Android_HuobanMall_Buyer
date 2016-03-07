@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.huotu.partnermall.inner"
+          android:installLocation="auto">
+
+    <application android:name="com.huotu.partnermall.BaseApplication"
+                 android:allowBackup="true"
+                 android:icon="@drawable/ic_launcher"
+                 android:label="@string/app_name"
+                 android:theme="@style/AppTheme"
+                 tools:replace="icon,label">
+
+        <!-- ShareSDK分享 -->
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <data android:scheme="tencent1105224618"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <!-- 调用新浪原生SDK，需要注册的回调activity -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!--微信分享回调-->
+        <activity android:name="com.huotu.mall.guozhenhao.wxapi.WXEntryActivity"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
+                  android:exported="true"
+                  android:screenOrientation="portrait">
+        </activity>
+        <!--微信支付回调-->
+        <activity
+            android:name="com.huotu.mall.guozhenhao.wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"/>
+
+        <!--需要写在application中app对应的百度定位服务的key包名需和注册的一致 -->
+        <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="wnMbPMCM9rXkc85pL3yhKK2F"/>
+        <!-- 友盟统计参数 -->
+        <meta-data android:name="UMENG_APPKEY" android:value="56721dd567e58ecd3f002991" />
+        <meta-data android:name="UMENG_CHANNEL" android:value="huotu" />
+
+    </application>
+
+</manifest>

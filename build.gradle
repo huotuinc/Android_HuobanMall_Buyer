@@ -1,3 +1,5 @@
+apply plugin: 'com.android.application'
+
 buildscript {
     repositories {
         jcenter()
@@ -6,7 +8,6 @@ buildscript {
         classpath 'com.android.tools.build:gradle:1.5.0'
     }
 }
-apply plugin: 'com.android.application'
 
 allprojects {
     repositories {
@@ -81,6 +82,13 @@ android {
             assets.srcDirs = ['custom/olquan/assets']
         }
 
+        guozhenhao{
+            manifest.srcFile 'custom/guozhenhao/AndroidManifest.xml'
+            java.srcDirs = ['custom/guozhenhao/src']
+            res.srcDirs = ['custom/guozhenhao/res']
+            assets.srcDirs = ['custom/guozhenhao/assets']
+        }
+
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
 
@@ -135,6 +143,16 @@ android {
             buildConfigField 'String','APP_ID', '\"'+"${OLQUAN_APP_ID}"+'\"'
             buildConfigField 'String','APP_SECRET', '\"'+"${OLQUAN_APP_SECRET}"+'\"'
             buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
+        }
+
+        guozhenhao{//果真好
+            applicationId 'com.huotu.mall.guozhenhao'
+            versionCode GUOZHENHAO_VERSIONCODE.toInteger()
+            versionName "${GUOZHENHAO_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://gzh2016.huobanmall.com/\"'
+            buildConfigField 'String','APP_ID', '\"'+"${GUOZHENHAO_APP_ID}"+'\"'
+            buildConfigField 'String','APP_SECRET', '\"'+"${GUOZHENHAO_APP_SECRET}"+'\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
         }
     }
 
