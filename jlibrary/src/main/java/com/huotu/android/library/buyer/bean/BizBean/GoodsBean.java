@@ -41,17 +41,21 @@ public class GoodsBean {
      */
     private double price;
     /**
+     * 会员价，[min,max]
+     */
+    private List<Double> priceLevel;
+    /**
      *商品编码
      */
     private String bn;
     /**
      *自己购买获得的积分，[min,max]
      */
-    private String score;
+    private List<Integer> score;
     /**
      *下线购买得到的返利，[min,max]
      */
-    private List<String> rebate;
+    private List<Integer> rebate;
     /**
      *缩略图
      */
@@ -83,7 +87,11 @@ public class GoodsBean {
     /**
      *创建时间
      */
-    private Date createTime;
+    private long createTime;
+    /**
+     * 商品详情页地址
+     */
+    private String detailUrl;
 
     public String getGoodName() {
         return goodName;
@@ -157,20 +165,28 @@ public class GoodsBean {
         this.bn = bn;
     }
 
-    public String getScore() {
+    public List<Integer> getScore() {
         return score;
     }
 
-    public void setScore(String score) {
+    public void setScore(List<Integer> score) {
         this.score = score;
     }
 
-    public List<String> getRebate() {
+    public List<Integer> getRebate() {
         return rebate;
     }
 
-    public void setRebate(List<String> rebate) {
+    public void setRebate(List<Integer> rebate) {
         this.rebate = rebate;
+    }
+
+    public List<Double> getPriceLevel() {
+        return priceLevel;
+    }
+
+    public void setPriceLevel(List<Double> priceLevel) {
+        this.priceLevel = priceLevel;
     }
 
     public String getThumbnailPic() {
@@ -229,11 +245,19 @@ public class GoodsBean {
         this.specDesc = specDesc;
     }
 
-    public Date getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
+    }
+
+    public String getDetailUrl() {
+        return detailUrl;
+    }
+
+    public void setDetailUrl(String detailUrl) {
+        this.detailUrl = detailUrl;
     }
 }

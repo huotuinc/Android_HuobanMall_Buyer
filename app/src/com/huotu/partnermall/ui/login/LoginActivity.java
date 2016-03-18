@@ -9,6 +9,7 @@ import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -35,41 +36,31 @@ import cn.sharesdk.wechat.friends.Wechat;
  * 登录界面
  */
 public class LoginActivity extends BaseActivity implements Handler.Callback {
-
     @Bind(R.id.loginL)
     RelativeLayout loginL;
     AutnLogin login;
-    public Handler mHandler;
-    public ProgressPopupWindow progress;
-    public ProgressPopupWindow successProgress;
-    //windows类
-    WindowManager wManager;
-    public NoticePopWindow noticePop;
-    public AssetManager am;
-    public Resources res;
+    Handler mHandler;
+    ProgressPopupWindow progress;
+    ProgressPopupWindow successProgress;
+    NoticePopWindow noticePop;
     MsgPopWindow msgPopWindow;
 
     @Override
-    protected
-    void onCreate ( Bundle savedInstanceState ) {
+    protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
         mHandler = new Handler ( this );
-        am = this.getAssets();
-        res = this.getResources();
-        setContentView ( R.layout.login_ui );
+        setContentView(R.layout.login_ui);
         ButterKnife.bind(this);
         initView();
-        wManager = this.getWindowManager();
         progress = new ProgressPopupWindow ( LoginActivity.this );
         successProgress = new ProgressPopupWindow (  LoginActivity.this );
     }
 
     @Override
     protected void initView ( ) {
-        //SystemTools.setFontStyle(loginText, application);
         Drawable[] drawables = new Drawable[2];
-        drawables[0] = new PaintDrawable(res.getColor(R.color.theme_color));
-        drawables[1] = new PaintDrawable(SystemTools.obtainColor( application.obtainMainColor()));
+        drawables[0] = new PaintDrawable( ContextCompat.getColor( this , R.color.theme_color));  //res.getColor(R.color.theme_color));
+        drawables[1] = new PaintDrawable( SystemTools.obtainColor( getString(R.string.maincolor) ) );//new PaintDrawable(SystemTools.obtainColor( application.obtainMainColor()));
         LayerDrawable ld = new LayerDrawable(drawables);
         ld.setLayerInset(0, 0, 0, 0, 0);
         ld.setLayerInset(1, 0, 2, 0, 0);
@@ -103,12 +94,10 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
 
     @OnClick(R.id.loginL)
     void doLogin(){
-        //
         progress.showProgress(null);
         progress.showAtLocation ( loginL, Gravity.CENTER, 0, 0 );
         //微信授权登录
-        login = new AutnLogin (  mHandler );
-        //login.authorize(new Wechat(LoginActivity.this));
+        login = new AutnLogin ( mHandler );
         login.authorize(ShareSDK.getPlatform( Wechat.NAME ));
         loginL.setClickable(false);
     }
@@ -116,7 +105,6 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
     @Override
     public boolean handleMessage ( Message msg ) {
         loginL.setClickable(true);
-
         switch ( msg.what )
         {
             //授权登录
@@ -130,7 +118,6 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
             //授权登录 失败
             case Constants.LOGIN_AUTH_ERROR:
             {
-                loginL.setClickable ( true );
                 progress.dismissView ( );
                 successProgress.dismissView ();
                 //提示授权失败
@@ -142,16 +129,12 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
             break;
             case Constants.MSG_AUTH_ERROR:
             {
-                loginL.setClickable ( true );
                 progress.dismissView ( );
                 Throwable throwable = ( Throwable ) msg.obj;
-                //if("cn.sharesdk.wechat.utils.WechatClientNotExistException".equals ( throwable.toString () ))
                 if( throwable instanceof cn.sharesdk.wechat.utils.WechatClientNotExistException ){
                     //手机没有安装微信客户端
                     phoneLogin("您的设备没有安装微信客户端,是否通过手机登录?");
-                }
-                else {
-                    loginL.setClickable ( true );
+                }else {
                     progress.dismissView ();
                     //提示授权失败
                     noticePop = new NoticePopWindow ( LoginActivity.this, "微信授权失败");

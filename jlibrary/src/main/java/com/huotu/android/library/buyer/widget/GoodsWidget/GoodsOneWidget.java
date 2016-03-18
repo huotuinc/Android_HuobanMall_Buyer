@@ -1,6 +1,7 @@
 package com.huotu.android.library.buyer.widget.GoodsWidget;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.ViewGroup;
@@ -9,17 +10,32 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.huotu.android.library.buyer.BizApiService;
+import com.huotu.android.library.buyer.bean.BizBean.BizBaseBean;
 import com.huotu.android.library.buyer.bean.BizBean.GoodsBean;
 import com.huotu.android.library.buyer.bean.Data.DataItem;
+import com.huotu.android.library.buyer.bean.Data.LoadCompleteEvent;
 import com.huotu.android.library.buyer.bean.GoodsBean.GoodsOneConfig;
+import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+import com.huotu.android.library.buyer.utils.Logger;
+import com.huotu.android.library.buyer.utils.RetrofitUtil;
+import com.huotu.android.library.buyer.utils.SignUtil;
 import com.huotu.android.library.buyer.widget.SpanningUtil;
 import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.R;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -99,7 +115,7 @@ public class GoodsOneWidget extends LinearLayout {
         tvJifen.setTextColor(Color.BLACK);
         rlGoods.addView(tvJifen);
 
-        if(  TextUtils.isEmpty( goodsOneConfig.getBackground()) ==false) {
+        if(  !TextUtils.isEmpty( goodsOneConfig.getBackground())) {
             ivJifen = new SimpleDraweeView(getContext());
             ivJifen.setId( ivJifen.hashCode());
             int widthPx= DensityUtils.dip2px(getContext() , goodsOneConfig.getIconWidth());
@@ -145,7 +161,7 @@ public class GoodsOneWidget extends LinearLayout {
         tvName = new TextView(getContext());
         tvName.setId(tvName.hashCode());
         layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.ALIGN_TOP , tvPrice.getId());
+        layoutParams.addRule(RelativeLayout.BELOW , ivPic.getId());
         layoutParams.addRule(RelativeLayout.LEFT_OF , tvPrice.getId());
         tvName.setLayoutParams(layoutParams);
         tvName.setMaxLines(1);
@@ -201,20 +217,23 @@ public class GoodsOneWidget extends LinearLayout {
             tvJifen.setVisibility(GONE);
         }
 
-        if( ivJifen !=null && TextUtils.isEmpty( goodsOneConfig.getBackground() ) == false){
+        if( ivJifen !=null && !TextUtils.isEmpty( goodsOneConfig.getBackground() ) ){
             int widthPx=DensityUtils.dip2px( getContext() , goodsOneConfig.getIconWidth());
-            FrescoDraweeController.loadImage(ivJifen, widthPx, goodsOneConfig.getBackground());
+
+            String bgUrl = Variable.resourceUrl + goodsOneConfig.getBackground();
+
+            FrescoDraweeController.loadImage(ivJifen, widthPx, bgUrl);
         }
 
         int picWidth = getContext().getResources().getDisplayMetrics().widthPixels;
         FrescoDraweeController.loadImage(ivPic, picWidth, good.getThumbnailPic());
         tvName.setText( good.getGoodName() );
-        tvDesc.setText(good.getSpec());
+        tvDesc.setText(good.getBrief());
 
-        String priceStr = String.valueOf( good.getMarketPrice() );
-        String zpriceStr = String.valueOf( good.getPrice());
+        String priceStr = CommonUtil.formatDouble( good.getPrice() );
+        String zpriceStr = CommonUtil.formatPrice( good.getPriceLevel() ); //String.valueOf( good.getPrice());
         SpanningUtil.set_Price_Format2(tvPrice, priceStr, zpriceStr, Color.RED, Color.GRAY);
-        String jifenStr = String.valueOf( good.getRebate() );
+        String jifenStr = CommonUtil.formatJiFen(good.getScore()); // String.valueOf( good.getRebate() );
         tvJifen.setText( jifenStr +"积分" );
 
     }
@@ -224,36 +243,40 @@ public class GoodsOneWidget extends LinearLayout {
      * TODO
      */
     private void asyncGetGoodsData(){
-        //模拟数据---------------------------------------------
-        goods = new ArrayList<>();
-        for(int i=0;i<5;i++){
-            GoodsBean item = new GoodsBean();
-            item.setGoodName("把iPhone部门看成一个国家它到底有多富？");
-            item.setPdtSpec("");
-            item.setIntro("");
-            item.setBn("");
-            item.setBrand("");
-            item.setBrandId(i);
-            item.setCatId(i);
-            item.setCreateTime(new Date());
-            item.setGoodType("");
-            //item.setDetailurl("http://res.olquan.cn/resource/images/wechat/4471/mall/pic20160123132920.jpg");
-            item.setThumbnailPic("http://res.olquan.cn/resource/images/wechat/4471/mall/pic20160123132920.jpg");
-            item.setPrice(299d);
-            item.setMarketPrice(328d);
-            item.setBrief("iPhone 一直都是炙手可热的摇钱树，“富可敌国”不是说着玩的。苹果又再一次在收入上破纪录了，虽然 iPhone 的出货量增长幅度为史上最低");
-            //item.setTitle("把iPhone部门看成一个国家它到底有多富？");
-            //item.setzPrice(250d);
-            goods.add(item);
-        }
-        //-----------------------------------------------------
+        BizApiService apiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl ).create( BizApiService.class );
+        String key = Variable.BizKey;
+        String random = String.valueOf(System.currentTimeMillis());
+        String secure = SignUtil.getSecure(Variable.BizKey, Variable.BizAppSecure, random);
+        int customerid= Variable.CustomerId;
+        String goodsids = goodsOneConfig.getBindDataID();
+        int levelid = Variable.userLevelId;
 
-        for( GoodsBean item : goods) {
-            if (goodsOneConfig.getGoods_layer().equals(Constant.LAYER_STYLE_CARD)) {
-                create_card(item);
-            } else if (goodsOneConfig.getGoods_layer().equals(Constant.LAYER_STYLE_NORMAL)) {
-                create_jijian(item);
+        Call<BizBaseBean<List<GoodsBean>>> call = apiService.getGoodsDetail( key,
+                random, secure , customerid , goodsids , levelid);
+        call.enqueue(new Callback<BizBaseBean<List<GoodsBean>>>() {
+            @Override
+            public void onResponse(Response<BizBaseBean<List<GoodsBean>>> response) {
+                if( response ==null || response.code() != Constant.REQUEST_SUCCESS || response.body()==null||
+                        response.body().getData()==null ){
+                    Logger.e( response.message());
+                    EventBus.getDefault().post(new LoadCompleteEvent());
+                    return;
+                }
+
+                goods = response.body().getData();
+                for( GoodsBean item : goods) {
+                    if (goodsOneConfig.getGoods_layer().equals(Constant.LAYER_STYLE_CARD)) {
+                        create_card(item);
+                    } else if (goodsOneConfig.getGoods_layer().equals(Constant.LAYER_STYLE_NORMAL)) {
+                        create_jijian(item);
+                    }
+                }
             }
-        }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Logger.e( "error" , t );
+            }
+        });
     }
 }

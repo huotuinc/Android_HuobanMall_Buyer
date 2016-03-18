@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
+import com.huotu.android.library.buyer.bean.Variable;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
 
 
@@ -23,12 +24,14 @@ public class FrescoHolderView implements Holder<AdImageBean> {
     @Override
     public View createView(Context context ) {
         iv = new SimpleDraweeView(context);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.WRAP_CONTENT);
         iv.setLayoutParams(layoutParams);
         return iv;
     }
     @Override
     public void UpdateUI(Context context,int position, AdImageBean data) {
-        FrescoDraweeController.loadImage(iv, width, data.getImageUrl());
+
+        String imageUrl = Variable.resourceUrl + data.getImageUrl();
+        FrescoDraweeController.loadImage(iv, width,  imageUrl );
     }
 }

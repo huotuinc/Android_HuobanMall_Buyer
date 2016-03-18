@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,15 +15,17 @@ import android.widget.Button;
 
 //import com.huotu.partnermall.AppManager;
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.ui.sis.GoodManageActivity;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.Util;
+import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.umeng.analytics.MobclickAgent;
 
 public abstract class BaseActivity extends Activity {
 
     public BaseApplication application;
-    //protected Handler mHandler = null;
     protected static final String NULL_NETWORK = "无网络或当前网络不可用!";
+    protected ProgressPopupWindow progressPopupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +118,7 @@ public abstract class BaseActivity extends Activity {
         if (pBundle != null) {
             intent.putExtras(pBundle);
         }
-        startActivity ( intent );
+        startActivity(intent);
     }
 
     /**
@@ -145,4 +148,18 @@ public abstract class BaseActivity extends Activity {
         aty.finish();
     }
 
+
+    public  void showProgress(String message){
+        if( progressPopupWindow==null){
+            progressPopupWindow= new ProgressPopupWindow( this );
+        }
+        progressPopupWindow.showProgress(message);
+        progressPopupWindow.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+    }
+
+    public void dismissProgress(){
+        if( progressPopupWindow!=null ){
+            progressPopupWindow.dismissView();
+        }
+    }
 }

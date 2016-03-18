@@ -6,6 +6,7 @@
     <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#727272</color>
     <color name="lightgraywhite">#e5e5e5</color>
+    <color name="shopdefaultbg">#BA100C</color>
     <!--半透明-->
     <color name="translucent">#a0000000</color>
     <!-- 白色 -->

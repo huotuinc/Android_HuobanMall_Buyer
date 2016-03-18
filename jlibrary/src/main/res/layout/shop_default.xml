@@ -6,7 +6,7 @@
                 android:layout_height="wrap_content">
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/shop_default_bg"
-            android:background="@color/blue"
+            android:background="@color/shopdefaultbg"
             android:layout_width="match_parent"
             android:layout_height="160dp"/>
         <RelativeLayout
@@ -50,6 +50,7 @@
             app:dividerPadding="10dp"
             android:layout_height="60dp">
             <LinearLayout
+                android:id="@+id/shop_default_ll1"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical|center_horizontal"
@@ -72,6 +73,7 @@
                     android:layout_height="0dp"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/shop_default_ll2"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -93,6 +95,7 @@
                     android:layout_height="0dp"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/shop_default_ll3"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:gravity="center"
                 android:orientation="vertical"

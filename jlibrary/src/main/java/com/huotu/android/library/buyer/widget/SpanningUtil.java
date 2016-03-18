@@ -27,9 +27,10 @@ public class SpanningUtil {
         String text = "￥" + zPriceStr + "\r\n￥" + priceStr;
         SpannableString spannableString = new SpannableString(text);
         int startIndex = 0;
-        int endIndex = 1 + priceStr.length();
+        int endIndex = zPriceStr.length()+1; //priceStr.length();
         spannableString.setSpan(new ForegroundColorSpan( color1 ), startIndex, endIndex, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        startIndex = endIndex + 2;
+
+        startIndex = text.lastIndexOf("￥"); // endIndex + 1;
         endIndex = text.length();
         StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan( color2 );
@@ -51,9 +52,9 @@ public class SpanningUtil {
         String text = "￥" + zPriceStr + " ￥" + priceStr;
         SpannableString spannableString = new SpannableString(text);
         int startIndex = 0;
-        int endIndex = 1 + priceStr.length();
+        int endIndex = zPriceStr.length()+1; //1 + priceStr.length();
         spannableString.setSpan(new ForegroundColorSpan( color1 ), startIndex, endIndex, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        startIndex = endIndex + 1;
+        startIndex = text.lastIndexOf("￥");//endIndex + 1;
         endIndex = text.length();
         StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan( color2 );

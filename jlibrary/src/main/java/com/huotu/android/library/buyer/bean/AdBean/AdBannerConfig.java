@@ -26,7 +26,7 @@ public class AdBannerConfig extends BaseConfig {
         this.images = images;
     }
 
-    public boolean isAutoPlay() {
+    public boolean getAutoPlay() {
         return autoPlay;
     }
 

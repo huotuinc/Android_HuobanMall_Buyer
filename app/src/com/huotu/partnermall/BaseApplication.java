@@ -14,9 +14,11 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.google.gson.Gson;
+import com.huotu.android.library.buyer.Jlibrary;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.BuildConfig;
+import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
@@ -60,6 +62,8 @@ public class BaseApplication extends Application {
      */
     public boolean isLeftImg = true;
 
+    public static BaseApplication single;
+
     @Override
     public void onConfigurationChanged ( Configuration newConfig ) {
         super.onConfigurationChanged ( newConfig );
@@ -68,6 +72,8 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate ( ) {
         super.onCreate ( );
+
+        single=this;
 
         if(BuildConfig.DEBUG){
             LeakCanary.install(this);//内存检测工具
@@ -86,7 +92,9 @@ public class BaseApplication extends Application {
         //JPushInterface.init ( this );
         //初始化shareSDK参数
         ShareSDK.initSDK ( getApplicationContext ( ) );
-        solveAsyncTaskOnPostExecuteBug ( );
+        solveAsyncTaskOnPostExecuteBug();
+
+        Jlibrary.init(this);
 
         //加载异常处理模块
         CrashHandler crashHandler = CrashHandler.getInstance ( );
@@ -281,7 +289,8 @@ public class BaseApplication extends Application {
 
     //获取商户ID
     public String readMerchantId() {
-        return PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID );
+        return String.valueOf( BuildConfig.CUSTOMERID );
+        //return PreferenceHelper.readString ( getApplicationContext ( ), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID );
     }
 
     /**
@@ -451,9 +460,17 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_level, level );
     }
 
+    public void writeMemberLevelId( int levelid){
+        PreferenceHelper.writeInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_LEVELID, levelid);
+    }
+
     public String readMemberLevel()
     {
         return PreferenceHelper.readString ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_level );
+    }
+
+    public int readMemberLevelId(){
+        return PreferenceHelper.readInt ( getApplicationContext (), Constants.MEMBER_INFO, Constants.MEMBER_LEVELID );
     }
 
     public boolean isFirst() {
@@ -484,14 +501,9 @@ public class BaseApplication extends Application {
 
     public String obtainMainColor()
     {
-        return PreferenceHelper.readString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_MAIN );
+        return getString( R.string.maincolor );
+        //return PreferenceHelper.readString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_MAIN );
     }
-
-//    public String obtainSecondColor()
-//    {
-//        return PreferenceHelper.readString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_SECOND );
-//    }
-
 
     //获取微信key
     public String readWeixinKey()

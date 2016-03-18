@@ -8,7 +8,29 @@ import java.util.List;
 public class PageConfig {
     private int version;
     private List<WidgetConfig> widgets;
+    /**
+     * 标题
+     */
     private String title;
+    /**
+     * 资源根地址
+     */
+    private String mallResourceURL;
+    /**
+     *
+     */
+    private String description;
+
+    private String backgroundColor;
+
+    private String createdTime;
+
+    private String lastModifiedDate;
+
+    private boolean enabled;
+
+    private boolean indexed;
+
 
     public String getTitle() {
         return title;
@@ -16,6 +38,14 @@ public class PageConfig {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getMallResourceURL() {
+        return mallResourceURL;
+    }
+
+    public void setMallResourceURL(String mallResourceURL) {
+        this.mallResourceURL = mallResourceURL;
     }
 
     public int getVersion() {

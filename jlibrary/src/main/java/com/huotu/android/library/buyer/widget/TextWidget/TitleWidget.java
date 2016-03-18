@@ -52,7 +52,7 @@ public class TitleWidget extends LinearLayout implements View.OnClickListener{
 
         tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, config.getFontSize() );
         try {
-            int bgColor = Color.parseColor( "#"+ this.config.getTitle_background());
+            int bgColor = Color.parseColor( this.config.getTitle_background());
             ll.setBackgroundColor(bgColor);
         }catch (Exception ex){
             Logger.e(ex.getMessage(), ex);

@@ -29,6 +29,18 @@ public class MallInfoBean {
      * 上新商品数量
      */
     private int newGoodNum;
+    /**
+     * 全部订单数量
+     */
+    private int orderNum;
+    /**
+     * 商品链接
+     */
+    private String goodsListUrl;
+    /**
+     * 订单链接
+     */
+    private String orderListUrl;
 
     public String getMallName() {
         return mallName;
@@ -76,5 +88,29 @@ public class MallInfoBean {
 
     public void setNewGoodNum(int newGoodNum) {
         this.newGoodNum = newGoodNum;
+    }
+
+    public int getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(int orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public String getGoodsListUrl() {
+        return goodsListUrl;
+    }
+
+    public void setGoodsListUrl(String goodsListUrl) {
+        this.goodsListUrl = goodsListUrl;
+    }
+
+    public String getOrderListUrl() {
+        return orderListUrl;
+    }
+
+    public void setOrderListUrl(String orderListUrl) {
+        this.orderListUrl = orderListUrl;
     }
 }

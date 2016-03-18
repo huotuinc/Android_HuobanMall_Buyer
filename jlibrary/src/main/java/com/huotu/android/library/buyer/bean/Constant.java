@@ -72,4 +72,33 @@ public class Constant {
      * hide–不显示
      */
     public static String GOODS_HIDE="hide";
+
+
+
+    public final static String HEADER_USER_KEY="_user_key";
+    public final static String HEADER_USER_RANDOM="_user_random";
+    public final static String HEADER_USER_SECURE="_user_secure";
+
+    /**
+     * 每页显示的条数
+     */
+    public final static int PAGESIZE=10;
+    /**
+     * 请求业务数据接口 成功状态码 200
+     */
+    public final static int REQUEST_SUCCESS=200;
+    /**
+     * 返利图标的宽度
+     */
+    public final static int REBATEICON_WIDTH= 40;
+    /**
+     * 底部导航栏图标的宽度
+     */
+    public final static int FOOTER_ICON_WIDTH = 25;
+
+    /**
+     * url地址中的参数 占位符
+     */
+    public final static String URL_PARAMETER_CUSTOMERID="{CustomerID}";
+
 }

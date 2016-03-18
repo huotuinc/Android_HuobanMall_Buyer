@@ -5,6 +5,10 @@ package com.huotu.android.library.buyer.bean.AdBean;
  */
 public class AdImageBean {
     /**
+     *
+     */
+    private long id;
+    /**
      * 图片地址
      */
     private String imageUrl;
@@ -24,6 +28,14 @@ public class AdImageBean {
      * 链接地址
      */
     private String linkUrl;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getImageUrl() {
         return imageUrl;

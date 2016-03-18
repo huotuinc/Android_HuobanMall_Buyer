@@ -157,11 +157,6 @@ public class SplashActivity extends BaseActivity {
                             AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), targetUrl, SplashActivity.this);
                             final String url = paramUtils.obtainUrls();
                             HttpUtil.getInstance().doVolley(application, url);
-
-//                            String initUrl = Constants.getINTERFACE_PREFIX()+"mall/Init?customerid=";
-//                            initUrl += application.readMerchantId();//动态获取商户编号
-//                            AuthParamUtils paramInit = new AuthParamUtils(application, System.currentTimeMillis(), initUrl, SplashActivity.this);
-//                            initUrl = paramInit.obtainUrls();
                         }
                     }
 
@@ -272,8 +267,8 @@ public class SplashActivity extends BaseActivity {
         String j = gsonUtil.toJson(config);
 
         WidgetConfig widgetConfig = new WidgetConfig();
-        widgetConfig.setWidgetTypeEnum(WidgetTypeEnum.AD_ADBANNER);
-        widgetConfig.setJsonString( j );
+        widgetConfig.setType(WidgetTypeEnum.AD_ADBANNER.getIndex());
+        //widgetConfig.setProperties( j );
 
         widgetConfigs.add( widgetConfig);
 
@@ -293,9 +288,9 @@ public class SplashActivity extends BaseActivity {
         if( localUIVersion>= serverUIVersion){
             JSONUtil<PageConfig> jsonUtil = new JSONUtil<>();
             String json = jsonUtil.toJson(serverUIConfig);
-            PreferenceHelper.writeString( SplashActivity.this , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_KEY , json);
+            PreferenceHelper.writeString( SplashActivity.this , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_SELF_KEY , json);
         }else{
-            String config = PreferenceHelper.readString(SplashActivity.this, NativeConstants.UI_CONFIG_FILE, NativeConstants.UI_CONFIG_KEY);
+            String config = PreferenceHelper.readString(SplashActivity.this, NativeConstants.UI_CONFIG_FILE, NativeConstants.UI_CONFIG_SELF_KEY);
             if( TextUtils.isEmpty( config )){
                 forceUpdateApp();
                 return true;

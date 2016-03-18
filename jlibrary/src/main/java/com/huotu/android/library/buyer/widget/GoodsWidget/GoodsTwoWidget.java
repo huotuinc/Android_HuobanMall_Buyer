@@ -3,22 +3,38 @@ package com.huotu.android.library.buyer.widget.GoodsWidget;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.huotu.android.library.buyer.BizApiService;
+import com.huotu.android.library.buyer.bean.BizBean.BizBaseBean;
 import com.huotu.android.library.buyer.bean.BizBean.GoodsBean;
 import com.huotu.android.library.buyer.bean.Data.DataItem;
+import com.huotu.android.library.buyer.bean.Data.LoadCompleteEvent;
 import com.huotu.android.library.buyer.bean.GoodsBean.GoodsTwoConfig;
+import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+import com.huotu.android.library.buyer.utils.Logger;
+import com.huotu.android.library.buyer.utils.RetrofitUtil;
+import com.huotu.android.library.buyer.utils.SignUtil;
 import com.huotu.android.library.buyer.widget.SpanningUtil;
 import com.huotu.android.library.buyer.R;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 二方格(默认样式)
@@ -95,17 +111,18 @@ public class GoodsTwoWidget extends LinearLayout {
         //layoutParams.addRule( RelativeLayout.RIGHT_OF , tvName.getId() );
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         tvPrice.setLayoutParams(layoutParams);
+        tvPrice.setBackgroundResource(R.drawable.transparent_circle_bg);
         rlGoods.addView(tvPrice);
 
-        tvName = new TextView(getContext());
-        tvName.setId(tvName.hashCode());
-        layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.ALIGN_TOP , tvPrice.getId());
-        layoutParams.addRule(RelativeLayout.LEFT_OF , tvPrice.getId());
-        tvName.setLayoutParams(layoutParams);
-        tvName.setMaxLines(1);
-        tvName.setTextColor(Color.BLACK);
-        rlGoods.addView(tvName);
+//        tvName = new TextView(getContext());
+//        tvName.setId(tvName.hashCode());
+//        layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        layoutParams.addRule(RelativeLayout.ALIGN_TOP , tvPrice.getId());
+//        layoutParams.addRule(RelativeLayout.LEFT_OF , tvPrice.getId());
+//        tvName.setLayoutParams(layoutParams);
+//        tvName.setMaxLines(1);
+//        tvName.setTextColor(Color.BLACK);
+//        rlGoods.addView(tvName);
 
 //        tvDesc = new TextView( getContext());
 //        tvDesc.setId(tvDesc.hashCode());
@@ -113,7 +130,6 @@ public class GoodsTwoWidget extends LinearLayout {
 //        layoutParams.addRule(RelativeLayout.BELOW, tvName.getId());
 //        tvDesc.setLayoutParams(layoutParams);
 //        rlGoods.addView(tvDesc);
-
 
         tvJifen = new TextView( getContext() );
         tvJifen.setId(tvJifen.hashCode());
@@ -138,6 +154,7 @@ public class GoodsTwoWidget extends LinearLayout {
 
     private RelativeLayout create_chuxiao(GoodsBean good ){
         RelativeLayout rlGoods = new RelativeLayout(getContext());
+        rlGoods.setBackgroundResource(R.drawable.gray_border_style);
         LinearLayout.LayoutParams llLayoutOParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         llLayoutOParams.setMargins(2,2,2,2);
         rlGoods.setLayoutParams(llLayoutOParams);
@@ -148,18 +165,31 @@ public class GoodsTwoWidget extends LinearLayout {
         rlGoods.setPadding(leftPx, topPx, rightPx, bottomPx);
 
         ivPic = new SimpleDraweeView(getContext());
-        ivPic.setId( ivPic.hashCode() );
+        ivPic.setId(ivPic.hashCode());
         int picWidth = getContext().getResources().getDisplayMetrics().widthPixels;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(picWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
         ivPic.setLayoutParams(layoutParams);
         rlGoods.addView(ivPic);
 
+
+        TextView tvCX = new TextView(getContext());
+        tvCX.setId(tvCX.hashCode());
+        layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.BELOW, ivPic.getId());
+        layoutParams.addRule(RelativeLayout.ALIGN_RIGHT , ivPic.getId() );
+        tvCX.setLayoutParams(layoutParams);
+        tvCX.setText("我要\r\n促销");
+        tvCX.setBackgroundColor(Color.RED);
+        tvCX.setTextColor(Color.WHITE);
+        tvCX.setGravity(Gravity.CENTER);
+        rlGoods.addView(tvCX);
+
         tvPrice = new TextView( getContext() );
         tvPrice.setId(tvPrice.hashCode());
         layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.BELOW , ivPic.getId());
-        //layoutParams.addRule( RelativeLayout.RIGHT_OF , tvName.getId() );
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams.addRule( RelativeLayout.LEFT_OF , tvCX.getId() );
+        layoutParams.addRule(RelativeLayout.ALIGN_LEFT , ivPic.getId());
         tvPrice.setLayoutParams(layoutParams);
         rlGoods.addView(tvPrice);
 
@@ -177,6 +207,8 @@ public class GoodsTwoWidget extends LinearLayout {
         tvJifen.setTextColor(Color.WHITE);
         rlGoods.addView(tvJifen);
 
+
+
         setStyle(good);
 
         return rlGoods;
@@ -187,47 +219,37 @@ public class GoodsTwoWidget extends LinearLayout {
      *
      */
     protected void asyncGetGoodsData() {
-        //TODO
-//        ApiService apiService = RetrofitUtil.getInstance().create( ApiService.class );
-//        Call<List<DataItem>> call = apiService.getGoodsList("", "");
-//        call.enqueue(new Callback<List<DataItem>>() {
-//            @Override
-//            public void onResponse(Response<List<DataItem>> response) {
-//                Logger.i( response.message() );
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//                Logger.e( "error" , t );
-//            }
-//        });
+        BizApiService apiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl).create( BizApiService.class );
+        String key = Variable.BizKey;
+        String random = String.valueOf(System.currentTimeMillis());
+        String secure = SignUtil.getSecure(Variable.BizKey, Variable.BizAppSecure, random);
+        int customerid= Variable.CustomerId;
+        String goodsids = goodsTwoConfig.getBindDataID();
+        int levelid = Variable.userLevelId;
+        Call<BizBaseBean<List<GoodsBean>>> call = apiService.getGoodsDetail( key,
+                random, secure , customerid , goodsids , levelid);
+        call.enqueue(new Callback<BizBaseBean<List<GoodsBean>>>() {
+            @Override
+            public void onResponse(Response<BizBaseBean<List<GoodsBean>>> response) {
+                if( response ==null || response.code() != Constant.REQUEST_SUCCESS || response.body()==null|| response.body().getData()==null ){
+                    Logger.e(response.message());
+                    //EventBus.getDefault().post(new LoadCompleteEvent());
+                    return;
+                }
 
-        goods = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            GoodsBean item = new GoodsBean();
-            if(i%3==0) {
-                item.setThumbnailPic("http://res.olquan.cn//resource/images/wechat/4471/mall/pic20160116163457.jpg");
-            }else if(i%3==1) {
-                item.setThumbnailPic("http://res.olquan.cn//resource/images/wechat/4471/mall/pic20160116151849.jpg");
-            }else if(i%3==2){
-                item.setThumbnailPic("http://res.olquan.cn/resource/images/photo/4471/20160129175743.jpg");
+                goods = response.body().getData();
+                if (goodsTwoConfig.isStyleLayout()) {
+                    infliate_1();
+                } else {
+                    infliate_2();
+                }
             }
-            item.setPrice(32.89d);
-            item.setGoodName("当然意味着——哥们，快把手机关了放口袋里，向吧台那一侧的美丽姑娘勇猛地发起冲锋吧！她正在等着她");
-            item.setSpec("");
-            //item.setRebate(3);
-            //item.setDetailurl("");
-            //item.setId(i);
-            item.setMarketPrice(45d);
-            goods.add(item);
-        }
 
-
-        if (goodsTwoConfig.isStyleLayout()) {
-            infliate_1();
-        } else {
-            infliate_2();
-        }
+            @Override
+            public void onFailure(Throwable t) {
+                Logger.e( "error" , t );
+            }
+        });
     }
 
     protected void infliate_1(){
@@ -345,7 +367,7 @@ public class GoodsTwoWidget extends LinearLayout {
         layoutParams.addRule(RelativeLayout.BELOW, ivPic.getId());
         tvName.setLayoutParams(layoutParams);
         tvName.setMaxLines(2);
-        tvName.setTextColor(Color.BLACK);
+        //tvName.setTextColor(Color.BLACK);
         rlGoods.addView(tvName);
 
 //        tvDesc = new TextView( getContext());
@@ -367,10 +389,10 @@ public class GoodsTwoWidget extends LinearLayout {
 
         if(  TextUtils.isEmpty( goodsTwoConfig.getBackground()) ) {
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.addRule(RelativeLayout.ALIGN_TOP, tvPrice.getId());
+            layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvPrice.getId());
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             tvJifen.setLayoutParams(layoutParams);
-            tvJifen.setTextColor(Color.BLACK);
+            //tvJifen.setTextColor(Color.BLACK);
             rlGoods.addView(tvJifen);
         }else {
             ivJifen = new SimpleDraweeView(getContext());
@@ -396,12 +418,11 @@ public class GoodsTwoWidget extends LinearLayout {
     }
 
 
-
     protected void setStyle( GoodsBean good ){
         if( this.goodsTwoConfig.getProduct_showname().equals( Constant.GOODS_SHOW )){
-            tvName.setVisibility(VISIBLE);
+            if(tvName!=null) tvName.setVisibility(VISIBLE);
         }else {
-            tvName.setVisibility(GONE);
+            if(tvName!=null) tvName.setVisibility(GONE);
         }
 //        if( this.goodsTwoConfig.getIsShowSyno().equals( Constant.GOODS_SHOW ) ){
 //            tvDesc.setVisibility(VISIBLE);
@@ -422,18 +443,24 @@ public class GoodsTwoWidget extends LinearLayout {
 
         int picWidth = getContext().getResources().getDisplayMetrics().widthPixels/2;
         FrescoDraweeController.loadImage(ivPic, picWidth, good.getThumbnailPic());
-        tvName.setText( good.getGoodName() );
+        if( tvName!=null) tvName.setText( good.getGoodName() );
         //tvDesc.setText(good.getSpec());
 
-        String priceStr = String.valueOf( good.getMarketPrice() );
-        String zpriceStr = String.valueOf( good.getPrice());
-        SpanningUtil.set_Price_Format1(tvPrice, priceStr, zpriceStr, Color.RED, Color.GRAY);
-        String jifenStr = String.valueOf( good.getRebate() );
+        String priceStr = CommonUtil.formatDouble( good.getPrice());// String.valueOf( good.getMarketPrice() );
+        String zpriceStr = CommonUtil.formatPrice( good.getPriceLevel() ); //String.valueOf(good.getPrice());
+
+        if( goodsTwoConfig.getGoods_layer().equals(Constant.LAYER_STYLE_NORMAL) ){
+            SpanningUtil.set_Price_Format2(tvPrice, priceStr, zpriceStr , Color.WHITE ,Color.WHITE );
+        }else{
+            SpanningUtil.set_Price_Format1(tvPrice, priceStr, zpriceStr, Color.RED, Color.GRAY);
+        }
+        String jifenStr = CommonUtil.formatJiFen(good.getScore()); //String.valueOf( good.getRebate() );
         tvJifen.setText( jifenStr +"积分" );
 
-        if( ivJifen!=null && TextUtils.isEmpty(goodsTwoConfig.getBackground()) ==false ){
-            int iconWidth = DensityUtils.dip2px( getContext() , goodsTwoConfig.getIconWidth());
-            FrescoDraweeController.loadImage(ivJifen, iconWidth, goodsTwoConfig.getBackground());
+        if( ivJifen!=null && !TextUtils.isEmpty(goodsTwoConfig.getBackground()) ){
+            int iconWidth = DensityUtils.dip2px(getContext(), Constant.REBATEICON_WIDTH );
+            String bgUrl = Variable.resourceUrl + goodsTwoConfig.getBackground();
+            FrescoDraweeController.loadImage(ivJifen, iconWidth, bgUrl);
         }
     }
 

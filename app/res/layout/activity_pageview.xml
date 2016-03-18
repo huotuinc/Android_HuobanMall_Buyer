@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+    <RelativeLayout
+        android:id="@+id/activity_pageview_titlelayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+            <include layout="@layout/title_index"></include>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/activity_pageview_webViewlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/activity_pageview_titlelayout">
+        <include layout="@layout/page_load_view"></include>
+    </RelativeLayout>
+</RelativeLayout>

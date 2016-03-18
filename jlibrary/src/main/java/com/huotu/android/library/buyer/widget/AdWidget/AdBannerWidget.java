@@ -8,6 +8,8 @@ import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.huotu.android.library.buyer.bean.AdBean.AdBannerConfig;
 import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
+import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.DensityUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -20,11 +22,13 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
     private AdBannerConfig config;
 
     public AdBannerWidget(Context context , AdBannerConfig  config ) {
-        super(context , config.isAutoPlay() );
+        super(context , config.getAutoPlay() );
 
         this.config = config;
-        final int iwidth = this.config.getWidth();
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(config.getWidth(), config.getHeight());
+        final int iwidth = DensityUtils.getScreenW(getContext()); //this.config.getWidth();
+        int iHeight = 200;//LayoutParams.WRAP_CONTENT;
+        iHeight = DensityUtils.dip2px( getContext(), iHeight);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( iwidth , iHeight );
         this.setLayoutParams(layoutParams);
 
         this.setPages(new CBViewHolderCreator() {
@@ -37,12 +41,14 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
         .setPageIndicator(new int[]{R.drawable.ic_page_indicator, R.drawable.ic_page_indicator_focused})
         .setOnItemClickListener(this);
 
-        this.startTurning(4000);
+        int time = config.getImages().size()*1000;
+        this.startTurning( time );
     }
 
     @Override
     public void onItemClick(int position) {
         AdImageBean bean = config.getImages().get( position );
-        EventBus.getDefault().post( new LinkEvent(bean.getLinkName(), bean.getLinkUrl() ));
+        String url = Variable.siteUrl + bean.getLinkUrl();
+        EventBus.getDefault().post( new LinkEvent(bean.getLinkName(), url ));
     }
 }

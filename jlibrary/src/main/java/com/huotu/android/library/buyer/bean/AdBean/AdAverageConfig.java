@@ -19,11 +19,11 @@ public class AdAverageConfig extends AdBaseConfig {
     /**
      * 上下距离
      */
-    private int paddingTop = 0;
+    //private int paddingTop = 0;
     /**
      * 左右距离
      */
-    private int paddingLeft=0;
+    //private int paddingLeft=0;
     /**
      * 背景颜色，格式取Hex color格式，比如#ffffff
      */
@@ -47,26 +47,6 @@ public class AdAverageConfig extends AdBaseConfig {
 
     public void setPaddingOutRight(int paddingOutRight) {
         this.paddingOutRight = paddingOutRight;
-    }
-
-    @Override
-    public int getPaddingTop() {
-        return paddingTop;
-    }
-
-    @Override
-    public void setPaddingTop(int paddingTop) {
-        this.paddingTop = paddingTop;
-    }
-
-    @Override
-    public int getPaddingLeft() {
-        return paddingLeft;
-    }
-
-    @Override
-    public void setPaddingLeft(int paddingLeft) {
-        this.paddingLeft = paddingLeft;
     }
 
     public String getBackcolor() {

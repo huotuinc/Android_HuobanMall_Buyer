@@ -51,17 +51,17 @@ public class ListViewOneItemWidget extends BaseLinearLayoutWidget {
         tvName1 =  (TextView)findViewById(R.id.listview_one_item1_name1);
         tvPrice1 =  (TextView)findViewById(R.id.listview_one_item1_price1);
         tvJiFen1 =  (TextView)findViewById(R.id.listview_one_item1_jifen1);
-        if( config.isProduct_showname() ){
+        if( config.getProduct_showname().equals( Constant.GOODS_SHOW ) ){
             tvName1.setVisibility(View.VISIBLE);
         }else {
             tvName1.setVisibility(View.GONE);
         }
-        if( config.isProduct_showprices() ){
+        if( config.getProduct_showprices().equals( Constant.GOODS_SHOW ) ){
             tvPrice1.setVisibility(View.VISIBLE);
         }else{
             tvPrice1.setVisibility(View.GONE);
         }
-        if( config.isProduct_userInteger() ){
+        if( config.getProduct_userInteger().equals(Constant.GOODS_SHOW) ){
             tvJiFen1.setVisibility(View.VISIBLE);
         }else{
             tvJiFen1.setVisibility(View.GONE);
@@ -150,30 +150,30 @@ public class ListViewOneItemWidget extends BaseLinearLayoutWidget {
 
         if( config.getGoods_layer().equals( Constant.LAYER_STYLE_CARD ) ) {
             tvName1.setText(item.getGoodName());
-            String price = CommonUtil.FormatDouble(item.getMarketPrice());
-            String zPrice =CommonUtil.FormatDouble( item.getPrice() );
+            String price = CommonUtil.formatDouble(item.getPrice());
+            String zPrice =CommonUtil.formatPrice( item.getPriceLevel() );
 
            SpanningUtil.set_Price_Format1(tvPrice1, price, zPrice, Color.RED,Color.GRAY);
 
-            String jf = item.getScore(); //CommonUtil.FormatDouble( item.getRebate() );
+            String jf = item.getScore().toString(); //CommonUtil.FormatDouble( item.getRebate() );
             tvJiFen1.setText( jf  +"积分");
 
         }else if( config.getGoods_layer().equals( Constant.LAYER_STYLE_NORMAL) ){
             tvName1.setText("");
 
-            String price = CommonUtil.FormatDouble( item.getMarketPrice() );
-            String zPrice = CommonUtil.FormatDouble(item.getPrice());
+            String price = CommonUtil.formatDouble( item.getPrice() );
+            String zPrice = CommonUtil.formatPrice(item.getPriceLevel());
             SpanningUtil.set_Price_Format2(tvPrice1, price, zPrice, Color.WHITE, Color.WHITE);
 
-            String jf = item.getScore();//CommonUtil.FormatDouble( item.getRebate() );
+            String jf = item.getScore().toString();//CommonUtil.FormatDouble( item.getRebate() );
             tvJiFen1.setText( jf +"积分" );
 
         }else if( config.getGoods_layer().equals( Constant.LAYER_STYLE_PROMOTION )){
             tvName1.setText("我要\r\n促销");
-            String jf = item.getScore();//CommonUtil.FormatDouble( item.getRebate() );
+            String jf = item.getScore().toString();//CommonUtil.FormatDouble( item.getRebate() );
             tvJiFen1.setText( jf  + "积分");
-            String price = CommonUtil.FormatDouble( item.getMarketPrice() );
-            String zPrice = CommonUtil.FormatDouble( item.getPrice() );
+            String price = CommonUtil.formatDouble( item.getPrice() );
+            String zPrice = CommonUtil.formatPrice( item.getPriceLevel() );
 
             SpanningUtil.set_Price_Format2(tvPrice1, price, zPrice, Color.RED, Color.GRAY);
         }

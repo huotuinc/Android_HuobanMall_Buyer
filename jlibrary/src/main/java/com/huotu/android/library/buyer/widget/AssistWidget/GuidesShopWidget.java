@@ -7,10 +7,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.huotu.android.library.buyer.BizApiService;
+import com.huotu.android.library.buyer.bean.BizBean.BizBaseBean;
+import com.huotu.android.library.buyer.bean.BizBean.MallInfoBean;
+import com.huotu.android.library.buyer.bean.Variable;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.R;
 import com.huotu.android.library.buyer.bean.AsistBean.GuidesShopConfig;
+import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+import com.huotu.android.library.buyer.utils.Logger;
+import com.huotu.android.library.buyer.utils.RetrofitUtil;
+import com.huotu.android.library.buyer.utils.SignUtil;
 import com.huotu.android.library.buyer.utils.TypeFaceUtil;
+
+import java.lang.ref.WeakReference;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by jinxiangdong on 2016/1/14.
@@ -92,10 +106,45 @@ public class GuidesShopWidget extends RelativeLayout {
 
         //TODO
         //FrescoDraweeController.loadImage( ivLogo , logoWidthPx , config. );
+        asyncLoadData();
     }
 
-    public void loadData(){
+    public void asyncLoadData(){
+        BizApiService bizApiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl).create(BizApiService.class);
+        int customerId= Variable.CustomerId;
 
+        String key = Variable.BizKey;
+        String random = String.valueOf(System.currentTimeMillis());
+        String secure = SignUtil.getSecure(Variable.BizKey, Variable.BizAppSecure, random);
+
+        Call<BizBaseBean<MallInfoBean>> call = bizApiService.getMallInfo(key, random, secure, customerId);
+        call.enqueue(new LogoCallBack(this));
+    }
+
+    public class LogoCallBack implements Callback<BizBaseBean<MallInfoBean>> {
+        WeakReference<GuidesShopWidget> ref;
+        public LogoCallBack(GuidesShopWidget widget){
+            this.ref =  new WeakReference<>(widget);
+        }
+
+        @Override
+        public void onResponse(Response<BizBaseBean<MallInfoBean>> response) {
+            if( ref.get()==null)return;
+            if( response==null||response.code() !=200 || response.body() ==null || response.body().getData()==null){
+                Logger.e(response.message());
+                return;
+            }
+            String logoUrl = response.body().getData().getLogo();
+            int imageWidthPx = DensityUtils.dip2px(ref.get().getContext() , 30);
+            FrescoDraweeController.loadImage(ref.get().ivLogo , imageWidthPx, logoUrl);
+            String shopName = response.body().getData().getMallName();
+            ref.get().tvShopName.setText( shopName );
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+            Logger.e(t.getMessage());
+        }
     }
 
 }

@@ -42,6 +42,7 @@ class AuthMallModel  {
     public class AuthMall
     {
         private int userid;
+        private int levelID;
         private String levelName;
         private String nickName;
         private String headImgUrl;
@@ -66,8 +67,7 @@ class AuthMallModel  {
             this.userType = userType;
         }
 
-        public
-        List< MenuModel > getHome_menus ( ) {
+        public  List< MenuModel > getHome_menus ( ) {
             return home_menus;
         }
 
@@ -122,6 +122,14 @@ class AuthMallModel  {
 
         public void setRelatedType(int relatedType) {
             this.relatedType = relatedType;
+        }
+
+        public int getLevelID() {
+            return levelID;
+        }
+
+        public void setLevelId(int levelid) {
+            this.levelID = levelid;
         }
     }
 

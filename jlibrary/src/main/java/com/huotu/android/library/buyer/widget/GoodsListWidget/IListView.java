@@ -12,4 +12,6 @@ import java.util.List;
  */
 public interface IListView {
      void addItems(GoodsListBean data);
+
+     void asyncGetGoodsData( boolean isRefreshData );
 }

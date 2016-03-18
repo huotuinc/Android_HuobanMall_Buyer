@@ -16,6 +16,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+//    sourceSets{
+//        debug.setRoot('build-types/debug')
+//        release.setRoot('build-types/release')
+//    }
 }
 
 dependencies {

@@ -4,6 +4,8 @@
 
     <string name="index_search_edit_hint">搜索商品</string>
 
+    <string name="maincolor">255,25,90,250</string>
+
     <!--引导界面图片-->
     <string-array name="guide_icon">
         <item>guide01</item>

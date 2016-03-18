@@ -30,6 +30,11 @@ public class ClassBean {
      */
     private int goodCount;
 
+    /**
+     * 是否选择
+     */
+    private boolean isSelect;
+
     public int getCatId() {
         return catId;
     }
@@ -76,5 +81,13 @@ public class ClassBean {
 
     public void setGoodCount(int goodCount) {
         this.goodCount = goodCount;
+    }
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setIsSelect(boolean isSelect) {
+        this.isSelect = isSelect;
     }
 }

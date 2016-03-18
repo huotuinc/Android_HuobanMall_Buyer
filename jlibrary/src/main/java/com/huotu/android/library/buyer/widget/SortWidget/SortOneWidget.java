@@ -3,29 +3,41 @@ package com.huotu.android.library.buyer.widget.SortWidget;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-import com.huotu.android.library.buyer.ApiService;
+import com.huotu.android.library.buyer.BizApiService;
 import com.huotu.android.library.buyer.adapter.BrandAdapter;
 import com.huotu.android.library.buyer.bean.BizBean.BizBaseBean;
 import com.huotu.android.library.buyer.bean.BizBean.BrandBean;
 import com.huotu.android.library.buyer.bean.BizBean.ClassBean;
+import com.huotu.android.library.buyer.bean.Constant;
+import com.huotu.android.library.buyer.bean.Data.StartLoadEvent;
 import com.huotu.android.library.buyer.bean.SortBean.SortOneConfig;
+import com.huotu.android.library.buyer.bean.Variable;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.R;
 import com.huotu.android.library.buyer.adapter.ClassAdapter;
+import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.android.library.buyer.utils.RetrofitUtil;
+import com.huotu.android.library.buyer.utils.SignUtil;
 import com.huotu.android.library.buyer.utils.TypeFaceUtil;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +46,7 @@ import retrofit2.Response;
 /**
  * Created by jinxiangdong on 2016/1/21.
  */
-public class SortOneWidget extends LinearLayout implements View.OnClickListener{
+public class SortOneWidget extends LinearLayout implements View.OnClickListener , AdapterView.OnItemClickListener{
     private TextView tvone;
     private TextView tvoneup;
     private TextView tvonedown;
@@ -65,6 +77,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener{
     private TextView tvBrand;
     private TextView tvClass;
     private TextView tvHot;
+    private TextView btnOk;
 
     private SortOneConfig config;
     private final String ASC="asc";
@@ -86,8 +99,8 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener{
 
         tvone = (TextView)findViewById(R.id.sortone_1);
         tvoneup = (TextView)findViewById(R.id.sortone_1_up);
-        tvoneup.setTextColor(Color.RED );
         tvonedown = (TextView)findViewById(R.id.sortone_1_down);
+        tvonedown.setTextColor(Color.RED );
         tvoneline = (TextView)findViewById(R.id.sortone_1_line);
 
         tvtwo = (TextView)findViewById(R.id.sortone_2);
@@ -134,7 +147,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener{
         tvoneline.setBackgroundColor(Color.RED);
         int hPx = DensityUtils.dip2px(context, 2);
         int h2Px = DensityUtils.dip2px(context,1);
-        tvoneline.setHeight(hPx );
+        tvoneline.setHeight(hPx);
 
         tvtwoline.setBackgroundColor(Color.GRAY);
         tvtwoline.setHeight(h2Px);
@@ -150,6 +163,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener{
         }else{
             rl5.setVisibility(GONE);
         }
+
     }
 
     protected void clearStyle(){
@@ -198,68 +212,72 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if( v.getId() == R.id.sortone_1_rl) {
+        if (v.getId() == R.id.sortone_1_rl) {
             clearStyle();
-           setStyle(tvone, tvoneup, tvonedown, tvoneline, "新品");
-        }else if(v.getId()==R.id.sortone_2_rl){
+            setStyle(tvone, tvoneup, tvonedown, tvoneline, "新品");
+            EventBus.getDefault().post(new StartLoadEvent());
+        } else if (v.getId() == R.id.sortone_2_rl) {
             clearStyle();
             tvtwoline.setBackgroundColor(Color.RED);
-            tvtwo.setTextColor( Color.RED);
+            tvtwo.setTextColor(Color.RED);
             tvtwodown.setTextColor(Color.RED);
-            sortCol="销量";
-            sorttype=DESC;
-        }else if(v.getId()==R.id.sortone_3_rl){
+            sortCol = "销量";
+            sorttype = DESC;
+            EventBus.getDefault().post(new StartLoadEvent());
+        } else if (v.getId() == R.id.sortone_3_rl) {
             setStyle(tvthree, tvthreeup, tvthreedown, tvthreeline, "价格");
-        }else if(v.getId()==R.id.sortone_4_rl){
+            EventBus.getDefault().post(new StartLoadEvent());
+        } else if (v.getId() == R.id.sortone_4_rl) {
             clearStyle();
             tvfourline.setBackgroundColor(Color.RED);
             tvfour.setTextColor(Color.RED);
-            sortCol="综合";
-            sorttype="";
-        }else if( v.getId() == R.id.sortone_5_rl){
+            sortCol = "综合";
+            sorttype = "";
+            EventBus.getDefault().post(new StartLoadEvent());
+        } else if (v.getId() == R.id.sortone_5_rl) {
             clearStyle();
             tvfiveline.setBackgroundColor(Color.RED);
             tvfive.setTextColor(Color.RED);
-            sortCol="筛选";
-            sorttype="";
+            sortCol = "筛选";
+            sorttype = "";
             showFilterDialog();
-        }else if( v.getId()==R.id.layout_filter_dialog_brand ){
+        } else if (v.getId() == R.id.layout_filter_dialog_brand) {
             tvBrand.setBackgroundResource(R.drawable.layout_filter_dialog_tab_selected_style);
-            int topPad= DensityUtils.dip2px(getContext(),10);
-            int bottonPad= DensityUtils.dip2px(getContext(),12);
-            int topPad2 = DensityUtils.dip2px(getContext(),8);
+            int topPad = DensityUtils.dip2px(getContext(), 10);
+            int bottonPad = DensityUtils.dip2px(getContext(), 12);
+            int topPad2 = DensityUtils.dip2px(getContext(), 8);
             tvBrand.setPadding(0, topPad, 0, bottonPad);
             tvClass.setBackgroundResource(R.drawable.layout_filter_dialog_tab_normal_style);
             tvClass.setPadding(0, topPad2, 0, topPad2);
             tvHot.setBackgroundResource(R.drawable.layout_filter_dialog_tab_normal_style);
             tvHot.setPadding(0, topPad2, 0, topPad2);
-            int margion = DensityUtils.dip2px(getContext(),4);
+            int margion = DensityUtils.dip2px(getContext(), 4);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT); //(RelativeLayout.LayoutParams)tvClass.getLayoutParams();
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             //layoutParams.setMargins(margion, margion, margion, margion);
             tvBrand.setLayoutParams(layoutParams);
 
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT); //(RelativeLayout.LayoutParams)tvClass.getLayoutParams();
-            layoutParams.addRule(RelativeLayout.ABOVE,R.id.layout_filter_dialog_line1);
+            layoutParams.addRule(RelativeLayout.ABOVE, R.id.layout_filter_dialog_line1);
             layoutParams.setMargins(margion, margion, margion, margion);
             tvClass.setLayoutParams(layoutParams);
 
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT); //(RelativeLayout.LayoutParams)tvClass.getLayoutParams();
-            layoutParams.addRule(RelativeLayout.ABOVE,R.id.layout_filter_dialog_line2);
+            layoutParams.addRule(RelativeLayout.ABOVE, R.id.layout_filter_dialog_line2);
             layoutParams.setMargins(margion, margion, margion, margion);
             tvHot.setLayoutParams(layoutParams);
 
-            tvBrand.setTextColor(ContextCompat.getColor( getContext() , R.color.orangered));
-            tvClass.setTextColor( ContextCompat.getColor(getContext() , R.color.gray));
-            tvHot.setTextColor( ContextCompat.getColor( getContext() , R.color.gray));
+            tvBrand.setTextColor(ContextCompat.getColor(getContext(), R.color.orangered));
+            tvClass.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
+            tvHot.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
 
-        }else if( v.getId()==R.id.layout_filter_dialog_class){
+        } else if (v.getId() == R.id.layout_filter_dialog_class) {
             tvClass.setBackgroundResource(R.drawable.layout_filter_dialog_tab_selected_style);
             tvBrand.setBackgroundResource(R.drawable.layout_filter_dialog_tab_normal_style);
             tvHot.setBackgroundResource(R.drawable.layout_filter_dialog_tab_normal_style);
-            int topPad= DensityUtils.dip2px(getContext(),10);
-            int bottonPad= DensityUtils.dip2px(getContext(),12);
-            int topPad2 = DensityUtils.dip2px(getContext(),8);
+            int topPad = DensityUtils.dip2px(getContext(), 10);
+            int bottonPad = DensityUtils.dip2px(getContext(), 12);
+            int topPad2 = DensityUtils.dip2px(getContext(), 8);
             tvClass.setPadding(0, topPad, 0, bottonPad);
             tvBrand.setPadding(0, topPad2, 0, topPad2);
             tvHot.setPadding(0, topPad2, 0, topPad2);
@@ -270,31 +288,31 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener{
 
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT); //(RelativeLayout.LayoutParams)tvBrand.getLayoutParams();
             layoutParams.addRule(RelativeLayout.ABOVE, R.id.layout_filter_dialog_line0);
-            int margion = DensityUtils.dip2px(getContext(),4);
-            layoutParams.setMargins(margion,margion,margion,margion);
+            int margion = DensityUtils.dip2px(getContext(), 4);
+            layoutParams.setMargins(margion, margion, margion, margion);
             tvBrand.setLayoutParams(layoutParams);
 
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT); //(RelativeLayout.LayoutParams)tvHot.getLayoutParams();
-            layoutParams.addRule(RelativeLayout.ABOVE,R.id.layout_filter_dialog_line2);
+            layoutParams.addRule(RelativeLayout.ABOVE, R.id.layout_filter_dialog_line2);
             layoutParams.setMargins(margion, margion, margion, margion);
             tvHot.setLayoutParams(layoutParams);
 
             tvBrand.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
-            tvClass.setTextColor( ContextCompat.getColor(getContext(),R.color.orangered) );
-            tvHot.setTextColor( ContextCompat.getColor(getContext(),R.color.gray) );
-        }else if( v.getId()==R.id.layout_filter_dialog_hot){
+            tvClass.setTextColor(ContextCompat.getColor(getContext(), R.color.orangered));
+            tvHot.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
+        } else if (v.getId() == R.id.layout_filter_dialog_hot) {
             tvHot.setBackgroundResource(R.drawable.layout_filter_dialog_tab_selected_style);
             tvBrand.setBackgroundResource(R.drawable.layout_filter_dialog_tab_normal_style);
             tvClass.setBackgroundResource(R.drawable.layout_filter_dialog_tab_normal_style);
-            int topPad= DensityUtils.dip2px(getContext(),10);
-            int bottonPad= DensityUtils.dip2px(getContext(),12);
-            int topPad2 = DensityUtils.dip2px(getContext(),8);
+            int topPad = DensityUtils.dip2px(getContext(), 10);
+            int bottonPad = DensityUtils.dip2px(getContext(), 12);
+            int topPad2 = DensityUtils.dip2px(getContext(), 8);
             tvHot.setPadding(0, topPad, 0, bottonPad);
             tvBrand.setPadding(0, topPad2, 0, topPad2);
             tvClass.setPadding(0, topPad2, 0, topPad2);
 
-            int margion = DensityUtils.dip2px(getContext(),4);
-            RelativeLayout.LayoutParams layoutParams =new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT); //(RelativeLayout.LayoutParams)tvHot.getLayoutParams();
+            int margion = DensityUtils.dip2px(getContext(), 4);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT); //(RelativeLayout.LayoutParams)tvHot.getLayoutParams();
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             //layoutParams.setMargins(margion, margion, margion, margion);
             tvHot.setLayoutParams(layoutParams);
@@ -310,9 +328,16 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener{
             tvClass.setLayoutParams(layoutParams);
 
             tvBrand.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
-            tvClass.setTextColor(ContextCompat.getColor(getContext(),R.color.gray));
-            tvHot.setTextColor(ContextCompat.getColor(getContext(),R.color.orangered));
+            tvClass.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
+            tvHot.setTextColor(ContextCompat.getColor(getContext(), R.color.orangered));
+        } else if (v.getId() == R.id.layout_filter_dialog_ok) {
+
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 
     /**
@@ -325,6 +350,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener{
             filterDialog = layoutInflater.inflate(R.layout.layout_filter_dialog, null);
             llFilter.addView(filterDialog);
             gridView = (GridView)llFilter.findViewById(R.id.layout_filter_dialog_data);
+            gridView.setOnItemClickListener(this);
 
             //LinearLayout.LayoutParams layoutParams = (LayoutParams)gridView.getLayoutParams();
 
@@ -334,44 +360,124 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener{
             tvClass.setOnClickListener(this);
             tvHot = (TextView)llFilter.findViewById(R.id.layout_filter_dialog_hot);
             tvHot.setOnClickListener(this);
+
+            btnOk = (TextView)llFilter.findViewById(R.id.layout_filter_dialog_ok);
+            btnOk.setOnClickListener(this);
+
             asyncGetClassData();
         }
     }
 
+    /**
+     * 请求 品牌数据
+     */
     protected void asyncGetBrandData(){
-        ApiService apiService = RetrofitUtil.getInstance().create(ApiService.class);
-        int customerid=0;
-        Call<BizBaseBean<List<BrandBean>>> call = apiService.getBrandList(customerid);
+        if( brandList!=null && brandList.size()>0){
+            gridView.setAdapter(brandAdapter);
+            return;
+        }
+
+        if( brandList ==null){
+            brandList =new ArrayList<>();
+            brandAdapter = new BrandAdapter( gridView , brandList ,getContext());
+            gridView.setAdapter(brandAdapter);
+        }
+
+        BizApiService apiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl).create(BizApiService.class);
+        int customerid=Variable.CustomerId;
+
+        String userkey = Variable.BizKey;
+        String random = String.valueOf(System.currentTimeMillis());
+        String secure = SignUtil.getSecure( userkey , Constant.HEADER_USER_SECURE , random);
+
+        Call<BizBaseBean<List<BrandBean>>> call = apiService.getAllBrand(
+                userkey ,
+                random,
+                secure,
+                customerid  );
         call.enqueue(new Callback<BizBaseBean<List<BrandBean>>>() {
             @Override
             public void onResponse(Response<BizBaseBean<List<BrandBean>>> response) {
+                if( response==null || response.code()!= Constant.REQUEST_SUCCESS){
+                    Logger.e(response.message());
+                    return;
+                }
 
+                brandList.clear();
+                brandList.addAll(response.body().getData());
+                brandAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Throwable t) {
-
+                Logger.e( t.getMessage() );
             }
         });
     }
 
+    /**
+     * 请求 商品分类数据
+     */
     protected void asyncGetClassData(){
+        if( classList!=null && classList.size()>0){
+            gridView.setAdapter(classAdapter);
+            return;
+        }
+
         if(classList ==null){
             classList =new ArrayList<>();
             classAdapter = new ClassAdapter( gridView , classList,getContext());
             gridView.setAdapter(classAdapter);
         }
-        for(int i=0;i<50;i++){
-            ClassBean bean = new ClassBean();
-            bean.setCatId(i);
-            bean.setCatName("分享石帆芬" + String.valueOf(i));
-            bean.setCatPath("");
-            bean.setChildCount(20);
-            bean.setGoodCount(100);
-            bean.setParentId(i);
-            classList.add(bean);
-        }
-        classAdapter.notifyDataSetChanged();
 
+        BizApiService apiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl).create(BizApiService.class);
+        int customerid=Variable.CustomerId;
+
+        String userkey = Variable.BizKey;
+        String random = String.valueOf(System.currentTimeMillis());
+        String secure = SignUtil.getSecure(userkey, Constant.HEADER_USER_SECURE, random);
+
+        Call<BizBaseBean<List<ClassBean>>> call =
+                apiService.getAllCategory(userkey, random,secure, customerid);
+
+        call.enqueue(new Callback<BizBaseBean<List<ClassBean>>>() {
+            @Override
+            public void onResponse(Response<BizBaseBean<List<ClassBean>>> response) {
+                if( response==null || response.code()!= Constant.REQUEST_SUCCESS){
+                    Logger.e(response.message());
+                    return;
+                }
+
+                classList.clear();
+                classList.addAll(response.body().getData());
+                classAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Logger.e(t.getMessage(),t);
+            }
+        });
+
+
+
+    }
+
+
+    public String getSortRule(){
+        if( sortCol.equals("新品")){
+            return "0:"+sorttype;
+        }else if(sortCol.equals("销量")){
+            return "1:"+sorttype;
+        }else if(sortCol.equals("价格")){
+            return "2:"+sorttype;
+        }else if( sortCol.equals("综合")){
+            return "1:desc,0:desc";
+        }
+        return "";
+    }
+
+    public String getFilter(){
+        return "";
     }
 }

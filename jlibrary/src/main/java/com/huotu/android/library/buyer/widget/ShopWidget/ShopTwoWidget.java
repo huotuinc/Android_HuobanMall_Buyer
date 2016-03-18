@@ -2,28 +2,40 @@ package com.huotu.android.library.buyer.widget.ShopWidget;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.ShopBean.ShopTwoConfig;
+import com.huotu.android.library.buyer.bean.Variable;
 import com.huotu.android.library.buyer.utils.DensityUtils;
+import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+
+import org.greenrobot.eventbus.EventBus;
 
 
 /**
- *
- * Created by Administrator on 2016/1/15.
+ * 店铺头部二
+ * Created by jinxiangdong on 2016/1/15.
  */
-public class ShopTwoWidget extends RelativeLayout {
+public class ShopTwoWidget extends RelativeLayout implements View.OnClickListener{
     private ShopTwoConfig config;
+    SimpleDraweeView ivLeft;
+    SimpleDraweeView ivMiddle;
+    SimpleDraweeView ivRight;
 
     public ShopTwoWidget(Context context , ShopTwoConfig config ) {
         super(context);
 
         this.config = config;
 
-        SimpleDraweeView ivLeft = new SimpleDraweeView(context);
-        SimpleDraweeView ivMiddle = new SimpleDraweeView(context);
-        SimpleDraweeView ivRight = new SimpleDraweeView(context);
+        ivLeft = new SimpleDraweeView(context);
+        ivLeft.setOnClickListener(this);
+        ivMiddle = new SimpleDraweeView(context);
+        ivMiddle.setOnClickListener(this);
+        ivRight = new SimpleDraweeView(context);
+        ivRight.setOnClickListener(this);
 
         int widthPx =DensityUtils.dip2px(context, 30 ); //DensityUtils.dip2px(context, this.config.getImageLeft().getWidth());
         int heightPx = DensityUtils.dip2px(context, 30 ); //DensityUtils.dip2px( context , this.config.getImageLeft().getHeight());
@@ -31,7 +43,6 @@ public class ShopTwoWidget extends RelativeLayout {
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         ivLeft.setLayoutParams(layoutParams);
         this.addView(ivLeft);
-
 
         widthPx =  DensityUtils.dip2px( context ,30);// DensityUtils.dip2px( context , this.config.getImageMiddle().getWidth() );
         heightPx = DensityUtils.dip2px( context ,30);// DensityUtils.dip2px(context, this.config.getImageMiddle().getHeight());
@@ -52,11 +63,32 @@ public class ShopTwoWidget extends RelativeLayout {
         this.setPadding( leftPx , topPx ,leftPx,topPx );
         this.setBackgroundColor(Color.parseColor(this.config.getBackColor()));
 
-        //TODO 通过API接口 获得图标信息
-//        FrescoDraweeController.loadImage(ivLeft, widthPx, this.config.getImageLeft().getImageUrl());
-//        FrescoDraweeController.loadImage(ivMiddle, widthPx, this.config.getImageMiddle().getImageUrl());
-//        FrescoDraweeController.loadImage(ivRight, widthPx, this.config.getImageRight().getImageUrl());
-
+        //
+        if( config.isShow1() ) {
+            String imageUrl1 = Variable.resourceUrl + config.getImageUrl1();
+            FrescoDraweeController.loadImage(ivLeft, widthPx, imageUrl1);
+        }
+        if( config.isShow2()) {
+            String imageUrl2 = Variable.resourceUrl + config.getImageUrl2();
+            FrescoDraweeController.loadImage(ivMiddle, widthPx, imageUrl2);
+        }
+        if( config.isShow3()) {
+            String imageUrl3 = Variable.resourceUrl + config.getImageUrl3();
+            FrescoDraweeController.loadImage(ivRight, widthPx, imageUrl3);
+        }
     }
 
+    @Override
+    public void onClick(View v) {
+        if(v.getId()== ivLeft.getId()){
+            String url = Variable.resourceUrl + config.getLinkUrl1();
+            EventBus.getDefault().post(new LinkEvent("",url));
+        }else if(v.getId() == ivMiddle.getId()){
+            String url = Variable.resourceUrl + config.getLinkUrl2();
+            EventBus.getDefault().post(new LinkEvent("",url));
+        }else if( v.getId() == ivRight.getId()){
+            String url = Variable.resourceUrl + config.getLinkUrl3();
+            EventBus.getDefault().post(new LinkEvent("",url));
+        }
+    }
 }

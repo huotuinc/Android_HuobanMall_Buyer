@@ -39,19 +39,19 @@ public class BaseListConfig extends BaseConfig {
      * show-显示
      * hide–不显示
      */
-    private boolean product_showname;
+    private String product_showname;
     /**
      * 是否显示价格
      * show-显示
      * hide–不显示
      */
-    private boolean product_showprices;
+    private String product_showprices;
     /**
      * 是否显示返利积分
      * show-显示
      * hide–不显示
      */
-    private boolean product_userInteger;
+    private String product_userInteger;
     /**
      * 商品分类ID,为0时则是全部商品的下拉列表
      */
@@ -109,27 +109,27 @@ public class BaseListConfig extends BaseConfig {
         this.goods_layer = goods_layer;
     }
 
-    public boolean isProduct_showname() {
+    public String getProduct_showname() {
         return product_showname;
     }
 
-    public void setProduct_showname(boolean product_showname) {
+    public void setProduct_showname(String product_showname) {
         this.product_showname = product_showname;
     }
 
-    public boolean isProduct_showprices() {
+    public String getProduct_showprices() {
         return product_showprices;
     }
 
-    public void setProduct_showprices(boolean product_showprices) {
+    public void setProduct_showprices(String product_showprices) {
         this.product_showprices = product_showprices;
     }
 
-    public boolean isProduct_userInteger() {
+    public String getProduct_userInteger() {
         return product_userInteger;
     }
 
-    public void setProduct_userInteger(boolean product_userInteger) {
+    public void setProduct_userInteger(String product_userInteger) {
         this.product_userInteger = product_userInteger;
     }
 

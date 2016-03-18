@@ -180,6 +180,8 @@ public class Constants {
 	public static final String MEMBER_INFO              = "member_info";
 	//会员等级
 	public static final String MEMBER_level             = "member_level";
+	//会员等级id
+	public static final String MEMBER_LEVELID			="member_levelid";
 	//会员名称
 	public static final String MEMBER_NAME              = "member_name";
 	//会员ID

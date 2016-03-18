@@ -11,6 +11,7 @@ import com.huotu.android.library.buyer.R;
 import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
 import com.huotu.android.library.buyer.bean.AdBean.AdWindowConfig;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
+import com.huotu.android.library.buyer.bean.Variable;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
 
 import org.greenrobot.eventbus.EventBus;
@@ -61,19 +62,19 @@ public class AdWindowWidget extends LinearLayout implements View.OnClickListener
         int itemCount = 3;//adWindowConfig.getImages().size();
         int itemWidth = getResources().getDisplayMetrics().widthPixels / itemCount;
         if( adWindowConfig.getImages().size()>0 ){
-            String url = adWindowConfig.getImages().get(0).getImageUrl();
+            String url = Variable.resourceUrl + adWindowConfig.getImages().get(0).getImageUrl();
             FrescoDraweeController.loadImage( image1, itemWidth, url );
             image1.setOnClickListener(this);
             image1.setTag( adWindowConfig.getImages().get(0) );
         }
         if( adWindowConfig.getImages().size()>1) {
-            String url = adWindowConfig.getImages().get(1).getImageUrl();
+            String url = Variable.resourceUrl + adWindowConfig.getImages().get(1).getImageUrl();
             FrescoDraweeController.loadImage(image2, itemWidth, url);
             image2.setOnClickListener(this);
             image2.setTag(adWindowConfig.getImages().get(1));
         }
         if( adWindowConfig.getImages().size()>2) {
-            String url = adWindowConfig.getImages().get(2).getImageUrl();
+            String url = Variable.resourceUrl + adWindowConfig.getImages().get(2).getImageUrl();
             FrescoDraweeController.loadImage(image3, itemWidth, url);
             image3.setOnClickListener(this);
             image3.setTag(adWindowConfig.getImages().get(2));

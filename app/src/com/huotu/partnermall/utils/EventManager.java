@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
-import com.huotu.partnermall.ui.ClassActivity;
+import com.huotu.partnermall.ui.nativeui.ClassActivity;
 import com.huotu.partnermall.ui.WebViewActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -43,6 +43,7 @@ public class EventManager {
             intent.putExtra("url", event.getLinkUrl());
             context.startActivity(intent);
         }
+
     }
 
 }

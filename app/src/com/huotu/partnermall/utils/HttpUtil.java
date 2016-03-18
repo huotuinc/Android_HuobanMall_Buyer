@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.huotu.android.library.buyer.Jlibrary;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
@@ -36,6 +37,7 @@ import com.huotu.partnermall.model.OrderModel;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.ui.HomeActivity;
+import com.huotu.partnermall.ui.nativeui.NativeActivity;
 import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.PayPopWindow;
@@ -232,8 +234,10 @@ public class HttpUtil{
         VolleyUtil.getRequestQueue().add( re);
     }
 
-    public void doVolley( final Activity aty,  final Handler mHandler, final BaseApplication application, String url, Map param, final AccountModel account ){
-        final GsonRequest re = new GsonRequest (
+    public void doVolley( final Activity aty,  final Handler mHandler,
+                          final BaseApplication application,
+                          String url, Map param, final AccountModel account ){
+        final GsonRequest<AuthMallModel> re = new GsonRequest<> (
                 Request.Method.POST, url, AuthMallModel.class, null, param,
                 new Response.Listener<AuthMallModel >(){
             @Override
@@ -259,6 +263,11 @@ public class HttpUtil{
                                 account.getAccountUnionId ( )
                         );
                         application.writeMemberLevel(mall.getLevelName());
+                        //
+                        application.writeMemberLevelId(mall.getLevelID());
+                        //设置 用户的登级Id
+                        //Jlibrary.initData( mall.getLevelID() );
+
                         //记录登录类型(1:微信登录，2：手机登录)
                         application.writeMemberLoginType(1);
                         //记录微信关联类型（0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号）
@@ -281,7 +290,8 @@ public class HttpUtil{
                         {
                             application.writeMenus ( menus );
                             //跳转到首页
-                            ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
+                            ActivityUtils.getInstance().skipActivity(aty , NativeActivity.class);
+                            //ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
                         }
                         else
                         {
@@ -324,8 +334,6 @@ public class HttpUtil{
                 msg.obj = "调用授权接口失败，请确认！";
                 mHandler.sendMessage ( msg );
             }
-
-
         });
         VolleyUtil.getRequestQueue().add(re);
     }

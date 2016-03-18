@@ -2,8 +2,12 @@ package com.huotu.android.library.buyer.widget.AdWidget;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.huotu.android.library.buyer.bean.Variable;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.android.library.buyer.bean.AdBean.AdAverageConfig;
@@ -16,7 +20,8 @@ import com.huotu.android.library.buyer.widget.GoodsListWidget.BaseLinearLayoutWi
  * 均分广告
  * Created by jinxiangdong on 2016/1/14.
  */
-public class AdAverageWidget extends com.huotu.android.library.buyer.widget.GoodsListWidget.BaseLinearLayoutWidget {
+public class AdAverageWidget extends com.huotu.android.library.buyer.widget.GoodsListWidget.BaseLinearLayoutWidget
+                            implements View.OnClickListener{
     private AdAverageConfig config = null;
     public AdAverageWidget(Context context , AdAverageConfig config) {
         super(context);
@@ -30,13 +35,16 @@ public class AdAverageWidget extends com.huotu.android.library.buyer.widget.Good
         int leftPx = DensityUtils.dip2px(context,this.config.getPaddingLeft());
         int rightPx = DensityUtils.dip2px(context,this.config.getPaddingLeft());
         //this.setPadding( leftPx+outLeftPx , topPx , rightPx+outRightPx , bottomPx );
-        this.setBackgroundColor(Color.parseColor( this.config.getBackcolor()));
+
+        if(!TextUtils.isEmpty(this.config.getBackcolor())) {
+            this.setBackgroundColor(Color.parseColor(this.config.getBackcolor()));
+        }
 
         //TODO
         if( this.config.getImages() ==null )return;
         int itemCount = config.getImages().size();
-        int itemWidth  = (screenWidth- outLeftPx - outRightPx - itemCount* (leftPx+rightPx)) / this.config.getImages().size();
-        for(int i =0 ; i< this.config.getImages().size() ; i++ ){
+        int itemWidth  = (screenWidth- outLeftPx - outRightPx - itemCount* (leftPx+rightPx)) / itemCount;
+        for(int i =0 ; i< itemCount ; i++ ){
             AdImageBean item = this.config.getImages().get(i);
             SimpleDraweeView iv = new SimpleDraweeView(context);
             LinearLayout.LayoutParams layoutParams =new LayoutParams( itemWidth , ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -55,9 +63,13 @@ public class AdAverageWidget extends com.huotu.android.library.buyer.widget.Good
             }
 
             iv.setLayoutParams(layoutParams);
+            iv.setOnClickListener(this);
 
             this.addView(iv);
-            FrescoDraweeController.loadImage(iv, itemWidth, item.getImageUrl());
+
+            String imageUrl = Variable.resourceUrl + item.getImageUrl();
+
+            FrescoDraweeController.loadImage(iv, itemWidth, imageUrl );
 
         }
     }
@@ -67,5 +79,10 @@ public class AdAverageWidget extends com.huotu.android.library.buyer.widget.Good
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }
