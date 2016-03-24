@@ -10,18 +10,19 @@ import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
 import com.huotu.android.library.buyer.bean.AdBean.AdThreeConfig;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
 /**
  * 橱窗二组件 左一大右两小
- * Created by jinxiangdong on 2016/1/14.
+ * Created by jingdong on 2016/1/14.
  */
-public class AdThreeWidget extends LinearLayout implements View.OnClickListener{
+public class AdThreeWidget extends BaseLinearLayout{
     private AdThreeConfig config;
-
     private SimpleDraweeView iv1;
     private SimpleDraweeView iv2;
     private SimpleDraweeView iv3;
@@ -33,7 +34,7 @@ public class AdThreeWidget extends LinearLayout implements View.OnClickListener{
         this.config = config;
 
         this.setOrientation(HORIZONTAL);
-        this.setBackgroundColor(Color.parseColor( config.getBackcolor() ));
+        this.setBackgroundColor(CommonUtil.parseColor( config.getBackcolor() ));
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(layoutParams);
 
@@ -57,7 +58,6 @@ public class AdThreeWidget extends LinearLayout implements View.OnClickListener{
         layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT , ViewGroup.LayoutParams.WRAP_CONTENT,1.0f);
         //layoutParams.weight =1;
         iv1.setLayoutParams(layoutParams);
-
 
         layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT , ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
         //layoutParams.weight = 1;
@@ -100,9 +100,9 @@ public class AdThreeWidget extends LinearLayout implements View.OnClickListener{
     public void onClick(View v) {
         if( v.getTag()!=null && v.getTag() instanceof AdImageBean){
             AdImageBean bean = (AdImageBean)v.getTag();
-            String url = Variable.siteUrl + bean.getLinkUrl();
+            String url = bean.getLinkUrl();
             String name = bean.getLinkName();
-            EventBus.getDefault().post(new LinkEvent(name, url));
+            CommonUtil.link(name,url);
         }
     }
 }

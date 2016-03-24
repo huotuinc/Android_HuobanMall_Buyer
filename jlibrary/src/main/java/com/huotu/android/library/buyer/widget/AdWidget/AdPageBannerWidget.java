@@ -14,8 +14,10 @@ import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
 import com.huotu.android.library.buyer.bean.AdBean.AdPageBannerConfig;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,7 +26,7 @@ import org.greenrobot.eventbus.EventBus;
  * 滑动 广告控件
  *
  */
-public class AdPageBannerWidget extends LinearLayout implements View.OnClickListener{
+public class AdPageBannerWidget extends BaseLinearLayout{
     private AdPageBannerConfig config;
     HorizontalScrollView horizontalScrollView;
     LinearLayout ll;
@@ -37,7 +39,7 @@ public class AdPageBannerWidget extends LinearLayout implements View.OnClickList
 
         this.config = config;
 
-        this.setBackgroundColor(Color.parseColor(config.getBackcolor()));
+        this.setBackgroundColor(CommonUtil.parseColor(config.getBackcolor()));
         int leftPx = DensityUtils.dip2px(getContext(), config.getPaddingLeft());
         int topPx = DensityUtils.dip2px(getContext(), config.getPaddingTop());
         int rightPx = DensityUtils.dip2px(getContext(), config.getPaddingRight());
@@ -108,9 +110,9 @@ public class AdPageBannerWidget extends LinearLayout implements View.OnClickList
     public void onClick(View v) {
         if( v.getTag()!=null && v.getTag() instanceof AdImageBean) {
             AdImageBean bean = (AdImageBean) v.getTag();
-            String url = Variable.siteUrl + bean.getLinkUrl();
+            String url = bean.getLinkUrl();
             String name = bean.getLinkName();
-            EventBus.getDefault().post(new LinkEvent(name , url ));
+            CommonUtil.link(name , url);
         }
     }
 }

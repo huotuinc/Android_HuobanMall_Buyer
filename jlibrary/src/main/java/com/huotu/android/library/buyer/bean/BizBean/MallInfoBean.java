@@ -41,6 +41,10 @@ public class MallInfoBean {
      * 订单链接
      */
     private String orderListUrl;
+    /**
+     * 客服QQ
+     */
+    private String clientQQ;
 
     public String getMallName() {
         return mallName;
@@ -112,5 +116,13 @@ public class MallInfoBean {
 
     public void setOrderListUrl(String orderListUrl) {
         this.orderListUrl = orderListUrl;
+    }
+
+    public String getClientQQ() {
+        return clientQQ;
+    }
+
+    public void setClientQQ(String clientQQ) {
+        this.clientQQ = clientQQ;
     }
 }

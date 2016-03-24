@@ -11,15 +11,17 @@ import com.huotu.android.library.buyer.bean.AdBean.AdFourConfig;
 import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Administrator on 2016/1/14.
  */
-public class AdFourWidget extends LinearLayout implements View.OnClickListener{
+public class AdFourWidget extends BaseLinearLayout{
     private AdFourConfig config;
     //最左边的大图
     private SimpleDraweeView iv1;
@@ -37,7 +39,7 @@ public class AdFourWidget extends LinearLayout implements View.OnClickListener{
 
         this.config = config;
         this.setOrientation(HORIZONTAL);
-        this.setBackgroundColor(Color.parseColor( config.getBackcolor()));
+        this.setBackgroundColor(CommonUtil.parseColor( config.getBackcolor()));
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(layoutParams);
 
@@ -118,9 +120,9 @@ public class AdFourWidget extends LinearLayout implements View.OnClickListener{
     public void onClick(View v) {
         if( v.getTag()!=null && v.getTag() instanceof AdImageBean){
             AdImageBean bean = (AdImageBean)v.getTag();
-            String url = Variable.siteUrl+ bean.getLinkUrl();
+            String url = bean.getLinkUrl();
             String name = bean.getLinkName();
-            EventBus.getDefault().post(new LinkEvent( name , url ));
+            CommonUtil.link(name , url);
         }
     }
 }

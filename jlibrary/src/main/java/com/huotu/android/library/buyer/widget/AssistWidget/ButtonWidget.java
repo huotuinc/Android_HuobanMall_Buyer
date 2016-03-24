@@ -17,7 +17,10 @@ import com.huotu.android.library.buyer.bean.AsistBean.ButtonConfig;
 import com.huotu.android.library.buyer.bean.AsistBean.LinkBean;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
+import com.huotu.android.library.buyer.utils.Logger;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -25,7 +28,7 @@ import org.greenrobot.eventbus.EventBus;
  * 按钮布局
  * Created by jinxiangdong on 2016/2/18.
  */
-public class ButtonWidget extends LinearLayout implements View.OnClickListener{
+public class ButtonWidget extends BaseLinearLayout{
     private ButtonConfig config;
     public ButtonWidget(Context context , ButtonConfig config ) {
         super(context);
@@ -37,12 +40,12 @@ public class ButtonWidget extends LinearLayout implements View.OnClickListener{
         int heightPx = ViewGroup.LayoutParams.WRAP_CONTENT;
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
         this.setLayoutParams(layoutParams);
-        this.setBackgroundColor(Color.parseColor(config.getBackColor()));
+        this.setBackgroundColor(CommonUtil.parseColor(config.getBackColor()));
 
 //        RoundRectShape roundRectShape2 = new RoundRectShape( outR,null, null);
 //        ShapeDrawable shapeDrawable2 = new ShapeDrawable(roundRectShape2);
 //        shapeDrawable2.setPadding(8, 8, 8, 8);
-//        shapeDrawable2.getPaint().setColor(Color.parseColor(config.getWidgetBorderColor()));
+//        shapeDrawable2.getPaint().setColor(CommonUtil.parseColor(config.getWidgetBorderColor()));
 //        shapeDrawable2.getPaint().setStyle(Paint.Style.STROKE);
 
 //        int[] normalState = new int[] {};
@@ -62,12 +65,13 @@ public class ButtonWidget extends LinearLayout implements View.OnClickListener{
             btn.setOnClickListener(this);
             btn.setTag(bean);
             btn.setText(bean.getName());
-            btn.setTextColor(Color.parseColor(bean.getFontColor()));
-            //btn.setBackgroundColor(Color.parseColor(bean.getBackColor()));
+            btn.setTextColor(CommonUtil.parseColor(bean.getFontColor()));
+            //btn.setBackgroundColor(CommonUtil.parseColor(bean.getBackColor()));
             int heightPx = DensityUtils.dip2px(getContext(), config.getHeight());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, heightPx , 1.0f);
             int space = DensityUtils.dip2px(getContext(), 4);
             layoutParams.setMargins( space , space, space ,space );
+            btn.setPadding( space, space ,space,space );
             btn.setLayoutParams(layoutParams);
 
             float[] outR = { radius , radius , radius , radius ,radius , radius, radius, radius };
@@ -77,13 +81,13 @@ public class ButtonWidget extends LinearLayout implements View.OnClickListener{
             RoundRectShape roundRectShape1 = new RoundRectShape( outR, null , null );
             ShapeDrawable shapeDrawable1 = new ShapeDrawable(roundRectShape1);
             //shapeDrawable1.setPadding(6, 6, 6, 6);
-            shapeDrawable1.getPaint().setColor(Color.parseColor(bean.getBackColor()));
+            shapeDrawable1.getPaint().setColor(CommonUtil.parseColor(bean.getBackColor()));
             shapeDrawable1.getPaint().setStyle(Paint.Style.FILL);
 
             RoundRectShape roundRectShape2 = new RoundRectShape( outR, inRect , inR);
             ShapeDrawable shapeDrawable2 = new ShapeDrawable(roundRectShape2);
             //shapeDrawable2.setPadding(6, 6, 6, 6);
-            shapeDrawable2.getPaint().setColor(Color.parseColor(config.getBorderColor()));
+            shapeDrawable2.getPaint().setColor(CommonUtil.parseColor(config.getBorderColor()));
             shapeDrawable2.getPaint().setStyle(Paint.Style.STROKE);
 
             Drawable[] drawables = new Drawable[]{shapeDrawable1,shapeDrawable2};
@@ -91,7 +95,7 @@ public class ButtonWidget extends LinearLayout implements View.OnClickListener{
             LayerDrawable layer = new LayerDrawable(drawables);
 
             btn.setBackgroundDrawable(layer);
-            //btn.setBackgroundColor(Color.parseColor( bean.getBackColor() ));
+            //btn.setBackgroundColor(CommonUtil.parseColor( bean.getBackColor() ));
 
             this.addView(btn);
         }
@@ -99,11 +103,12 @@ public class ButtonWidget extends LinearLayout implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
+        super.onClick(v);
         if( v.getTag()!=null && v.getTag() instanceof LinkBean){
             LinkBean bean = (LinkBean)v.getTag();
-            String url = Variable.siteUrl + bean.getLinkUrl();
-            String name = bean.getName();
-            EventBus.getDefault().post(new LinkEvent(name , url));
+            golink( bean.getName() , bean.getLinkUrl() );
+        }else{
+            Logger.e("url error");
         }
     }
 }

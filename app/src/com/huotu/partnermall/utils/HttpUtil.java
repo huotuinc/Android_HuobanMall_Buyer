@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -20,8 +21,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.huotu.android.library.buyer.Jlibrary;
+import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.config.NativeConstants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
@@ -290,7 +293,11 @@ public class HttpUtil{
                         {
                             application.writeMenus ( menus );
                             //跳转到首页
-                            ActivityUtils.getInstance().skipActivity(aty , NativeActivity.class);
+                            Bundle bd = new Bundle();
+                            String url = PreferenceHelper.readString(BaseApplication.single, NativeConstants.UI_CONFIG_FILE, NativeConstants.UI_CONFIG_SELF_HREF);
+                            bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
+                            bd.putBoolean(NativeConstants.KEY_ISMAINUI, true);
+                            ActivityUtils.getInstance().skipActivity(aty , NativeActivity.class,bd);
                             //ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
                         }
                         else

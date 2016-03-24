@@ -11,9 +11,13 @@ public class Variable {
     public static String BizAppSecure = "1f2f3f4f5f6f7f8f";
     //刘启福 ip
     //public static String BizRootUrl="http://192.168.3.24:8080/";
-    //开发机 ip
+    /**
+     * 获得 组件业务数据的 根地址
+     */
     public static String BizRootUrl="http://api.open.fancat.cn:8081/";
-    //
+    /**
+     *  获得smartui页面组件配置信息的 根地址
+     */
     public static String configRootUrl = "http://api.open.fancat.cn:8081/";
 
     /**
@@ -28,4 +32,8 @@ public class Variable {
      * 商户域名根地址
      */
     public static String siteUrl ="";
+    /**
+     * 获取主界面组件配置信息的地址
+     */
+    public static String mainUiConfigUrl = "";
 }

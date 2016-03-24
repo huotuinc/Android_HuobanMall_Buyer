@@ -95,6 +95,7 @@ public class BaseApplication extends Application {
         solveAsyncTaskOnPostExecuteBug();
 
         Jlibrary.init(this);
+        Jlibrary.initCustomerId(BuildConfig.CUSTOMERID);
 
         //加载异常处理模块
         CrashHandler crashHandler = CrashHandler.getInstance ( );

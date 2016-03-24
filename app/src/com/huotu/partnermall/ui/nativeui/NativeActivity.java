@@ -1,6 +1,7 @@
 package com.huotu.partnermall.ui.nativeui;
 
 import android.content.Intent;
+import android.nfc.tech.IsoDep;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,8 +15,12 @@ import com.android.volley.VolleyError;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.huotu.android.library.buyer.Jlibrary;
+import com.huotu.android.library.buyer.bean.Data.ClassEvent;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.Data.LoadCompleteEvent;
+import com.huotu.android.library.buyer.bean.Data.RefreshUIEvent;
+import com.huotu.android.library.buyer.bean.Data.SearchEvent;
+import com.huotu.android.library.buyer.bean.Data.SmartUiEvent;
 import com.huotu.android.library.buyer.bean.Data.StartLoadEvent;
 import com.huotu.android.library.buyer.bean.PageConfig;
 import com.huotu.android.library.buyer.bean.WidgetConfig;
@@ -24,23 +29,29 @@ import com.huotu.android.library.buyer.utils.GsonUtil;
 import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.android.library.buyer.widget.FooterWidget.FooterOneWidget;
 import com.huotu.android.library.buyer.widget.GoodsListWidget.IListView;
+import com.huotu.android.library.buyer.widget.SearchWidget.ISearch;
 import com.huotu.android.library.buyer.widget.WidgetBuilder;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.config.NativeConstants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.model.Native.FindIndexConfig;
 import com.huotu.partnermall.ui.base.NativeBaseActivity;
+import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.PreferenceHelper;
-import com.huotu.partnermall.utils.SignUtil;
+import com.huotu.android.library.buyer.utils.SignUtil;
 import com.huotu.partnermall.utils.ToastUtils;
+
+import org.eclipse.mat.parser.index.IndexWriter;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
+import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +60,7 @@ import butterknife.ButterKnife;
 
 public class NativeActivity
         extends NativeBaseActivity
-        implements Handler.Callback , PullToRefreshBase.OnRefreshListener2{
+        implements PullToRefreshBase.OnRefreshListener2{
     @Bind(R.id.activity_native_scrollview)
     PullToRefreshScrollView scrollView;
     @Bind(R.id.activity_native_main)
@@ -58,72 +69,108 @@ public class NativeActivity
     RelativeLayout rlFooter;
     @Bind(R.id.activity_native_root)
     RelativeLayout llRoot;
-    PageConfig uiConfig;
-    Handler mHandler;
+
     IListView listView;
+    ISearch searchWidget;
+    String smartuiConfigUrl;
+    //商品分类id
+    int classid;
+    //搜索关键字
+    String keyword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_native);
 
+        if( getIntent().hasExtra(NativeConstants.KEY_SMARTUICONFIGURL)){
+            smartuiConfigUrl = getIntent().getStringExtra(NativeConstants.KEY_SMARTUICONFIGURL);
+        }
+        if(getIntent().hasExtra(NativeConstants.KEY_CLASSID)){
+            classid = getIntent().getIntExtra(NativeConstants.KEY_CLASSID,0);
+        }
+        if(getIntent().hasExtra(NativeConstants.KEY_SEARCH)){
+            keyword = getIntent().getStringExtra(NativeConstants.KEY_SEARCH);
+        }
+
+        if(getIntent().hasExtra(NativeConstants.KEY_ISMAINUI)){
+            //如果是主界面，则设置相关参数
+            isMainUI = getIntent().getBooleanExtra(NativeConstants.KEY_ISMAINUI,false);
+            Jlibrary.initMainUIConfigUrl( smartuiConfigUrl );
+        }
+
         ButterKnife.bind(this);
 
         setImmerseLayout(llRoot);
 
-        Register();
-
-        mHandler = new Handler(this);
+        //Register();
 
         Jlibrary.initUserLevelId(BaseApplication.single.readMemberLevelId());
 
-        loadWidgets();
+        getIndexConfig(smartuiConfigUrl);
+        //loadWidgets();
 
-        if( listView ==null ){
-            scrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-        }else {
-            scrollView.setMode(PullToRefreshBase.Mode.BOTH);
-        }
-        scrollView.setOnRefreshListener(this);
+//        if( listView ==null ){
+//            scrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+//        }else {
+//            scrollView.setMode(PullToRefreshBase.Mode.BOTH);
+//        }
+//        scrollView.setOnRefreshListener(this);
 
-        if( listView!=null) showProgress("正在加载数据...");
-        asyncGetGoods(true);
+//        if( listView!=null) showProgress("正在加载数据...");
+//        asyncGetGoods(true);
     }
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         //loadWidgets();
         //scrollView.onRefreshComplete();
-        getIndexConfig();
+
+        //String rootUrl = PreferenceHelper.readString( BaseApplication.single , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_SELF_HREF );
+
+        getIndexConfig(smartuiConfigUrl);
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        asyncGetGoods(false);
+        asyncGetGoods(false, classid);
     }
 
     /**
      * 异步获得商品列表
      */
-    protected void asyncGetGoods(boolean isRefresh ){
+    protected void asyncGetGoods(boolean isRefresh ,int classid ){
         if( listView==null) return;
-        listView.asyncGetGoodsData( isRefresh );
+        if(searchWidget!=null) {
+            keyword = searchWidget.getKeyword();
+        }else{
+            keyword="";
+        }
+        listView.asyncGetGoodsData(isRefresh, classid, keyword);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Register();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        UnRegister();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
-        UnRegister();
+        //UnRegister();
     }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-        return false;
-    }
-
-    private void getIndexConfig(){
-        String rootUrl = PreferenceHelper.readString( BaseApplication.single , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_SELF_HREF );
+    private void getIndexConfig(String rootUrl ){
         if( !rootUrl.endsWith("/") ) rootUrl+="/";
         String url = rootUrl + NativeConstants.NATIVECODE_URL;
         url +="?platform=Android&version=000000000000000&osVersion=";
@@ -139,17 +186,17 @@ public class NativeActivity
                 url,
                 PageConfig.class,
                 headers,
-                new nativeCodeListener(NativeActivity.this),
+                new nativeCodeListener(NativeActivity.this , url ),
                 new nativeCodeErrorListener(NativeActivity.this)
         );
         VolleyUtil.getRequestQueue().add(request);
     }
 
-    protected void loadWidgets(){
+    protected void loadWidgets( String url ){
         llMain.removeAllViews();
         rlFooter.removeAllViews();
 
-        String json = PreferenceHelper.readString(this, NativeConstants.UI_CONFIG_FILE, NativeConstants.UI_CONFIG_SELF_KEY);
+        String json = PreferenceHelper.readString(this, NativeConstants.UI_CONFIG_FILE, url );
         if(TextUtils.isEmpty(json)){
             ToastUtils.showLongToast(this,"配置信息丢失");
             return;
@@ -170,15 +217,31 @@ public class NativeActivity
                 rlFooter.removeAllViews();
                 rlFooter.addView(view);
                 continue;
+            }else if( CommonUtil.isInterface(view.getClass(), ISearch.class.getName())){
+                searchWidget = (ISearch)view;
+                searchWidget.setKeyWord(keyword);
+                searchWidget.setIsMainUi(isMainUI);
             }
             llMain.addView(view);
         }
+
+        if( listView ==null ){
+            scrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        }else {
+            scrollView.setMode(PullToRefreshBase.Mode.BOTH);
+        }
+        scrollView.setOnRefreshListener(this);
+
+        if( listView!=null) showProgress("正在加载数据...");
+        asyncGetGoods(true,classid );
     }
 
     static class nativeCodeListener implements Response.Listener<PageConfig>{
         WeakReference<NativeActivity> ref;
-        public nativeCodeListener(NativeActivity act){
+        String url;
+        public nativeCodeListener(NativeActivity act, String url){
             ref =new WeakReference<>(act);
+            this.url = url;
         }
         @Override
         public void onResponse(PageConfig pageConfig ) {
@@ -192,12 +255,13 @@ public class NativeActivity
 
             JSONUtil<PageConfig> jsonUtil = new JSONUtil<>();
             String json = jsonUtil.toJson(pageConfig);
-            PreferenceHelper.writeString( ref.get() , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_SELF_KEY , json );
+            //PreferenceHelper.writeString( ref.get() , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_SELF_KEY , json );
+            PreferenceHelper.writeString(ref.get(), NativeConstants.UI_CONFIG_FILE, url, json);
 
-            ref.get().loadWidgets();
             ref.get().scrollView.onRefreshComplete();
             ref.get().dismissProgress();
-            ref.get().onRefreshData(new StartLoadEvent());
+            ref.get().loadWidgets(url);
+            //ref.get().onRefreshData(new StartLoadEvent());
         }
     }
 
@@ -234,7 +298,7 @@ public class NativeActivity
         if( listView !=null) {
             showProgress("正在加载数据...");
         }
-        asyncGetGoods(true);
+        asyncGetGoods(true,classid);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -245,16 +309,50 @@ public class NativeActivity
 
     @Subscribe(threadMode=ThreadMode.MAIN)
     public void onLinkEvnent(LinkEvent event){
+        //if(!isMainUI)return;
         //Toast.makeText(context, event.getUrl(),Toast.LENGTH_LONG).show();
-        if( event.getLinkName()!=null && event.getLinkName().equals("分类") ){
-            Intent intent = new Intent(this,ClassActivity.class);
-            this.startActivity(intent);
-        }else {
+//        if( event.getLinkName()!=null && event.getLinkName().equals("分类") ){
+//            Intent intent = new Intent(this,ClassActivity.class);
+//            this.startActivity(intent);
+//        }else {
             Intent intent = new Intent(this, PageViewActivity.class);
             intent.putExtra(Constants.INTENT_URL, event.getLinkUrl());
             this.startActivity(intent);
-        }
+//        }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSmartUiEvent(SmartUiEvent event){
+        //if(!isMainUI)return;
 
+        String smartUrl = event.getConfigUrl();
+        Bundle bd = new Bundle();
+        bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, smartUrl);
+        ActivityUtils.getInstance().showActivity(NativeActivity.this, NativeActivity.class, bd);
+    }
+
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onRefreshMainUIEvent( RefreshUIEvent event){
+//        scrollView.setRefreshing(true);
+//    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSmartUiClassEvent( ClassEvent event){
+        //if(!isMainUI)return;
+
+        String smartUrl = event.getConfigUrl();
+        Bundle bd = new Bundle();
+        bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, smartUrl);
+        bd.putInt(NativeConstants.KEY_CLASSID, event.getClassId());
+        ActivityUtils.getInstance().showActivity(NativeActivity.this,NativeActivity.class,bd);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSearchUIEvent(SearchEvent event){
+        String smartUrl = event.getConfigUrl();
+        Bundle bd = new Bundle();
+        bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, smartUrl);
+        bd.putString(NativeConstants.KEY_SEARCH, event.getKeyword());
+        ActivityUtils.getInstance().showActivity(NativeActivity.this,NativeActivity.class,bd);
+    }
 }

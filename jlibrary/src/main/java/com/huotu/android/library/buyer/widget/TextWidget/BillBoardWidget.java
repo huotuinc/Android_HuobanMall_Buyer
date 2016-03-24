@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.huotu.android.library.buyer.bean.TextBean.BillBoardConfig;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.utils.Logger;
 
@@ -21,12 +22,12 @@ public class BillBoardWidget extends TextView {
         this.billBoardConfig=billBoardConfig;
 
         try {
-            this.setBackgroundColor(Color.parseColor( this.billBoardConfig.getText_background()));
+            this.setBackgroundColor(CommonUtil.parseColor(this.billBoardConfig.getText_background()));
         }catch (Exception ex){
             Logger.e(ex.getMessage(), ex);
         }
         try{
-            this.setTextColor( Color.parseColor( this.billBoardConfig.getText_color() ) );
+            this.setTextColor( CommonUtil.parseColor( this.billBoardConfig.getText_color() ) );
         }catch (Exception ex){
             Logger.e(ex.getMessage(),ex);
         }

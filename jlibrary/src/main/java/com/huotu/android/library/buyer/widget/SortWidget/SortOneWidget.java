@@ -3,23 +3,29 @@ package com.huotu.android.library.buyer.widget.SortWidget;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.huotu.android.library.buyer.BizApiService;
 import com.huotu.android.library.buyer.adapter.BrandAdapter;
+import com.huotu.android.library.buyer.adapter.TagAdapter;
 import com.huotu.android.library.buyer.bean.BizBean.BizBaseBean;
 import com.huotu.android.library.buyer.bean.BizBean.BrandBean;
 import com.huotu.android.library.buyer.bean.BizBean.ClassBean;
+import com.huotu.android.library.buyer.bean.BizBean.TagBean;
 import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.Data.StartLoadEvent;
 import com.huotu.android.library.buyer.bean.SortBean.SortOneConfig;
@@ -89,6 +95,10 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
     private List<ClassBean> classList;
     private BrandAdapter brandAdapter;
     private List<BrandBean> brandList;
+    private List<Integer> selectedBrand;
+    private List<Integer> selectedClass;
+    private List<TagBean> tagList;
+    private TagAdapter tagAdapter;
 
     public SortOneWidget(Context context , SortOneConfig config) {
         super(context);
@@ -134,7 +144,6 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
         rl5.setOnClickListener(this);
 
         llFilter = (LinearLayout)findViewById(R.id.sortone_filter);
-
 
         tvoneup.setTypeface( TypeFaceUtil.FONTAWEOME(getContext()) );
         tvonedown.setTypeface( TypeFaceUtil.FONTAWEOME(getContext()) );
@@ -271,6 +280,8 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
             tvClass.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
             tvHot.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
 
+            asyncGetBrandData();
+
         } else if (v.getId() == R.id.layout_filter_dialog_class) {
             tvClass.setBackgroundResource(R.drawable.layout_filter_dialog_tab_selected_style);
             tvBrand.setBackgroundResource(R.drawable.layout_filter_dialog_tab_normal_style);
@@ -300,6 +311,9 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
             tvBrand.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
             tvClass.setTextColor(ContextCompat.getColor(getContext(), R.color.orangered));
             tvHot.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
+
+            asyncGetClassData();
+
         } else if (v.getId() == R.id.layout_filter_dialog_hot) {
             tvHot.setBackgroundResource(R.drawable.layout_filter_dialog_tab_selected_style);
             tvBrand.setBackgroundResource(R.drawable.layout_filter_dialog_tab_normal_style);
@@ -330,14 +344,46 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
             tvBrand.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
             tvClass.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
             tvHot.setTextColor(ContextCompat.getColor(getContext(), R.color.orangered));
-        } else if (v.getId() == R.id.layout_filter_dialog_ok) {
 
+            asyncGetHotData();
+
+        } else if (v.getId() == R.id.layout_filter_dialog_ok) {
+            go();
         }
+    }
+
+    protected void go(){
+        rl1.performClick();
+        //EventBus.getDefault().post(new StartLoadEvent());
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ListAdapter adapter = gridView.getAdapter();
+        if( gridView.getAdapter()==null ) return;
+        if( gridView.getAdapter() instanceof ClassAdapter){
+            //if( selectedClass==null) selectedClass = new ArrayList<>();
+            classList.get(position).setChecked( !classList.get(position).isChecked());
+            classAdapter.notifyDataSetChanged();
+//            if( classList.get(position).isChecked()){
+//                selectedClass.add( classList.get(position).getCatId() );
+//            }else{
+//                selectedClass.remove( classList.get(position).getCatId() );
+//            }
+        }else if(gridView.getAdapter() instanceof BrandAdapter){
+            brandList.get(position).setChecked( !brandList.get(position).isChecked() );
+            brandAdapter.notifyDataSetChanged();
+            //if( selectedBrand==null ) selectedBrand = new ArrayList<>();
 
+//            if( brandList.get(position).isChecked()){
+//                selectedBrand.add( brandList.get(position).getBrandId() );
+//            }else{
+//                selectedBrand.remove( brandList.get(position).getBrandId() );
+//            }
+        }else if( gridView.getAdapter() instanceof TagAdapter){
+            tagList.get(position).setChecked( !tagList.get(position).isChecked() );
+            tagAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -364,7 +410,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
             btnOk = (TextView)llFilter.findViewById(R.id.layout_filter_dialog_ok);
             btnOk.setOnClickListener(this);
 
-            asyncGetClassData();
+            asyncGetBrandData();
         }
     }
 
@@ -372,6 +418,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
      * 请求 品牌数据
      */
     protected void asyncGetBrandData(){
+        gridView.setAdapter(null);
         if( brandList!=null && brandList.size()>0){
             gridView.setAdapter(brandAdapter);
             return;
@@ -388,7 +435,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
 
         String userkey = Variable.BizKey;
         String random = String.valueOf(System.currentTimeMillis());
-        String secure = SignUtil.getSecure( userkey , Constant.HEADER_USER_SECURE , random);
+        String secure = SignUtil.getSecure( Variable.BizKey , Variable.BizAppSecure , random);
 
         Call<BizBaseBean<List<BrandBean>>> call = apiService.getAllBrand(
                 userkey ,
@@ -398,7 +445,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
         call.enqueue(new Callback<BizBaseBean<List<BrandBean>>>() {
             @Override
             public void onResponse(Response<BizBaseBean<List<BrandBean>>> response) {
-                if( response==null || response.code()!= Constant.REQUEST_SUCCESS){
+                if (response == null || response.code() != Constant.REQUEST_SUCCESS) {
                     Logger.e(response.message());
                     return;
                 }
@@ -410,7 +457,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
 
             @Override
             public void onFailure(Throwable t) {
-                Logger.e( t.getMessage() );
+                Logger.e(t.getMessage());
             }
         });
     }
@@ -419,6 +466,8 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
      * 请求 商品分类数据
      */
     protected void asyncGetClassData(){
+        gridView.setAdapter(null);
+
         if( classList!=null && classList.size()>0){
             gridView.setAdapter(classAdapter);
             return;
@@ -435,10 +484,10 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
 
         String userkey = Variable.BizKey;
         String random = String.valueOf(System.currentTimeMillis());
-        String secure = SignUtil.getSecure(userkey, Constant.HEADER_USER_SECURE, random);
+        String secure = SignUtil.getSecure(Variable.BizKey, Variable.BizAppSecure, random);
 
         Call<BizBaseBean<List<ClassBean>>> call =
-                apiService.getAllCategory(userkey, random,secure, customerid);
+                apiService.getAllCategory(userkey, random, secure, customerid);
 
         call.enqueue(new Callback<BizBaseBean<List<ClassBean>>>() {
             @Override
@@ -458,9 +507,52 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
                 Logger.e(t.getMessage(),t);
             }
         });
+    }
 
+    /**
+     * 请求 热点 数据
+     */
+    protected void asyncGetHotData(){
+        gridView.setAdapter(null);
+        if( tagList!=null && tagList.size()>0){
+            gridView.setAdapter(tagAdapter);
+            return;
+        }
 
+        if( tagList ==null){
+            tagList =new ArrayList<>();
+            tagAdapter = new TagAdapter( gridView , tagList ,getContext());
+            gridView.setAdapter(tagAdapter);
+        }
 
+        BizApiService apiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl).create(BizApiService.class);
+        int customerid=Variable.CustomerId;
+
+        String userkey = Variable.BizKey;
+        String random = String.valueOf(System.currentTimeMillis());
+        String secure = SignUtil.getSecure(Variable.BizKey, Variable.BizAppSecure, random);
+
+        Call<BizBaseBean<List<TagBean>>> call =
+                apiService.getAllTag(userkey, random, secure, customerid);
+
+        call.enqueue(new Callback<BizBaseBean<List<TagBean>>>() {
+            @Override
+            public void onResponse(Response<BizBaseBean<List<TagBean>>> response) {
+                if( response==null || response.code()!= Constant.REQUEST_SUCCESS){
+                    Logger.e(response.message());
+                    return;
+                }
+
+                tagList.clear();
+                tagList.addAll(response.body().getData());
+                tagAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Logger.e(t.getMessage(),t);
+            }
+        });
     }
 
 
@@ -478,6 +570,33 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
     }
 
     public String getFilter(){
-        return "";
+        String brands = "";
+        String classes="";
+        String tags="";
+        if(brandList!=null){
+            for(BrandBean bean : brandList){
+                if(bean.isChecked()){
+                    if(!TextUtils.isEmpty(brands)) brands+=",";
+                    brands+=bean.getBrandId();
+                }
+            }
+        }
+        if(classList!=null){
+            for(ClassBean bean : classList){
+                if(bean.isChecked()){
+                    if(!TextUtils.isEmpty(brands)) classes+=",";
+                    classes+=bean.getCatId();
+                }
+            }
+        }
+        if(tagList!=null){
+            for(TagBean bean :tagList){
+                if(bean.isChecked()){
+                    if(!TextUtils.isEmpty(tags)) tags+=",";
+                    tags+=bean.getTagId();
+                }
+            }
+        }
+        return brands+":"+classes+":"+tags;
     }
 }

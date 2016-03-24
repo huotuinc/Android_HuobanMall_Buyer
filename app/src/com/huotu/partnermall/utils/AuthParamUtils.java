@@ -62,8 +62,8 @@ public class AuthParamUtils {
                         if ( 2 == values.length ) {
                             paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
                         }
-                        else if ( 1 == values.length ) {
-                            paramMap.put ( values[ 0 ], null );
+                        else if ( 1 == values.length ) {//排除 null值
+                            //paramMap.put ( values[ 0 ], null );
                         }
                     }
                 }

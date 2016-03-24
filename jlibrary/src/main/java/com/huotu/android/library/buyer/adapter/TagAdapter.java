@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.huotu.android.library.buyer.R;
 import com.huotu.android.library.buyer.bean.BizBean.BrandBean;
-import com.huotu.android.library.buyer.bean.BizBean.ClassBean;
+import com.huotu.android.library.buyer.bean.BizBean.TagBean;
 import com.huotu.android.library.buyer.utils.ViewHolderUtil;
 
 import java.util.List;
@@ -21,14 +21,14 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/2/2.
  */
-public class BrandAdapter extends BaseAdapter implements CompoundButton.OnCheckedChangeListener {
-    private List<BrandBean> data;
+public class TagAdapter extends BaseAdapter implements CompoundButton.OnCheckedChangeListener {
+    private List<TagBean> data;
     private Context context;
     private GridView gridView;
     private LayoutInflater inflater;
     private int itemHeight;
 
-    public BrandAdapter(GridView gridView, List<BrandBean> data, Context context) {
+    public TagAdapter(GridView gridView, List<TagBean> data, Context context) {
         this.data=data;
         this.context = context;
         this.gridView= gridView;
@@ -71,7 +71,7 @@ public class BrandAdapter extends BaseAdapter implements CompoundButton.OnChecke
             }
         }
         CheckBox ckb = ViewHolderUtil.get(convertView, R.id.layout_filter_item_name);
-        ckb.setText(data.get(position).getBrandName());
+        ckb.setText(data.get(position).getTagName());
         ckb.setChecked( data.get(position).isChecked() );
         //ckb.setOnCheckedChangeListener(this);
 

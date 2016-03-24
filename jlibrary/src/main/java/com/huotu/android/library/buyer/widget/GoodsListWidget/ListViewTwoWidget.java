@@ -57,8 +57,6 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
         }else{
             create_NormalLayout();
         }
-
-        //EventBus.getDefault().post(new StartLoadEvent());
     }
 
     protected void create_NormalLayout(){
@@ -108,7 +106,7 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
     private  void addGoodsByPubu(GoodsListBean goods ){
         if( goods ==null|| goods.getGoods()==null|| goods.getGoods().size()<1 ) return;
 
-        int itemWidth = getWidth()/ columnCount;
+        int itemWidth = (getWidth()-2*3)/ columnCount;
         for( int i=0;i< goods.getGoods().size();i++) {
             int position = count % columnCount;
             LinearLayout llItem = lls.get(position);
@@ -126,7 +124,6 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
             listViewOneItemConfig.setPagesize(config.getPagesize());
             listViewOneItemConfig.setBackground(config.getBackground());
 
-
             ListViewOneItemWidget oneWidget = new ListViewOneItemWidget( getContext() , listViewOneItemConfig  ,itemWidth);
             llItem.addView( oneWidget );
             oneWidget.addData(goods.getGoods().get(i));
@@ -138,6 +135,7 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
         int itemWidth = getWidth()/ columnCount;
         int lineCount = goods.getGoods().size()/columnCount;
         lineCount += goods.getGoods().size() % columnCount>0?1:0;
+        int recordConut = goods.getGoods().size();
 
         for( int i=0;i< lineCount;i++) {
             int position = 0;
@@ -160,7 +158,12 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
             ListViewOneItemWidget oneWidget = new ListViewOneItemWidget( getContext() , listViewOneItemConfig  ,itemWidth);
 
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT,1.0f);
-            layoutParams.setMargins(2,2,2,2);
+            int bottomPx = 2;
+            int topPx=1;
+            if( i == 0){ bottomPx=1;topPx = 2;}
+            else if( i == (lineCount-1) ){ bottomPx=2;}
+            else{topPx=1;bottomPx=1;}
+            layoutParams.setMargins(2, topPx , 1 ,bottomPx);
             oneWidget.setLayoutParams(layoutParams);
 
             llItem.addView(oneWidget);
@@ -171,7 +174,12 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
             if( position < goods.getGoods().size() ) {
                 oneWidget = new ListViewOneItemWidget(getContext(), listViewOneItemConfig, itemWidth);
                 layoutParams = new LinearLayout.LayoutParams( LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f); //(LinearLayout.LayoutParams)oneWidget.getLayoutParams();
-                layoutParams.setMargins(2,2,2,2);
+                topPx = 1;
+                bottomPx=2;
+                if(i==0){topPx=2;bottomPx=1;}
+                else if(i==(lineCount-1)){bottomPx=2;}
+                else{topPx=1;bottomPx=1;}
+                layoutParams.setMargins(1,topPx,2,bottomPx);
                 oneWidget.setLayoutParams(layoutParams);
 
                 llItem.addView(oneWidget);
@@ -191,7 +199,7 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
     }
 
     @Override
-    public void asyncGetGoodsData( boolean isRefreshData ) {
+    public void asyncGetGoodsData( boolean isRefreshData , int classid ,String keyword ) {
         if( isRefreshData ){
             pageIndex = 0;
             count=0;
@@ -209,11 +217,11 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
 
         BizApiService bizApiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl).create(BizApiService.class);
         int customerId= Variable.CustomerId;
-        int catid = 0;
+        int catid = classid;
         int userlevelid = Variable.userLevelId;
         String sortRule = "0:desc";
         String filter= "";
-        String searchKey = "";
+        String searchKey = keyword;
         int pIndex = pageIndex+1;
         if( config.isOrderRule() ){
             sortRule = sortOneWidget.getSortRule();
@@ -235,6 +243,10 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
             public void onResponse(Response<BizBaseBean<GoodsListBean>> response) {
                 if( response ==null || response.code() != Constant.REQUEST_SUCCESS ){
                     Logger.e( response.message());
+                    EventBus.getDefault().post(new LoadCompleteEvent());
+                    return;
+                }
+                if( response.body()==null || response.body().getData()==null){
                     EventBus.getDefault().post(new LoadCompleteEvent());
                     return;
                 }

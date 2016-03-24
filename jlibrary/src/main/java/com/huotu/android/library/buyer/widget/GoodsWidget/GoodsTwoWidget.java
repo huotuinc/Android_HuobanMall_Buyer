@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,6 +25,7 @@ import com.huotu.android.library.buyer.utils.FrescoDraweeController;
 import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.android.library.buyer.utils.RetrofitUtil;
 import com.huotu.android.library.buyer.utils.SignUtil;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
 import com.huotu.android.library.buyer.widget.SpanningUtil;
 import com.huotu.android.library.buyer.R;
 
@@ -40,7 +42,7 @@ import retrofit2.Response;
  * 二方格(默认样式)
  * Created by jinxiangdong on 2016/1/25.
  */
-public class GoodsTwoWidget extends LinearLayout {
+public class GoodsTwoWidget extends BaseLinearLayout {
     private GoodsTwoConfig goodsTwoConfig;
     private List<LinearLayout> lls=null;
     private int count;
@@ -63,7 +65,7 @@ public class GoodsTwoWidget extends LinearLayout {
           create_NormalLayout();
       }
 
-        asyncGetGoodsData();
+      asyncGetGoodsData();
     }
     protected  void create_NormalLayout(){
         setOrientation(VERTICAL);
@@ -107,7 +109,7 @@ public class GoodsTwoWidget extends LinearLayout {
         tvPrice = new TextView( getContext() );
         tvPrice.setId(tvPrice.hashCode());
         layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.BELOW , ivPic.getId());
+        layoutParams.addRule(RelativeLayout.BELOW, ivPic.getId());
         //layoutParams.addRule( RelativeLayout.RIGHT_OF , tvName.getId() );
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         tvPrice.setLayoutParams(layoutParams);
@@ -217,7 +219,7 @@ public class GoodsTwoWidget extends LinearLayout {
 
     /**
      *
-     */
+    */
     protected void asyncGetGoodsData() {
         BizApiService apiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl).create( BizApiService.class );
         String key = Variable.BizKey;
@@ -266,6 +268,8 @@ public class GoodsTwoWidget extends LinearLayout {
                 oneWidget=create_chuxiao(item);
             }
             llItem.addView(oneWidget);
+            oneWidget.setOnClickListener(this);
+            oneWidget.setTag(item);
         }
     }
 
@@ -278,7 +282,6 @@ public class GoodsTwoWidget extends LinearLayout {
 
             LinearLayout ll= create_two(item1,item2);
             this.addView(ll);
-
         }
     }
 
@@ -336,7 +339,11 @@ public class GoodsTwoWidget extends LinearLayout {
         }
 
         ll.addView(rlOne);
+        rlOne.setOnClickListener(this);
+        rlOne.setTag(item1);
         ll.addView(rlTwo);
+        rlTwo.setOnClickListener(this);
+        rlTwo.setTag(item2);
 
         return ll;
     }
@@ -388,8 +395,17 @@ public class GoodsTwoWidget extends LinearLayout {
         tvJifen.setId( tvJifen.hashCode());
 
         if(  TextUtils.isEmpty( goodsTwoConfig.getBackground()) ) {
+            int relaId;
+            if(goodsTwoConfig.getProduct_showprices().equals(Constant.GOODS_SHOW)){
+                relaId = tvPrice.getId();
+            }else if( goodsTwoConfig.getProduct_showname().equals(Constant.GOODS_SHOW)){
+                relaId = tvName.getId();
+            }else{
+                relaId = ivPic.getId();
+            }
+
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, tvPrice.getId());
+            layoutParams.addRule(RelativeLayout.BELOW, relaId );
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             tvJifen.setLayoutParams(layoutParams);
             //tvJifen.setTextColor(Color.BLACK);
@@ -416,7 +432,6 @@ public class GoodsTwoWidget extends LinearLayout {
 
         return rlGoods;
     }
-
 
     protected void setStyle( GoodsBean good ){
         if( this.goodsTwoConfig.getProduct_showname().equals( Constant.GOODS_SHOW )){
@@ -464,4 +479,14 @@ public class GoodsTwoWidget extends LinearLayout {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        if( v.getTag()!=null && v.getTag() instanceof GoodsBean){
+            GoodsBean bean = (GoodsBean)v.getTag();
+            String url = bean.getDetailUrl();
+            String name = bean.getGoodName();
+            CommonUtil.link(name , url );
+        }
+    }
 }

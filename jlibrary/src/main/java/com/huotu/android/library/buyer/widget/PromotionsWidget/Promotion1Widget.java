@@ -4,17 +4,21 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.huotu.android.library.buyer.bean.PromotionsBean.Promotion1Config;
 import com.huotu.android.library.buyer.bean.PromotionsBean.PromotionBean;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.R;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
+
 /**
  * Created by Administrator on 2016/1/29.
  */
-public class Promotion1Widget extends LinearLayout {
+public class Promotion1Widget extends BaseLinearLayout {
     private Promotion1Config config;
 
     public Promotion1Widget(Context context , Promotion1Config config) {
@@ -52,6 +56,7 @@ public class Promotion1Widget extends LinearLayout {
         ll.setLayoutParams(layoutParams);
         ll.setPadding(2, 0, 2, 0);
         this.addView(ll);
+        ll.setOnClickListener(this);
 
         TextView tvPrice = new TextView(getContext());
         layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1.0f);
@@ -60,7 +65,7 @@ public class Promotion1Widget extends LinearLayout {
         layoutParams.gravity = Gravity.CENTER;
         tvPrice.setLayoutParams(layoutParams);
         tvPrice.setText(bean.getPrices());
-        tvPrice.setTextColor(Color.parseColor(fontColor));
+        tvPrice.setTextColor(CommonUtil.parseColor(fontColor));
         tvPrice.setGravity(Gravity.CENTER_HORIZONTAL);
         tvPrice.setSingleLine();
         tvPrice.setEllipsize(TextUtils.TruncateAt.END);
@@ -75,9 +80,22 @@ public class Promotion1Widget extends LinearLayout {
         tvName.setLayoutParams(layoutParams);
         tvName.setGravity(Gravity.CENTER_HORIZONTAL);
         tvName.setText(bean.getName());
-        tvName.setTextColor( Color.parseColor( fontColor));
+        tvName.setTextColor(CommonUtil.parseColor(fontColor));
         tvName.setSingleLine();
         tvName.setTextSize(14);
         ll.addView(tvName);
+        ll.setTag(bean);
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+
+        if(v.getTag()!=null && v.getTag() instanceof PromotionBean ){
+            PromotionBean bean = (PromotionBean)v.getTag();
+            String url = bean.getPageUrl();
+            String name = bean.getName();
+            CommonUtil.link(name , url);
+        }
     }
 }

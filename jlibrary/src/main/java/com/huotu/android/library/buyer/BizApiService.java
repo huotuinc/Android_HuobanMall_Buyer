@@ -126,8 +126,7 @@ public interface BizApiService {
             @Header(Constant.HEADER_USER_KEY) String userkey,
             @Header(Constant.HEADER_USER_RANDOM) String userrandom,
             @Header(Constant.HEADER_USER_SECURE) String usersecure,
-            @Query("customerId") int customerId,
-            @Query("sign") String sign);
+            @Query("customerId") int customerId);
 
     /**
      * 根据具体的商品ID来获得商品信息api

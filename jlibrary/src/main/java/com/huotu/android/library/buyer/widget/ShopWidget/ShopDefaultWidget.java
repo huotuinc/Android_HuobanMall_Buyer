@@ -16,6 +16,7 @@ import com.huotu.android.library.buyer.bean.BizBean.MallInfoBean;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.ShopBean.ShopDefaultConfig;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.R;
 import com.huotu.android.library.buyer.bean.Constant;
@@ -81,7 +82,7 @@ public class ShopDefaultWidget extends RelativeLayout implements View.OnClickLis
         tvOrder.setTypeface(TypeFaceUtil.FONTAWEOME(getContext()));
 
         if(  config.getShow_type() == Constant.WIDGETBACKTYPE_COLOR ){
-            ivBg.setBackgroundColor(Color.parseColor( config.getColor()) );
+            ivBg.setBackgroundColor(CommonUtil.parseColor( config.getColor()) );
         }else if( config.getShow_type() == Constant.WIDGETBACKTYPE_IMAGE ) {
             int width = getResources().getDisplayMetrics().widthPixels;
             FrescoDraweeController.loadImage(ivBg, width, config.getBackground());
@@ -99,7 +100,8 @@ public class ShopDefaultWidget extends RelativeLayout implements View.OnClickLis
         if(v.getId()==R.id.shop_default_ll1){//跳转到全部商品页面
             String url = mallInfoBean.getGoodsListUrl();
             String name = "";
-            EventBus.getDefault().post(new LinkEvent( name , url ));
+            CommonUtil.link( name , url );
+            //EventBus.getDefault().post(new LinkEvent( name , url ));
         }else if( v.getId()==R.id.shop_default_ll3){//跳转到订单页面
             String url = mallInfoBean.getOrderListUrl();
             String name = "";
@@ -133,7 +135,7 @@ public class ShopDefaultWidget extends RelativeLayout implements View.OnClickLis
                 tvShopName.setText(  response.body().getData().getMallName() );
                 tvGoodsCount.setText( String.valueOf( response.body().getData().getGoodNum()  ));
                 tvNewGoodsCount.setText(String.valueOf( response.body().getData().getNewGoodNum() ));
-                tvOrder.setText( String.valueOf( response.body().getData().getOrderNum() ) );
+                //tvOrder.setText( String.valueOf( response.body().getData().getOrderNum() ) );
                 int widthPx = DensityUtils.dip2px(getContext(), 90);
                 int width = ivAvator.getLayoutParams() == null ? widthPx : ivAvator.getLayoutParams().width;
                 FrescoDraweeController.loadImage(ivAvator, width, response.body().getData().getLogo());

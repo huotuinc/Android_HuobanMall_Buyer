@@ -33,7 +33,7 @@ public class ClassBean {
     /**
      * 是否选择
      */
-    private boolean isSelect;
+    private boolean checked;
 
     public int getCatId() {
         return catId;
@@ -83,11 +83,11 @@ public class ClassBean {
         this.goodCount = goodCount;
     }
 
-    public boolean isSelect() {
-        return isSelect;
+    public boolean isChecked() {
+        return checked;
     }
 
-    public void setIsSelect(boolean isSelect) {
-        this.isSelect = isSelect;
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

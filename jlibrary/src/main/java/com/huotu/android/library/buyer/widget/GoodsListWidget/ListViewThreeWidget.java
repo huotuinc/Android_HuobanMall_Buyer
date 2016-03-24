@@ -70,7 +70,7 @@ public class ListViewThreeWidget extends BaseLinearLayoutWidget implements IList
             List<GoodsBean> child = new ArrayList<>();
             for(int k = 0; k<3; k++) {
                 int pos = i * 3 + k;
-                if( (pos +1 ) >= total ) break;
+                if( (pos +1 ) > total ) break;
                 child.add(goods.getGoods().get(pos));
             }
             widget.addItem(child);
@@ -79,7 +79,7 @@ public class ListViewThreeWidget extends BaseLinearLayoutWidget implements IList
     }
 
     @Override
-    public void asyncGetGoodsData( boolean isRefreshData ) {
+    public void asyncGetGoodsData( boolean isRefreshData , int classid ,String keyword ) {
         if( isRefreshData) {
             pageIndex= 0;
             if( goods !=null) goods.clear();
@@ -94,11 +94,11 @@ public class ListViewThreeWidget extends BaseLinearLayoutWidget implements IList
 
         BizApiService bizApiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl).create(BizApiService.class);
         int customerid= Variable.CustomerId;
-        int catid = 0;
+        int catid = classid;
         int userlevelid = Variable.userLevelId;
         String sortRule ="0:desc";
         String filter= "";
-        String searchKey = "";
+        String searchKey = keyword;
         int pIndex = pageIndex+1;
         if( listViewThreeConfig.isOrderRule() ){
             sortRule = sortOneWidget.getSortRule();

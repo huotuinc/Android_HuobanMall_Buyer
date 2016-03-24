@@ -98,13 +98,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateVisible|adjustResize"/>
-
         <activity
             android:name="com.huotu.partnermall.ui.nativeui.PageViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NativeTheme"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-
 
         <service android:name="com.huotu.partnermall.service.LocationService"/>
         <!-- 极光配置 -->
@@ -277,13 +275,15 @@
         </activity>
         <activity
             android:name="com.huotu.partnermall.ui.nativeui.ClassActivity"
-            android:theme="@style/NativeTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/NativeTheme">
         </activity>
         <activity
             android:name="com.huotu.partnermall.ui.AppUpdateActivity"
             android:screenOrientation="portrait"/>
         <activity android:name="com.huotu.partnermall.ui.base.NativeBaseActivity">
+        </activity>
+        <activity android:name="com.huotu.partnermall.ui.nativeui.SmartUIActivity">
         </activity>
     </application>
 

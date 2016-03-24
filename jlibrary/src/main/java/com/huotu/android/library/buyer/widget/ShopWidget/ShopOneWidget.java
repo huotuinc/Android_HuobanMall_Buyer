@@ -16,6 +16,7 @@ import com.huotu.android.library.buyer.bean.BizBean.MallInfoBean;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.ShopBean.ShopOneConfig;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
 import com.huotu.android.library.buyer.bean.Constant;
@@ -51,7 +52,7 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
         int leftRight = DensityUtils.dip2px(context, config.getPaddingLeft());
         int topBottom = DensityUtils.dip2px(context, config.getPaddingTop());
         this.setPadding(leftRight, topBottom, leftRight, topBottom);
-        this.setBackgroundColor(Color.parseColor(config.getBackColor()));
+        this.setBackgroundColor(CommonUtil.parseColor(config.getBackColor()));
 
         leftImage = new SimpleDraweeView(context);
         leftImage.setOnClickListener(this);
@@ -70,7 +71,7 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         tvLeftTitle.setLayoutParams(layoutParams);
         tvLeftTitle.setGravity(Gravity.CENTER_VERTICAL);
-        tvLeftTitle.setTextColor(Color.parseColor(config.getFontColor()));
+        tvLeftTitle.setTextColor(CommonUtil.parseColor(config.getFontColor()));
         this.addView(tvLeftTitle);
 
         tvRightTitle = new TextView(context);
@@ -83,7 +84,7 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
         layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
         tvRightTitle.setLayoutParams(layoutParams);
         tvRightTitle.setGravity(Gravity.CENTER_VERTICAL);
-        tvRightTitle.setTextColor(Color.parseColor(config.getFontColor()));
+        tvRightTitle.setTextColor(CommonUtil.parseColor(config.getFontColor()));
         this.addView(tvRightTitle);
 
         rightImage = new SimpleDraweeView(context);

@@ -20,6 +20,10 @@ public class BrandBean {
      * 排序字段
      */
     private int orderNum;
+    /**
+     * 标记 是否 选中 状态
+     */
+    private boolean checked;
 
     public int getBrandId() {
         return brandId;
@@ -51,5 +55,13 @@ public class BrandBean {
 
     public void setOrderNum(int orderNum) {
         this.orderNum = orderNum;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

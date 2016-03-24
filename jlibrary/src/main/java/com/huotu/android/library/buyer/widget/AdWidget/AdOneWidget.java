@@ -10,10 +10,12 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
 import com.huotu.android.library.buyer.bean.AdBean.AdOneConfig;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -21,9 +23,9 @@ import java.sql.Wrapper;
 
 /**
  * 单一图片组件
- * Created by jinxiangdong on 2016/1/12.
+ * Created by iangdong on 2016/1/12.
  */
-public class AdOneWidget extends LinearLayout implements View.OnClickListener{
+public class AdOneWidget extends BaseLinearLayout {
     AdOneConfig config;
     public AdOneWidget(Context context , AdOneConfig config) {
         super(context);
@@ -82,9 +84,9 @@ public class AdOneWidget extends LinearLayout implements View.OnClickListener{
     public void onClick(View v) {
         if( v.getTag()!=null && v.getTag() instanceof AdImageBean){
             AdImageBean bean = (AdImageBean)v.getTag();
-            String url = Variable.siteUrl + bean.getLinkUrl();
+            String url = bean.getLinkUrl();
             String name = bean.getLinkName();
-            EventBus.getDefault().post(new LinkEvent(name,url));
+            CommonUtil.link(name , url);
         }
     }
 }

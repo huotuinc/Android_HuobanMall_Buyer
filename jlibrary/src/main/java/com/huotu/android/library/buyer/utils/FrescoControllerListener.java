@@ -45,4 +45,17 @@ public class FrescoControllerListener extends BaseControllerListener {
         ref.get().setAspectRatio(ratio);
         //ref.get().postInvalidate();
     }
+
+    @Override
+    public void onFailure(String id, Throwable throwable) {
+        super.onFailure(id, throwable);
+        if( ref.get() ==null ) return;
+
+        ViewGroup.LayoutParams layoutParams = ref.get().getLayoutParams();
+        layoutParams.width = width;
+        layoutParams.height = width;
+        ref.get().setLayoutParams(layoutParams);
+        float ratio = 1.0f;
+        ref.get().setAspectRatio(ratio);
+    }
 }

@@ -12,7 +12,9 @@ import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
 import com.huotu.android.library.buyer.bean.AdBean.AdWindowConfig;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -20,7 +22,7 @@ import org.greenrobot.eventbus.EventBus;
  * 橱窗组件
  * Created by jinxiangdong on 2016/1/12.
  */
-public class AdWindowWidget extends LinearLayout implements View.OnClickListener{
+public class AdWindowWidget extends BaseLinearLayout{
     private AdWindowConfig adWindowConfig;
 
     public AdWindowWidget(Context context, AdWindowConfig adWindowConfig) {
@@ -37,12 +39,11 @@ public class AdWindowWidget extends LinearLayout implements View.OnClickListener
         AdImageBean bean  = (AdImageBean)v.getTag();
         if( bean ==null )return;
 
-        EventBus.getDefault().post( new LinkEvent( bean.getLinkName() , bean.getLinkUrl()));
-
+        CommonUtil.link( bean.getTitle() , bean.getLinkUrl() );
+        //EventBus.getDefault().post( new LinkEvent( bean.getLinkName() , bean.getLinkUrl()));
     }
 
     private void createLayout(){
-
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         layoutInflater.inflate( R.layout.ad_window , this, true );
 

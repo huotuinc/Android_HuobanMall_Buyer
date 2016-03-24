@@ -1,5 +1,7 @@
 package com.huotu.android.library.buyer;
 
+import com.huotu.android.library.buyer.bean.Data.ClassificationConfig;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -59,5 +61,23 @@ public interface ConfigApiService {
             @Header("_user_secure") String userSecurity ,
             @Query("merchantId") int merchantId
     );
+
+    /**
+     *
+     * @param userkey
+     * @param userRandom
+     * @param userSecurity
+     * @param merchantId
+     * @param productClassification
+     * @param type
+     * @return
+     */
+    @GET("namedPages/search/findByClassification")
+    Call<ClassificationConfig> findByClassification( @Header("_user_key") String userkey ,
+                                       @Header("_user_random") String userRandom ,
+                                       @Header("_user_secure") String userSecurity ,
+                                       @Query("merchantId") int merchantId,
+                                       @Query("productClassification") String productClassification,
+                                       @Query("type") String type );
 
 }

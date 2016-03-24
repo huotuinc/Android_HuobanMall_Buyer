@@ -10,8 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.huotu.android.library.buyer.bean.AsistBean.LinkBean;
 import com.huotu.android.library.buyer.bean.TextBean.NavigationConfig;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
 import com.huotu.android.library.buyer.widget.LinkClickListener;
 import com.huotu.android.library.buyer.bean.TextBean.LinkConfig;
 import com.huotu.android.library.buyer.utils.TypeFaceUtil;
@@ -20,17 +23,17 @@ import com.huotu.android.library.buyer.R;
 /**
  * Created by Administrator on 2016/1/7.
  */
-public class NavigationWidget extends LinearLayout implements View.OnClickListener {
+public class NavigationWidget extends BaseLinearLayout{
     NavigationConfig navigationConfig;
     TextView tvTitle;
     TextView tvArrow;
     RelativeLayout rl;
 
-    private LinkClickListener linkClickListener;
+//    private LinkClickListener linkClickListener;
 
-    public void setLinkClickListener(LinkClickListener linkClickListener) {
-        this.linkClickListener = linkClickListener;
-    }
+//    public void setLinkClickListener(LinkClickListener linkClickListener) {
+//        this.linkClickListener = linkClickListener;
+//    }
 
     public NavigationWidget(Context context, NavigationConfig navigationConfig) {
         super(context);
@@ -44,7 +47,6 @@ public class NavigationWidget extends LinearLayout implements View.OnClickListen
             LinkConfig item = navigationConfig.getLinks().get(i);
             createLayout(item, (i+1) == count  ? false : true);
         }
-
 
 //        LayoutInflater layoutInflater = LayoutInflater.from(context);
 //        layoutInflater.inflate(R.layout.text_navigation, this, true);
@@ -116,11 +118,11 @@ public class NavigationWidget extends LinearLayout implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (linkClickListener != null) {
-            LinkConfig bean = (LinkConfig) v.getTag();
-            if (bean == null || !TextUtils.isEmpty(bean.getLinkUrl())) return;
-            linkClickListener.Link(bean.getLinkUrl());
+        if(v.getTag()!=null && v.getTag() instanceof LinkConfig){
+            LinkConfig bean = (LinkConfig)v.getTag();
+            String name = bean.getLinkName();
+            String url = bean.getLinkUrl();
+            CommonUtil.link(name,url);
         }
     }
-
 }

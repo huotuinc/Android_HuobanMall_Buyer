@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.huotu.android.library.buyer.R;
 import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.TextBean.TitleConfig;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.android.library.buyer.widget.LinkClickListener;
 
@@ -52,7 +53,7 @@ public class TitleWidget extends LinearLayout implements View.OnClickListener{
 
         tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, config.getFontSize() );
         try {
-            int bgColor = Color.parseColor( this.config.getTitle_background());
+            int bgColor = CommonUtil.parseColor(this.config.getTitle_background());
             ll.setBackgroundColor(bgColor);
         }catch (Exception ex){
             Logger.e(ex.getMessage(), ex);

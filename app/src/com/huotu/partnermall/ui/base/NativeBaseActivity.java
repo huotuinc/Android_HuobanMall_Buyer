@@ -4,18 +4,25 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.ui.HomeActivity;
+import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.WindowProgress;
 
 public class NativeBaseActivity extends AppCompatActivity {
-    //protected ProgressPopupWindow progressPopupWindow;
+    /**
+     * 标记 是否 主界面
+     */
+    protected boolean isMainUI = false;
     protected WindowProgress windowProgress;
+    private long exitTime = 0l;
 
     public void setImmerseLayout(View view){
         if ( BaseApplication.single.isKITKAT()) {
@@ -39,6 +46,35 @@ public class NativeBaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_native_base);
     }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if( isMainUI ){
+                QuitApp();
+            }else{
+                finish();
+            }
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    protected void QuitApp(){
+        //2秒以内按两次推出程序
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            ToastUtils.showLongToast(getApplicationContext(), "再按一次退出程序");
+            exitTime = System.currentTimeMillis();
+        } else {
+            try {
+                this.finish();
+                Runtime.getRuntime().exit(0);
+            } catch (Exception e) {
+                Runtime.getRuntime().exit(-1);
+            }
+        }
+    }
+
 
 
     public  void showProgress(String message) {

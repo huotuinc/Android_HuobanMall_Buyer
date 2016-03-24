@@ -1,14 +1,20 @@
 package com.huotu.android.library.buyer.widget.AdWidget;
 
 import android.content.Context;
+import android.net.Uri;
 import android.widget.LinearLayout;
+
+import com.facebook.common.util.UriUtil;
 import com.huotu.android.library.buyer.R;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.huotu.android.library.buyer.bean.AdBean.AdBannerConfig;
 import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
+import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
+import com.huotu.android.library.buyer.bean.Data.SmartUiEvent;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,14 +47,29 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
         .setPageIndicator(new int[]{R.drawable.ic_page_indicator, R.drawable.ic_page_indicator_focused})
         .setOnItemClickListener(this);
 
-        int time = config.getImages().size()*1000;
+        if(!config.getAutoPlay()) return;
+        if(config.getImages().size()<=1) return;
+
+        int time = config.getImages().size()*1500;
         this.startTurning( time );
     }
 
     @Override
     public void onItemClick(int position) {
         AdImageBean bean = config.getImages().get( position );
-        String url = Variable.siteUrl + bean.getLinkUrl();
-        EventBus.getDefault().post( new LinkEvent(bean.getLinkName(), url ));
+        go(bean);
+    }
+
+    protected void go(AdImageBean bean){
+        String relateUrl = bean.getLinkUrl();
+        String name = bean.getTitle();
+        CommonUtil.link(name, relateUrl);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        this.stopTurning();
     }
 }

@@ -24,6 +24,7 @@ android {
         versionName "${BUYER_VERSIONNAME}"
         signingConfig signingConfigs.huotu
         buildConfigField 'int','NATIVE_UI_CONFIG_VERSION', '1'
+        multiDexEnabled true
     }
 
     sourceSets {
@@ -158,10 +159,10 @@ dependencies {
     compile 'com.huotu.android.library:libcropper:1.0'
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.handmark.library:pulltorefresh:1.1'
-    compile 'com.huotu.android.library:libCoverFlow:1.1'
-    //    compile('com.huotu.android.library:libCoverFlow:1.1') {
-    //        exclude module:'appcompat-v7', group:'com.android.support'
-    //    }
+    //compile 'com.huotu.android.library:libCoverFlow:1.1'
+        compile('com.huotu.android.library:libCoverFlow:1.1') {
+            exclude module:'appcompat-v7', group:'com.android.support'
+        }
     compile 'com.github.mikephil.charting:MPAndroidChart:1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.umeng.analytics:analytics:5.6.1'

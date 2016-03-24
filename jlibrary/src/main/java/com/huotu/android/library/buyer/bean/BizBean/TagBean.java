@@ -33,6 +33,10 @@ public class TagBean {
      * 图标
      */
     private String tagImage;
+    /**
+     * 是否选择
+     */
+    private boolean checked;
 
     public int getTagId() {
         return tagId;
@@ -88,5 +92,13 @@ public class TagBean {
 
     public void setTagImage(String tagImage) {
         this.tagImage = tagImage;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

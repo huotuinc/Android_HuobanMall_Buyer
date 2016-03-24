@@ -38,6 +38,7 @@ import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.base.NativeBaseActivity;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
+import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WindowUtils;
@@ -175,6 +176,11 @@ public class PageViewActivity
         //viewPage.getSettings().setSavePassword(true);
         viewPage.getSettings().setLoadsImagesAutomatically(true);
         viewPage.addJavascriptInterface(this, "android");
+
+        AuthParamUtils paramUtils = new AuthParamUtils ( BaseApplication.single , System.currentTimeMillis (), url , PageViewActivity.this );
+        String url = paramUtils.obtainUrl ();
+
+
         viewPage.loadUrl(url);
 
         viewPage.setWebViewClient(

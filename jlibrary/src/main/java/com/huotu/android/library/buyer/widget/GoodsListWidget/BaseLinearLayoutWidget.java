@@ -32,35 +32,6 @@ public class BaseLinearLayoutWidget extends LinearLayout {
     }
 
 
-//    protected void set_Price_Format1( TextView tv , String priceStr , String zPriceStr ){
-//        String text = "￥" + priceStr + "\r\n￥" + zPriceStr;
-//        SpannableString spannableString = new SpannableString(text);
-//        int startIndex = 0;
-//        int endIndex = 1 + priceStr.length();
-//        spannableString.setSpan(new ForegroundColorSpan(Color.RED), startIndex, endIndex, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-//        startIndex = endIndex + 2;
-//        endIndex = text.length();
-//        StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
-//        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.GRAY);
-//        spannableString.setSpan(foregroundColorSpan, startIndex, endIndex, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-//        spannableString.setSpan(strikethroughSpan, startIndex, endIndex, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-//        tv.setText(spannableString);
-//    }
-//    protected void set_Price_Format2( TextView tv , String priceStr , String zPriceStr , int color1 , int color2){
-//        String text = "￥" + priceStr + " ￥" + zPriceStr;
-//        SpannableString spannableString = new SpannableString(text);
-//        int startIndex = 0;
-//        int endIndex = 1 + priceStr.length();
-//        spannableString.setSpan(new ForegroundColorSpan( color1 ), startIndex, endIndex, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-//        startIndex = endIndex + 1;
-//        endIndex = text.length();
-//        StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
-//        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan( color2 );
-//        spannableString.setSpan(foregroundColorSpan, startIndex, endIndex, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-//        spannableString.setSpan(strikethroughSpan, startIndex, endIndex, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-//        tv.setText(spannableString);
-//    }
-
     public static class ListHandler extends Handler{
         private WeakReference<BaseLinearLayoutWidget> ref;
 

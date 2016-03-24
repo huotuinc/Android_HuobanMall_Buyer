@@ -13,13 +13,18 @@ import android.widget.TextView;
 
 import com.huotu.android.library.buyer.ConfigApiService;
 import com.huotu.android.library.buyer.R;
+import com.huotu.android.library.buyer.bean.Constant;
+import com.huotu.android.library.buyer.bean.Data.StartLoadEvent;
 import com.huotu.android.library.buyer.bean.SearchBean.Search2Config;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.android.library.buyer.utils.RetrofitUtil;
 import com.huotu.android.library.buyer.utils.SignUtil;
 import com.huotu.android.library.buyer.utils.TypeFaceUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,11 +34,12 @@ import retrofit2.Response;
  * 搜索组件二
  * Created by jinxiangdong on 2016/1/14.
  */
-public class Search2Widget extends RelativeLayout implements View.OnClickListener , TextWatcher , Callback<Object>{
+public class Search2Widget extends RelativeLayout implements ISearch, View.OnClickListener , TextWatcher , Callback<Object>{
     private Search2Config config;
     private TextView tvRightPic;
     private EditText etText;
     private TextView tvSearch;
+    private boolean isMainUi;
 
     public Search2Widget(Context context , Search2Config config ) {
         super(context);
@@ -42,7 +48,7 @@ public class Search2Widget extends RelativeLayout implements View.OnClickListene
         int topPx= DensityUtils.dip2px(getContext(), 10);
         int leftPx = DensityUtils.dip2px( getContext() , 10);
         this.setPadding( leftPx ,topPx ,leftPx,topPx );
-        this.setBackgroundColor( Color.parseColor( config.getSearch_background()) );
+        this.setBackgroundColor( CommonUtil.parseColor( config.getSearch_background()) );
 
         tvSearch = new TextView(getContext());
         int tvSearch_id = tvSearch.hashCode();
@@ -112,8 +118,13 @@ public class Search2Widget extends RelativeLayout implements View.OnClickListene
         if( v.getId()== tvRightPic.getId()){
             etText.setText("");
         }else if( v.getId()==tvSearch.getId()){
-            //String url = config.get
-            getSearchPage();
+            if( isMainUi ) {
+                String keyword = etText.getText().toString().trim();
+                String url = "/" + Constant.URL_SEARCH_ASPX + "?keyword=" + keyword;
+                CommonUtil.link("", url);
+            }else{
+                EventBus.getDefault().post(new StartLoadEvent() );
+            }
         }
     }
 
@@ -156,5 +167,20 @@ public class Search2Widget extends RelativeLayout implements View.OnClickListene
     @Override
     public void onFailure(Throwable t) {
         Logger.e(t.getMessage());
+    }
+
+    @Override
+    public void setKeyWord(String keyword){
+        etText.setText(keyword);
+    }
+
+    @Override
+    public void setIsMainUi(boolean isMainUi) {
+        this.isMainUi = isMainUi;
+    }
+
+    @Override
+    public String getKeyword() {
+        return etText.getText().toString();
     }
 }

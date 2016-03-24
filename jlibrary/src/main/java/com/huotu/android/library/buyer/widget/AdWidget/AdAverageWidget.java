@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.android.library.buyer.bean.AdBean.AdAverageConfig;
@@ -37,7 +38,7 @@ public class AdAverageWidget extends com.huotu.android.library.buyer.widget.Good
         //this.setPadding( leftPx+outLeftPx , topPx , rightPx+outRightPx , bottomPx );
 
         if(!TextUtils.isEmpty(this.config.getBackcolor())) {
-            this.setBackgroundColor(Color.parseColor(this.config.getBackcolor()));
+            this.setBackgroundColor(CommonUtil.parseColor(this.config.getBackcolor()));
         }
 
         //TODO
@@ -66,6 +67,7 @@ public class AdAverageWidget extends com.huotu.android.library.buyer.widget.Good
             iv.setOnClickListener(this);
 
             this.addView(iv);
+            iv.setTag(item);
 
             String imageUrl = Variable.resourceUrl + item.getImageUrl();
 
@@ -83,6 +85,11 @@ public class AdAverageWidget extends com.huotu.android.library.buyer.widget.Good
 
     @Override
     public void onClick(View v) {
-
+        if( v.getTag()!=null && v.getTag() instanceof AdImageBean){
+            AdImageBean bean = (AdImageBean)v.getTag();
+            String url = bean.getLinkUrl();
+            String name = bean.getTitle();
+            CommonUtil.link(name, url );
+        }
     }
 }

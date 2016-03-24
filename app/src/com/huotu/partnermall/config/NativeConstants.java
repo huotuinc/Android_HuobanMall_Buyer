@@ -56,7 +56,16 @@ public class NativeConstants {
     public final static String HEADER_USER_KEY="_user_key";
     public final static String HEADER_USER_RANDOM="_user_random";
     public final static String HEADER_USER_SECURE="_user_secure";
+    /**
+     *
+     */
+    public final static String KEY_SMARTUICONFIGURL="key_smartuiconfigurl";
 
+    public final static String KEY_ISMAINUI="key_ismainui";
+
+    public final static String KEY_CLASSID="key_classid";
+
+    public final static String KEY_SEARCH="key_search";
 
     public final static String NATIVIE_KEY(){
         if(BuildConfig.DEBUG){

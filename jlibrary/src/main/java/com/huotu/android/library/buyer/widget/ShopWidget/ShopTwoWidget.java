@@ -9,6 +9,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.ShopBean.ShopTwoConfig;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
 
@@ -31,10 +32,13 @@ public class ShopTwoWidget extends RelativeLayout implements View.OnClickListene
         this.config = config;
 
         ivLeft = new SimpleDraweeView(context);
+        ivLeft.setId(ivLeft.hashCode());
         ivLeft.setOnClickListener(this);
         ivMiddle = new SimpleDraweeView(context);
+        ivMiddle.setId(ivMiddle.hashCode());
         ivMiddle.setOnClickListener(this);
         ivRight = new SimpleDraweeView(context);
+        ivRight.setId(ivRight.hashCode());
         ivRight.setOnClickListener(this);
 
         int widthPx =DensityUtils.dip2px(context, 30 ); //DensityUtils.dip2px(context, this.config.getImageLeft().getWidth());
@@ -48,6 +52,7 @@ public class ShopTwoWidget extends RelativeLayout implements View.OnClickListene
         heightPx = DensityUtils.dip2px( context ,30);// DensityUtils.dip2px(context, this.config.getImageMiddle().getHeight());
         layoutParams = new LayoutParams(widthPx,heightPx);
         layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
         ivMiddle.setLayoutParams(layoutParams);
         this.addView(ivMiddle);
 
@@ -61,7 +66,7 @@ public class ShopTwoWidget extends RelativeLayout implements View.OnClickListene
         int topPx = DensityUtils.dip2px( getContext() , config.getPaddingTop());
         int leftPx = DensityUtils.dip2px(getContext(), config.getPaddingLeft());
         this.setPadding( leftPx , topPx ,leftPx,topPx );
-        this.setBackgroundColor(Color.parseColor(this.config.getBackColor()));
+        this.setBackgroundColor(CommonUtil.parseColor(this.config.getBackColor()));
 
         //
         if( config.isShow1() ) {
@@ -81,14 +86,14 @@ public class ShopTwoWidget extends RelativeLayout implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if(v.getId()== ivLeft.getId()){
-            String url = Variable.resourceUrl + config.getLinkUrl1();
-            EventBus.getDefault().post(new LinkEvent("",url));
+            String url = config.getLinkUrl1();
+            CommonUtil.link( config.getLinkName1() , url );
         }else if(v.getId() == ivMiddle.getId()){
-            String url = Variable.resourceUrl + config.getLinkUrl2();
-            EventBus.getDefault().post(new LinkEvent("",url));
+            String url = config.getLinkUrl2();
+            CommonUtil.link( config.getLinkName2() , url );
         }else if( v.getId() == ivRight.getId()){
-            String url = Variable.resourceUrl + config.getLinkUrl3();
-            EventBus.getDefault().post(new LinkEvent("",url));
+            String url = config.getLinkUrl3();
+            CommonUtil.link( config.getLinkName3() , url );
         }
     }
 }

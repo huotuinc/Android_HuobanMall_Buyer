@@ -13,6 +13,9 @@ public class Jlibrary {
         Fresco.initialize(context);
     }
 
+    public static void initCustomerId(int customerId){
+        Variable.CustomerId = customerId;
+    }
 
     public static void initUserLevelId( int levelId ){
         Variable.userLevelId = levelId;
@@ -25,11 +28,10 @@ public class Jlibrary {
     public static void initSiteUrl(String url){
         Variable.siteUrl = url;
     }
-    /**
-     * 业务数据接口 调用 AppSecurity
-     */
-    //public final static String BizApiSecurity="1165a8d240b29af3f418b8d10599d0dc";
 
+    public static void initMainUIConfigUrl(String url){
+        Variable.mainUiConfigUrl =url;
+    }
 
 
 }

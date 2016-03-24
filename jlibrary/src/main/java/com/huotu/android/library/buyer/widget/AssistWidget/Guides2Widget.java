@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.R;
 import com.huotu.android.library.buyer.bean.AsistBean.Guides2Config;
@@ -50,14 +51,14 @@ public class Guides2Widget extends FrameLayout {
         layoutParams.gravity = Gravity.CENTER;
         tvTitle.setLayoutParams(layoutParams);
         tvTitle.setGravity(Gravity.CENTER);
-        tvTitle.setBackgroundColor(Color.parseColor( config.getBackColor()));
+        tvTitle.setBackgroundColor(CommonUtil.parseColor(config.getBackColor()));
         int px = DensityUtils.dip2px(getContext() , 8);
         tvTitle.setPadding( px ,0, px ,0);
-        tvTitle.setTextColor(Color.parseColor(  config.getFontColor()));
+        tvTitle.setTextColor(CommonUtil.parseColor(  config.getFontColor()));
         tvTitle.setText(config.getName());
         tvTitle.setTextSize(18);
 
-        this.setBackgroundColor(Color.parseColor(  config.getBackColor()));
+        this.setBackgroundColor(CommonUtil.parseColor(  config.getBackColor()));
 
         this.addView(tvBg);
         this.addView(tvTitle);

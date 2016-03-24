@@ -6,9 +6,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,6 +41,7 @@ import java.util.List;
 public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements View.OnClickListener{
     private ListViewThreeConfig listViewThreeConfig;
     private LayoutInflater layoutInflater;
+    LinearLayout llroot;
     SimpleDraweeView iv1, iv2, iv3;
     TextView tvName1,tvName2,tvName3;
     TextView tvPrice1,tvPrice2,tvPrice3;
@@ -80,7 +83,7 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
     }
 
     /*
-    根据配置，设置布局样式
+     * 根据配置，设置布局样式
      */
     private void create_Layout(){
         if( this.listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_2) ){
@@ -105,6 +108,8 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
     }
 
     private void findViewById(){
+        llroot =(LinearLayout)findViewById(R.id.listview_three_item_root);
+
         rl1 = (RelativeLayout)findViewById(R.id.listview_three_item_rl1);
         rl1.setOnClickListener(this);
         rl2 = (RelativeLayout)findViewById(R.id.listview_three_item_rl2);
@@ -132,9 +137,9 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         ivJifenPic2 = (SimpleDraweeView) findViewById(R.id.listview_three_item_jifenPic2);
         ivJifenPic3 = (SimpleDraweeView) findViewById(R.id.listview_three_item_jifenPic3);
 
-        rl1.setBackgroundResource(R.drawable.gray_border_style);
-        rl2.setBackgroundResource(R.drawable.gray_border_style);
-        rl3.setBackgroundResource(R.drawable.gray_border_style);
+//        rl1.setBackgroundResource(R.drawable.gray_border_style);
+//        rl2.setBackgroundResource(R.drawable.gray_border_style);
+//        rl3.setBackgroundResource(R.drawable.gray_border_style);
 
         if( !this.listViewThreeConfig.getProduct_showname().equals(Constant.GOODS_SHOW) ){
             tvName1.setVisibility(View.GONE);
@@ -170,6 +175,22 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
             ivJifenPic1.setVisibility(GONE);
             ivJifenPic2.setVisibility(GONE);
             ivJifenPic3.setVisibility(GONE);
+
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)tvJiFen1.getLayoutParams();
+            layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.listview_three_item_pic1);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            tvJiFen1.setLayoutParams(layoutParams);
+
+            layoutParams = (RelativeLayout.LayoutParams)tvJiFen2.getLayoutParams();
+            layoutParams.addRule( RelativeLayout.ALIGN_BOTTOM , R.id.listview_three_item_pic2 );
+            layoutParams.addRule( RelativeLayout.ALIGN_PARENT_RIGHT);
+            tvJiFen2.setLayoutParams(layoutParams);
+
+            layoutParams = (RelativeLayout.LayoutParams)tvJiFen3.getLayoutParams();
+            layoutParams.addRule( RelativeLayout.ALIGN_BOTTOM , R.id.listview_three_item_pic3 );
+            layoutParams.addRule( RelativeLayout.ALIGN_PARENT_RIGHT);
+            tvJiFen3.setLayoutParams(layoutParams);
+
         }else{
             ivJifenPic1.setVisibility(VISIBLE);
             ivJifenPic2.setVisibility(VISIBLE);
@@ -181,6 +202,10 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
      */
     private void setStyle_YIDALIANGXIAO_KAPINGBUJU(){
         findViewById();
+
+        rl1.setBackgroundResource(R.drawable.gray_border_style);
+        rl2.setBackgroundResource(R.drawable.gray_border_style);
+        rl3.setBackgroundResource(R.drawable.gray_border_style);
 
         RelativeLayout.LayoutParams layoutParams =(RelativeLayout.LayoutParams) tvName1.getLayoutParams();
         layoutParams.addRule(RelativeLayout.BELOW, R.id.listview_three_item_pic1);
@@ -257,24 +282,27 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.listview_three_item_price3);
         ivJifenPic3.setLayoutParams(layoutParams);
 
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.defaultpic);
-        int w = bmp.getWidth();
-        int h = bmp.getHeight();
-        int ivw = getResources().getDisplayMetrics().widthPixels;
-        int ivh =  h* ivw / w;
+        //Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.defaultpic);
+        //int w = bmp.getWidth();
+        //int h = bmp.getHeight();
+        int ivw = getResources().getDisplayMetrics().widthPixels-
+                llroot.getPaddingLeft() - llroot.getPaddingRight() - rl1.getPaddingLeft()- rl1.getPaddingRight() - iv1.getPaddingRight()-iv1.getPaddingLeft();
+        int ivh = ivw;
         layoutParams = new RelativeLayout.LayoutParams( ivw , ivh );
         iv1.setLayoutParams( layoutParams );
 
         imageWidth1 = ivw;
 
+        imageWidth2 = getResources().getDisplayMetrics().widthPixels;
+        imageWidth2 = imageWidth2 - llroot.getPaddingLeft()- llroot.getPaddingRight()- rl2.getPaddingLeft()-rl2.getPaddingRight();
+        imageWidth2 = imageWidth2/2;
 
-        imageWidth3 = imageWidth2 = getResources().getDisplayMetrics().widthPixels/2;
-        //int ivh2 = h * ivw2/w;
-        //layoutParams = new RelativeLayout.LayoutParams(ivw2,ivh2);
-        //iv2.setLayoutParams( layoutParams );
+        imageWidth3 = imageWidth2;
 
-        //layoutParams.height = 300;
-        //iv3.setLayoutParams(layoutParams);
+        layoutParams = new RelativeLayout.LayoutParams( imageWidth2 ,imageWidth2 );
+        iv2.setLayoutParams( layoutParams );
+
+        iv3.setLayoutParams(layoutParams);
 
         set_jiefenPic();
     }
@@ -329,16 +357,25 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
 
         set_JiFen_Style(tvJiFen3, R.id.listview_three_item_pic3, leftMargin, topMargin, rightMargin, bottomMargin);
 
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.defaultpic);
-        int w = bmp.getWidth();
-        int h = bmp.getHeight();
-        int ivw = getResources().getDisplayMetrics().widthPixels;
-        int ivh =  h* ivw / w;
+//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.defaultpic);
+//        int w = bmp.getWidth();
+//        int h = bmp.getHeight();
+        int ivw = getResources().getDisplayMetrics().widthPixels -
+                llroot.getPaddingLeft()- llroot.getPaddingRight() - rl1.getPaddingLeft()- rl1.getPaddingRight();
+        int ivh = ivw;
         layoutParams = new RelativeLayout.LayoutParams( ivw , ivh );
         iv1.setLayoutParams(layoutParams);
 
         imageWidth1 = ivw;
-        imageWidth2 = imageWidth3 = ivw /2;
+
+        imageWidth2 = getResources().getDisplayMetrics().widthPixels;
+        imageWidth2 = imageWidth2 - llroot.getPaddingLeft()- llroot.getPaddingRight() - rl2.getPaddingLeft()-rl2.getPaddingRight();
+        imageWidth2 = imageWidth2/2;
+
+        imageWidth3 = imageWidth2;
+        layoutParams = new RelativeLayout.LayoutParams( imageWidth2 , imageWidth2 );
+        iv2.setLayoutParams(layoutParams);
+        iv3.setLayoutParams(layoutParams);
 
         set_jiefenPic();
     }
@@ -370,6 +407,10 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
     private void setStyle_XIANGXILIEBIAO_KAPINGBUJU(){
          findViewById();
 
+        rl1.setBackgroundResource(R.drawable.gray_border_style);
+        rl2.setBackgroundResource(R.drawable.gray_border_style);
+        rl3.setBackgroundResource(R.drawable.gray_border_style);
+
         tvName1.setTextColor(Color.BLACK);
         tvName2.setTextColor(Color.BLACK);
         tvName3.setTextColor(Color.BLACK);
@@ -378,11 +419,12 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
 //        int w = bmp.getWidth();
 //        int h = bmp.getHeight();
         int ivw =getResources().getDisplayMetrics().widthPixels *2/5;
+        int ivh = ivw;
 //        int ivh =  h* ivw / w;
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams( ivw , ViewGroup.LayoutParams.WRAP_CONTENT );
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams( ivw , ivh );
         iv1.setLayoutParams(layoutParams);
-        //iv2.setLayoutParams(layoutParams);
-        //iv3.setLayoutParams(layoutParams);
+        iv2.setLayoutParams(layoutParams);
+        iv3.setLayoutParams(layoutParams);
 
         imageWidth1 = imageWidth2 = imageWidth3 = ivw;
 
@@ -393,6 +435,11 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
      */
     private void setStyle_XIANGXILIEBIAO_JIJIANBUJU(){
         findViewById();
+
+        rl1.setBackgroundResource(R.drawable.gray_border_style);
+        rl2.setBackgroundResource(R.drawable.gray_border_style);
+        rl3.setBackgroundResource(R.drawable.gray_border_style);
+
         tvLine1 = (TextView)findViewById(R.id.listview_three_item_line1);
         tvLine2 =(TextView) findViewById(R.id.listview_three_item_line2);
         tvLine3 =(TextView)findViewById(R.id.listview_three_item_line3);
@@ -405,7 +452,11 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         rl3.setBackgroundResource(0);
 
         imageWidth1 = imageWidth2 = imageWidth3 =getResources().getDisplayMetrics().widthPixels*2/5;
-        //int ivw = MyApplication.ScreenWidth*2/5;
+        int ivh = imageWidth1;
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams( imageWidth1 , ivh );
+        iv1.setLayoutParams(layoutParams);
+        iv2.setLayoutParams(layoutParams);
+        iv3.setLayoutParams(layoutParams);
 
         set_jiefenPic();
     }
@@ -483,5 +534,21 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
             String zPriceStr = CommonUtil.formatPrice(item.getPriceLevel());
             SpanningUtil.set_Price_Format1(tv, priceStr, zPriceStr, Color.RED , Color.GRAY);
         }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+//        int w1 = iv1.getMeasuredWidth();
+//        Log.e("a",String.valueOf(w1));
+//        int w2 = iv2.getMeasuredWidth();
+//        Log.e("a", String.valueOf(w2) );
+//        int w3 = iv3.getMeasuredHeight();
+//        Log.e("a", String.valueOf(w3) );
+
+//        CommonUtil.setSimpleDraweeViewWidthHeight( iv1 , w1 );
+//        CommonUtil.setSimpleDraweeViewWidthHeight( iv2 , w2 );
+//        CommonUtil.setSimpleDraweeViewWidthHeight( iv3 , w3 );
     }
 }

@@ -18,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.huotu.android.library.buyer.Jlibrary;
+import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.PageConfig;
 import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.partnermall.BaseApplication;
@@ -27,6 +28,7 @@ import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.MSiteModel;
+import com.huotu.partnermall.model.MerchantPayInfo;
 import com.huotu.partnermall.model.Native.FindIndexConfig;
 import com.huotu.partnermall.service.ApiService;
 import com.huotu.partnermall.service.ZRetrofitUtil;
@@ -36,16 +38,19 @@ import com.huotu.partnermall.ui.guide.GuideActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.BuyerSignUtil;
 import com.huotu.partnermall.utils.GsonRequest;
-import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.PreferenceHelper;
-import com.huotu.partnermall.utils.SignUtil;
+import com.huotu.android.library.buyer.utils.SignUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -75,7 +80,7 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
-        VolleyUtil.getRequestQueue().cancelAll(GsonRequest.TAG);
+        //VolleyUtil.getRequestQueue().cancelAll(GsonRequest.TAG);
     }
 
     @Override
@@ -95,11 +100,6 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
         Bitmap bitmap2 = ImageUtils.resizeImageByWidth ( bitmap , Constants.SCREEN_WIDTH );
         SystemTools.loadBackground( loading_root , new BitmapDrawable(getResources(), bitmap2));
 
-
-        //Test
-        //Intent intent = new Intent(this,NativeActivity.class);
-        //this.startActivity(intent);
-
         getInitData();
     }
 
@@ -111,7 +111,11 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
     }
 
     protected void getInitData() {
-        if (!canConnect()) return;
+        if (!canConnect()) {
+            loading_pbar.setVisibility(View.GONE);
+            loading_tryagain.setVisibility(View.VISIBLE);
+            return;
+        }
 
         getSiteUrl();
         //String hrefUrl = PreferenceHelper.readString( BaseApplication.single , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_SELF_HREF );
@@ -143,7 +147,7 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
     }
 
     /**
-     *
+     * 通过 api接口获得 商城首页的 组件配置信息
      */
     protected void getFindIndexConfigHref(){
         String url = NativeConstants.FINDINDEX_URL;
@@ -188,7 +192,7 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
                 url,
                 PageConfig.class,
                 headers,
-                new nativeCodeListener(LoadingActivity.this),
+                new nativeCodeListener(LoadingActivity.this , rootUrl ),
                 new findErrorListener(LoadingActivity.this)
         );
 
@@ -225,13 +229,18 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
             String selfhref = findIndexConfig.get_links().getSelf().getHref();
             PreferenceHelper.writeString(BaseApplication.single, NativeConstants.UI_CONFIG_FILE, NativeConstants.UI_CONFIG_SELF_HREF, selfhref);
 
-            ref.get().getIndexConfig();
+            //ref.get().getIndexConfig();
+            if(ref.get().startGuideUi()) return;
             //判断是否登录
-//            if (BaseApplication.single.isLogin()) {
-//                ActivityUtils.getInstance().skipActivity(ref.get(), NativeActivity.class);
-//            } else {
-//                ActivityUtils.getInstance().skipActivity(ref.get(), LoginActivity.class);
-//            }
+            if (BaseApplication.single.isLogin()) {
+                Bundle bd = new Bundle();
+                String url = selfhref;
+                bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
+                bd.putBoolean(NativeConstants.KEY_ISMAINUI, true);
+                ActivityUtils.getInstance().skipActivity(ref.get(), NativeActivity.class, bd);
+            } else {
+                ActivityUtils.getInstance().skipActivity(ref.get(), LoginActivity.class);
+            }
         }
     }
 
@@ -256,8 +265,10 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
 
     static class nativeCodeListener implements Response.Listener<PageConfig>{
         WeakReference<LoadingActivity> ref;
-        public nativeCodeListener(LoadingActivity act){
+        String smartuiconfigurl;
+        public nativeCodeListener(LoadingActivity act , String url ){
             ref =new WeakReference<>(act);
+            smartuiconfigurl = url;
         }
         @Override
         public void onResponse(PageConfig pageConfig ) {
@@ -276,15 +287,20 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
             if(ref.get().startGuideUi()) return;
             //判断是否登录
             if (BaseApplication.single.isLogin()) {
-                ActivityUtils.getInstance().skipActivity(ref.get(), NativeActivity.class);
+                Bundle bd = new Bundle();
+                String url = smartuiconfigurl;
+                bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
+                ActivityUtils.getInstance().skipActivity(ref.get(), NativeActivity.class, bd);
             } else {
                 ActivityUtils.getInstance().skipActivity(ref.get(), LoginActivity.class);
             }
         }
     }
 
+    /**
+     * 获取商家站点域名地址
+     */
     protected void getSiteUrl(){
-        //获取商家站点域名地址
         String rootUrl = Constants.getINTERFACE_PREFIX() + "mall/getmsiteurl";
         rootUrl += "?customerId=" + application.readMerchantId();
         AuthParamUtils paramUtil = new AuthParamUtils(application, System.currentTimeMillis(), rootUrl, LoadingActivity.this);
@@ -319,10 +335,66 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
                 return;
             }
 
-            BaseApplication.single.writeDomain( mSiteModel.getData().getMsiteUrl() );
+            BaseApplication.single.writeDomain(mSiteModel.getData().getMsiteUrl());
             Jlibrary.initSiteUrl( mSiteModel.getData().getMsiteUrl() );
-            ref.get().getFindIndexConfigHref();
+            //ref.get().getFindIndexConfigHref();
+            ref.get().getPayConfig();
         }
     }
 
+    /**
+     * 获取商户支付信息
+    */
+    protected void getPayConfig(){
+        ApiService apiService = ZRetrofitUtil.getInstance().create(ApiService.class);
+        String version = BaseApplication.getAppVersion(LoadingActivity.this);
+        String operation = Constants.OPERATION_CODE;
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String appid="";
+        String customerId = BaseApplication.single.readMerchantId();
+        try {
+            appid = URLEncoder.encode(Constants.getAPP_ID(), "UTF-8");
+        }catch (UnsupportedEncodingException ex){}
+
+        Map<String,String> map = new HashMap<>();
+        map.put("version", version);
+        map.put("operation",operation);
+        map.put("timestamp",timestamp);
+        map.put("appid",appid);
+        map.put("customerid",customerId);
+
+        String sign = BuyerSignUtil.getSign(map);
+        Call<MerchantPayInfo> call = apiService.payConfig(version , operation , timestamp ,appid , sign , customerId );
+        call.enqueue(new Callback<MerchantPayInfo>() {
+            @Override
+            public void onResponse(retrofit2.Response<MerchantPayInfo> response) {
+                if (response == null || response.code() != 200 || response.body() == null) {
+                    ToastUtils.showLongToast(LoadingActivity.this, "请求失败！");
+                    loading_pbar.setVisibility(View.GONE);
+                    loading_tryagain.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+                List<MerchantPayInfo.MerchantPayModel> merchantPays = response.body().getData();
+                if (!merchantPays.isEmpty()) {
+                    for (MerchantPayInfo.MerchantPayModel merchantPay : merchantPays) {
+                        if (400 == merchantPay.getPayType()) {
+                            //支付宝信息
+                            application.writeAlipay(merchantPay.getPartnerId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay());
+                        } else if (300 == merchantPay.getPayType()) {
+                            //微信支付
+                            application.writeWx(merchantPay.getPartnerId(), merchantPay.getAppId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay());
+                        }
+                    }
+                }
+
+                getFindIndexConfigHref();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Logger.e(t.getMessage());
+            }
+        });
+    }
 }

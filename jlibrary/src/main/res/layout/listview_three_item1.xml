@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:fresco="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/listview_three_item_root"
               android:orientation="vertical"
               android:padding="4dp"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/listview_three_item_rl1"
-        android:background="@drawable/gray_border_style"
         android:layout_width="match_parent"
         android:padding="2dp"
         android:layout_height="wrap_content">
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/listview_three_item_pic1"
-            fresco:placeholderImage ="@drawable/defaultpic"
             android:layout_width="80dp"
             android:layout_height="60dp"/>
         <TextView
@@ -44,14 +43,12 @@
         android:layout_height="wrap_content">
     <RelativeLayout
         android:id="@+id/listview_three_item_rl2"
-        android:background="@drawable/gray_border_style"
         android:layout_weight="1"
         android:padding="2dp"
         android:layout_marginRight="4dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content">
         <com.facebook.drawee.view.SimpleDraweeView
-            fresco:placeholderImage="@drawable/defaultpic"
             android:id="@+id/listview_three_item_pic2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -77,14 +74,12 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/listview_three_item_rl3"
-        android:background="@drawable/gray_border_style"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:padding="2dp"
         android:layout_height="wrap_content">
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/listview_three_item_pic3"
-            fresco:placeholderImage="@drawable/defaultpic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <TextView

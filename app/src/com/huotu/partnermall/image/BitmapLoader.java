@@ -12,7 +12,7 @@ import com.huotu.partnermall.widgets.NetworkImageViewCircle;
  * 
  * @类名称：BitmapLoader
  * @类描述：加载图片
- * @创建人：aaron
+ * @创建人：
  * @修改人：
  * @修改时间：2015年6月2日 上午9:26:12
  * @修改备注：

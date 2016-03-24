@@ -1,5 +1,7 @@
 package com.huotu.android.library.buyer.bean;
 
+import java.net.FileNameMap;
+
 /**
  *
  * Created by jinxiangdong on 2016/1/27.
@@ -95,10 +97,60 @@ public class Constant {
      * 底部导航栏图标的宽度
      */
     public final static int FOOTER_ICON_WIDTH = 25;
-
     /**
      * url地址中的参数 占位符
      */
     public final static String URL_PARAMETER_CUSTOMERID="{CustomerID}";
-
+    /**
+     * smart ui 页
+     */
+    public final static String URL_SMART_ASPX="smart.aspx";
+    /**
+     * 店铺首页
+     */
+    public final static String URL_SHOP_INDEX="index.aspx";
+    /**
+     * 分类页面
+     */
+    public final static String URL_CLASS_ASPX="mall/list.aspx";
+    /**
+     * 默认 分类 页面
+     */
+    public final static String URL_CAT_ASPX="mall/cat.aspx";
+    /**
+     * 搜索页面
+     */
+    public final static String URL_SEARCH_ASPX="mall/search.aspx";
+    /**
+     * 商品分类页面
+     */
+    public final static int PAGE_TYPE_1=1;
+    /**
+     * 虚拟分类页面
+     */
+    public final static int PAGE_TYPE_2=2;
+    /**
+     * 搜索页面
+     */
+    public final static int PAGE_TYPE_3=3;
+    /**
+     * 品牌页面
+     */
+    public final static int PAGE_TYPE_4=4;
+    /**
+     * 搜索页面类型
+     */
+    public final static int TYPE_2=-2;
+    /**
+     * 商品分类 类型
+     */
+    public final static int TYPE_1=-1;
+    /**
+     * 虚拟商品分类 类型
+     */
+    public final static int TYPE_3=-3;
+    /**
+     * 品牌类型
+     */
+    public final static int TYPE_4=-4;
 }

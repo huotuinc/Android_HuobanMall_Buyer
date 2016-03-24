@@ -2,6 +2,7 @@ package com.huotu.android.library.buyer.widget.GoodsWidget;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,6 +23,7 @@ import com.huotu.android.library.buyer.utils.FrescoDraweeController;
 import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.android.library.buyer.utils.RetrofitUtil;
 import com.huotu.android.library.buyer.utils.SignUtil;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
 import com.huotu.android.library.buyer.widget.SpanningUtil;
 import com.huotu.android.library.buyer.R;
 
@@ -39,7 +41,7 @@ import retrofit2.Response;
  * 商品布局 单方格 卡片样式
  * Created by jinxiangdong on 2016/1/31.
  */
-public class GoodsOneCardWidget extends LinearLayout {
+public class GoodsOneCardWidget extends BaseLinearLayout {
     private GoodsOneConfig goodsOneConfig;
     private SimpleDraweeView ivPic;
     private TextView tvName;
@@ -53,9 +55,7 @@ public class GoodsOneCardWidget extends LinearLayout {
         this.setOrientation(VERTICAL);
         this.goodsOneConfig = goodsOneConfig;
 
-
         asyncGetGoodsData();
-
     }
 
     private void create_card( GoodsBean good  ) {
@@ -102,13 +102,16 @@ public class GoodsOneCardWidget extends LinearLayout {
         tvJifen = new TextView( getContext() );
         tvJifen.setId( tvJifen.hashCode());
         layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM , ivPic.getId() );
+        layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, ivPic.getId());
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         tvJifen.setLayoutParams(layoutParams);
         //tvJifen.setTextColor(Color.BLACK);
         rlGoods.addView(tvJifen);
 
         this.addView(rlGoods);
+
+        rlGoods.setOnClickListener(this);
+        rlGoods.setTag(good);
 
         setStyle(good);
     }
@@ -165,7 +168,10 @@ public class GoodsOneCardWidget extends LinearLayout {
         tvJifen.setTextColor(Color.WHITE);
         rlGoods.addView(tvJifen);
 
-        this.addView(rlGoods );
+        this.addView(rlGoods);
+
+        rlGoods.setOnClickListener(this);
+        rlGoods.setTag(good);
 
         setStyle(good);
     }
@@ -199,10 +205,9 @@ public class GoodsOneCardWidget extends LinearLayout {
         tvJifen.setText( jifenStr +"积分" );
     }
 
-
     /**
      * 获得商品信息
-     * TODO
+     *
      */
     private void asyncGetGoodsData(){
         BizApiService apiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl).create( BizApiService.class );
@@ -249,4 +254,15 @@ public class GoodsOneCardWidget extends LinearLayout {
 //        }
     }
 
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+
+        if( v.getTag()!=null && v.getTag() instanceof GoodsBean){
+            GoodsBean bean = (GoodsBean)v.getTag();
+            String url = bean.getDetailUrl();
+            String name = bean.getGoodName();
+            CommonUtil.link(name , url );
+        }
+    }
 }

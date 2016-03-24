@@ -15,8 +15,10 @@ import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.FooterBean.FooterImageBean;
 import com.huotu.android.library.buyer.bean.FooterBean.FooterOneConfig;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,7 +26,7 @@ import org.greenrobot.eventbus.EventBus;
  * 底部导航组件
  * Created by jinxiangdong on 2016/1/22.
  */
-public class FooterOneWidget extends LinearLayout implements View.OnClickListener{
+public class FooterOneWidget extends BaseLinearLayout {
     private FooterOneConfig footerOneConfig;
 
     public FooterOneWidget(Context context , FooterOneConfig footerOneConfig) {
@@ -46,7 +48,7 @@ public class FooterOneWidget extends LinearLayout implements View.OnClickListene
         llContainer.setOrientation(HORIZONTAL);
         layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         llContainer.setLayoutParams(layoutParams);
-        llContainer.setBackgroundColor(Color.parseColor(footerOneConfig.getBackgroundColor()));
+        llContainer.setBackgroundColor(CommonUtil.parseColor(footerOneConfig.getBackgroundColor()));
         int topMargion = DensityUtils.dip2px(getContext(), footerOneConfig.getTopMargion());
         int bottomMargion = DensityUtils.dip2px(getContext(),footerOneConfig.getBottomMargion());
         llContainer.setPadding(0, topMargion, 0, bottomMargion);
@@ -78,7 +80,7 @@ public class FooterOneWidget extends LinearLayout implements View.OnClickListene
             layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
             tv.setLayoutParams(layoutParams);
             tv.setText(item.getName());
-            tv.setTextColor(Color.parseColor( footerOneConfig.getFontColor() ) );
+            tv.setTextColor(CommonUtil.parseColor( footerOneConfig.getFontColor() ) );
             ll.addView(tv);
 
             llContainer.addView(ll);
@@ -90,9 +92,14 @@ public class FooterOneWidget extends LinearLayout implements View.OnClickListene
         for( FooterImageBean item : footerOneConfig.getRows()) {
             if (v.getId() == item.hashCode()) {
                 Toast.makeText(getContext(), item.getName(), Toast.LENGTH_LONG).show();
-                String url = Variable.siteUrl + item.getLinkUrl();
+                String url = item.getLinkUrl();
                 url = url.replace( Constant.URL_PARAMETER_CUSTOMERID , String.valueOf( Variable.CustomerId ));
-                EventBus.getDefault().post(new LinkEvent( item.getName() , url ));
+                //EventBus.getDefault().post(new LinkEvent( item.getName() , url ));
+
+                //url = url.replace("{QQ}","http://wpa.qq.com/msgrd?v=3&uin=3054706711&site=qq&menu=yes");
+
+                String name = item.getName();
+                CommonUtil.link( name , url );
                 break;
             }
         }

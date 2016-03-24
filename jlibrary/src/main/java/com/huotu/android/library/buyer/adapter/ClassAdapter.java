@@ -69,8 +69,8 @@ public class ClassAdapter extends BaseAdapter implements CompoundButton.OnChecke
         }
         CheckBox ckb = ViewHolderUtil.get(convertView, R.id.layout_filter_item_name);
         ckb.setText(data.get(position).getCatName());
-        ckb.setOnCheckedChangeListener(this);
-
+        //ckb.setOnCheckedChangeListener(this);
+        ckb.setChecked( data.get(position).isChecked() );
         return convertView;
     }
 
