@@ -11,6 +11,8 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
+import android.provider.Telephony;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,58 +25,98 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.huotu.android.library.buyer.BizApiService;
 import com.huotu.android.library.buyer.R;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.huotu.android.library.buyer.bean.BizBean.BizBaseBean;
+import com.huotu.android.library.buyer.bean.BizBean.GoodsBean;
+import com.huotu.android.library.buyer.bean.BizBean.GoodsListBean;
 import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.Data.GroupGoodsBean;
+import com.huotu.android.library.buyer.bean.Data.LoadCompleteEvent;
 import com.huotu.android.library.buyer.bean.GroupBean.GoodsGroupConfig;
 import com.huotu.android.library.buyer.bean.GroupBean.GroupBean;
+import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+import com.huotu.android.library.buyer.utils.Logger;
+import com.huotu.android.library.buyer.utils.RetrofitUtil;
+import com.huotu.android.library.buyer.utils.SignUtil;
 import com.huotu.android.library.buyer.widget.SpanningUtil;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
  * 商品分组组件
  * Created by Administrator on 2016/2/19.
  */
-public class GoodsGroupWidget extends LinearLayout implements View.OnClickListener{
+public class GoodsGroupWidget extends LinearLayout implements View.OnClickListener {
     private GoodsGroupConfig config;
     private ScrollView leftScrollView;
     private LinearLayout leftMenu;
     private ScrollView rightScrollView;
     private LinearLayoutCompat rightMenu;
-    private List<GroupGoodsBean> goods;
+    private List<GoodsBean> goods;
     private LayoutInflater layoutInflater;
     private int MsgCode = 100;
     private TextView currentView;
     private int scrollCount = 0;
     private ProgressDialog progressDialog;
+    private LinearLayout llSpace;
+    private int leftWidth;
+    private int rightWidth;
+    private int spaceWidth;
 
-    public GoodsGroupWidget(Context context , GoodsGroupConfig config ){
+    public GoodsGroupWidget(Context context, GoodsGroupConfig config) {
         super(context);
 
         this.setOrientation(HORIZONTAL);
+        this.setBackgroundColor(Color.WHITE);
         this.layoutInflater = LayoutInflater.from(getContext());
+
+        spaceWidth = DensityUtils.px2sp(getContext(), 1);
+        int screenWidth = DensityUtils.getScreenW(getContext());
+        leftWidth = (screenWidth - spaceWidth)/3;
+        rightWidth = screenWidth - spaceWidth - leftWidth;
 
         this.config = config;
 
         createLeftMenu();
+
+        createSpace();
+
         createRightMenu();
 
         asyncRequestData();
     }
 
-    protected void createRightMenu(){
+    protected void createSpace(){
+        llSpace = new LinearLayout(getContext());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( spaceWidth , LayoutParams.MATCH_PARENT);
+        llSpace.setLayoutParams(layoutParams);
+        llSpace.setBackgroundResource(R.color.lightgraywhite);
+        this.addView(llSpace);
+    }
+
+    protected void createRightMenu() {
         rightScrollView = new ScrollView(getContext());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( rightWidth , ViewGroup.LayoutParams.WRAP_CONTENT);
         rightScrollView.setLayoutParams(layoutParams);
         this.addView(rightScrollView);
 
         rightMenu = new LinearLayoutCompat(getContext());
-        FrameLayout.LayoutParams flayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT );
+        FrameLayout.LayoutParams flayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rightMenu.setLayoutParams(flayoutParams);
         rightMenu.setBackgroundResource(R.color.lightgraywhite);
         rightMenu.setOrientation(LinearLayoutCompat.VERTICAL);
@@ -118,69 +160,70 @@ public class GoodsGroupWidget extends LinearLayout implements View.OnClickListen
         });
     }
 
-    protected void scrollPrevious(){
-        if(currentView==null)return;
-        if(config.getGroups()==null||config.getGroups().size()<1) return;
+    protected void scrollPrevious() {
+        if (currentView == null) return;
+        if (config.getGroups() == null || config.getGroups().size() < 1) return;
         GroupBean group = (GroupBean) currentView.getTag();
-        if(group==null) return;
+        if (group == null) return;
 
         int idx = config.getGroups().indexOf(group);
-        if(idx<0)return;
-        if(idx==0) return;
+        if (idx < 0) return;
+        if (idx == 0) return;
 
-        idx = idx-1;
+        idx = idx - 1;
         group = config.getGroups().get(idx);
         View view = leftMenu.findViewWithTag(group);
-        if(view==null)return;
-        view.performClick();
-
-        scrollToView(view);
-    }
-    protected void scrollNext(){
-        if(currentView==null)return;
-        if(config.getGroups()==null||config.getGroups().size()<1) return;
-        GroupBean group = (GroupBean) currentView.getTag();
-        if(group==null) return;
-
-        int idx = config.getGroups().indexOf(group);
-        if(idx<0)return;
-        idx +=1;
-        if( idx >= config.getGroups().size() ) return;
-
-        group = config.getGroups().get(idx);
-        View view = leftMenu.findViewWithTag(group);
-        if(view==null)return;
+        if (view == null) return;
         view.performClick();
 
         scrollToView(view);
     }
 
-    protected void scrollToView(final View view){
-        Rect scrollRect=new Rect();
+    protected void scrollNext() {
+        if (currentView == null) return;
+        if (config.getGroups() == null || config.getGroups().size() < 1) return;
+        GroupBean group = (GroupBean) currentView.getTag();
+        if (group == null) return;
+
+        int idx = config.getGroups().indexOf(group);
+        if (idx < 0) return;
+        idx += 1;
+        if (idx >= config.getGroups().size()) return;
+
+        group = config.getGroups().get(idx);
+        View view = leftMenu.findViewWithTag(group);
+        if (view == null) return;
+        view.performClick();
+
+        scrollToView(view);
+    }
+
+    protected void scrollToView(final View view) {
+        Rect scrollRect = new Rect();
         leftScrollView.getHitRect(scrollRect);
         //判断view是否在scrollview可见范围内
-        if(!view.getLocalVisibleRect(scrollRect)){
+        if (!view.getLocalVisibleRect(scrollRect)) {
 
             leftScrollView.post(new Runnable() {
                 @Override
                 public void run() {
-                    int[] loca1= new int[2];
+                    int[] loca1 = new int[2];
                     view.getLocationOnScreen(loca1);
                     int[] loca2 = new int[2];
                     view.getLocationInWindow(loca2);
                     Log.i("tt", loca1[0] + " " + loca1[1]);
-                    Log.i("tt",loca2[0]+" "+loca2[1]);
-                    Log.i("tt", ""+ view.getTop());
-                    int offset = loca1[1]-leftScrollView.getMeasuredHeight();
-                    int offset2 = (int)view.getTop() -leftScrollView.getMeasuredHeight();
-                    if( offset2<0){
-                        offset2=0;
-                    }else {
+                    Log.i("tt", loca2[0] + " " + loca2[1]);
+                    Log.i("tt", "" + view.getTop());
+                    int offset = loca1[1] - leftScrollView.getMeasuredHeight();
+                    int offset2 = (int) view.getTop() - leftScrollView.getMeasuredHeight();
+                    if (offset2 < 0) {
+                        offset2 = 0;
+                    } else {
                         offset2 += view.getPaddingTop();
                         offset2 += view.getMeasuredHeight();
                     }
                     int theight = leftScrollView.getChildAt(0).getMeasuredHeight();
-                    if( offset2> theight ){
+                    if (offset2 > theight) {
                         offset2 = theight;
                     }
                     leftScrollView.smoothScrollTo(0, offset2);
@@ -189,31 +232,33 @@ public class GoodsGroupWidget extends LinearLayout implements View.OnClickListen
         }
     }
 
-    protected void createLeftMenu(){
-        if( config.getGroups()==null||config.getGroups().size()<1)return;
+    protected void createLeftMenu() {
+        if (config.getGroups() == null || config.getGroups().size() < 1) return;
 
         leftScrollView = new ScrollView(getContext());
         leftScrollView.setVerticalScrollBarEnabled(false);
         leftScrollView.setHorizontalScrollBarEnabled(false);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( leftWidth , LayoutParams.MATCH_PARENT);
         leftScrollView.setLayoutParams(layoutParams);
         this.addView(leftScrollView);
-        int leftpadding = DensityUtils.dip2px(getContext(), 5);
-        int toppadding = DensityUtils.dip2px(getContext(),8);
+        int leftpadding = DensityUtils.dip2px(getContext(), 8);
+        int toppadding = DensityUtils.dip2px(getContext(), 8);
+        int rightMargion = DensityUtils.dip2px(getContext(), 1);
         leftMenu = new LinearLayout(getContext());
-        FrameLayout.LayoutParams flayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams flayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        //flayoutParams.setMargins(0,0,rightMargion,0);
         leftMenu.setLayoutParams(flayoutParams);
         leftMenu.setOrientation(VERTICAL);
-        //leftMenu.setPadding(leftpadding, toppadding, leftpadding, toppadding);
+
         leftScrollView.addView(leftMenu);
 
-        //StateListDrawable style = getMenuStyle();
-        for(GroupBean bean:config.getGroups()){
+        for (GroupBean bean : config.getGroups()) {
             TextView menu = new TextView(getContext());
-            menu.setId( menu.hashCode() );
+            menu.setId(menu.hashCode());
             leftMenu.addView(menu);
             layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            layoutParams.setMargins(0, toppadding, 0, toppadding);
+            //layoutParams.setMargins(0, toppadding, 0, toppadding);
+            //menu.setPadding(0,toppadding,0,toppadding);
             menu.setLayoutParams(layoutParams);
             menu.setText(bean.getName());
             menu.setTextColor(Color.BLACK);
@@ -226,56 +271,58 @@ public class GoodsGroupWidget extends LinearLayout implements View.OnClickListen
             menu.setPadding(leftpadding, toppadding, leftpadding, toppadding);
 
             TextView space = new TextView(getContext());
-            int heightPx = DensityUtils.dip2px(getContext(),1);
-            layoutParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,heightPx);
+            int heightPx = DensityUtils.dip2px(getContext(), 1);
+            layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
             space.setBackgroundResource(R.color.lightgraywhite);
             space.setLayoutParams(layoutParams);
             leftMenu.addView(space);
         }
     }
 
-    protected StateListDrawable getMenuStyle(){
-        StateListDrawable stateListDrawable =new StateListDrawable();
-        int[] selectedState = new int[]{android.R.attr.state_selected , android.R.attr.state_pressed };
-        int[] normaledState =new int[]{-android.R.attr.state_selected};
+    protected StateListDrawable getMenuStyle() {
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        int[] selectedState = new int[]{android.R.attr.state_selected, android.R.attr.state_pressed};
+        int[] normaledState = new int[]{-android.R.attr.state_selected};
 
-        RoundRectShape roundRectShape1 = new RoundRectShape(null, null,null );
-        ShapeDrawable shapeDrawable1 = new ShapeDrawable( roundRectShape1);
+        RoundRectShape roundRectShape1 = new RoundRectShape(null, null, null);
+        ShapeDrawable shapeDrawable1 = new ShapeDrawable(roundRectShape1);
         shapeDrawable1.getPaint().setColor(Color.WHITE);
 
-        RectF inset=new RectF(10f,0f,0f,0f);
-        float[] outR = new float[]{0f,0f,0f,0f,0f,0f,0f,0f};
-        RoundRectShape roundRectShape2 = new RoundRectShape( outR, inset , null);
+        RectF inset = new RectF(10f, 0f, 0f, 0f);
+        float[] outR = new float[]{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+        RoundRectShape roundRectShape2 = new RoundRectShape(outR, inset, null);
         ShapeDrawable shapeDrawable2 = new ShapeDrawable(roundRectShape2);
         shapeDrawable2.getPaint().setColor(getResources().getColor(R.color.green));
         shapeDrawable2.getPaint().setStyle(Paint.Style.STROKE);
         shapeDrawable2.getPaint().setStrokeWidth(2);
 
-        RectF inset2=new RectF(5f,0f,0f,0f);
+        RectF inset2 = new RectF(5f, 0f, 0f, 0f);
         RoundRectShape roundRectShape3 = new RoundRectShape(outR, inset2, outR);
         ShapeDrawable shapeDrawable3 = new ShapeDrawable(roundRectShape3);
         shapeDrawable3.getPaint().setStyle(Paint.Style.FILL);
         shapeDrawable3.getPaint().setColor(Color.WHITE);
-        Drawable[] drawables=new Drawable[]{shapeDrawable2,shapeDrawable3};
-        LayerDrawable layerDrawable = new LayerDrawable( drawables );
+        Drawable[] drawables = new Drawable[]{shapeDrawable2, shapeDrawable3};
+        LayerDrawable layerDrawable = new LayerDrawable(drawables);
 
 
         stateListDrawable.addState(normaledState, shapeDrawable1);
         stateListDrawable.addState(selectedState, shapeDrawable2);
 
-        return  stateListDrawable;
+        return stateListDrawable;
     }
 
-    protected void createGoodsLayout( GroupBean group , List<GroupGoodsBean> goods ){
+    protected void createGoodsLayout(GroupBean group, List<GoodsBean> goods) {
         rightMenu.removeAllViews();
-        if( goods ==null|| goods.size()<1) return;
+        if (goods == null || goods.size() < 1) return;
         int rightMargionPx = DensityUtils.dip2px(getContext(), 4);
-        int topMargionPx = DensityUtils.dip2px(getContext(),4);
+        int topMargionPx = DensityUtils.dip2px(getContext(), 4);
         RelativeLayout rlGroup = new RelativeLayout(getContext());
         TextView tvMore = new TextView(getContext());
         int tvmoreid = tvMore.hashCode();
         tvMore.setId(tvmoreid);
-        tvMore.setText("更多");
+        tvMore.setText(" 更多 ");
+        tvMore.setTag(group.getId());
+        tvMore.setOnClickListener(this);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         layoutParams.setMargins(rightMargionPx, topMargionPx, rightMargionPx, topMargionPx);
@@ -296,74 +343,84 @@ public class GoodsGroupWidget extends LinearLayout implements View.OnClickListen
 
         rightMenu.addView(rlGroup);
 
-        if( config.getGoods_layout().equals(Constant.LAYER_STYLE_CARD)) {
-            create_card( rightMenu  );
-        }else if(config.getGoods_layout().equals(Constant.LAYER_STYLE_NORMAL)){
+        if (config.getGoods_layout().equals(Constant.LAYER_STYLE_CARD)) {
+            create_card(rightMenu);
+        } else if (config.getGoods_layout().equals(Constant.LAYER_STYLE_NORMAL)) {
             create_normal();
         }
     }
 
-    private void create_normal(){
-        int imageWidth = DensityUtils.dip2px( getContext() ,80);
+    private void create_normal() {
+        int imageWidth = DensityUtils.dip2px(getContext(), 80);
 
         int count = goods.size();
-        int lineCount = count/3;
-        int margion = DensityUtils.dip2px(getContext(),4);
+        int lineCount = count / 3;
+        int margion = DensityUtils.dip2px(getContext(), 4);
 
-        lineCount += count %3 > 0 ? 1:0;
-        for(int i=0;i<lineCount;i++) {
+        //int imageWidth = ( rightWidth - 3 * margion*2)/2;
+
+        lineCount += count % 3 > 0 ? 1 : 0;
+        for (int i = 0; i < lineCount; i++) {
             LinearLayout lineView = new LinearLayout(getContext());
             lineView.setOrientation(HORIZONTAL);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lineView.setLayoutParams(layoutParams);
             rightMenu.addView(lineView);
 
-            for(int k = 0;k<3;k++) {
+            for (int k = 0; k < 3; k++) {
                 int idx = i * 3 + k;
-                if( idx >= count ) {
+                if (idx >= count) {
                     View emptyView = layoutInflater.inflate(R.layout.group_goods_normal_item, rightMenu, false);
-                    layoutParams= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,1.0f);
+                    layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0f);
                     layoutParams.setMargins(margion, margion, margion, margion);
                     emptyView.setLayoutParams(layoutParams);
                     emptyView.setBackgroundResource(R.color.transparent);
                     lineView.addView(emptyView);
                     continue;
                 }
-                GroupGoodsBean bean = goods.get(idx);
+
+                GoodsBean bean = goods.get(idx);
 
                 View view = layoutInflater.inflate(R.layout.group_goods_normal_item, rightMenu, false);
-                layoutParams= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1.0f);
-                layoutParams.setMargins(margion,margion,margion,margion);
+                layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+                layoutParams.setMargins(margion, margion, margion, margion);
                 view.setLayoutParams(layoutParams);
 
+                LinearLayout ll = (LinearLayout) view.findViewById(R.id.group_goods_normal_item_ll);
+                ll.setOnClickListener(this);
+                ll.setTag(bean);
                 TextView tvName = (TextView) view.findViewById(R.id.group_goods_normal_item_name);
                 SimpleDraweeView ivPic = (SimpleDraweeView) view.findViewById(R.id.group_goods_normal_item_pic);
-                tvName.setText(bean.getGoodname());
-                FrescoDraweeController.loadImage(ivPic, imageWidth, bean.getImageUrl());
+                tvName.setText(bean.getGoodName());
+                FrescoDraweeController.loadImage(ivPic, imageWidth, bean.getThumbnailPic());
                 lineView.addView(view);
             }
         }
     }
 
-    private void create_card( LinearLayoutCompat rightMenu  ){
+    private void create_card(LinearLayoutCompat rightMenu) {
+        int imageWidth = DensityUtils.dip2px(getContext(), 80);
 
-        int imageWidth = DensityUtils.dip2px( getContext() ,80);
-
-        for(GroupGoodsBean bean : goods ){
-            View view = layoutInflater.inflate(R.layout.group_goods_card_item, rightMenu , false );
-            TextView tvName = (TextView)view.findViewById(R.id.group_goods_card_goodname);
-            SimpleDraweeView ivPic = (SimpleDraweeView)view.findViewById(R.id.group_goods_card_pic);
-            TextView tvPrice = (TextView)view.findViewById(R.id.group_goods_card_price);
+        for (GoodsBean bean : goods) {
+            View view = layoutInflater.inflate(R.layout.group_goods_card_item, rightMenu, false);
+            TextView tvName = (TextView) view.findViewById(R.id.group_goods_card_goodname);
+            SimpleDraweeView ivPic = (SimpleDraweeView) view.findViewById(R.id.group_goods_card_pic);
+            TextView tvPrice = (TextView) view.findViewById(R.id.group_goods_card_price);
             TextView tvJifen = (TextView) view.findViewById(R.id.group_goods_card_jifen);
+            RelativeLayout rl = (RelativeLayout)view.findViewById(R.id.group_goods_card_rl);
+            rl.setOnClickListener(this);
+            rl.setTag(bean);
 
-            tvName.setText(bean.getGoodname());
-            if( config.getProduct_userInteger().equals(Constant.GOODS_SHOW) ){
-                tvJifen.setText( bean.getJifen() );
+            tvName.setText(bean.getGoodName());
+            if (config.getProduct_userInteger().equals(Constant.GOODS_SHOW)) {
+                tvJifen.setText(CommonUtil.formatJiFen(bean.getScore()) + "积分");
             }
 
-            SpanningUtil.set_Price_Format1(tvPrice, bean.getPrice(), bean.getZprice(), Color.RED, Color.GRAY);
+            String price = CommonUtil.formatDouble(bean.getPrice());
+            String zPrice = CommonUtil.formatPrice(bean.getPriceLevel());
+            SpanningUtil.set_Price_Format1(tvPrice, price, zPrice, Color.RED, Color.GRAY);
 
-            FrescoDraweeController.loadImage(ivPic, imageWidth, bean.getImageUrl());
+            FrescoDraweeController.loadImage(ivPic, imageWidth, bean.getThumbnailPic());
 
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             view.setLayoutParams(layoutParams);
@@ -375,75 +432,87 @@ public class GoodsGroupWidget extends LinearLayout implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if(currentView != null){
-            if( currentView.getId()== v.getId()) return;
-            currentView.setTextColor( Color.BLACK );
-        }
+        if( v instanceof  TextView && v.getTag() !=null && v.getTag() instanceof  GroupBean ) {
+            if (currentView != null) {
+                if (currentView.getId() == v.getId()) return;
+                currentView.setTextColor(Color.BLACK);
+                currentView.setBackgroundResource(R.color.white);
+            }
 
-        currentView =  (TextView)v;
-        currentView.setTextColor( getResources().getColor(R.color.orangered) );
-        if( currentView.getTag()==null )return;
-        if( currentView.getTag() instanceof GroupBean) {
-            GroupBean group = (GroupBean) currentView.getTag();
-
-            //showProgress();
-
-            asyncRequestData(group);
+            currentView = (TextView) v;
+            currentView.setTextColor(getResources().getColor(R.color.orangered));
+            currentView.setBackgroundResource(R.color.lightgraywhite);
+            if (currentView.getTag() == null) return;
+            if (currentView.getTag() instanceof GroupBean) {
+                GroupBean group = (GroupBean) currentView.getTag();
+                asyncRequestData(group);
+            }
+        }else if( v instanceof LinearLayout || v instanceof RelativeLayout){
+            if(v.getTag()!=null && v.getTag() instanceof GoodsBean){
+                GoodsBean bean = (GoodsBean)v.getTag();
+                CommonUtil.link( bean.getGoodName(), bean.getDetailUrl() );
+            }
+        }else if( v instanceof TextView && v.getTag()!=null && v.getTag() instanceof Integer ){
+            int catid = (int)v.getTag();
+            String url = String.format("/%s?customerid=%d&cateid=%d", Constant.URL_CLASS_ASPX , Variable.CustomerId, catid);
+            CommonUtil.link("",url);
         }
     }
 
-    protected void asyncRequestData(){
-        if( leftMenu.getChildCount()<0)return;
+    protected void asyncRequestData() {
+        if (leftMenu == null || leftMenu.getChildCount() < 0) return;
         View view = leftMenu.getChildAt(0);
-        if(view instanceof TextView) {
+        if (view instanceof TextView) {
             //currentView = (TextView)view;
             view.performClick();
         }
     }
 
-//    protected void showProgress(){
-//        if(progressDialog==null){
-//            progressDialog=new ProgressDialog(getContext());
-//            progressDialog.setMessage("正在加载数据,请稍等...");
-//        }
-//        progressDialog.show();
-//    }
-//    protected void closeProgress(){
-//        if(progressDialog!=null){
-//            progressDialog.dismiss();
-//            progressDialog=null;
-//        }
-//    }
+    protected void asyncRequestData(final GroupBean group) {
+        if (group == null) return;
 
-    protected void asyncRequestData( GroupBean group ) {
-        if( group==null)return;
+        BizApiService apiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl).create(BizApiService.class);
+        String key = Variable.BizKey;
+        String random = String.valueOf(System.currentTimeMillis());
+        String secure = SignUtil.getSecure(Variable.BizKey, Variable.BizAppSecure, random);
+        int customerid = Variable.CustomerId;
+        int userlevelid = Variable.userLevelId;
+        int catid = group.getId();
+        String sortRule = "0:desc";
+        String filter = "";
+        String searchKey = "";
+        int pIndex = 1;
+        int pageSize = group.getCount();
 
-        goods = new ArrayList<>();
-        for (int i = 0; i <20; i++) {
-            GroupGoodsBean good = new GroupGoodsBean();
-            good.setGoodid(i);
-            good.setGoodname(group.getName() + String.valueOf(i));
-            good.setJifen(String.valueOf(i) + "积分");
-            if( i%6 ==0 ) {
-                good.setImageUrl("http://m.olquan.cn/resource/images/wechat/4471/mall/pic20151130173342.jpg");
-            }else if(i%6==1){
-                good.setImageUrl("http://m.olquan.cn/resource/images/wechat/4471/mall/pic20151130175304.jpg");
-            }else if(i%6==2){
-                good.setImageUrl("http://m.olquan.cn/resource/images/wechat/4471/mall/pic20151130181553.jpg");
-            }else if(i%6==3){
-                good.setImageUrl("http://m.olquan.cn/resource/images/wechat/4471/mall/pic20151130175614.jpg");
-            }else if(i%6==4){
-                good.setImageUrl("http://m.olquan.cn/resource/images/wechat/4471/mall/pic20151130174749.jpg");
-            }else if(i%6==5){
-                good.setImageUrl("http://m.olquan.cn/resource/images/wechat/4471/mall/pic20151130175413.jpg");
+        Call<BizBaseBean<GoodsListBean>> call = apiService.getGoodsList(
+                key, random, secure, customerid, catid, userlevelid, sortRule, searchKey, filter, pIndex, pageSize
+        );
+
+        call.enqueue(new Callback<BizBaseBean<GoodsListBean>>() {
+            @Override
+            public void onResponse(Response<BizBaseBean<GoodsListBean>> response) {
+                if (response == null || response.code() != Constant.REQUEST_SUCCESS
+                        || response.body() == null || response.body().getData() == null || response.body().getData().getGoods() == null) {
+                    Logger.e(response.message());
+                    Toast.makeText(getContext(), response.message(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (goods == null) {
+                    goods = new ArrayList<>();
+                } else {
+                    goods.clear();
+                }
+
+                goods.addAll(response.body().getData().getGoods());
+
+                createGoodsLayout(group, goods);
             }
-            good.setPrice("233.00");
-            good.setZprice("192.03");
-            goods.add(good);
-        }
 
-        createGoodsLayout(group, goods);
-
-        //closeProgress();
+            @Override
+            public void onFailure(Throwable t) {
+                Logger.e(t.getMessage());
+            }
+        });
     }
 }

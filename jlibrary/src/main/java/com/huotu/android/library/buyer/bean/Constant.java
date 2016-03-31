@@ -1,7 +1,5 @@
 package com.huotu.android.library.buyer.bean;
 
-import java.net.FileNameMap;
-
 /**
  *
  * Created by jinxiangdong on 2016/1/27.
@@ -102,6 +100,10 @@ public class Constant {
      */
     public final static String URL_PARAMETER_CUSTOMERID="{CustomerID}";
     /**
+     * URL地址中的参数 占位符
+     */
+    public final static String URL_PARAMETER_QQ ="{QQ}";
+    /**
      * smart ui 页
      */
     public final static String URL_SMART_ASPX="smart.aspx";
@@ -153,4 +155,6 @@ public class Constant {
      * 品牌类型
      */
     public final static int TYPE_4=-4;
+
+
 }

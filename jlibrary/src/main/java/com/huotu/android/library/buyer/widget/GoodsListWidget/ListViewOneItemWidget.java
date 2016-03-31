@@ -55,6 +55,7 @@ public class ListViewOneItemWidget extends BaseLinearLayoutWidget implements Vie
         pic1 = (SimpleDraweeView)findViewById(R.id.listview_one_item1_pic1);
         CommonUtil.setSimpleDraweeViewWidthHeight(pic1, this.itemWidth);
         tvName1 =  (TextView)findViewById(R.id.listview_one_item1_name1);
+        tvName1.setMaxLines(2);
         tvPrice1 =  (TextView)findViewById(R.id.listview_one_item1_price1);
         tvJiFen1 =  (TextView)findViewById(R.id.listview_one_item1_jifen1);
         jifenPic1 = (SimpleDraweeView) findViewById(R.id.listview_one_item1_jifenpic1);

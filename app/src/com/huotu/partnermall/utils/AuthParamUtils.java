@@ -69,22 +69,27 @@ public class AuthParamUtils {
                 }
 
                 //添加额外固定参数
-                paramMap.put ( "version", application.getAppVersion ( context ) );
-                paramMap.put ( "operation", Constants.OPERATION_CODE );
-                paramMap.put ( "buserId", application.readUserId ( ) );
+                paramMap.put("version", application.getAppVersion(context));
+                paramMap.put("operation", Constants.OPERATION_CODE);
+                paramMap.put("buserId", application.readUserId());
                 //1、timestamp
-                paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ),
-                                                                "UTF-8" ) );
+                paramMap.put("timestamp", URLEncoder.encode(String.valueOf(timestamp),
+                        "UTF-8"));
                 //appid
-                paramMap.put ( "appid", URLEncoder.encode ( Constants.getAPP_ID() , "UTF-8" ));
+                paramMap.put("appid", URLEncoder.encode(Constants.getAPP_ID(), "UTF-8"));
                 //unionid
-                paramMap.put ( "unionid", URLEncoder.encode ( application.readUserUnionId ( ), "UTF-8" ) );
+                paramMap.put("unionid", URLEncoder.encode(application.readUserUnionId(), "UTF-8"));
 
                 //生成sigin
-                paramMap.put ( "sign", getSign ( paramMap ) );
+                paramMap.put("sign", getSign(paramMap));
 
                 builder.append ( url );
-                builder.append ( "&timestamp=" + paramMap.get ( "timestamp" ) );
+                if(TextUtils.isEmpty( params )) {
+                    builder.append("?");
+                }else {
+                    builder.append("&");
+                }
+                builder.append ( "timestamp=" + paramMap.get ( "timestamp" ) );
                 builder.append ( "&appid="+paramMap.get ( "appid" ) );
                 builder.append ( "&unionid="+paramMap.get ( "unionid" ) );
                 builder.append ( "&sign="+paramMap.get ( "sign" ) );

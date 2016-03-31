@@ -10,9 +10,11 @@ import android.view.Gravity;
 import android.webkit.WebView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.config.NativeConstants;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.ui.WebViewActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
+import com.huotu.partnermall.ui.nativeui.NativeActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
@@ -44,6 +46,11 @@ public class UrlFilterUtils {
      */
     public boolean shouldOverrideUrlBySFriend ( WebView view, String url ) {
         if( ref.get() ==null) return false;
+
+        String indexUrl = BaseApplication.single.obtainMerchantUrl().toLowerCase().trim();
+        indexUrl = indexUrl.endsWith("/")? indexUrl : indexUrl+"/";
+        String url2 = url.toLowerCase();
+        url2 = url2.endsWith("/") ? url2:url2+"/";
 
         if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
             String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
@@ -143,10 +150,13 @@ public class UrlFilterUtils {
             //清除登录信息
             application.logout ();
             //跳转到登录界面
-            ActivityUtils.getInstance ().skipActivity ( ref.get() , LoginActivity.class );
+            ActivityUtils.getInstance ().skipActivity(ref.get(), LoginActivity.class);
         }
-        else
-        {
+        else if( url.contains( "/"+ NativeConstants.CUSTOMERID()+"/Index.aspx" )){
+            ActivityUtils.getInstance().showActivity(ref.get(), NativeActivity.class);
+        }else if( url2.equals(indexUrl ) ){
+            ActivityUtils.getInstance().showActivity(ref.get(), NativeActivity.class);
+        }else{
             //跳转到新界面
             view.loadUrl(url);
             return false;

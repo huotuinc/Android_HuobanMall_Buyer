@@ -17,12 +17,12 @@
             android:layout_height="60dp"/>
         <TextView
             android:id="@+id/listview_three_item_name1"
-            android:text="此处显示商品名称"
+            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/listview_three_item_price1"
-            android:text="￥200"
+            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <com.facebook.drawee.view.SimpleDraweeView
@@ -54,12 +54,12 @@
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/listview_three_item_name2"
-            android:text="此处显示商品名称"
+            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/listview_three_item_price2"
-            android:text="￥200"
+            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <com.facebook.drawee.view.SimpleDraweeView
@@ -84,12 +84,12 @@
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/listview_three_item_name3"
-            android:text="此处显示商品名称"
+            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/listview_three_item_price3"
-            android:text="￥200"
+            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <com.facebook.drawee.view.SimpleDraweeView

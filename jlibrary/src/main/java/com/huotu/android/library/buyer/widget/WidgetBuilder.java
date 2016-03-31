@@ -21,6 +21,7 @@ import com.huotu.android.library.buyer.bean.GoodsBean.GoodsOneConfig;
 import com.huotu.android.library.buyer.bean.GoodsBean.GoodsTwoConfig;
 import com.huotu.android.library.buyer.bean.GoodsListBean.ListViewThreeConfig;
 import com.huotu.android.library.buyer.bean.GoodsListBean.ListViewTwoConfig;
+import com.huotu.android.library.buyer.bean.GroupBean.ClassGroupConfig;
 import com.huotu.android.library.buyer.bean.GroupBean.GoodsGroupConfig;
 import com.huotu.android.library.buyer.bean.PromotionsBean.Promotion1Config;
 import com.huotu.android.library.buyer.bean.SearchBean.Search1Config;
@@ -52,6 +53,7 @@ import com.huotu.android.library.buyer.widget.GoodsListWidget.ListViewTwoWidget;
 import com.huotu.android.library.buyer.widget.GoodsWidget.GoodsOneCardWidget;
 import com.huotu.android.library.buyer.widget.GoodsWidget.GoodsOneWidget;
 import com.huotu.android.library.buyer.widget.GoodsWidget.GoodsTwoWidget;
+import com.huotu.android.library.buyer.widget.GroupWidget.ClassGroupWidget;
 import com.huotu.android.library.buyer.widget.PromotionsWidget.Promotion1Widget;
 import com.huotu.android.library.buyer.widget.SearchWidget.Search1Widget;
 import com.huotu.android.library.buyer.widget.SearchWidget.Search2Widget;
@@ -296,6 +298,13 @@ public class WidgetBuilder {
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties(), config);
             GoodsGroupWidget widget = new GoodsGroupWidget(activity, config);
+            return widget;
+        }else if( widgetConfig.getType() == WidgetTypeEnum.GROUP_Class.getIndex()){
+            GsonUtil<ClassGroupConfig> gsonUtil = new GsonUtil<>();
+            ClassGroupConfig config = new ClassGroupConfig();
+            config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
+            //config = gsonUtil.toBean(widgetConfig.getProperties(), config);
+            ClassGroupWidget widget = new ClassGroupWidget(activity, config);
             return widget;
         }
         else {

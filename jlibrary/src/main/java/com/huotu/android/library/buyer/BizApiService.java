@@ -18,23 +18,23 @@ import retrofit2.http.Header;
 import retrofit2.http.Query;
 
 /**
- * Created by Administrator on 2016/1/31.
+ * 业务数据接口定义
+ * Created by jinxiangdong on 2016/1/31.
  */
 public interface BizApiService {
-
-    /**
-     * 获得商品信息api
-     * @param customerid 商户id
-     * @param goodIds 商品id，多个用逗号分割
-     * @return
-     */
-    @GET("goods/getgoodslist")
-    Call<List<GoodsBean>> getGoodsList(
-            @Header(Constant.HEADER_USER_KEY) String userkey,
-            @Header(Constant.HEADER_USER_RANDOM) String userrandom,
-            @Header(Constant.HEADER_USER_SECURE) String usersecure,
-            @Query("customerId") String customerid ,
-            @Query("goodIds") String goodIds );
+//    /**
+//     * 获得商品信息api
+//     * @param customerid 商户id
+//     * @param goodIds 商品id，多个用逗号分割
+//     * @return
+//     */
+//    @GET("goods/getgoodslist")
+//    Call<List<GoodsBean>> getGoodsList(
+//            @Header(Constant.HEADER_USER_KEY) String userkey,
+//            @Header(Constant.HEADER_USER_RANDOM) String userrandom,
+//            @Header(Constant.HEADER_USER_SECURE) String usersecure,
+//            @Query("customerId") String customerid ,
+//            @Query("goodIds") String goodIds );
 
     /**
      * 获得商城基本信息api
@@ -113,8 +113,7 @@ public interface BizApiService {
             @Header(Constant.HEADER_USER_RANDOM) String userrandom,
             @Header(Constant.HEADER_USER_SECURE) String usersecure,
             @Query("customerId") int customerId ,
-            @Query("catId") int catId,
-            @Query("sign") String sign);
+            @Query("catId") int catId );
 
     /**
      * 获得全部标签api

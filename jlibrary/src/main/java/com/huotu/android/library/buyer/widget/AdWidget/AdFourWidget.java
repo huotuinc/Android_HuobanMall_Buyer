@@ -91,25 +91,25 @@ public class AdFourWidget extends BaseLinearLayout{
 
         if( config.getImages()==null ) return;
         if( config.getImages().size()>0) {
-            int itemWidth = ( context.getResources().getDisplayMetrics().widthPixels - leftPx - rightPx)/2;
+            int itemWidth = ( context.getResources().getDisplayMetrics().widthPixels - leftPx - rightPx-px)/2;
             String imageUrl = Variable.resourceUrl + config.getImages().get(0).getImageUrl();
             FrescoDraweeController.loadImage(iv1, itemWidth, imageUrl);
             iv1.setTag( config.getImages().get(0) );
         }
         if( config.getImages().size()>1){
-            int itemWidth = ( context.getResources().getDisplayMetrics().widthPixels - leftPx - rightPx)/4;
+            int itemWidth = ( context.getResources().getDisplayMetrics().widthPixels - leftPx - rightPx-px-px)/4;
             String imageUrl = Variable.resourceUrl + config.getImages().get(1).getImageUrl();
             FrescoDraweeController.loadImage(iv3,itemWidth , imageUrl );
-            iv2.setTag( config.getImages().get(1));
+            iv3.setTag( config.getImages().get(1));
         }
         if( config.getImages().size()>2){
-            int itemWidth = ( context.getResources().getDisplayMetrics().widthPixels - leftPx - rightPx)/4;
+            int itemWidth = ( context.getResources().getDisplayMetrics().widthPixels - leftPx - rightPx-px-px)/4;
             String imageUrl = Variable.resourceUrl + config.getImages().get(2).getImageUrl();
             FrescoDraweeController.loadImage(iv4,itemWidth,imageUrl);
             iv4.setTag(config.getImages().get(2));
         }
         if( config.getImages().size()>3){
-            int itemWidth = ( context.getResources().getDisplayMetrics().widthPixels - leftPx - rightPx)/2;
+            int itemWidth = ( context.getResources().getDisplayMetrics().widthPixels - leftPx - rightPx-px)/2;
             String imageUrl = Variable.resourceUrl + config.getImages().get(3).getImageUrl();
             FrescoDraweeController.loadImage(iv2,itemWidth,imageUrl);
             iv2.setTag( config.getImages().get(3));

@@ -50,6 +50,7 @@ public class SignUtil {
 //    }
 
     public static String getSecure(String app_key , String app_security , String random) {
+
         String temp = app_key + random;
         String secure = "";
         try {

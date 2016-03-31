@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/text_articletitle_rl"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/text_articletitle_ll"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -9,14 +9,15 @@
         android:text="这里显示标题"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/text_articletitle_date_author_link"
         android:text="2016-01-07 作者 链接链接链接链接链接链接链接链接链接链接链接链接链接链接链接"
         android:layout_below="@id/text_articletitle_title"
         android:layout_alignLeft="@id/text_articletitle_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <TextView
         android:layout_below="@+id/text_articletitle_date_author_link"
@@ -24,5 +25,4 @@
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
-
-</RelativeLayout>
+</LinearLayout>

@@ -217,7 +217,16 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
 
         BizApiService bizApiService = RetrofitUtil.getBizRetroftInstance(Variable.BizRootUrl).create(BizApiService.class);
         int customerId= Variable.CustomerId;
-        int catid = classid;
+
+        int catid =0;
+        if( classid==0) {
+            try {
+                catid = Integer.valueOf( config.getBindDataID());
+            }catch (Exception ex){}
+        }else{
+            catid = classid;
+        }
+
         int userlevelid = Variable.userLevelId;
         String sortRule = "0:desc";
         String filter= "";

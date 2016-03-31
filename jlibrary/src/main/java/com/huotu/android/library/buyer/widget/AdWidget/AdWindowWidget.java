@@ -40,7 +40,6 @@ public class AdWindowWidget extends BaseLinearLayout{
         if( bean ==null )return;
 
         CommonUtil.link( bean.getTitle() , bean.getLinkUrl() );
-        //EventBus.getDefault().post( new LinkEvent( bean.getLinkName() , bean.getLinkUrl()));
     }
 
     private void createLayout(){

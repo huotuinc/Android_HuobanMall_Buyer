@@ -82,7 +82,7 @@ public class TagAdapter extends BaseAdapter implements CompoundButton.OnCheckedC
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         int h = buttonView.getHeight();
         int h2 =((View)buttonView.getParent()).getHeight();
-        Toast.makeText(context,"h="+h+",,,h2="+h2,Toast.LENGTH_LONG).show();
+        //Toast.makeText(context,"h="+h+",,,h2="+h2,Toast.LENGTH_LONG).show();
 
     }
 }

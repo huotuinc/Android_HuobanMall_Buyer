@@ -16,6 +16,7 @@ import com.baidu.location.LocationClient;
 import com.google.gson.Gson;
 import com.huotu.android.library.buyer.Jlibrary;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.config.NativeConstants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.BuildConfig;
 import com.huotu.partnermall.inner.R;
@@ -94,8 +95,11 @@ public class BaseApplication extends Application {
         ShareSDK.initSDK ( getApplicationContext ( ) );
         solveAsyncTaskOnPostExecuteBug();
 
-        Jlibrary.init(this);
-        Jlibrary.initCustomerId(BuildConfig.CUSTOMERID);
+        Jlibrary.initFresco(this);
+        Jlibrary.initCustomerId(NativeConstants.CUSTOMERID());
+        Jlibrary.initSmartKey(NativeConstants.NATIVIE_KEY());
+        Jlibrary.initSmartSecurity(NativeConstants.Native_security());
+        Jlibrary.initSmartUrl(NativeConstants.get_Config_Root_Url());
 
         //加载异常处理模块
         CrashHandler crashHandler = CrashHandler.getInstance ( );

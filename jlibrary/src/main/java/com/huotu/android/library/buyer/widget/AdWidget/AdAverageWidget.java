@@ -35,31 +35,35 @@ public class AdAverageWidget extends com.huotu.android.library.buyer.widget.Good
         int bottomPx = DensityUtils.dip2px(context,this.config.getPaddingTop());
         int leftPx = DensityUtils.dip2px(context,this.config.getPaddingLeft());
         int rightPx = DensityUtils.dip2px(context,this.config.getPaddingLeft());
-        //this.setPadding( leftPx+outLeftPx , topPx , rightPx+outRightPx , bottomPx );
+        this.setPadding( outLeftPx , topPx , outRightPx , bottomPx );
 
         if(!TextUtils.isEmpty(this.config.getBackcolor())) {
             this.setBackgroundColor(CommonUtil.parseColor(this.config.getBackcolor()));
         }
 
-        //TODO
         if( this.config.getImages() ==null )return;
         int itemCount = config.getImages().size();
-        int itemWidth  = (screenWidth- outLeftPx - outRightPx - itemCount* (leftPx+rightPx)) / itemCount;
+        int itemWidth  = (screenWidth- outLeftPx - outRightPx - (itemCount +1) * leftPx ) / itemCount;
+        topPx=bottomPx=0;
         for(int i =0 ; i< itemCount ; i++ ){
             AdImageBean item = this.config.getImages().get(i);
             SimpleDraweeView iv = new SimpleDraweeView(context);
             LinearLayout.LayoutParams layoutParams =new LayoutParams( itemWidth , ViewGroup.LayoutParams.WRAP_CONTENT);
-            if( i ==0 ){
-                int leftitem = outLeftPx + leftPx;
+            if( i == 0 && i != (itemCount -1)){
+                int leftitem = leftPx;
+                int rightitem = 0;
+                layoutParams.setMargins( leftitem , topPx , rightitem , bottomPx);
+            }else if(i==0 && i == (itemCount-1)){
+                int leftitem = leftPx;
                 int rightitem = rightPx;
                 layoutParams.setMargins( leftitem , topPx , rightitem , bottomPx);
-            }else if( i == config.getImages().size()-1){
+            }else if( i == (itemCount-1) ){
                 int leftitem = leftPx;
-                int rightitem = rightPx + outRightPx;
+                int rightitem = rightPx;
                 layoutParams.setMargins( leftitem , topPx , rightitem , bottomPx);
             }else {
-                int leftitem =  leftPx;
-                int rightitem = rightPx;
+                int leftitem = leftPx;
+                int rightitem = 0;// rightPx;
                 layoutParams.setMargins( leftitem , topPx , rightitem , bottomPx);
             }
 
@@ -70,13 +74,9 @@ public class AdAverageWidget extends com.huotu.android.library.buyer.widget.Good
             iv.setTag(item);
 
             String imageUrl = Variable.resourceUrl + item.getImageUrl();
-
             FrescoDraweeController.loadImage(iv, itemWidth, imageUrl );
-
         }
     }
-
-
 
     @Override
     protected void onFinishInflate() {

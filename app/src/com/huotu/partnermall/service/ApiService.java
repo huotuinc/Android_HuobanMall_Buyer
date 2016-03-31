@@ -2,6 +2,7 @@ package com.huotu.partnermall.service;
 
 import com.huotu.android.library.buyer.bean.BizBean.MallInfoBean;
 import com.huotu.partnermall.model.MSiteModel;
+import com.huotu.partnermall.model.MerchantInfoModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
 
 import retrofit2.Call;
@@ -33,4 +34,14 @@ public interface ApiService {
             @Query("appid") String appid,
             @Query("sign") String sign,
             @Query("customerid") String customerid);
+
+    @GET("/mall/getConfig")
+    Call<MerchantInfoModel> getMallConfig(
+            @Query("version" ) String version,
+            @Query("operation") String operation,
+            @Query("timestamp") String timestamp,
+            @Query("appid") String appid,
+            @Query("sign") String sign,
+            @Query("customerid") String customerid
+    );
 }

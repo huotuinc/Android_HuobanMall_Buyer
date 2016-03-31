@@ -13,28 +13,25 @@ import com.huotu.android.library.buyer.R;
 import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.TextBean.TitleConfig;
 import com.huotu.android.library.buyer.utils.CommonUtil;
-import com.huotu.android.library.buyer.utils.Logger;
-import com.huotu.android.library.buyer.widget.LinkClickListener;
+import com.huotu.android.library.buyer.widget.BaseLinearLayout;
 
 /**
  * 标题组件
  * Created by jinxiangdong on 2016/1/7.
  *
  */
-public class TitleWidget extends LinearLayout implements View.OnClickListener{
+public class TitleWidget extends BaseLinearLayout {
     TitleConfig config;
     TextView tvTitle;
     TextView tvSubTitle;
     LinearLayout ll;
-    LinkClickListener linkClickListener;
 
     public TitleWidget(Context context, TitleConfig config) {
         super(context);
 
         this.config = config;
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view =layoutInflater.inflate(R.layout.text_title, this, true);
-        //this.addView(view);
+        layoutInflater.inflate(R.layout.text_title, this, true);
 
         ll = (LinearLayout)findViewById(R.id.text_title_ll);
         tvTitle= (TextView)findViewById(R.id.text_title_title);
@@ -52,12 +49,8 @@ public class TitleWidget extends LinearLayout implements View.OnClickListener{
         }
 
         tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, config.getFontSize() );
-        try {
-            int bgColor = CommonUtil.parseColor(this.config.getTitle_background());
-            ll.setBackgroundColor(bgColor);
-        }catch (Exception ex){
-            Logger.e(ex.getMessage(), ex);
-        }
+        int bgColor = CommonUtil.parseColor(this.config.getTitle_background());
+        ll.setBackgroundColor(bgColor);
 
         String title = this.config.getTitle_name();
         if(!TextUtils.isEmpty(this.config.getTitle_linkname())){
@@ -67,8 +60,6 @@ public class TitleWidget extends LinearLayout implements View.OnClickListener{
         tvTitle.setText( title );
         this.tvTitle.setOnClickListener(this);
         tvSubTitle.setText( this.config.getTitle_subname() );
-
-
     }
 
     @Override
@@ -79,14 +70,7 @@ public class TitleWidget extends LinearLayout implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if( v.getId()== R.id.text_title_title){
-            if( this.linkClickListener!=null) {
-                this.linkClickListener.Link(this.config.getLinkUrl());
-            }
+            CommonUtil.link( config.getTitle_name() , config.getLinkUrl() );
         }
     }
-
-    public void setLinkClickListener(LinkClickListener linkClickListener){
-        this.linkClickListener = linkClickListener;
-    }
-
 }

@@ -1,6 +1,5 @@
 package com.huotu.partnermall.ui.nativeui;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -13,9 +12,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -34,8 +31,6 @@ import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
-import com.huotu.partnermall.ui.HomeActivity;
-import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.base.NativeBaseActivity;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
@@ -44,9 +39,7 @@ import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
-
 import java.util.HashMap;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -59,38 +52,28 @@ import cn.sharesdk.framework.PlatformActionListener;
 public class PageViewActivity
         extends NativeBaseActivity
         implements Handler.Callback, MyBroadcastReceiver.BroadcastListener {
-    //获取资源文件对象
-    private Resources  resources;
     private Handler  mHandler;
-    //web视图
     private WebView viewPage;
     private String url;
     private SharePopupWindow share;
     private MyBroadcastReceiver myBroadcastReceiver;
-    //tilte组件
     @Bind(R.id.activity_pageview_titlelayout)
     RelativeLayout titleLayout;
-    //标题栏左侧图标
     @Bind(R.id.titleLeftImage)
     ImageView titleLeftImage;
-    //标题栏标题文字
     @Bind(R.id.titleText)
     TextView  titleText;
-    //标题栏右侧图标
     @Bind(R.id.titleRightImage)
     ImageView titleRightImage;
     @Bind(R.id.viewPage)
     PullToRefreshWebView refreshWebView;
-
-    ProgressPopupWindow progress;
-
     @Bind(R.id.main_pgbar)
     ProgressBar pgBar;
+    ProgressPopupWindow progress;
 
     @Override
     protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
-        resources = this.getResources ( );
         this.setContentView(R.layout.activity_pageview);
         ButterKnife.bind(this);
         setImmerseLayout(titleLayout);
@@ -179,7 +162,6 @@ public class PageViewActivity
 
         AuthParamUtils paramUtils = new AuthParamUtils ( BaseApplication.single , System.currentTimeMillis (), url , PageViewActivity.this );
         String url = paramUtils.obtainUrl ();
-
 
         viewPage.loadUrl(url);
 
@@ -278,7 +260,7 @@ public class PageViewActivity
 
         String text = BaseApplication.single.obtainMerchantName ()+"分享";
         String imageurl = BaseApplication.single.obtainMerchantLogo ();
-        if(!imageurl.contains ( "http://" ))
+        if( !TextUtils.isEmpty(imageurl) && !imageurl.contains ( "http://" ))
         {
             //加上域名
             imageurl = BaseApplication.single.obtainMerchantUrl () + imageurl;

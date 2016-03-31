@@ -5,8 +5,10 @@ package com.huotu.android.library.buyer.bean.Data;
  */
 public class SmartUiEvent {
     private String configUrl;
-    public SmartUiEvent(String configUrl){
+    private boolean ismainUi;
+    public SmartUiEvent(String configUrl , boolean ismainUi){
         this.configUrl = configUrl;
+        this.ismainUi = ismainUi;
     }
 
     public String getConfigUrl() {
@@ -15,5 +17,13 @@ public class SmartUiEvent {
 
     public void setConfigUrl(String configUrl) {
         this.configUrl = configUrl;
+    }
+
+    public boolean ismainUi() {
+        return ismainUi;
+    }
+
+    public void setIsmainUi(boolean ismainUi) {
+        this.ismainUi = ismainUi;
     }
 }

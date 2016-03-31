@@ -101,6 +101,7 @@ public class Search1Widget  extends BaseLinearLayout implements ISearch{
     }
 
     public void setKeyWord(String keyword){
+        if(etText==null)return;
         etText.setText(keyword);
     }
 
@@ -110,6 +111,7 @@ public class Search1Widget  extends BaseLinearLayout implements ISearch{
 
     @Override
     public String getKeyword() {
+        if( etText==null) return "";
         return etText.getText().toString();
     }
 }

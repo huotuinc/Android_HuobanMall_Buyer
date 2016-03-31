@@ -6,7 +6,7 @@ import java.util.List;
  * Created by jinxiangdong on 2016/1/7.
  */
 public class PageConfig {
-    private int version;
+    //private int version;
     private List<WidgetConfig> widgets;
     /**
      * 标题
@@ -19,17 +19,17 @@ public class PageConfig {
     /**
      *
      */
-    private String description;
-
-    private String backgroundColor;
-
-    private String createdTime;
-
-    private String lastModifiedDate;
-
-    private boolean enabled;
-
-    private boolean indexed;
+//    private String description;
+//
+//    private String backgroundColor;
+//
+//    private String createdTime;
+//
+//    private String lastModifiedDate;
+//
+//    private boolean enabled;
+//
+//    private boolean indexed;
 
 
     public String getTitle() {
@@ -48,13 +48,13 @@ public class PageConfig {
         this.mallResourceURL = mallResourceURL;
     }
 
-    public int getVersion() {
-        return version;
-    }
+//    public int getVersion() {
+//        return version;
+//    }
 
-    public void setVersion(int version) {
-        this.version = version;
-    }
+//    public void setVersion(int version) {
+//        this.version = version;
+//    }
 
     public List<WidgetConfig> getWidgets() {
         return widgets;

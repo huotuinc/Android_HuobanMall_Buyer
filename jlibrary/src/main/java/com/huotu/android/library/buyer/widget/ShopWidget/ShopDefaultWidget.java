@@ -85,7 +85,8 @@ public class ShopDefaultWidget extends RelativeLayout implements View.OnClickLis
             ivBg.setBackgroundColor(CommonUtil.parseColor( config.getColor()) );
         }else if( config.getShow_type() == Constant.WIDGETBACKTYPE_IMAGE ) {
             int width = getResources().getDisplayMetrics().widthPixels;
-            FrescoDraweeController.loadImage(ivBg, width, config.getBackground());
+            String imageUrl = Variable.resourceUrl + config.getBackground();
+            FrescoDraweeController.loadImage(ivBg, width, imageUrl );
         }
 
 //        if( TextUtils.isEmpty(config.getAvatarUrl())==false){

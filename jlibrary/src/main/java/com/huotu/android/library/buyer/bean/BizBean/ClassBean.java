@@ -34,6 +34,10 @@ public class ClassBean {
      * 是否选择
      */
     private boolean checked;
+    /**
+     * 分类 图片地址
+     */
+    private String picPath;
 
     public int getCatId() {
         return catId;
@@ -89,5 +93,13 @@ public class ClassBean {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
+    }
+
+    public String getPicPath() {
+        return picPath;
+    }
+
+    public void setPicPath(String picPath) {
+        this.picPath = picPath;
     }
 }

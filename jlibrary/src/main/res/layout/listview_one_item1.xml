@@ -11,7 +11,8 @@
     <TextView
         android:id="@+id/listview_one_item1_name1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:lines="2"/>
     <TextView
         android:id="@+id/listview_one_item1_price1"
         android:layout_width="wrap_content"

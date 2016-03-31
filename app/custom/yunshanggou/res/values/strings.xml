@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">云尚购</string>
+
+    <string name="maincolor">255,255,0,0</string>
+    <!--引导界面图片-->
+    <string-array name="guide_icon">
+        <item>guide01</item>
+    </string-array>
+</resources>

@@ -243,15 +243,6 @@ public class GoodsOneCardWidget extends BaseLinearLayout {
                 Logger.e( "error" , t );
             }
         });
-
-
-//        for( GoodsBean item : goods) {
-//            if (goodsOneConfig.getGoods_layer().equals(Constant.LAYER_STYLE_CARD)) {
-//                create_card(item);
-//            } else if (goodsOneConfig.getGoods_layer().equals(Constant.LAYER_STYLE_NORMAL)) {
-//                create_jijian(item);
-//            }
-//        }
     }
 
     @Override

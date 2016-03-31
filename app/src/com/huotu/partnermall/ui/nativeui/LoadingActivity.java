@@ -1,7 +1,5 @@
 package com.huotu.partnermall.ui.nativeui;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -9,8 +7,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -18,7 +14,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.huotu.android.library.buyer.Jlibrary;
-import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.PageConfig;
 import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.partnermall.BaseApplication;
@@ -28,11 +23,11 @@ import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.MSiteModel;
+import com.huotu.partnermall.model.MerchantInfoModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
 import com.huotu.partnermall.model.Native.FindIndexConfig;
 import com.huotu.partnermall.service.ApiService;
 import com.huotu.partnermall.service.ZRetrofitUtil;
-import com.huotu.partnermall.ui.SplashActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.guide.GuideActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
@@ -175,32 +170,32 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
         VolleyUtil.getRequestQueue().add(findIndexConfigGsonRequest );
     }
 
-    private void getIndexConfig(){
-        String rootUrl = PreferenceHelper.readString( BaseApplication.single , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_SELF_HREF );
-        if( !rootUrl.endsWith("/") ) rootUrl+="/";
-        String url = rootUrl + NativeConstants.NATIVECODE_URL;
-        url +="?platform=Android&version=000000000000000&osVersion=";
-        Map<String,String> headers = new HashMap();
-        headers.put(NativeConstants.HEADER_USER_KEY, NativeConstants.NATIVIE_KEY());
-        String random = String.valueOf(System.currentTimeMillis());
-        headers.put(NativeConstants.HEADER_USER_RANDOM, random );
-        String secure = SignUtil.getSecure(NativeConstants.NATIVIE_KEY(), NativeConstants.Native_security(), random);
-        headers.put(NativeConstants.HEADER_USER_SECURE, secure );
-
-        GsonRequest<PageConfig> request = new GsonRequest<PageConfig>(
-                Request.Method.GET,
-                url,
-                PageConfig.class,
-                headers,
-                new nativeCodeListener(LoadingActivity.this , rootUrl ),
-                new findErrorListener(LoadingActivity.this)
-        );
-
-        loading_pbar.setVisibility(View.VISIBLE);
-        loading_tryagain.setVisibility(View.GONE);
-
-        VolleyUtil.getRequestQueue().add(request);
-    }
+//    private void getIndexConfig(){
+//        String rootUrl = PreferenceHelper.readString( BaseApplication.single , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_SELF_HREF );
+//        if( !rootUrl.endsWith("/") ) rootUrl+="/";
+//        String url = rootUrl + NativeConstants.NATIVECODE_URL;
+//        url +="?platform=Android&version=000000000000000&osVersion=";
+//        Map<String,String> headers = new HashMap();
+//        headers.put(NativeConstants.HEADER_USER_KEY, NativeConstants.NATIVIE_KEY());
+//        String random = String.valueOf(System.currentTimeMillis());
+//        headers.put(NativeConstants.HEADER_USER_RANDOM, random );
+//        String secure = SignUtil.getSecure(NativeConstants.NATIVIE_KEY(), NativeConstants.Native_security(), random);
+//        headers.put(NativeConstants.HEADER_USER_SECURE, secure );
+//
+//        GsonRequest<PageConfig> request = new GsonRequest<PageConfig>(
+//                Request.Method.GET,
+//                url,
+//                PageConfig.class,
+//                headers,
+//                new nativeCodeListener(LoadingActivity.this , rootUrl ),
+//                new findErrorListener(LoadingActivity.this)
+//        );
+//
+//        loading_pbar.setVisibility(View.VISIBLE);
+//        loading_tryagain.setVisibility(View.GONE);
+//
+//        VolleyUtil.getRequestQueue().add(request);
+//    }
 
     static class findListener implements Response.Listener<FindIndexConfig>{
         WeakReference<LoadingActivity> ref;
@@ -256,46 +251,46 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
 
             if (ref.get() == null) return;
             //ref.get().dismissProgress();
-            ToastUtils.showLongToast(ref.get(), "请求异常");
+            ToastUtils.showLongToast(ref.get(), "请求异常,请重试");
             Logger.e("请求异常");
             ref.get().loading_pbar.setVisibility(View.GONE);
             ref.get().loading_tryagain.setVisibility(View.VISIBLE);
         }
     }
 
-    static class nativeCodeListener implements Response.Listener<PageConfig>{
-        WeakReference<LoadingActivity> ref;
-        String smartuiconfigurl;
-        public nativeCodeListener(LoadingActivity act , String url ){
-            ref =new WeakReference<>(act);
-            smartuiconfigurl = url;
-        }
-        @Override
-        public void onResponse(PageConfig pageConfig ) {
-            if (ref.get() == null) return;
-            if (pageConfig == null) {
-                ToastUtils.showLongToast(ref.get(), "请求失败！");
-                ref.get().loading_pbar.setVisibility(View.GONE);
-                ref.get().loading_tryagain.setVisibility(View.VISIBLE);
-                return;
-            }
-
-            JSONUtil<PageConfig> jsonUtil = new JSONUtil<>();
-            String json = jsonUtil.toJson(pageConfig);
-            PreferenceHelper.writeString( ref.get() , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_SELF_KEY , json );
-
-            if(ref.get().startGuideUi()) return;
-            //判断是否登录
-            if (BaseApplication.single.isLogin()) {
-                Bundle bd = new Bundle();
-                String url = smartuiconfigurl;
-                bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
-                ActivityUtils.getInstance().skipActivity(ref.get(), NativeActivity.class, bd);
-            } else {
-                ActivityUtils.getInstance().skipActivity(ref.get(), LoginActivity.class);
-            }
-        }
-    }
+//    static class nativeCodeListener implements Response.Listener<PageConfig>{
+//        WeakReference<LoadingActivity> ref;
+//        String smartuiconfigurl;
+//        public nativeCodeListener(LoadingActivity act , String url ){
+//            ref =new WeakReference<>(act);
+//            smartuiconfigurl = url;
+//        }
+//        @Override
+//        public void onResponse(PageConfig pageConfig ) {
+//            if (ref.get() == null) return;
+//            if (pageConfig == null) {
+//                ToastUtils.showLongToast(ref.get(), "请求失败！");
+//                ref.get().loading_pbar.setVisibility(View.GONE);
+//                ref.get().loading_tryagain.setVisibility(View.VISIBLE);
+//                return;
+//            }
+//
+//            JSONUtil<PageConfig> jsonUtil = new JSONUtil<>();
+//            String json = jsonUtil.toJson(pageConfig);
+//            PreferenceHelper.writeString( ref.get() , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_SELF_KEY , json );
+//
+//            if(ref.get().startGuideUi()) return;
+//            //判断是否登录
+//            if (BaseApplication.single.isLogin()) {
+//                Bundle bd = new Bundle();
+//                String url = smartuiconfigurl;
+//                bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
+//                ActivityUtils.getInstance().skipActivity(ref.get(), NativeActivity.class, bd);
+//            } else {
+//                ActivityUtils.getInstance().skipActivity(ref.get(), LoginActivity.class);
+//            }
+//        }
+//    }
 
     /**
      * 获取商家站点域名地址
@@ -338,8 +333,70 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
             BaseApplication.single.writeDomain(mSiteModel.getData().getMsiteUrl());
             Jlibrary.initSiteUrl( mSiteModel.getData().getMsiteUrl() );
             //ref.get().getFindIndexConfigHref();
-            ref.get().getPayConfig();
+            //ref.get().getPayConfig();
+            ref.get().getMallInfo();
         }
+    }
+
+    /**
+     * 获得 商城配置信息
+     */
+    protected void getMallInfo(){
+        ApiService apiService = ZRetrofitUtil.getInstance().create(ApiService.class);
+        String version = BaseApplication.getAppVersion(LoadingActivity.this);
+        String operation = Constants.OPERATION_CODE;
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String appid="";
+        String customerId = BaseApplication.single.readMerchantId();
+        try {
+            appid = URLEncoder.encode(Constants.getAPP_ID(), "UTF-8");
+        }catch (UnsupportedEncodingException ex){}
+
+        Map<String,String> map = new HashMap<>();
+        map.put("version", version);
+        map.put("operation",operation);
+        map.put("timestamp",timestamp);
+        map.put("appid",appid);
+        map.put("customerid",customerId);
+        String sign = BuyerSignUtil.getSign(map);
+        Call<MerchantInfoModel> call = apiService.getMallConfig(version, operation, timestamp, appid, sign, customerId);
+        call.enqueue(new Callback<MerchantInfoModel>() {
+            @Override
+            public void onResponse(retrofit2.Response<MerchantInfoModel> response) {
+                if (response == null || response.code() != 200 || response.body() == null) {
+                    ToastUtils.showLongToast(LoadingActivity.this, "请求失败！");
+                    loading_pbar.setVisibility(View.GONE);
+                    loading_tryagain.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+                String logo;
+                if ( null != response.body().getMall_logo() && null != response.body().getMall_name() ) {
+                    if(!TextUtils.isEmpty ( application.obtainMerchantUrl () ))
+                    {
+                        logo =  application.obtainMerchantUrl () + response.body().getMall_logo();
+                    }
+                    else
+                    {
+                        logo = response.body().getMall_logo();
+                    }
+
+                    String name = response.body().getMall_name();
+                    application.writeMerchantLogo(logo);
+                    application.writeMerchantName(name);
+                }
+
+                getPayConfig();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Logger.e(t.getMessage());
+                ToastUtils.showLongToast(LoadingActivity.this , "请求异常,请重试");
+                loading_pbar.setVisibility(View.GONE);
+                loading_tryagain.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     /**

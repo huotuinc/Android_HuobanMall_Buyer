@@ -270,6 +270,7 @@
         <activity
             android:name="com.huotu.partnermall.ui.nativeui.NativeActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@style/NativeTheme"
             android:windowSoftInputMode="adjustResize|stateHidden">
         </activity>
@@ -281,10 +282,11 @@
         <activity
             android:name="com.huotu.partnermall.ui.AppUpdateActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name="com.huotu.partnermall.ui.base.NativeBaseActivity">
-        </activity>
-        <activity android:name="com.huotu.partnermall.ui.nativeui.SmartUIActivity">
-        </activity>
+        <!--<activity android:name="com.huotu.partnermall.ui.base.NativeBaseActivity">-->
+        <!--</activity>-->
+        <activity android:name="com.huotu.partnermall.ui.nativeui.SmartUIActivity"
+            android:theme="@style/NativeTheme"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

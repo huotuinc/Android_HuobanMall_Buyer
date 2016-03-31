@@ -164,7 +164,7 @@ public class GuidesShopWidget extends BaseLinearLayout {
     public void onClick(View v) {
         if( v.getTag()!=null && v.getTag() instanceof MallInfoBean ) {
             String url = Variable.mainUiConfigUrl;
-            EventBus.getDefault().post(new SmartUiEvent(url));
+            EventBus.getDefault().post(new SmartUiEvent(url,false));
         }else{
             Logger.e("url error");
         }

@@ -14,7 +14,7 @@ public class WidgetConfig {
     /**
      * 组件版本号
      */
-    private String version;
+    private int version;
     /**
      * 组件详细配置信息
      */
@@ -28,11 +28,11 @@ public class WidgetConfig {
         this.type = type;
     }
 
-    public String getVersion() {
+    public int getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(int version) {
         this.version = version;
     }
 

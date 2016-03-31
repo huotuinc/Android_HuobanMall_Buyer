@@ -2,9 +2,7 @@ package com.huotu.android.library.buyer.widget.AdWidget;
 
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;

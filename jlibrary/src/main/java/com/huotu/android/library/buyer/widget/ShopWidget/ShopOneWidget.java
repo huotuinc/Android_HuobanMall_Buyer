@@ -116,11 +116,11 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
         if( v.getId() == leftImage.getId() || v.getId()== tvLeftTitle.getId() ){
             String url = config.getLinkUrl1();
             String name = config.getLinkName1();
-            EventBus.getDefault().post(new LinkEvent( name , url ));
+            CommonUtil.link(name , url);
         }else if( v.getId() == rightImage.getId() || v.getId()== tvRightTitle.getId() ){
             String url = config.getLinkUrl();
             String name = config.getLinkName();
-            EventBus.getDefault().post(new LinkEvent(name , url));
+            CommonUtil.link(name , url);
         }
     }
 

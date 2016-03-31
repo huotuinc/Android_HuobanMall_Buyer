@@ -1,5 +1,6 @@
 package com.huotu.android.library.buyer;
 
+import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.Data.ClassificationConfig;
 
 import retrofit2.Call;
@@ -8,10 +9,9 @@ import retrofit2.http.Header;
 import retrofit2.http.Query;
 
 /**
- * Created by Administrator on 2016/3/8.
+ * Created by jinxiangdong on 2016/3/8.
  */
 public interface ConfigApiService {
-
     /**
      *
      * @param userkey
@@ -21,11 +21,11 @@ public interface ConfigApiService {
      * @return
      */
     @GET("smartPages/search/findIndex")
-    Call<Object> findIndex(@Header("_user_key") String userkey ,
-                     @Header("_user_random") String userRandom ,
-                     @Header("_user_secure") String userSecurity ,
-                     @Query("merchantId") int merchantId);
-
+    Call<Object> findIndex(
+            @Header(Constant.HEADER_USER_KEY) String userkey ,
+            @Header(Constant.HEADER_USER_RANDOM) String userRandom ,
+            @Header(Constant.HEADER_USER_SECURE) String userSecurity ,
+            @Query("merchantId") int merchantId);
 
     /**
      *
@@ -39,9 +39,9 @@ public interface ConfigApiService {
      */
     @GET("nativeCode")
     Call<Object> nativeCode(
-                            @Header("_user_key") String userkey ,
-                            @Header("_user_random") String userRandom ,
-                            @Header("_user_secure") String userSecurity ,
+                            @Header(Constant.HEADER_USER_KEY) String userkey ,
+                            @Header(Constant.HEADER_USER_RANDOM) String userRandom ,
+                            @Header(Constant.HEADER_USER_SECURE) String userSecurity ,
                             @Query("platform") String platform,
                             @Query("version") String version,
                             @Query("osVersion") String osVersion );
@@ -56,9 +56,9 @@ public interface ConfigApiService {
      */
     @GET("merchantWidgetSettings/search/findByMerchantId")
     Call<Object> findByMerchantId(
-            @Header("_user_key") String userkey ,
-            @Header("_user_random") String userRandom ,
-            @Header("_user_secure") String userSecurity ,
+            @Header(Constant.HEADER_USER_KEY) String userkey ,
+            @Header(Constant.HEADER_USER_RANDOM) String userRandom ,
+            @Header(Constant.HEADER_USER_SECURE) String userSecurity ,
             @Query("merchantId") int merchantId
     );
 
@@ -73,9 +73,10 @@ public interface ConfigApiService {
      * @return
      */
     @GET("namedPages/search/findByClassification")
-    Call<ClassificationConfig> findByClassification( @Header("_user_key") String userkey ,
-                                       @Header("_user_random") String userRandom ,
-                                       @Header("_user_secure") String userSecurity ,
+    Call<ClassificationConfig> findByClassification(
+                                    @Header(Constant.HEADER_USER_KEY) String userkey ,
+                                       @Header(Constant.HEADER_USER_RANDOM) String userRandom ,
+                                       @Header(Constant.HEADER_USER_SECURE) String userSecurity ,
                                        @Query("merchantId") int merchantId,
                                        @Query("productClassification") String productClassification,
                                        @Query("type") String type );

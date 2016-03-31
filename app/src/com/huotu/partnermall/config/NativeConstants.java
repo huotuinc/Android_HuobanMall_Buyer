@@ -1,8 +1,6 @@
 package com.huotu.partnermall.config;
 
-import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.BuildConfig;
-import com.huotu.partnermall.utils.PreferenceHelper;
 
 /**
  * Created by Administrator on 2016/2/24.
@@ -26,12 +24,8 @@ public class NativeConstants {
      * 获得配置接口根地址
      * @return
      */
-    private static String get_Config_Root_Url(){
-        if( BuildConfig.DEBUG){
-            return  "http://api.open.fancat.cn:8081/";
-        }else {
-            return "";
-        }
+    public static String get_Config_Root_Url(){
+        return BuildConfig.SMART_URL;
     }
 
     /**
@@ -67,20 +61,14 @@ public class NativeConstants {
 
     public final static String KEY_SEARCH="key_search";
 
+    public final static String KEY_NEEDREFRESHUI = "key_needrefreshui";
+
     public final static String NATIVIE_KEY(){
-        if(BuildConfig.DEBUG){
-            return "_demo";
-        }else{
-            return "";
-        }
+        return BuildConfig.SMART_KEY;
     }
 
     public final static String Native_security(){
-        if(BuildConfig.DEBUG){
-            return "1f2f3f4f5f6f7f8f";
-        }else{
-            return "";
-        }
+        return BuildConfig.SMART_SECURITY;
     }
 
     public final static int CUSTOMERID(){

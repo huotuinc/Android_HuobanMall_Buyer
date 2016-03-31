@@ -1,25 +1,14 @@
 package com.huotu.android.library.buyer.widget.AdWidget;
 
 import android.content.Context;
-import android.net.Uri;
 import android.widget.LinearLayout;
-
-import com.facebook.common.util.UriUtil;
 import com.huotu.android.library.buyer.R;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.huotu.android.library.buyer.bean.AdBean.AdBannerConfig;
 import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
-import com.huotu.android.library.buyer.bean.Constant;
-import com.huotu.android.library.buyer.bean.Data.LinkEvent;
-import com.huotu.android.library.buyer.bean.Data.SmartUiEvent;
-import com.huotu.android.library.buyer.bean.Variable;
 import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
-
-import org.greenrobot.eventbus.EventBus;
-
-
 /**
  * Banner组件
  * Created by jinxiangdong on 2016/1/13.
@@ -27,8 +16,12 @@ import org.greenrobot.eventbus.EventBus;
 public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner implements OnItemClickListener {
     private AdBannerConfig config;
 
+    public AdBannerWidget(Context context) {
+        super(context);
+    }
+
     public AdBannerWidget(Context context , AdBannerConfig  config ) {
-        super(context , config.getAutoPlay() );
+        super(context);
 
         this.config = config;
         final int iwidth = DensityUtils.getScreenW(getContext()); //this.config.getWidth();
@@ -47,8 +40,10 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
         .setPageIndicator(new int[]{R.drawable.ic_page_indicator, R.drawable.ic_page_indicator_focused})
         .setOnItemClickListener(this);
 
+        this.stopTurning();
         if(!config.getAutoPlay()) return;
         if(config.getImages().size()<=1) return;
+
 
         int time = config.getImages().size()*1500;
         this.startTurning( time );
@@ -71,5 +66,20 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
         super.onDetachedFromWindow();
 
         this.stopTurning();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        int he=0;
+//        int count = this.getViewPager().getChildCount();
+//        for(int i = 0;i<count;i++){
+//            View v = this.getViewPager().getChildAt(i);
+//            v.measure( widthMeasureSpec , MeasureSpec.makeMeasureSpec( 0 , MeasureSpec.UNSPECIFIED ) );
+//            int h = v.getMeasuredHeight();
+//            if(h>he){he=h;}
+//        }
+//        heightMeasureSpec = MeasureSpec.makeMeasureSpec(he,MeasureSpec.EXACTLY);
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 }

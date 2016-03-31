@@ -29,7 +29,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.facebook.fresco:fresco:0.8.1'
     compile 'com.google.code.gson:gson:2.5'
-    compile 'com.huotu.android.library:libConvenientBanner:1.0'
+    compile 'com.huotu.android.library:libConvenientBanner:1.1'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'

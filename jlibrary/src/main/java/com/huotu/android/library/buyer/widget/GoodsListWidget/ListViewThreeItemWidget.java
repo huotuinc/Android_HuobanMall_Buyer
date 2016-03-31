@@ -86,9 +86,9 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
      * 根据配置，设置布局样式
      */
     private void create_Layout(){
-        if( this.listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_2) ){
+        if( !TextUtils.isEmpty(this.listViewThreeConfig.getGoods_layout()) && this.listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_2) ){
             create_YIDALIANGXIAO();
-        }else if( this.listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_3) ){
+        }else if( !TextUtils.isEmpty( this.listViewThreeConfig.getGoods_layer()) && this.listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_3) ){
             create_XIANGXILIEBIAO();
         }else{
             Logger.e("未知布局样式");
@@ -220,9 +220,14 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         tvPrice1.setLayoutParams(layoutParams);
         tvPrice1.setTextColor(Color.WHITE);
 
-        layoutParams =(RelativeLayout.LayoutParams) tvJiFen1.getLayoutParams();
+
+        layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);//(RelativeLayout.LayoutParams) tvJiFen1.getLayoutParams();
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.listview_three_item_price1);
+        if( listViewThreeConfig.getProduct_showprices().equals(Constant.GOODS_SHOW) ) {
+            layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.listview_three_item_price1);
+        }else if( listViewThreeConfig.getProduct_showname().equals(Constant.GOODS_SHOW)){
+            layoutParams.addRule(RelativeLayout.BELOW , R.id.listview_three_item_name1);
+        }
         tvJiFen1.setLayoutParams(layoutParams);
         tvJiFen1.setTextColor(Color.BLACK);
 
@@ -236,6 +241,7 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         layoutParams.addRule(RelativeLayout.BELOW, R.id.listview_three_item_pic2);
         layoutParams.addRule(RelativeLayout.ALIGN_LEFT, R.id.listview_three_item_pic2);
         tvName2.setLayoutParams(layoutParams);
+        tvName2.setLines(2);
         tvName2.setTextColor(Color.BLACK);
 
         layoutParams = (RelativeLayout.LayoutParams)tvPrice2.getLayoutParams();
@@ -245,9 +251,19 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         tvPrice2.setLayoutParams(layoutParams);
         tvPrice2.setTextColor(Color.WHITE);
 
-        layoutParams =(RelativeLayout.LayoutParams) tvJiFen2.getLayoutParams();
+
+        layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT); //(RelativeLayout.LayoutParams) tvJiFen2.getLayoutParams();
+
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.listview_three_item_price2);
+        int relaId=0;
+        if( listViewThreeConfig.getProduct_showprices().equals(Constant.GOODS_SHOW) ){
+            relaId = R.id.listview_three_item_price2;
+            layoutParams.addRule(RelativeLayout.ALIGN_TOP , relaId );
+        }else if(listViewThreeConfig.getProduct_showname().equals(Constant.GOODS_SHOW)){
+            relaId = R.id.listview_three_item_name2;
+            layoutParams.addRule( RelativeLayout.BELOW , relaId);
+        }
+        //layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.listview_three_item_price2);
         tvJiFen2.setLayoutParams(layoutParams);
         tvJiFen2.setTextColor(Color.BLACK);
 
@@ -261,18 +277,24 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         layoutParams.addRule(RelativeLayout.BELOW, R.id.listview_three_item_pic3);
         layoutParams.addRule(RelativeLayout.ALIGN_LEFT, R.id.listview_three_item_pic3);
         tvName3.setLayoutParams(layoutParams);
+        tvName3.setLines(2);
         tvName3.setTextColor(Color.BLACK);
 
         layoutParams = (RelativeLayout.LayoutParams)tvPrice3.getLayoutParams();
         layoutParams.addRule(RelativeLayout.BELOW, R.id.listview_three_item_name3);
         layoutParams.addRule(RelativeLayout.ALIGN_LEFT, R.id.listview_three_item_name3);
-        layoutParams.addRule(RelativeLayout.LEFT_OF,R.id.listview_three_item_jifenPic3);
+        layoutParams.addRule(RelativeLayout.LEFT_OF, R.id.listview_three_item_jifenPic3);
         tvPrice3.setLayoutParams(layoutParams);
         tvPrice3.setTextColor(Color.BLACK);
 
-        layoutParams =(RelativeLayout.LayoutParams) tvJiFen3.getLayoutParams();
+        layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT); //(RelativeLayout.LayoutParams) tvJiFen3.getLayoutParams();
         layoutParams.addRule( RelativeLayout.ALIGN_PARENT_RIGHT );
-        layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.listview_three_item_price3);
+        if( listViewThreeConfig.getProduct_showprices().equals(Constant.GOODS_SHOW) ){
+            layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.listview_three_item_price3);
+        }else if(listViewThreeConfig.getProduct_showname().equals(Constant.GOODS_SHOW)){
+            layoutParams.addRule(RelativeLayout.BELOW,R.id.listview_three_item_name3);
+        }
+        //layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.listview_three_item_price3);
         tvJiFen3.setLayoutParams(layoutParams);
         tvJiFen3.setTextColor(Color.BLACK);
 
@@ -320,20 +342,28 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         RelativeLayout.LayoutParams layoutParams =(RelativeLayout.LayoutParams) tvName1.getLayoutParams();
         layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.listview_three_item_pic1);
         layoutParams.addRule(RelativeLayout.ALIGN_LEFT, R.id.listview_three_item_pic1);
-        layoutParams.setMargins(leftMargin,topMargin,rightMargin,bottomMargin);
+        layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
         tvName1.setLayoutParams(layoutParams);
         tvName1.setTextColor(Color.WHITE);
         tvName1.setBackgroundResource(R.drawable.transparent_circle_bg);
 
-        layoutParams = (RelativeLayout.LayoutParams)tvPrice1.getLayoutParams();
+        layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT); //(RelativeLayout.LayoutParams)tvPrice1.getLayoutParams();
         layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.listview_three_item_pic1);
         layoutParams.addRule(RelativeLayout.ALIGN_RIGHT, R.id.listview_three_item_pic1);
-        layoutParams.setMargins(leftMargin,topMargin,rightMargin,bottomMargin);
+        layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
         tvPrice1.setLayoutParams(layoutParams);
         tvPrice1.setTextColor(Color.WHITE);
         tvPrice1.setBackgroundResource(R.drawable.transparent_circle_bg);
 
         set_JiFen_Style(tvJiFen1, R.id.listview_three_item_pic1, leftMargin, topMargin, rightMargin, bottomMargin);
+        if(listViewThreeConfig.getProduct_userInteger().equals(Constant.GOODS_SHOW)){
+            layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            layoutParams.addRule(RelativeLayout.ALIGN_TOP , R.id.listview_three_item_pic1);
+            layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+            tvJiFen1.setLayoutParams(layoutParams);
+        }
+
 
         tvName2.setVisibility(GONE);
         layoutParams = (RelativeLayout.LayoutParams)tvPrice2.getLayoutParams();
@@ -345,6 +375,14 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         tvPrice2.setBackgroundResource(R.drawable.transparent_circle_bg);
 
         set_JiFen_Style(tvJiFen2, R.id.listview_three_item_pic2, leftMargin, topMargin, rightMargin, bottomMargin);
+        if(listViewThreeConfig.getProduct_userInteger().equals(Constant.GOODS_SHOW)){
+            layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            layoutParams.addRule(RelativeLayout.ALIGN_TOP , R.id.listview_three_item_pic2);
+            layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+            tvJiFen2.setLayoutParams(layoutParams);
+        }
+
 
         tvName3.setVisibility(GONE);
         layoutParams = (RelativeLayout.LayoutParams)tvPrice3.getLayoutParams();
@@ -356,6 +394,13 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         tvPrice3.setBackgroundResource(R.drawable.transparent_circle_bg);
 
         set_JiFen_Style(tvJiFen3, R.id.listview_three_item_pic3, leftMargin, topMargin, rightMargin, bottomMargin);
+        if(listViewThreeConfig.getProduct_userInteger().equals(Constant.GOODS_SHOW)){
+            layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            layoutParams.addRule(RelativeLayout.ALIGN_TOP , R.id.listview_three_item_pic3);
+            layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+            tvJiFen3.setLayoutParams(layoutParams);
+        }
 
 //        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.defaultpic);
 //        int w = bmp.getWidth();
@@ -381,13 +426,13 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
     }
 
     private void set_JiFen_Style(TextView tv , int resId , int leftMargin, int topMargin, int rightMargin, int bottomMargin){
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv.getLayoutParams();
-        layoutParams.addRule(RelativeLayout.ALIGN_TOP , resId );
-        layoutParams.addRule(RelativeLayout.ALIGN_LEFT, resId);
-        layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+        //RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+        //layoutParams.addRule(RelativeLayout.ALIGN_TOP , resId );
+        //layoutParams.addRule(RelativeLayout.ALIGN_LEFT, resId);
+        //layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
         tv.setBackgroundColor(Color.RED);
         tv.setTextColor(Color.WHITE);
-        tv.setLayoutParams(layoutParams);
+        //tv.setLayoutParams(layoutParams);
         tv.setPadding(4, 4, 4, 4);
     }
 
@@ -482,54 +527,55 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
     public void addItem(List<GoodsBean> dataItems){
         if( dataItems.size()>0 ){
             set_Image_Height(iv1, imageWidth1, dataItems.get(0));
-            tvName1.setText(dataItems.get(0).getGoodName());
+            if(tvName1!=null) tvName1.setText(dataItems.get(0).getGoodName());
             set_Price_Style(tvPrice1, dataItems.get(0));
             String jifen1 = CommonUtil.formatJiFen( dataItems.get(0).getScore() );
-            tvJiFen1.setText( jifen1 +"积分");
-            rl1.setTag( dataItems.get(0) );
+            if(tvJiFen1!=null) tvJiFen1.setText( jifen1 +"积分");
+            if(rl1!=null) rl1.setTag( dataItems.get(0) );
         }
         if( dataItems.size() >1 ){
-            //int width = iv2.getMeasuredWidth();
-            //FrescoDraweeController.loadImage(iv2,width, dataItems.get(1).getImageurl());
             set_Image_Height(iv2, imageWidth2, dataItems.get(1));
-            tvName2.setText(dataItems.get(1).getGoodName());
+            if(tvName2!=null) tvName2.setText(dataItems.get(1).getGoodName());
             set_Price_Style(tvPrice2, dataItems.get(1));
-            //tvJiFen2.setText( CommonUtil.FormatDouble( dataItems.get(1).getRebate()));
             String jifen2 = CommonUtil.formatJiFen( dataItems.get(1).getScore() );
-            tvJiFen2.setText( jifen2 +"积分");
-            rl2.setTag(dataItems.get(1));
+            if(tvJiFen2!=null) tvJiFen2.setText( jifen2 +"积分");
+            if(rl2!=null) rl2.setTag(dataItems.get(1));
         }
         if( dataItems.size() >2 ){
             set_Image_Height(iv3, imageWidth3, dataItems.get(2));
-            tvName3.setText(dataItems.get(2).getGoodName());
+            if(tvName3!=null) tvName3.setText(dataItems.get(2).getGoodName());
             set_Price_Style(tvPrice3, dataItems.get(2));
             String jifen3 = CommonUtil.formatJiFen( dataItems.get(2).getScore() );
-            tvJiFen3.setText( jifen3 +"积分");
-            rl3.setTag(dataItems.get(2));
+            if(tvJiFen3!=null) tvJiFen3.setText( jifen3 +"积分");
+            if(rl3!=null ) rl3.setTag(dataItems.get(2));
         }
     }
 
     private void set_Image_Height( SimpleDraweeView iv , int width , GoodsBean item){
-        if( listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_2) ){
-            //int width = iv.getMeasuredWidth();
+
+        if( !TextUtils.isEmpty( listViewThreeConfig.getGoods_layout()) && listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_2) ){
+
             FrescoDraweeController.loadImage(iv, width, item.getThumbnailPic());
         }
-        if( listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_3) ) {
-            //int width = MyApplication.ScreenWidth * 2 / 5;
+        if( !TextUtils.isEmpty(listViewThreeConfig.getGoods_layout()) && listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_3) ) {
+
             FrescoDraweeController.loadImage(iv, width, item.getThumbnailPic());
         }
     }
 
     private void set_Price_Style( TextView tv , GoodsBean item ){
-        if( listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_2) ) {
+        if( !TextUtils.isEmpty( listViewThreeConfig.getGoods_layout() ) && listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_2) ) {
             if (listViewThreeConfig.getGoods_layer().equals(Constant.LAYER_STYLE_CARD)) {
                 String priceStr = CommonUtil.formatDouble(item.getPrice());
                 String zPriceStr = CommonUtil.formatPrice( item.getPriceLevel());
                 SpanningUtil.set_Price_Format2(tv, priceStr, zPriceStr, Color.RED, Color.GRAY);
-            } else if (listViewThreeConfig.getGoods_layout().equals( Constant.LAYER_STYLE_NORMAL )) {
+            } else if (listViewThreeConfig.getGoods_layer().equals( Constant.LAYER_STYLE_NORMAL )) {
                 tv.setTextColor(Color.WHITE);
+                String priceStr = CommonUtil.formatDouble(item.getPrice());
+                String zPriceStr = CommonUtil.formatPrice( item.getPriceLevel());
+                SpanningUtil.set_Price_Format2(tv, priceStr, zPriceStr, Color.WHITE, Color.WHITE);
             }
-        }else if( listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_3)) {
+        }else if( !TextUtils.isEmpty(listViewThreeConfig.getGoods_layout()) && listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_3)) {
             String priceStr = CommonUtil.formatDouble(item.getPrice());
             String zPriceStr = CommonUtil.formatPrice(item.getPriceLevel());
             SpanningUtil.set_Price_Format1(tv, priceStr, zPriceStr, Color.RED , Color.GRAY);

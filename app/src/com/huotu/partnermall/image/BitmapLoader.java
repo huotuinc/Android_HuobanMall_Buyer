@@ -20,7 +20,6 @@ import com.huotu.partnermall.widgets.NetworkImageViewCircle;
  */
 public class BitmapLoader
 {
-
     private static BitmapLoader instance;
 
     public synchronized static BitmapLoader create()

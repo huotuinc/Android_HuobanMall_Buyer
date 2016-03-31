@@ -21,16 +21,8 @@ public class BillBoardWidget extends TextView {
         super(context);
         this.billBoardConfig=billBoardConfig;
 
-        try {
-            this.setBackgroundColor(CommonUtil.parseColor(this.billBoardConfig.getText_background()));
-        }catch (Exception ex){
-            Logger.e(ex.getMessage(), ex);
-        }
-        try{
-            this.setTextColor( CommonUtil.parseColor( this.billBoardConfig.getText_color() ) );
-        }catch (Exception ex){
-            Logger.e(ex.getMessage(),ex);
-        }
+        this.setBackgroundColor(CommonUtil.parseColor(this.billBoardConfig.getText_background()));
+        this.setTextColor( CommonUtil.parseColor( this.billBoardConfig.getText_color() ) );
         this.setSingleLine();
         this.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         this.setMarqueeRepeatLimit(-1);

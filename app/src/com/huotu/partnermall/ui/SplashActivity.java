@@ -231,7 +231,7 @@ public class SplashActivity extends BaseActivity {
 
     protected void Demo(){
         PageConfig pageConfig=new PageConfig();
-        pageConfig.setVersion(2);
+        //pageConfig.setVersion(2);
         pageConfig.setWidgets(null);
         List<WidgetConfig> widgetConfigs = new ArrayList<>();
 
@@ -284,7 +284,7 @@ public class SplashActivity extends BaseActivity {
      */
     private boolean judgeNativeUIConfigVersion( PageConfig serverUIConfig){
         int localUIVersion = NativeConstants.Version();
-        int serverUIVersion = serverUIConfig.getVersion();
+        int serverUIVersion = 0;//serverUIConfig.getVersion();
         if( localUIVersion>= serverUIVersion){
             JSONUtil<PageConfig> jsonUtil = new JSONUtil<>();
             String json = jsonUtil.toJson(serverUIConfig);

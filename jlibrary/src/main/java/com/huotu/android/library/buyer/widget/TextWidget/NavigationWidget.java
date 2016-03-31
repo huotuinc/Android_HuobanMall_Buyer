@@ -9,13 +9,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.huotu.android.library.buyer.bean.AsistBean.LinkBean;
 import com.huotu.android.library.buyer.bean.TextBean.NavigationConfig;
 import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
 import com.huotu.android.library.buyer.widget.BaseLinearLayout;
-import com.huotu.android.library.buyer.widget.LinkClickListener;
 import com.huotu.android.library.buyer.bean.TextBean.LinkConfig;
 import com.huotu.android.library.buyer.utils.TypeFaceUtil;
 import com.huotu.android.library.buyer.R;
@@ -25,15 +22,6 @@ import com.huotu.android.library.buyer.R;
  */
 public class NavigationWidget extends BaseLinearLayout{
     NavigationConfig navigationConfig;
-    TextView tvTitle;
-    TextView tvArrow;
-    RelativeLayout rl;
-
-//    private LinkClickListener linkClickListener;
-
-//    public void setLinkClickListener(LinkClickListener linkClickListener) {
-//        this.linkClickListener = linkClickListener;
-//    }
 
     public NavigationWidget(Context context, NavigationConfig navigationConfig) {
         super(context);
@@ -47,21 +35,9 @@ public class NavigationWidget extends BaseLinearLayout{
             LinkConfig item = navigationConfig.getLinks().get(i);
             createLayout(item, (i+1) == count  ? false : true);
         }
-
-//        LayoutInflater layoutInflater = LayoutInflater.from(context);
-//        layoutInflater.inflate(R.layout.text_navigation, this, true);
-//
-//        rl = (RelativeLayout)findViewById(R.id.text_navigation_rl);
-//        rl.setOnClickListener(this);
-//        tvTitle =(TextView)findViewById(R.id.text_navigation_title);
-//        tvArrow = (TextView) findViewById(R.id.text_navigation_right_arrow);
-//
-//        tvArrow.setTypeface( TypeFaceUtil.FONTAWEOME(getContext()) );
-//
-//        tvTitle.setText( navigationConfig.getLinks() );
     }
 
-    protected void createLayout(LinkConfig item, boolean shouwLine) {
+    protected void createLayout(LinkConfig item, boolean showLine) {
         int rlContent_id = item.hashCode();
         RelativeLayout rlContent = new RelativeLayout(getContext());
         rlContent.setId(rlContent_id);
@@ -104,7 +80,7 @@ public class NavigationWidget extends BaseLinearLayout{
         tvTitle.setLayoutParams(layoutParams1);
         rlContent.addView(tvTitle);
 
-        if (!shouwLine) return;
+        if (!showLine) return;
 
         TextView tvLine = new TextView(getContext());
         this.addView(tvLine);
@@ -113,7 +89,6 @@ public class NavigationWidget extends BaseLinearLayout{
         layoutParams.setMargins(leftPx,0,rightPx,0);
         tvLine.setLayoutParams(layoutParams);
         tvLine.setBackgroundColor(Color.GRAY);
-
     }
 
     @Override

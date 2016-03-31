@@ -100,8 +100,8 @@ public class CommonUtil {
             if( scores.get(0).equals( scores.get(1) )){
                 String s1 = String.valueOf(scores.get(0));
                 return s1;
-            }else {
-                return scores.toString();
+            }else {//
+                return scores.get(1).toString(); //scores.toString();
             }
         }
         return "0";
@@ -148,7 +148,10 @@ public class CommonUtil {
 
 
     public static void link(String linkName , String relativeUrl){
-        String url=relativeUrl.toLowerCase();
+
+        String url=relativeUrl;
+        url = url.replace( Constant.URL_PARAMETER_CUSTOMERID , String.valueOf( Variable.CustomerId ));
+
 //        if( !relativeUrl.startsWith(Variable.siteUrl)) {
 //            url = Variable.siteUrl + relativeUrl;
 //        }
@@ -159,16 +162,16 @@ public class CommonUtil {
         url = url.replace( Constant.URL_PARAMETER_CUSTOMERID, String.valueOf( Variable.CustomerId));
 
         Uri uri = Uri.parse(url);
-        String path = uri.getPath().toLowerCase().trim();
+        String path = uri.getPath().trim();
         int idx = path.lastIndexOf("/");
         String fileName = path.substring(idx + 1);
         String indexPage = String.valueOf( Variable.CustomerId )+"/"+Constant.URL_SHOP_INDEX;//首页
         if (path.endsWith(Constant.URL_SMART_ASPX)) {
             String smartUrlPara = uri.getQueryParameter("url");
-            EventBus.getDefault().post( new SmartUiEvent( smartUrlPara ));
+            EventBus.getDefault().post( new SmartUiEvent( smartUrlPara ,false));
         }else if( path.endsWith(indexPage)){
             String smartUrlPara = Variable.mainUiConfigUrl;
-            EventBus.getDefault().post( new SmartUiEvent( smartUrlPara ));
+            EventBus.getDefault().post( new SmartUiEvent( smartUrlPara ,true));
         }else if( path.endsWith(Constant.URL_CLASS_ASPX)){
             String para_cateid = uri.getQueryParameter("cateid");
             String para_vircateid = uri.getQueryParameter("vircateid");
@@ -201,7 +204,7 @@ public class CommonUtil {
      * @param catid
      * @param type
      */
-    protected static void getClassPageConfig( int customerid , final String catid , final String type , final String defaulttype , final String id ){
+    protected static void getClassPageConfig( final int customerid , final String catid , final String type , final String defaulttype , final String id ){
         String key = Variable.BizKey;
         String random = String.valueOf(System.currentTimeMillis());
         String secure = SignUtil.getSecure(Variable.BizKey, Variable.BizAppSecure, random);
@@ -223,6 +226,7 @@ public class CommonUtil {
                         response.body() == null || response.body().get_links() == null) {
                     Logger.e(response.message());
                     //当无法获得商品分类页面配置地址时，则获取默认的配置地址。
+                    if( customerid ==0 ) return;
                     getClassPageConfig(0, defaulttype, type, defaulttype, id);
                     return;
                 }
@@ -239,8 +243,14 @@ public class CommonUtil {
         });
     }
 
-
-    protected static void getSearchPageConfig(int customerid , final String pageclass ,final String type , final String keyword ){
+    /**
+     * 获得 商品搜索 配置信息 url
+     * @param customerid
+     * @param pageclass
+     * @param type
+     * @param keyword
+     */
+    protected static void getSearchPageConfig(final int customerid , final String pageclass ,final String type , final String keyword ){
         String key = Variable.BizKey;
         String random = String.valueOf(System.currentTimeMillis());
         String secure = SignUtil.getSecure(Variable.BizKey, Variable.BizAppSecure, random);
@@ -261,6 +271,7 @@ public class CommonUtil {
                         response.body() == null || response.body().get_links() == null) {
                     Logger.e(response.message());
                     //当无法获得商品分类页面配置地址时，则获取默认的配置地址。
+                    if( customerid ==0 ) return;
                     getSearchPageConfig(0, pageclass, type, keyword);
                     return;
                 }
