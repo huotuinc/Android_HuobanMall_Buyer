@@ -137,10 +137,6 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         ivJifenPic2 = (SimpleDraweeView) findViewById(R.id.listview_three_item_jifenPic2);
         ivJifenPic3 = (SimpleDraweeView) findViewById(R.id.listview_three_item_jifenPic3);
 
-//        rl1.setBackgroundResource(R.drawable.gray_border_style);
-//        rl2.setBackgroundResource(R.drawable.gray_border_style);
-//        rl3.setBackgroundResource(R.drawable.gray_border_style);
-
         if( !this.listViewThreeConfig.getProduct_showname().equals(Constant.GOODS_SHOW) ){
             tvName1.setVisibility(View.GONE);
             tvName2.setVisibility(View.GONE);
@@ -219,7 +215,6 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         layoutParams.addRule(RelativeLayout.LEFT_OF, R.id.listview_three_item_jifenPic1);
         tvPrice1.setLayoutParams(layoutParams);
         tvPrice1.setTextColor(Color.WHITE);
-
 
         layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);//(RelativeLayout.LayoutParams) tvJiFen1.getLayoutParams();
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -460,13 +455,11 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         tvName2.setTextColor(Color.BLACK);
         tvName3.setTextColor(Color.BLACK);
 
-//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.defaultpic);
-//        int w = bmp.getWidth();
-//        int h = bmp.getHeight();
-        int ivw =getResources().getDisplayMetrics().widthPixels *2/5;
+        int ivw =getResources().getDisplayMetrics().widthPixels /3;
         int ivh = ivw;
-//        int ivh =  h* ivw / w;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams( ivw , ivh );
+        int margin = DensityUtils.dip2px(getContext(),2);
+        layoutParams.setMargins(margin,margin,margin,margin);
         iv1.setLayoutParams(layoutParams);
         iv2.setLayoutParams(layoutParams);
         iv3.setLayoutParams(layoutParams);
@@ -496,7 +489,7 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         rl2.setBackgroundResource(0);
         rl3.setBackgroundResource(0);
 
-        imageWidth1 = imageWidth2 = imageWidth3 =getResources().getDisplayMetrics().widthPixels*2/5;
+        imageWidth1 = imageWidth2 = imageWidth3 =getResources().getDisplayMetrics().widthPixels/3;
         int ivh = imageWidth1;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams( imageWidth1 , ivh );
         iv1.setLayoutParams(layoutParams);
@@ -506,10 +499,10 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         set_jiefenPic();
     }
 
-    private void create_PUBULIU(){
-        //throw new Exception("no Implementation method!");
-        Logger.e("no Implementation method!");
-    }
+//    private void create_PUBULIU(){
+//        //throw new Exception("no Implementation method!");
+//        Logger.e("no Implementation method!");
+//    }
 
     /**
      * 设置 返利 图标
@@ -549,15 +542,29 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
             if(tvJiFen3!=null) tvJiFen3.setText( jifen3 +"积分");
             if(rl3!=null ) rl3.setTag(dataItems.get(2));
         }
+
+        //如果是详细布局，则根据数据隐藏控件
+        if( !TextUtils.isEmpty(listViewThreeConfig.getGoods_layout())
+                && listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_3 )){
+            if( dataItems.size() < 1 ){
+                rl1.setVisibility(GONE);
+                rl2.setVisibility(GONE);
+                rl3.setVisibility(GONE);
+            }else if(dataItems.size()<2){
+                rl2.setVisibility(GONE);
+                rl3.setVisibility(GONE);
+            }else if( dataItems.size()<3){
+                rl3.setVisibility(GONE);
+            }
+        }
     }
 
-    private void set_Image_Height( SimpleDraweeView iv , int width , GoodsBean item){
-
-        if( !TextUtils.isEmpty( listViewThreeConfig.getGoods_layout()) && listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_2) ){
+    private void set_Image_Height( SimpleDraweeView iv , int width , GoodsBean item) {
+        if (!TextUtils.isEmpty(listViewThreeConfig.getGoods_layout()) && listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_2)) {
 
             FrescoDraweeController.loadImage(iv, width, item.getThumbnailPic());
         }
-        if( !TextUtils.isEmpty(listViewThreeConfig.getGoods_layout()) && listViewThreeConfig.getGoods_layout().equals( Constant.WIDGETLAYOUT_SIZE_3) ) {
+        if (!TextUtils.isEmpty(listViewThreeConfig.getGoods_layout()) && listViewThreeConfig.getGoods_layout().equals(Constant.WIDGETLAYOUT_SIZE_3)) {
 
             FrescoDraweeController.loadImage(iv, width, item.getThumbnailPic());
         }

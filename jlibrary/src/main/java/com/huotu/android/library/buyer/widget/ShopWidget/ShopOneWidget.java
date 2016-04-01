@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.android.library.buyer.BizApiService;
 import com.huotu.android.library.buyer.bean.BizBean.BizBaseBean;
@@ -44,6 +46,7 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
     private SimpleDraweeView rightImage;
     private TextView tvLeftTitle;
     private TextView tvRightTitle;
+    private int LOGOWIDTH=20;
 
     public ShopOneWidget(Context context, ShopOneConfig config){
         super(context);
@@ -55,6 +58,9 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
         this.setBackgroundColor(CommonUtil.parseColor(config.getBackColor()));
 
         leftImage = new SimpleDraweeView(context);
+        RoundingParams roundingParams = RoundingParams.asCircle();
+        leftImage.getHierarchy().setRoundingParams(roundingParams);
+
         leftImage.setOnClickListener(this);
         id1 = leftImage.hashCode();
         leftImage.setId(id1);
@@ -69,6 +75,8 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
         layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.RIGHT_OF, id1);
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        int leftPx = DensityUtils.dip2px(getContext(),2);
+        layoutParams.setMargins(leftPx, 0, 0, 0);
         tvLeftTitle.setLayoutParams(layoutParams);
         tvLeftTitle.setGravity(Gravity.CENTER_VERTICAL);
         tvLeftTitle.setTextColor(CommonUtil.parseColor(config.getFontColor()));
@@ -82,6 +90,7 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
         layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        layoutParams.setMargins(leftPx,0,0,0);
         tvRightTitle.setLayoutParams(layoutParams);
         tvRightTitle.setGravity(Gravity.CENTER_VERTICAL);
         tvRightTitle.setTextColor(CommonUtil.parseColor(config.getFontColor()));
@@ -96,20 +105,20 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
         rightImage.setLayoutParams(layoutParams);
         this.addView(rightImage);
 
-        int imageWidthPx = DensityUtils.dip2px(context, 30 );
+        int imageWidthPx = DensityUtils.dip2px(context, LOGOWIDTH );
         if( config.getShow_type() == Constant.LOGO_1 ) {
             String imageUrl1  = Variable.resourceUrl + config.getImageUrl1();
             FrescoDraweeController.loadImage(leftImage, imageWidthPx, imageUrl1);
             tvLeftTitle.setText(config.getTitle_linkname1());
-            tvRightTitle.setText(config.getTitle_linkname());
-            String imageUrl = Variable.resourceUrl + config.getImageUrl();
-            FrescoDraweeController.loadImage(rightImage, imageWidthPx, imageUrl );
         }else{
             //通过API接口获得信息
             asyncGetLogo();
         }
-    }
 
+        tvRightTitle.setText(config.getTitle_linkname());
+        String imageUrl = Variable.resourceUrl + config.getImageUrl();
+        FrescoDraweeController.loadImage(rightImage, imageWidthPx, imageUrl );
+    }
 
     @Override
     public void onClick(View v) {
@@ -121,6 +130,10 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
             String url = config.getLinkUrl();
             String name = config.getLinkName();
             CommonUtil.link(name , url);
+
+            //FrescoDraweeController.clearCache();
+            //Toast.makeText(getContext(),"clearcache",Toast.LENGTH_LONG).show();
+
         }
     }
 
@@ -135,13 +148,13 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
         String secure = SignUtil.getSecure(Variable.BizKey, Variable.BizAppSecure, random);
 
         Call<BizBaseBean<MallInfoBean>> call = bizApiService.getMallInfo( key , random , secure , customerId );
-        call.enqueue(new LogoCallBack(leftImage));
+        call.enqueue(new LogoCallBack(this));
     }
 
     public class LogoCallBack implements Callback<BizBaseBean<MallInfoBean>>{
-        WeakReference<SimpleDraweeView> ref;
-        public LogoCallBack(SimpleDraweeView imageView){
-            this.ref =  new WeakReference<>(imageView);
+        WeakReference<ShopOneWidget> ref;
+        public LogoCallBack(ShopOneWidget widget){
+            this.ref =  new WeakReference<>(widget);
         }
 
         @Override
@@ -152,8 +165,9 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
                 return;
             }
             String logoUrl = response.body().getData().getLogo();
-            int imageWidthPx = DensityUtils.dip2px(ref.get().getContext() , 30);
-            FrescoDraweeController.loadImage(ref.get() , imageWidthPx, logoUrl );
+            int imageWidthPx = DensityUtils.dip2px(ref.get().getContext() , LOGOWIDTH );
+            FrescoDraweeController.loadImage(ref.get().leftImage , imageWidthPx, logoUrl );
+            ref.get().tvLeftTitle.setText( response.body().getData().getMallName() );
         }
 
         @Override

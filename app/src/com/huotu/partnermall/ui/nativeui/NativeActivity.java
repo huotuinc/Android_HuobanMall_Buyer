@@ -148,10 +148,7 @@ public class NativeActivity
         super.onResume();
         Register();
 
-//        if(getIntent().hasExtra(NativeConstants.KEY_NEEDREFRESHUI )){
-//            getIndexConfig();
-//            getIntent().removeExtra(NativeConstants.KEY_NEEDREFRESHUI);
-//        }
+        dismissProgress();
     }
 
     @Override

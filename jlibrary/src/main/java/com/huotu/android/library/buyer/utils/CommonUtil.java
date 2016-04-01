@@ -9,6 +9,14 @@ import android.widget.RelativeLayout;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.huotu.android.library.buyer.BizApiService;
 import com.huotu.android.library.buyer.ConfigApiService;
 import com.huotu.android.library.buyer.bean.BizBean.BizBaseBean;
@@ -129,9 +137,34 @@ public class CommonUtil {
      * @return 转化出来的 JavaBean 对象
      */
     public static <T> T convertMap(T thisObj, Map map) {
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(map);
-        return (T) gson.fromJson( jsonString , thisObj.getClass() );
+        try {
+            if(map.containsKey("paddingLeft")){
+                if( map.get("paddingLeft")!=null && map.get("paddingLeft")==""){
+                    map.put("paddingLeft", 0);
+                }
+            }
+            if(map.containsKey("paddingRight")){
+                if( map.get("paddingRight")!=null && map.get("paddingRight")==""){
+                    map.put("paddingRight",0);
+                }
+            }
+            if(map.containsKey("paddingTop")){
+                if( map.get("paddingTop")!=null && map.get("paddingTop")==""){
+                    map.put("paddingTop",0);
+                }
+            }
+            if(map.containsKey("paddingBottom")){
+                if( map.get("paddingBottom")!=null && map.get("paddingBottom")==""){
+                    map.put("paddingBottom",0);
+                }
+            }
+
+            Gson gson = new GsonBuilder().serializeNulls().create(); //new Gson();
+            String jsonString = gson.toJson(map);
+            return (T) gson.fromJson(jsonString, thisObj.getClass());
+        }catch ( Exception ex ){
+            return null;
+        }
     }
 
     /**
@@ -148,13 +181,11 @@ public class CommonUtil {
 
 
     public static void link(String linkName , String relativeUrl){
+        if( TextUtils.isEmpty( relativeUrl )) return;
 
         String url=relativeUrl;
         url = url.replace( Constant.URL_PARAMETER_CUSTOMERID , String.valueOf( Variable.CustomerId ));
 
-//        if( !relativeUrl.startsWith(Variable.siteUrl)) {
-//            url = Variable.siteUrl + relativeUrl;
-//        }
         if( !url.startsWith("http://")){
             url = Variable.siteUrl + relativeUrl;
         }
@@ -162,7 +193,7 @@ public class CommonUtil {
         url = url.replace( Constant.URL_PARAMETER_CUSTOMERID, String.valueOf( Variable.CustomerId));
 
         Uri uri = Uri.parse(url);
-        String path = uri.getPath().trim();
+        String path = uri.getPath().toLowerCase().trim();
         int idx = path.lastIndexOf("/");
         String fileName = path.substring(idx + 1);
         String indexPage = String.valueOf( Variable.CustomerId )+"/"+Constant.URL_SHOP_INDEX;//首页
@@ -286,4 +317,5 @@ public class CommonUtil {
             }
         });
     }
+
 }

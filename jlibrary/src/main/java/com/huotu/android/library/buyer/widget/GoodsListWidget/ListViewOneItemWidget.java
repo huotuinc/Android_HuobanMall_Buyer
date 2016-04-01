@@ -180,7 +180,7 @@ public class ListViewOneItemWidget extends BaseLinearLayoutWidget implements Vie
             int topPaddingPx = DensityUtils.dip2px( getContext() , topPadding );
             int bottomPaddingPx= topPaddingPx;
             tvName1.setPadding( leftPaddingPx , topPaddingPx , rightPaddingPx , bottomPaddingPx );
-            tvName1.setText("我要\r\n促销");
+            tvName1.setText("我要\r\n抢购");
 
         }
     }
@@ -213,7 +213,7 @@ public class ListViewOneItemWidget extends BaseLinearLayoutWidget implements Vie
             tvJiFen1.setText( jf +"积分" );
 
         }else if( config.getGoods_layer().equals( Constant.LAYER_STYLE_PROMOTION )){
-            tvName1.setText("我要\r\n促销");
+            tvName1.setText("我要\r\n抢购");
             String jf = CommonUtil.formatJiFen(item.getScore()); //item.getScore().toString();//CommonUtil.FormatDouble( item.getRebate() );
             tvJiFen1.setText( jf  + "积分");
             String price = CommonUtil.formatDouble( item.getPrice() );

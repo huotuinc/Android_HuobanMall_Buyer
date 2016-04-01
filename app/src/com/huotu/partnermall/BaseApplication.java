@@ -10,6 +10,8 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -109,6 +111,8 @@ public class BaseApplication extends Application {
     @Override
     public void onLowMemory ( ) {
         super.onLowMemory();
+
+        //Toast.makeText(this,"onlowmemory",Toast.LENGTH_LONG).show();
     }
 
     @Override

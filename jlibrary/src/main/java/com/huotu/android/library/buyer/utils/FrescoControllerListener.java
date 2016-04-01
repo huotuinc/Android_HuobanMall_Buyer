@@ -13,33 +13,36 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Administrator on 2016/1/6.
  */
-public class FrescoControllerListener extends BaseControllerListener {
+public class FrescoControllerListener extends BaseControllerListener<ImageInfo> {
     WeakReference< SimpleDraweeView> ref;
+    //SimpleDraweeView simpleDraweeView;
     int width;
 
     public FrescoControllerListener(SimpleDraweeView iv, int width){
         this.ref= new WeakReference<SimpleDraweeView>(iv);
+        //this.simpleDraweeView = iv;
         this.width=width;
     }
 
     @Override
-    public void onFinalImageSet(String id, Object imageInfo, Animatable animatable) {
+    public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
         super.onFinalImageSet(id, imageInfo, animatable);
-
+        if( imageInfo==null) return;
         if( ref.get() ==null ) return;
 
-        ImageInfo info = (ImageInfo)imageInfo;
-        int h = info.getHeight();
-        int w = info.getWidth();
+
+        int h = imageInfo.getHeight();
+        int w = imageInfo.getWidth();
 
         int ivw = width;
         int ivh = h* ivw / w;
-        ViewGroup.LayoutParams layoutParams = ref.get().getLayoutParams();
+        ViewGroup.LayoutParams layoutParams =  ref.get().getLayoutParams();
         //layoutParams.height = ivh;
         layoutParams.width = ivw;
         layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
 
         ref.get().setLayoutParams(layoutParams);
+
 
         float ratio = w * 1.0f/h;
         ref.get().setAspectRatio(ratio);
@@ -49,7 +52,7 @@ public class FrescoControllerListener extends BaseControllerListener {
     @Override
     public void onFailure(String id, Throwable throwable) {
         super.onFailure(id, throwable);
-        if( ref.get() ==null ) return;
+        //if( ref.get() ==null ) return;
 
         ViewGroup.LayoutParams layoutParams = ref.get().getLayoutParams();
         layoutParams.width = width;

@@ -75,8 +75,6 @@ public class NativeBaseActivity extends AppCompatActivity {
         }
     }
 
-
-
     public  void showProgress(String message) {
         if (windowProgress == null) {
             windowProgress = new WindowProgress(this);

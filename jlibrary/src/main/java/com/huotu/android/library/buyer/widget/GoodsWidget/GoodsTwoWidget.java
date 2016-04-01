@@ -180,7 +180,7 @@ public class GoodsTwoWidget extends BaseLinearLayout {
         layoutParams.addRule(RelativeLayout.BELOW, ivPic.getId());
         layoutParams.addRule(RelativeLayout.ALIGN_RIGHT , ivPic.getId() );
         tvCX.setLayoutParams(layoutParams);
-        tvCX.setText("我要\r\n促销");
+        tvCX.setText("我要\r\n抢购");
         tvCX.setBackgroundColor(Color.RED);
         tvCX.setTextColor(Color.WHITE);
         tvCX.setGravity(Gravity.CENTER);
@@ -351,7 +351,8 @@ public class GoodsTwoWidget extends BaseLinearLayout {
     private RelativeLayout create_card( GoodsBean good  ) {
         RelativeLayout rlGoods = new RelativeLayout(getContext());
         LinearLayout.LayoutParams llLayoutOParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        llLayoutOParams.setMargins(2,2,2,2);
+        int marginPx = DensityUtils.dip2px(getContext(),2);
+        llLayoutOParams.setMargins( marginPx , marginPx, marginPx, marginPx );
         rlGoods.setLayoutParams(llLayoutOParams);
         rlGoods.setBackgroundResource(R.drawable.gray_border_style);
         int leftPx = DensityUtils.dip2px(getContext(), this.goodsTwoConfig.getLeftMargion());
@@ -363,8 +364,9 @@ public class GoodsTwoWidget extends BaseLinearLayout {
 
         ivPic = new SimpleDraweeView(getContext());
         ivPic.setId( ivPic.hashCode() );
-        int picWidth = getContext().getResources().getDisplayMetrics().widthPixels/2;
+        int picWidth = getContext().getResources().getDisplayMetrics().widthPixels/2 - 2* marginPx ;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(picWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(2,1,2,1);
         ivPic.setLayoutParams(layoutParams);
         rlGoods.addView(ivPic);
 
@@ -394,7 +396,7 @@ public class GoodsTwoWidget extends BaseLinearLayout {
         tvJifen = new TextView( getContext() );
         tvJifen.setId( tvJifen.hashCode());
 
-        if(  TextUtils.isEmpty( goodsTwoConfig.getBackground()) ) {
+        if( TextUtils.isEmpty( goodsTwoConfig.getBackground()) ) {
             int relaId;
             if(goodsTwoConfig.getProduct_showprices().equals(Constant.GOODS_SHOW)){
                 relaId = tvPrice.getId();

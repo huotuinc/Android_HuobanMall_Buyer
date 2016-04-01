@@ -35,14 +35,6 @@ public class AdOneWidget extends BaseLinearLayout {
 
         if(config.getImages()==null || config.getImages().size()<1 ) return;
 
-//        LayoutParams llLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        int leftPx = DensityUtils.dip2px(getContext(), config.getPaddingLeft());
-//        int rightPx = DensityUtils.dip2px( getContext() , config.getPaddingRight() );
-//        int topPx = DensityUtils.dip2px( getContext() , config.getPaddingTop() );
-//        int bottomPx = DensityUtils.dip2px( getContext(),config.getPaddingBottom() );
-//        llLayoutParams.setMargins( leftPx , topPx , rightPx  , bottomPx );
-//        this.setLayoutParams(llLayoutParams);
-
         for(AdImageBean item : config.getImages()){
             createLayout(item);
         }
@@ -54,25 +46,27 @@ public class AdOneWidget extends BaseLinearLayout {
         llItem.setTag(item);
         llItem.setOrientation(VERTICAL);
 
-        SimpleDraweeView image1 = new SimpleDraweeView( getContext() );
-        int width = getResources().getDisplayMetrics().widthPixels;
-        LayoutParams layoutParams = new LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
-        image1.setLayoutParams(layoutParams);
-        llItem.addView(image1);
-
-        if( !TextUtils.isEmpty( item.getLinkName() ) ){
-            TextView tvName = new TextView(getContext() );
-            tvName.setText(item.getLinkName());
-            llItem.addView(tvName);
-        }
-
         int leftPx = DensityUtils.dip2px(getContext(), config.getPaddingLeft());
         int rightPx = DensityUtils.dip2px( getContext() , config.getPaddingRight() );
         int topPx = DensityUtils.dip2px( getContext() , config.getPaddingTop() );
         int bottomPx = DensityUtils.dip2px( getContext(),config.getPaddingBottom() );
-        layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins( leftPx , topPx , rightPx , bottomPx );
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(leftPx, topPx, rightPx, bottomPx);
         llItem.setLayoutParams(layoutParams);
+
+        SimpleDraweeView image1 = new SimpleDraweeView( getContext() );
+        int width = getResources().getDisplayMetrics().widthPixels;
+        width = width - leftPx - rightPx;
+
+        layoutParams = new LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        image1.setLayoutParams(layoutParams);
+        llItem.addView(image1);
+
+        if( !TextUtils.isEmpty( item.getTitle() ) ){
+            TextView tvName = new TextView(getContext() );
+            tvName.setText(item.getTitle());
+            llItem.addView(tvName);
+        }
 
         String imageUrl = Variable.resourceUrl + item.getImageUrl();
         FrescoDraweeController.loadImage(image1, width, imageUrl);
@@ -85,6 +79,7 @@ public class AdOneWidget extends BaseLinearLayout {
         if( v.getTag()!=null && v.getTag() instanceof AdImageBean){
             AdImageBean bean = (AdImageBean)v.getTag();
             String url = bean.getLinkUrl();
+            //if( TextUtils.isEmpty( url )) return;
             String name = bean.getLinkName();
             CommonUtil.link(name , url);
         }
