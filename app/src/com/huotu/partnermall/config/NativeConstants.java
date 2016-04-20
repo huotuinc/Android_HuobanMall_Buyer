@@ -74,4 +74,9 @@ public class NativeConstants {
     public final static int CUSTOMERID(){
         return BuildConfig.CUSTOMERID;
     }
+
+    public final static int TYPE_SMARTUI=1;
+    public final static int TYPE_WEB=2;
+    public final static int TYPE_INDEX=0;
+    public final static String KEY_TYPE="key_type";
 }

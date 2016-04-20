@@ -1,8 +1,6 @@
 package com.huotu.partnermall.ui.login;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.PaintDrawable;
@@ -12,7 +10,6 @@ import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
@@ -78,6 +75,10 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
         if( successProgress !=null) {
             successProgress.dismissView();
             successProgress=null;
+        }
+
+        if(mHandler!=null){
+            mHandler.removeCallbacksAndMessages(null);
         }
     }
 

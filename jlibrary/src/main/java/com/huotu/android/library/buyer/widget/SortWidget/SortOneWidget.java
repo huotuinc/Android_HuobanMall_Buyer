@@ -444,7 +444,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
                 customerid  );
         call.enqueue(new Callback<BizBaseBean<List<BrandBean>>>() {
             @Override
-            public void onResponse(Response<BizBaseBean<List<BrandBean>>> response) {
+            public void onResponse(Call<BizBaseBean<List<BrandBean>>> call, Response<BizBaseBean<List<BrandBean>>> response) {
                 if (response == null || response.code() != Constant.REQUEST_SUCCESS) {
                     Logger.e(response.message());
                     return;
@@ -456,7 +456,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure( Call<BizBaseBean<List<BrandBean>>> call, Throwable t) {
                 Logger.e(t.getMessage());
             }
         });
@@ -491,7 +491,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
 
         call.enqueue(new Callback<BizBaseBean<List<ClassBean>>>() {
             @Override
-            public void onResponse(Response<BizBaseBean<List<ClassBean>>> response) {
+            public void onResponse(Call<BizBaseBean<List<ClassBean>>> call, Response<BizBaseBean<List<ClassBean>>> response) {
                 if( response==null || response.code()!= Constant.REQUEST_SUCCESS){
                     Logger.e(response.message());
                     return;
@@ -503,7 +503,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<BizBaseBean<List<ClassBean>>> call, Throwable t) {
                 Logger.e(t.getMessage(),t);
             }
         });
@@ -537,7 +537,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
 
         call.enqueue(new Callback<BizBaseBean<List<TagBean>>>() {
             @Override
-            public void onResponse(Response<BizBaseBean<List<TagBean>>> response) {
+            public void onResponse( Call<BizBaseBean<List<TagBean>>> call, Response<BizBaseBean<List<TagBean>>> response) {
                 if( response==null || response.code()!= Constant.REQUEST_SUCCESS){
                     Logger.e(response.message());
                     return;
@@ -549,7 +549,7 @@ public class SortOneWidget extends LinearLayout implements View.OnClickListener 
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure( Call<BizBaseBean<List<TagBean>>> call, Throwable t) {
                 Logger.e(t.getMessage(),t);
             }
         });

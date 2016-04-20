@@ -3,8 +3,8 @@ package com.huotu.android.library.buyer.utils;
 import com.huotu.android.library.buyer.BuildConfig;
 import com.huotu.android.library.buyer.bean.Variable;
 
-import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  *
@@ -47,5 +47,21 @@ public class RetrofitUtil {
                     .build();
         }
         return bizRetrofitClient;
+    }
+
+    private static Retrofit tRetrofitClient;
+
+    public static Retrofit getTempRetroftClient(String baseUrl){
+        if( tRetrofitClient!=null && tRetrofitClient.baseUrl().equals(baseUrl)) {
+            return tRetrofitClient;
+        }
+
+        tRetrofitClient=null;
+        tRetrofitClient = new Retrofit.Builder()
+                    .baseUrl(baseUrl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+        return tRetrofitClient;
     }
 }

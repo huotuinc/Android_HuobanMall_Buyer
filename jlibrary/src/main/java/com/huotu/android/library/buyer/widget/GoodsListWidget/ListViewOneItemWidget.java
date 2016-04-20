@@ -186,9 +186,9 @@ public class ListViewOneItemWidget extends BaseLinearLayoutWidget implements Vie
     }
 
     public void addData( GoodsBean item ){
-        int s = this.getMeasuredWidth();
-        int width = this.itemWidth;//pic1.getMeasuredWidth();
-        FrescoDraweeController.loadImage(pic1, width, item.getThumbnailPic());
+        int width = this.itemWidth;
+        //FrescoDraweeController.loadImage(pic1, width, item.getThumbnailPic());
+        FrescoDraweeController.loadImage(pic1,width,width,item.getThumbnailPic());
 
         rl1.setTag(item);
 

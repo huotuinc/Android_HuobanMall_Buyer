@@ -160,7 +160,7 @@ public class ClassGroupWidget extends BaseLinearLayout {
 
         call.enqueue(new Callback<BizBaseBean<List<ClassBean>>>() {
             @Override
-            public void onResponse(Response<BizBaseBean<List<ClassBean>>> response) {
+            public void onResponse( Call<BizBaseBean<List<ClassBean>>> call, Response<BizBaseBean<List<ClassBean>>> response) {
                 if (response == null || response.code() != Constant.REQUEST_SUCCESS
                         || response.body() == null || response.body().getData() == null || response.body().getData() == null) {
                     Logger.e(response.message());
@@ -180,7 +180,7 @@ public class ClassGroupWidget extends BaseLinearLayout {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<BizBaseBean<List<ClassBean>>> call, Throwable t) {
                 Logger.e(t.getMessage());
             }
         });

@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -26,7 +27,7 @@ public class ListViewThreeCallback implements Callback<BizBaseBean<GoodsListBean
     }
 
     @Override
-    public void onResponse(Response<BizBaseBean<GoodsListBean>> response) {
+    public void onResponse( Call<BizBaseBean<GoodsListBean>> call,  Response<BizBaseBean<GoodsListBean>> response) {
         if( ref.get()==null) {
             EventBus.getDefault().post(new LoadCompleteEvent());
             return;
@@ -51,7 +52,7 @@ public class ListViewThreeCallback implements Callback<BizBaseBean<GoodsListBean
     }
 
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure( Call<BizBaseBean<GoodsListBean>> call, Throwable t) {
         Logger.e(t.getMessage());
         EventBus.getDefault().post(new LoadCompleteEvent());
     }

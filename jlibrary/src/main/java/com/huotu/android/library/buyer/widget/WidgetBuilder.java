@@ -82,7 +82,7 @@ import com.huotu.android.library.buyer.widget.TextWidget.TitleWidget;
 public class WidgetBuilder {
     public static View build( WidgetConfig widgetConfig , Activity activity){
         if( widgetConfig.getType() == WidgetTypeEnum.TEXT_TITLE.getIndex() ){
-            GsonUtil<TitleConfig> gsonUtil =new GsonUtil<>();
+            //GsonUtil<TitleConfig> gsonUtil =new GsonUtil<>();
             TitleConfig titleConfig = new TitleConfig();
             titleConfig = CommonUtil.convertMap(titleConfig, widgetConfig.getProperties());
             //titleConfig = gsonUtil.toBean( widgetConfig.getProperties() , titleConfig );
@@ -92,21 +92,21 @@ public class WidgetBuilder {
             titleWidget.setLayoutParams(layoutParams);
             return titleWidget;
         }else if(widgetConfig.getType()==WidgetTypeEnum.TEXT_RICHTEXT.getIndex()){
-            GsonUtil<RichTextConfig> gsonUtil =new GsonUtil<>();
+            //GsonUtil<RichTextConfig> gsonUtil =new GsonUtil<>();
             RichTextConfig richTextConfig = new RichTextConfig();
             richTextConfig = CommonUtil.convertMap( richTextConfig , widgetConfig.getProperties() );
             //richTextConfig = gsonUtil.toBean( widgetConfig.getProperties() , richTextConfig );
             RichTextWidget richTextWidget = new RichTextWidget(activity , richTextConfig);
             return richTextWidget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.TEXT_ARTICLETITLE.getIndex()){
-            GsonUtil<ArticleTitleConfig> gsonUtil =new GsonUtil<>();
+            //GsonUtil<ArticleTitleConfig> gsonUtil =new GsonUtil<>();
             ArticleTitleConfig articleTitleConfig = new ArticleTitleConfig();
             articleTitleConfig = CommonUtil.convertMap( articleTitleConfig , widgetConfig.getProperties() );
             //articleTitleConfig = gsonUtil.toBean( widgetConfig.getProperties() , articleTitleConfig );
             ArticleTitleWidget articleTitleWidget = new ArticleTitleWidget(activity , articleTitleConfig);
             return articleTitleWidget;
         }else if( widgetConfig.getType()==WidgetTypeEnum.TEXT_NAVIGATION.getIndex()){
-            GsonUtil<NavigationConfig> gsonUtil =new GsonUtil<>();
+            //GsonUtil<NavigationConfig> gsonUtil =new GsonUtil<>();
             NavigationConfig navigationConfig = new NavigationConfig();
             navigationConfig = CommonUtil.convertMap( navigationConfig , widgetConfig.getProperties() );
             //navigationConfig = gsonUtil.toBean( widgetConfig.getProperties() , navigationConfig );
@@ -115,35 +115,35 @@ public class WidgetBuilder {
             return navigationWidget;
 
         }else if(widgetConfig.getType()==WidgetTypeEnum.TEXT_BILLBOARD.getIndex()){
-            GsonUtil<BillBoardConfig> gsonUtil =new GsonUtil<>();
+            //GsonUtil<BillBoardConfig> gsonUtil =new GsonUtil<>();
             BillBoardConfig billBoardConfig = new BillBoardConfig();
             billBoardConfig = CommonUtil.convertMap(billBoardConfig,widgetConfig.getProperties());
             //billBoardConfig = gsonUtil.toBean( widgetConfig.getProperties() , billBoardConfig );
             BillBoardWidget billBoardWidget = new BillBoardWidget(activity , billBoardConfig);
             return billBoardWidget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.LISTVIEW_THREE.getIndex()){
-            GsonUtil<ListViewThreeConfig> gsonUtil =new GsonUtil<>();
+            //GsonUtil<ListViewThreeConfig> gsonUtil =new GsonUtil<>();
             ListViewThreeConfig listViewThreeConfig = new ListViewThreeConfig();
             listViewThreeConfig =  CommonUtil.convertMap( listViewThreeConfig , widgetConfig.getProperties() );
             //listViewThreeConfig = gsonUtil.toBean( widgetConfig.getProperties() , listViewThreeConfig);
             ListViewThreeWidget listViewThreeWidget = new ListViewThreeWidget(activity, listViewThreeConfig);
             return listViewThreeWidget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.LISTVIEW_TWO.getIndex() ){
-            GsonUtil<ListViewTwoConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<ListViewTwoConfig> gsonUtil = new GsonUtil<>();
             ListViewTwoConfig listViewTwoConfig = new ListViewTwoConfig();
             listViewTwoConfig = CommonUtil.convertMap( listViewTwoConfig, widgetConfig.getProperties() );
             //listViewTwoConfig = gsonUtil.toBean( widgetConfig.getProperties() , listViewTwoConfig );
             ListViewTwoWidget listViewTwoWidget =new ListViewTwoWidget(activity, listViewTwoConfig );
             return listViewTwoWidget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.AD_WINDOW.getIndex() ){
-            GsonUtil<AdWindowConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<AdWindowConfig> gsonUtil = new GsonUtil<>();
             AdWindowConfig config = new AdWindowConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean( widgetConfig.getProperties() , config );
             AdWindowWidget adWindowWidget =new AdWindowWidget(activity,  config );
             return adWindowWidget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.AD_ADONE.getIndex() ){
-            GsonUtil<AdOneConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<AdOneConfig> gsonUtil = new GsonUtil<>();
             AdOneConfig config = new AdOneConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean( widgetConfig.getProperties() , config );
@@ -158,7 +158,7 @@ public class WidgetBuilder {
             //adBannerWidget.setOnItemClickListener(activity);
             return adBannerWidget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.AD_ADPAGEBANNER.getIndex() ){
-            GsonUtil<AdPageBannerConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<AdPageBannerConfig> gsonUtil = new GsonUtil<>();
             AdPageBannerConfig config = new AdPageBannerConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean( widgetConfig.getProperties() , config );
@@ -166,77 +166,77 @@ public class WidgetBuilder {
             //adBannerWidget.setOnItemClickListener(activity);
             return adPageBannerWidget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.ASSIST_GUIDES2.getIndex() ){
-            GsonUtil<Guides2Config> gsonUtil = new GsonUtil<>();
+            //GsonUtil<Guides2Config> gsonUtil = new GsonUtil<>();
             Guides2Config config = new Guides2Config();
             config =  CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean( widgetConfig.getProperties() , config );
             Guides2Widget guides2Widget =new Guides2Widget(activity,  config );
             return guides2Widget;
         }else if( widgetConfig.getType() ==WidgetTypeEnum.SEARCH_ONE.getIndex() ){
-            GsonUtil<Search1Config> gsonUtil=new GsonUtil<>();
+            //GsonUtil<Search1Config> gsonUtil=new GsonUtil<>();
             Search1Config config = new Search1Config();
             config =  CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties(), config);
             Search1Widget search1Widget = new Search1Widget(activity, config);
             return  search1Widget;
         }else if(widgetConfig.getType() == WidgetTypeEnum.SHOP_TWO.getIndex() ){
-            GsonUtil<ShopTwoConfig> gsonUtil =new GsonUtil<>();
+            //GsonUtil<ShopTwoConfig> gsonUtil =new GsonUtil<>();
             ShopTwoConfig config = new ShopTwoConfig();
             config =  CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean( widgetConfig.getProperties() ,config );
             ShopTwoWidget shopTwoWidget = new ShopTwoWidget(activity , config);
             return shopTwoWidget;
         }else if(widgetConfig.getType() == WidgetTypeEnum.SHOP_ONE.getIndex() ){
-            GsonUtil<ShopOneConfig> gsonUtil =new GsonUtil<>();
+            //GsonUtil<ShopOneConfig> gsonUtil =new GsonUtil<>();
             ShopOneConfig config = new ShopOneConfig();
             config =  CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean( widgetConfig.getProperties() ,config );
             ShopOneWidget shopOneWidget = new ShopOneWidget(activity , config);
             return shopOneWidget;
         }else if(widgetConfig.getType() == WidgetTypeEnum.AD_ADAVERAGEBANNER.getIndex() ){
-            GsonUtil<AdAverageConfig> gsonUtil =new GsonUtil<>();
+            //GsonUtil<AdAverageConfig> gsonUtil =new GsonUtil<>();
             AdAverageConfig config = new AdAverageConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean( widgetConfig.getProperties() ,config );
             AdAverageWidget adAverageWidget = new AdAverageWidget(activity , config);
             return adAverageWidget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.AD_ADTHREE.getIndex() ){
-            GsonUtil<AdThreeConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<AdThreeConfig> gsonUtil = new GsonUtil<>();
             AdThreeConfig config = new AdThreeConfig();
             config =  CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             AdThreeWidget adThreeWidget = new AdThreeWidget(activity, config);
             return  adThreeWidget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.AD_ADFOUR.getIndex() ){
-            GsonUtil<AdFourConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<AdFourConfig> gsonUtil = new GsonUtil<>();
             AdFourConfig config = new AdFourConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             AdFourWidget adFOURWidget = new AdFourWidget(activity, config);
             return  adFOURWidget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.SORT_ONE.getIndex() ){
-            GsonUtil<SortOneConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<SortOneConfig> gsonUtil = new GsonUtil<>();
             SortOneConfig config = new SortOneConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             SortOneWidget widget = new SortOneWidget(activity, config);
             return  widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.FOOTER_ONE.getIndex() ){
-            GsonUtil<FooterOneConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<FooterOneConfig> gsonUtil = new GsonUtil<>();
             FooterOneConfig config = new FooterOneConfig();
             config =  CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             FooterOneWidget widget = new FooterOneWidget(activity, config);
             return  widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.GOODS_ONE.getIndex() ){
-            GsonUtil<GoodsOneConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<GoodsOneConfig> gsonUtil = new GsonUtil<>();
             GoodsOneConfig config = new GoodsOneConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             GoodsOneWidget widget = new GoodsOneWidget(activity, config);
             return  widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.SHOP_DEFAULT.getIndex() ){
-            GsonUtil<ShopDefaultConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<ShopDefaultConfig> gsonUtil = new GsonUtil<>();
             ShopDefaultConfig config = new ShopDefaultConfig();
 
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
@@ -244,63 +244,63 @@ public class WidgetBuilder {
             ShopDefaultWidget widget = new ShopDefaultWidget(activity, config);
             return  widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.ASSIST_GUIDES1.getIndex() ){
-            GsonUtil<Guides1Config> gsonUtil=new GsonUtil<>();
+            //GsonUtil<Guides1Config> gsonUtil=new GsonUtil<>();
             Guides1Config config=  new Guides1Config();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             Guides1Widget widget = new Guides1Widget(activity,config);
             return widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.ASSIST_GUIDESSHOP.getIndex()){
-            GsonUtil<GuidesShopConfig> gsonUtil=new GsonUtil<>();
+            //GsonUtil<GuidesShopConfig> gsonUtil=new GsonUtil<>();
             GuidesShopConfig config=  new GuidesShopConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             GuidesShopWidget widget = new GuidesShopWidget(activity,config);
             return widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.PROMOTION_ONE.getIndex()){
-            GsonUtil<Promotion1Config> gsonUtil=new GsonUtil<>();
+            //GsonUtil<Promotion1Config> gsonUtil=new GsonUtil<>();
             Promotion1Config config=  new Promotion1Config();
             config =  CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             Promotion1Widget widget = new Promotion1Widget(activity,config);
             return widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.SEARCH_TWO.getIndex() ){
-            GsonUtil<Search2Config> gsonUtil=new GsonUtil<>();
+            //GsonUtil<Search2Config> gsonUtil=new GsonUtil<>();
             Search2Config config=  new Search2Config();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             Search2Widget widget = new Search2Widget(activity,config);
             return widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.GOODS_ONE_CARD.getIndex() ){
-            GsonUtil<GoodsOneConfig> gsonUtil=new GsonUtil<>();
+            //GsonUtil<GoodsOneConfig> gsonUtil=new GsonUtil<>();
             GoodsOneConfig config=  new GoodsOneConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             GoodsOneCardWidget widget = new GoodsOneCardWidget(activity,config);
             return widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.GOODS_TWO.getIndex()){
-            GsonUtil<GoodsTwoConfig> gsonUtil=new GsonUtil<>();
+            //GsonUtil<GoodsTwoConfig> gsonUtil=new GsonUtil<>();
             GoodsTwoConfig config=  new GoodsTwoConfig();
             config =  CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             GoodsTwoWidget widget = new GoodsTwoWidget(activity,config);
             return widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.ASSIST_BUTTON.getIndex() ){
-            GsonUtil<ButtonConfig> gsonUtil=new GsonUtil<>();
+            //GsonUtil<ButtonConfig> gsonUtil=new GsonUtil<>();
             ButtonConfig config=  new ButtonConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties() , config);
             ButtonWidget widget = new ButtonWidget(activity,config);
             return widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.GROUP_GOODS.getIndex() ) {
-            GsonUtil<GoodsGroupConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<GoodsGroupConfig> gsonUtil = new GsonUtil<>();
             GoodsGroupConfig config = new GoodsGroupConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties(), config);
             GoodsGroupWidget widget = new GoodsGroupWidget(activity, config);
             return widget;
         }else if( widgetConfig.getType() == WidgetTypeEnum.GROUP_Class.getIndex()){
-            GsonUtil<ClassGroupConfig> gsonUtil = new GsonUtil<>();
+            //GsonUtil<ClassGroupConfig> gsonUtil = new GsonUtil<>();
             ClassGroupConfig config = new ClassGroupConfig();
             config = CommonUtil.convertMap( config , widgetConfig.getProperties() );
             //config = gsonUtil.toBean(widgetConfig.getProperties(), config);

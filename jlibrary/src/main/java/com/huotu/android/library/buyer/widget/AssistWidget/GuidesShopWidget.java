@@ -138,7 +138,7 @@ public class GuidesShopWidget extends BaseLinearLayout {
         }
 
         @Override
-        public void onResponse(Response<BizBaseBean<MallInfoBean>> response) {
+        public void onResponse( Call<BizBaseBean<MallInfoBean>> call, Response<BizBaseBean<MallInfoBean>> response) {
             if( ref.get()==null)return;
             if( response==null||response.code() !=200 || response.body() ==null || response.body().getData()==null){
                 Logger.e(response.message());
@@ -155,7 +155,7 @@ public class GuidesShopWidget extends BaseLinearLayout {
         }
 
         @Override
-        public void onFailure(Throwable t) {
+        public void onFailure(Call<BizBaseBean<MallInfoBean>> call,Throwable t) {
             Logger.e(t.getMessage());
         }
     }

@@ -232,7 +232,7 @@ public class GoodsTwoWidget extends BaseLinearLayout {
                 random, secure , customerid , goodsids , levelid);
         call.enqueue(new Callback<BizBaseBean<List<GoodsBean>>>() {
             @Override
-            public void onResponse(Response<BizBaseBean<List<GoodsBean>>> response) {
+            public void onResponse( Call<BizBaseBean<List<GoodsBean>>> call, Response<BizBaseBean<List<GoodsBean>>> response) {
                 if( response ==null || response.code() != Constant.REQUEST_SUCCESS || response.body()==null|| response.body().getData()==null ){
                     Logger.e(response.message());
                     //EventBus.getDefault().post(new LoadCompleteEvent());
@@ -248,7 +248,7 @@ public class GoodsTwoWidget extends BaseLinearLayout {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<BizBaseBean<List<GoodsBean>>> call,Throwable t) {
                 Logger.e( "error" , t );
             }
         });
@@ -474,7 +474,7 @@ public class GoodsTwoWidget extends BaseLinearLayout {
         String jifenStr = CommonUtil.formatJiFen(good.getScore()); //String.valueOf( good.getRebate() );
         tvJifen.setText( jifenStr +"积分" );
 
-        if( ivJifen!=null && !TextUtils.isEmpty(goodsTwoConfig.getBackground()) ){
+        if( ivJifen!=null && goodsTwoConfig.getProduct_userInteger().equals(Constant.GOODS_SHOW) && !TextUtils.isEmpty(goodsTwoConfig.getBackground()) ){
             int iconWidth = DensityUtils.dip2px(getContext(), Constant.REBATEICON_WIDTH );
             String bgUrl = Variable.resourceUrl + goodsTwoConfig.getBackground();
             FrescoDraweeController.loadImage(ivJifen, iconWidth, bgUrl);

@@ -46,8 +46,6 @@ import com.huotu.partnermall.model.UpdateLeftInfoModel;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.login.BindPhoneActivity;
-import com.huotu.partnermall.ui.sis.GoodManageActivity;
-import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
@@ -692,7 +690,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 //更新昵称
                 application.writeUserName(user.getWxNickName());
                 application.writeUserIcon(user.getWxHeadImg());
-                application.writeUserUnionId( user.getWxUnionId() );
+                application.writeUserUnionId(user.getWxUnionId());
                 application.writeMemberLevel(user.getLevelName());
 
                 //记录微信关联类型（0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号）
@@ -701,11 +699,12 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 //更新界面
                 userName.setText(user.getWxNickName());
                 userType.setText(user.getLevelName());
-                new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute ( );
+                new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute();
+
 
                 //切换用户，需要清空 店中店的 缓存数据
-                SisConstant.SHOPINFO = null;
-                SisConstant.CATEGORY = null;
+                //SisConstant.SHOPINFO = null;
+                //SisConstant.CATEGORY = null;
 
                 //动态加载侧滑菜单
                 UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, mHandler );
@@ -794,7 +793,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
     private void openSis(){
-        HomeActivity.this.startActivity(new Intent(HomeActivity.this, GoodManageActivity.class));
+        //HomeActivity.this.startActivity(new Intent(HomeActivity.this, GoodManageActivity.class));
     }
 
     private void refreshLeftMenu(){

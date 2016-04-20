@@ -301,19 +301,19 @@ public class PageViewActivity
                 Platform platform = ( Platform ) msg.obj;
                 if("WechatMoments".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "微信朋友圈分享成功" );
+                    ToastUtils.showShortToast ( "微信朋友圈分享成功" );
                 }
                 else if("Wechat".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "微信分享成功" );
+                    ToastUtils.showShortToast ( "微信分享成功" );
                 }
                 else if("QZone".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "QQ空间分享成功" );
+                    ToastUtils.showShortToast ( "QQ空间分享成功" );
                 }
                 else if("SinaWeibo".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "新浪微博分享成功" );
+                    ToastUtils.showShortToast ( "新浪微博分享成功" );
                 }
 
             }
@@ -323,19 +323,19 @@ public class PageViewActivity
                 //分享失败
                 Platform platform = ( Platform ) msg.obj;
                 if("WechatMoments".equals ( platform.getName () )) {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "微信朋友圈分享失败" );
+                    ToastUtils.showShortToast ( "微信朋友圈分享失败" );
                 }
                 else if("Wechat".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "微信分享失败" );
+                    ToastUtils.showShortToast (  "微信分享失败" );
                 }
                 else if("QZone".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "QQ空间分享失败" );
+                    ToastUtils.showShortToast ( "QQ空间分享失败" );
                 }
                 else if("SinaWeibo".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "新浪微博分享失败" );
+                    ToastUtils.showShortToast ( "新浪微博分享失败" );
                 }
             }
             break;
@@ -344,19 +344,19 @@ public class PageViewActivity
                 //分享取消
                 Platform platform = ( Platform ) msg.obj;
                 if("WechatMoments".equals ( platform.getName () )) {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "微信朋友圈分享取消" );
+                    ToastUtils.showShortToast ( "微信朋友圈分享取消" );
                 }
                 else if("Wechat".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "微信分享取消" );
+                    ToastUtils.showShortToast ( "微信分享取消" );
                 }
                 else if("QZone".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "QQ空间分享取消" );
+                    ToastUtils.showShortToast ( "QQ空间分享取消" );
                 }
                 else if("SinaWeibo".equals ( platform.getName () ))
                 {
-                    ToastUtils.showShortToast ( PageViewActivity.this, "新浪微博分享取消" );
+                    ToastUtils.showShortToast ( "新浪微博分享取消" );
                 }
             }
             break;

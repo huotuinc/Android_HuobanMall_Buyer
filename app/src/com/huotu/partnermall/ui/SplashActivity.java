@@ -114,14 +114,14 @@ public class SplashActivity extends BaseActivity {
                             //设置
                             //加载颜色配置信息
 //                            if (!application.checkColorInfo()) {
-                            try {
-                                InputStream is = SplashActivity.this.getAssets().open("color.properties");
-                                ColorBean color = PropertiesUtil.getInstance().readProperties(is);
-                                is.close();
-                                application.writeColorInfo(color);
-                            } catch (IOException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
+//                            try {
+//                                InputStream is = SplashActivity.this.getAssets().open("color.properties");
+//                                ColorBean color = PropertiesUtil.getInstance().readProperties(is);
+//                                is.close();
+//                                application.writeColorInfo(color);
+//                            } catch (IOException e) {
+//                                Log.e(TAG, e.getMessage());
+//                            }
 //                            }else{
 //                                String color = application.obtainMainColor();
 //                            }

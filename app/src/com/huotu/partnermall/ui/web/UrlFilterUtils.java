@@ -8,6 +8,10 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.webkit.WebView;
+
+import com.huotu.android.library.buyer.bean.Data.SmartUiEvent;
+import com.huotu.android.library.buyer.bean.Data.StartLoadEvent;
+import com.huotu.android.library.buyer.bean.Variable;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.config.NativeConstants;
@@ -20,6 +24,9 @@ import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -153,9 +160,11 @@ public class UrlFilterUtils {
             ActivityUtils.getInstance ().skipActivity(ref.get(), LoginActivity.class);
         }
         else if( url.contains( "/"+ NativeConstants.CUSTOMERID()+"/Index.aspx" )){
-            ActivityUtils.getInstance().showActivity(ref.get(), NativeActivity.class);
+            //ActivityUtils.getInstance().showActivity(ref.get(), NativeActivity.class);
+            EventBus.getDefault().post(new SmartUiEvent(Variable.mainUiConfigUrl ,true));
         }else if( url2.equals(indexUrl ) ){
-            ActivityUtils.getInstance().showActivity(ref.get(), NativeActivity.class);
+            //ActivityUtils.getInstance().showActivity(ref.get(), NativeActivity.class);
+            EventBus.getDefault().post(new SmartUiEvent(Variable.mainUiConfigUrl,true));
         }else{
             //跳转到新界面
             view.loadUrl(url);

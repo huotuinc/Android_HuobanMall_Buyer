@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -118,6 +119,12 @@ public class Search2Widget extends RelativeLayout implements ISearch, View.OnCli
         if( v.getId()== tvRightPic.getId()){
             etText.setText("");
         }else if( v.getId()==tvSearch.getId()){
+            //隐藏软键盘
+            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if( inputMethodManager.isActive()){
+                inputMethodManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
+            }
+
             if( isMainUi ) {
                 String keyword = etText.getText().toString().trim();
                 String url = "/" + Constant.URL_SEARCH_ASPX + "?keyword=" + keyword;
@@ -160,12 +167,12 @@ public class Search2Widget extends RelativeLayout implements ISearch, View.OnCli
     }
 
     @Override
-    public void onResponse(Response<Object> response) {
+    public void onResponse( Call<Object> call, Response<Object> response) {
         String str = response.message();
     }
 
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure( Call<Object> call,Throwable t) {
         Logger.e(t.getMessage());
     }
 

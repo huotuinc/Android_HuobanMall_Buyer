@@ -490,7 +490,7 @@ public class GoodsGroupWidget extends LinearLayout implements View.OnClickListen
 
         call.enqueue(new Callback<BizBaseBean<GoodsListBean>>() {
             @Override
-            public void onResponse(Response<BizBaseBean<GoodsListBean>> response) {
+            public void onResponse( Call<BizBaseBean<GoodsListBean>> call, Response<BizBaseBean<GoodsListBean>> response) {
                 if (response == null || response.code() != Constant.REQUEST_SUCCESS
                         || response.body() == null || response.body().getData() == null || response.body().getData().getGoods() == null) {
                     Logger.e(response.message());
@@ -510,7 +510,7 @@ public class GoodsGroupWidget extends LinearLayout implements View.OnClickListen
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<BizBaseBean<GoodsListBean>> call,Throwable t) {
                 Logger.e(t.getMessage());
             }
         });

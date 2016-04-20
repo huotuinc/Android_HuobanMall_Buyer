@@ -106,7 +106,8 @@ public class ShopDefaultWidget extends RelativeLayout implements View.OnClickLis
         }else if( v.getId()==R.id.shop_default_ll3){//跳转到订单页面
             String url = mallInfoBean.getOrderListUrl();
             String name = "";
-            EventBus.getDefault().post(new LinkEvent( name , url ));
+            //EventBus.getDefault().post(new LinkEvent( name , url ));
+            CommonUtil.link(name , url);
         }
     }
 
@@ -127,7 +128,7 @@ public class ShopDefaultWidget extends RelativeLayout implements View.OnClickLis
 
         call.enqueue(new Callback<BizBaseBean<MallInfoBean>>() {
             @Override
-            public void onResponse(Response<BizBaseBean<MallInfoBean>> response) {
+            public void onResponse( Call<BizBaseBean<MallInfoBean>> call, Response<BizBaseBean<MallInfoBean>> response) {
                 if( response ==null || response.code() != 200 ) {
                     Toast.makeText(getContext(),response.message(),Toast.LENGTH_LONG).show();
                     return;
@@ -143,7 +144,7 @@ public class ShopDefaultWidget extends RelativeLayout implements View.OnClickLis
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure( Call<BizBaseBean<MallInfoBean>> call, Throwable t) {
                 Logger.e(t.getMessage());
             }
         });

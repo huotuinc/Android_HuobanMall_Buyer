@@ -158,7 +158,7 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
         }
 
         @Override
-        public void onResponse(Response<BizBaseBean<MallInfoBean>> response) {
+        public void onResponse( Call<BizBaseBean<MallInfoBean>> call , Response<BizBaseBean<MallInfoBean>> response) {
             if( ref.get()==null)return;
             if( response==null||response.code() !=200 || response.body() ==null || response.body().getData()==null){
                 Logger.e(response.message());
@@ -167,11 +167,11 @@ public class ShopOneWidget extends RelativeLayout implements View.OnClickListene
             String logoUrl = response.body().getData().getLogo();
             int imageWidthPx = DensityUtils.dip2px(ref.get().getContext() , LOGOWIDTH );
             FrescoDraweeController.loadImage(ref.get().leftImage , imageWidthPx, logoUrl );
-            ref.get().tvLeftTitle.setText( response.body().getData().getMallName() );
+            ref.get().tvLeftTitle.setText(response.body().getData().getMallName());
         }
 
         @Override
-        public void onFailure(Throwable t) {
+        public void onFailure(Call<BizBaseBean<MallInfoBean>> call , Throwable t) {
             Logger.e(t.getMessage());
         }
     }

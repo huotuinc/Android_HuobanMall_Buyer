@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
+import com.github.moduth.blockcanary.BlockCanary;
 import com.google.gson.Gson;
 import com.huotu.android.library.buyer.Jlibrary;
 import com.huotu.partnermall.config.Constants;
@@ -25,11 +26,13 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
-import com.huotu.partnermall.ui.sis.SisConstant;
+import com.huotu.partnermall.utils.AppBlockCanaryContext;
 import com.huotu.partnermall.utils.CrashHandler;
 import com.huotu.partnermall.utils.PreferenceHelper;
 import com.squareup.leakcanary.LeakCanary;
 import java.util.List;
+
+import cn.jpush.android.api.JPushInterface;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
@@ -39,8 +42,6 @@ import cn.sharesdk.wechat.friends.Wechat;
  * Application
  */
 public class BaseApplication extends Application {
-    //定位句柄
-    //public Intent locationI = new Intent ( );
     //定位类型
     public int localType;
     //地址
@@ -54,7 +55,6 @@ public class BaseApplication extends Application {
     //城市
     public String             city;
     public LocationClient     mLocationClient;
-    //public GeofenceClient     mGeofenceClient;
     public MyLocationListener mMyLocationListener;
     //底部菜单是否隐藏 true显示， false隐藏
     public boolean isMenuHide = false;
@@ -82,17 +82,19 @@ public class BaseApplication extends Application {
             LeakCanary.install(this);//内存检测工具
         }
 
+        BlockCanary.install(this , new AppBlockCanaryContext()).start();
+
         mLocationClient = new LocationClient ( this.getApplicationContext ( ) );
         mMyLocationListener = new MyLocationListener ( );
         mLocationClient.registerLocationListener ( mMyLocationListener );
-        //mGeofenceClient = new GeofenceClient ( getApplicationContext ( ) );
-        //am = this.getAssets ( );
 
         // 初始化Volley实例
         VolleyUtil.init ( this );
         // 极光初始化
-        // JPushInterface.setDebugMode(true);// 日志，生产环境关闭
-        //JPushInterface.init ( this );
+        if(BuildConfig.DEBUG) {
+            JPushInterface.setDebugMode(true);// 日志，生产环境关闭
+        }
+        JPushInterface.init ( this );
         //初始化shareSDK参数
         ShareSDK.initSDK ( getApplicationContext ( ) );
         solveAsyncTaskOnPostExecuteBug();
@@ -390,8 +392,8 @@ public class BaseApplication extends Application {
 
         PreferenceHelper.clean ( getApplicationContext (), Constants.MEMBER_INFO );
 
-        SisConstant.CATEGORY = null;
-        SisConstant.SHOPINFO = null;
+        //SisConstant.CATEGORY = null;
+        //SisConstant.SHOPINFO = null;
     }
 
     //获取用户图片

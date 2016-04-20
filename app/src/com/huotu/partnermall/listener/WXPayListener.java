@@ -35,8 +35,7 @@ import java.util.Random;
 /**
  * 微信支付出发点击事件
  */
-public
-class WXPayListener implements View.OnClickListener {
+public class WXPayListener implements View.OnClickListener {
 
     private
     Context context;
@@ -48,8 +47,7 @@ class WXPayListener implements View.OnClickListener {
     private Purchase selectedPurchase = null;
 
 
-    public
-    WXPayListener (
+    public WXPayListener (
             Context context, Handler handler, PayBodyModel body, FMPrepareBuy result, Purchase selectedPurchase
                   ) {
 

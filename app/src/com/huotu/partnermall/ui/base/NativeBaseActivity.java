@@ -3,18 +3,18 @@ package com.huotu.partnermall.ui.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.utils.ToastUtils;
-import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.WindowProgress;
+
+import org.greenrobot.eventbus.EventBus;
+
+import cn.jpush.android.api.JPushInterface;
 
 public class NativeBaseActivity extends AppCompatActivity {
     /**
@@ -22,7 +22,7 @@ public class NativeBaseActivity extends AppCompatActivity {
      */
     protected boolean isMainUI = false;
     protected WindowProgress windowProgress;
-    private long exitTime = 0l;
+    protected long exitTime = 0l;
 
     public void setImmerseLayout(View view){
         if ( BaseApplication.single.isKITKAT()) {
@@ -48,6 +48,18 @@ public class NativeBaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        JPushInterface.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        JPushInterface.onResume(this);
+    }
+
+    @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if( isMainUI ){
@@ -63,7 +75,7 @@ public class NativeBaseActivity extends AppCompatActivity {
     protected void QuitApp(){
         //2秒以内按两次推出程序
         if ((System.currentTimeMillis() - exitTime) > 2000) {
-            ToastUtils.showLongToast(getApplicationContext(), "再按一次退出程序");
+            ToastUtils.showLongToast( "再按一次退出程序");
             exitTime = System.currentTimeMillis();
         } else {
             try {
@@ -88,4 +100,17 @@ public class NativeBaseActivity extends AppCompatActivity {
             windowProgress.dismissProgress();
         }
     }
+
+    public void Register() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    public void UnRegister() {
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
 }

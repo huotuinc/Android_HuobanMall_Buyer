@@ -84,11 +84,7 @@ public class GsonRequest<T> extends Request<T> {
 		super(method, url, errorListener);
 		this.mClass = objectClass;
 		this.mListener = listener;
-		mGson = new GsonBuilder()
-				.registerTypeAdapter(Date.class, new DateJsonDeserializer())
-				.registerTypeAdapter(Date.class, new DateJsonSerializer())
-				.setDateFormat(DateFormat.LONG)
-				.create();
+		this.mGson = JSONUtil.getGson();
 
 		if( null != headers ) {
 			mHeader.putAll(headers);
@@ -110,11 +106,7 @@ public class GsonRequest<T> extends Request<T> {
 		super(method,url, errorListener);
 		this.mTypeToken= typeToken;
 		this.mListener = listener;
-		this.mGson = new GsonBuilder()
-				.registerTypeAdapter(Date.class, new DateJsonDeserializer())
-				.registerTypeAdapter(Date.class , new DateJsonSerializer())
-				.setDateFormat(DateFormat.LONG)
-				.create();
+		this.mGson = JSONUtil.getGson();
 		if( null != headers){
 			mHeader.putAll(headers);
 		}
@@ -135,11 +127,7 @@ public class GsonRequest<T> extends Request<T> {
 		super(method, url, errorListener);
 		this.mClass = objectClass;
 		this.mListener = listener;
-		this.mGson = new GsonBuilder()
-				.registerTypeAdapter(Date.class , new DateJsonDeserializer())
-				.registerTypeAdapter(Date.class , new DateJsonSerializer())
-				.setDateFormat(DateFormat.LONG)
-				.create();
+		this.mGson = JSONUtil.getGson();
 
 		if( null != headers){
 			mHeader.putAll(headers);
@@ -188,17 +176,17 @@ public class GsonRequest<T> extends Request<T> {
 	}
 
 
-	public class DateJsonDeserializer implements JsonDeserializer<Date>{
-		@Override
-		public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-			return new Date( jsonElement.getAsJsonPrimitive().getAsLong() );
-		}
-	}
-
-	public class DateJsonSerializer implements JsonSerializer<Date>{
-		@Override
-		public JsonElement serialize(Date date , Type type, JsonSerializationContext jsonSerializationContext) {
-			return new JsonPrimitive( date.getTime() );
-		}
-	}
+//	public class DateJsonDeserializer implements JsonDeserializer<Date>{
+//		@Override
+//		public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+//			return new Date( jsonElement.getAsJsonPrimitive().getAsLong() );
+//		}
+//	}
+//
+//	public class DateJsonSerializer implements JsonSerializer<Date>{
+//		@Override
+//		public JsonElement serialize(Date date , Type type, JsonSerializationContext jsonSerializationContext) {
+//			return new JsonPrimitive( date.getTime() );
+//		}
+//	}
 }

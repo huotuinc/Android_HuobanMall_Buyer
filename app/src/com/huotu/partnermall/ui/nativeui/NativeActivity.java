@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,6 +25,8 @@ import com.huotu.android.library.buyer.bean.Data.StartLoadEvent;
 import com.huotu.android.library.buyer.bean.PageConfig;
 import com.huotu.android.library.buyer.bean.WidgetConfig;
 import com.huotu.android.library.buyer.utils.CommonUtil;
+import com.huotu.android.library.buyer.utils.FrescoDraweeController;
+import com.huotu.android.library.buyer.utils.FrescoImagePipelineConfig;
 import com.huotu.android.library.buyer.utils.GsonUtil;
 import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.android.library.buyer.widget.FooterWidget.FooterOneWidget;
@@ -42,6 +45,7 @@ import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.PreferenceHelper;
 import com.huotu.android.library.buyer.utils.SignUtil;
+import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.widgets.MsgPopWindow;
 import org.greenrobot.eventbus.EventBus;
@@ -63,10 +67,12 @@ public class NativeActivity
     LinearLayout llMain;
     @Bind(R.id.activity_native_footer)
     RelativeLayout rlFooter;
-    @Bind(R.id.activity_native_root)
-    RelativeLayout llRoot;
+    //@Bind(R.id.activity_native_root)
+    //RelativeLayout llRoot;
     @Bind(R.id.activity_native_header)
-    LinearLayout llHeader;
+    RelativeLayout llHeader;
+    @Bind(R.id.titleText)
+    TextView tvTitle;
 
     IListView listView;
     ISearch searchWidget;
@@ -111,9 +117,14 @@ public class NativeActivity
         //llRoot.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()));
         setImmerseLayout(llHeader);
 
+        llHeader.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()));
+
         Jlibrary.initUserLevelId(BaseApplication.single.readMemberLevelId());
 
         getIndexConfig();
+
+
+
     }
 
     @Override
@@ -121,6 +132,7 @@ public class NativeActivity
         //loadWidgets();
         //scrollView.onRefreshComplete();
         //String rootUrl = PreferenceHelper.readString( BaseApplication.single , NativeConstants.UI_CONFIG_FILE , NativeConstants.UI_CONFIG_SELF_HREF );
+        FrescoDraweeController.clearDiskCaches();
 
         getIndexConfig();
     }
@@ -257,6 +269,8 @@ public class NativeActivity
         llMain.removeAllViews();
         rlFooter.removeAllViews();
 
+
+
         String json = PreferenceHelper.readString(this, NativeConstants.UI_CONFIG_FILE, url);
         if (TextUtils.isEmpty(json)) {
             Toast.makeText(this,"配置信息丢失,建议您升级最新版本的App",Toast.LENGTH_LONG).show();
@@ -268,6 +282,8 @@ public class NativeActivity
         pageConfig = gsonUtil.toBean(json, pageConfig);
         //设置 页面的资源根地址
         Jlibrary.initResourceUrl(pageConfig.getMallResourceURL());
+
+        tvTitle.setText(TextUtils.isEmpty( pageConfig.getTitle()) ? "" : pageConfig.getTitle());
 
         for (WidgetConfig config : pageConfig.getWidgets()) {
             View view = WidgetBuilder.build(config, this);
@@ -310,8 +326,7 @@ public class NativeActivity
         public void onResponse(PageConfig pageConfig) {
             if (ref.get() == null) return;
             if (pageConfig == null) {
-                //ToastUtils.showLongToast(ref.get(), "请求失败！");
-                Toast.makeText(ref.get(),"请求失败！",Toast.LENGTH_LONG).show();
+                ToastUtils.showLongToast( "请求失败！");
                 ref.get().scrollView.onRefreshComplete();
                 ref.get().dismissProgress();
                 return;
@@ -344,24 +359,14 @@ public class NativeActivity
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             if (ref.get() == null) return;
-            Toast.makeText(ref.get(), "请求异常",Toast.LENGTH_LONG).show();
+            ToastUtils.showLongToast( "请求异常");
             Logger.e("请求异常"+volleyError.getMessage());
             ref.get().scrollView.onRefreshComplete();
             ref.get().dismissProgress();
         }
     }
 
-    public void Register() {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-    }
 
-    public void UnRegister() {
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRefreshData(StartLoadEvent event) {

@@ -9,11 +9,14 @@ import com.huotu.android.library.buyer.bean.AdBean.AdBannerConfig;
 import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
 import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
+import com.huotu.android.library.buyer.utils.FrescoControllerListener;
+
 /**
  * Banner组件
  * Created by jinxiangdong on 2016/1/13.
  */
-public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner implements OnItemClickListener {
+public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
+        implements OnItemClickListener , FrescoControllerListener.ImageCallback{
     private AdBannerConfig config;
 
     public AdBannerWidget(Context context) {
@@ -33,7 +36,7 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
         this.setPages(new CBViewHolderCreator() {
             @Override
             public Object createHolder() {
-                return new FrescoHolderView( iwidth );
+                return new FrescoHolderView( iwidth , AdBannerWidget.this );
             }
         }, config.getImages() )
         //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
@@ -53,6 +56,12 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
     public void onItemClick(int position) {
         AdImageBean bean = config.getImages().get( position );
         go(bean);
+    }
+
+    @Override
+    public void imageCallback(int width, int height) {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( width , height );
+        this.setLayoutParams(layoutParams);
     }
 
     protected void go(AdImageBean bean){

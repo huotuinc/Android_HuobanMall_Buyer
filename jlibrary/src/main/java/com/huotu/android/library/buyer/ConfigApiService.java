@@ -2,6 +2,8 @@ package com.huotu.android.library.buyer;
 
 import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.Data.ClassificationConfig;
+import com.huotu.android.library.buyer.bean.Data.FindIndexConfig;
+import com.huotu.android.library.buyer.bean.PageConfig;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -21,7 +23,7 @@ public interface ConfigApiService {
      * @return
      */
     @GET("smartPages/search/findIndex")
-    Call<Object> findIndex(
+    Call<FindIndexConfig> findIndex(
             @Header(Constant.HEADER_USER_KEY) String userkey ,
             @Header(Constant.HEADER_USER_RANDOM) String userRandom ,
             @Header(Constant.HEADER_USER_SECURE) String userSecurity ,
@@ -38,7 +40,7 @@ public interface ConfigApiService {
      * @return
      */
     @GET("nativeCode")
-    Call<Object> nativeCode(
+    Call<PageConfig> nativeCode(
                             @Header(Constant.HEADER_USER_KEY) String userkey ,
                             @Header(Constant.HEADER_USER_RANDOM) String userRandom ,
                             @Header(Constant.HEADER_USER_SECURE) String userSecurity ,

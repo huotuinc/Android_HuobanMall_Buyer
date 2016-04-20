@@ -6,25 +6,25 @@ android {
 
     signingConfigs {
         huotu {
-            storeFile file('../keystore/huotu_fm.keystore')
-            storePassword "huotuheyun"
-            keyAlias "huotu_fm.keystore"
-            keyPassword "huotuheyun"
+            storeFile file(huotu_signing_storefile)
+            storePassword huotu_signing_storepassword
+            keyAlias huotu_signing_keyalias
+            keyPassword huotu_signing_keypassword
         }
     }
 
     compileSdkVersion COMPILE_SDK_VERSION.toInteger()
     buildToolsVersion "${BUILD_TOOLS_VERSION}"
 
-    defaultConfig{
+    defaultConfig {
         applicationId "com.huotu.partnermall.inner"
         minSdkVersion MINSDKVERSION.toInteger()
         targetSdkVersion TARGETSDKVERSION.toInteger()
         versionCode BUYER_VERSIONCODE.toInteger()
         versionName "${BUYER_VERSIONNAME}"
         signingConfig signingConfigs.huotu
-        buildConfigField 'int','NATIVE_UI_CONFIG_VERSION', '0'
-        multiDexEnabled true
+        buildConfigField 'int', 'NATIVE_UI_CONFIG_VERSION', '0'
+        //multiDexEnabled true
     }
 
     sourceSets {
@@ -67,11 +67,18 @@ android {
 //            assets.srcDirs = ['custom/olquan/assets']
 //        }
 
-        yunshanggou{
+        yunshanggou {
             manifest.srcFile 'custom/yunshanggou/AndroidManifest.xml'
             java.srcDirs = ['custom/yunshanggou/src']
             res.srcDirs = ['custom/yunshanggou/res']
             assets.srcDirs = ['custom/yunshanggou/assets']
+        }
+
+        beibei {
+            manifest.srcFile 'custom/beibei/AndroidManifest.xml'
+            java.srcDirs = ['custom/beibei/src']
+            res.srcDirs = ['custom/beibei/res']
+            assets.srcDirs = ['custom/beibei/assets']
         }
 
         // Move the tests to tests/java, tests/res, etc...
@@ -90,19 +97,19 @@ android {
 
     //打包渠道
     productFlavors {
-//        morefan{
-//            applicationId 'cy.com.morefan'
-//            versionCode BUYER_VERSIONCODE.toInteger()
-//            versionName "${BUYER_VERSIONNAME}"
-//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanj.cn/\"'
-//            buildConfigField 'String','APP_ID','\"huotuacf89c9231848c9f49\"'
-//            buildConfigField 'String','APP_SECRET','\"0ad8abe244331aacf89c9231848c9f49\"'
-//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
-//            buildConfigField 'int', 'CUSTOMERID','4471'
-//            buildConfigField 'String','SMART_URL','\"http://api.open.fancat.cn:8081/\"'
-//            buildConfigField 'String','SMART_KEY' , '\"_demo\"'
-//            buildConfigField 'String','SMART_SECURITY','\"1f2f3f4f5f6f7f8f\"'
-//        }
+        morefan{
+            applicationId 'cy.com.morefan'
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanj.cn/\"'
+            buildConfigField 'String','APP_ID','\"huotuacf89c9231848c9f49\"'
+            buildConfigField 'String','APP_SECRET','\"0ad8abe244331aacf89c9231848c9f49\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
+            buildConfigField 'int', 'CUSTOMERID','4471'
+            buildConfigField 'String','SMART_URL','\"http://api.open.fancat.cn:8081/\"'
+            buildConfigField 'String','SMART_KEY' , '\"_demo\"'
+            buildConfigField 'String','SMART_SECURITY','\"1f2f3f4f5f6f7f8f\"'
+        }
 
 //        yunyi{//乔基
 //            applicationId 'com.huotu.mall.yunyi'
@@ -134,24 +141,38 @@ android {
 //            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
 //        }
 
-        yunshanggou{//云尚购
+        yunshanggou {//云尚购
             applicationId 'com.ysungoapp.ysungo.android'
             versionCode YUNSHANGGOU_VERSIONCODE.toInteger()
             versionName "${YUNSHANGGOU_VERSIONNAME}"
-            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.ysungo.cn/\"'
-            buildConfigField 'String','APP_ID', '\"'+"${YUNSHANGGOU_APP_ID}"+'\"'
-            buildConfigField 'String','APP_SECRET', '\"'+"${YUNSHANGGOU_APP_SECRET}"+'\"'
-            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
-            buildConfigField 'int', 'CUSTOMERID','6677'
-            buildConfigField 'String','SMART_URL','\"http://api.open.ysungo.cn/\"'
-            buildConfigField 'String','SMART_KEY' , '\"app\"'
-            buildConfigField 'String','SMART_SECURITY','\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-            buildConfigField 'int','NATIVE_UI_CONFIG_VERSION', '1'
+            buildConfigField 'String', 'INTERFACE_URL', '\"http://mallapi.ysungo.cn/\"'
+            buildConfigField 'String', 'APP_ID', '\"' + "${YUNSHANGGOU_APP_ID}" + '\"'
+            buildConfigField 'String', 'APP_SECRET', '\"' + "${YUNSHANGGOU_APP_SECRET}" + '\"'
+            buildConfigField 'String', "SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
+            buildConfigField 'int', 'CUSTOMERID', '6677'
+            buildConfigField 'String', 'SMART_URL', '\"http://api.open.ysungo.cn/\"'
+            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+            buildConfigField 'int', 'NATIVE_UI_CONFIG_VERSION', '1'
+        }
+
+        beibei{
+            applicationId 'com.jxd.beibei'
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanj.cn/\"'
+            buildConfigField 'String','APP_ID','\"huotuacf89c9231848c9f49\"'
+            buildConfigField 'String','APP_SECRET','\"0ad8abe244331aacf89c9231848c9f49\"'
+            //buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
+            buildConfigField 'int', 'CUSTOMERID','4471'
+            buildConfigField 'String','SMART_URL','\"http://api.open.fancat.cn:8081/\"'
+            buildConfigField 'String','SMART_KEY' , '\"_demo\"'
+            buildConfigField 'String','SMART_SECURITY','\"1f2f3f4f5f6f7f8f\"'
         }
     }
 
-    buildTypes{
-        debug{
+    buildTypes {
+        debug {
             signingConfig signingConfigs.huotu
 //            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanj.cn/\"'
 //            buildConfigField 'String','APP_ID','\"huotuacf89c9231848c9f49\"'
@@ -163,8 +184,14 @@ android {
 //            buildConfigField 'String','SMART_SECURITY','\"1f2f3f4f5f6f7f8f\"'
         }
 
-        release{
+        release {
             signingConfig signingConfigs.huotu
+            //开启代码混淆
+            //minifyEnabled true
+            // 移除无用的resource文件
+            //shrinkResources true
+            //zipAlignEnabled true
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -178,19 +205,23 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.huotu.android.library:libcropper:1.0'
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.handmark.library:pulltorefresh:1.1'
     //compile 'com.huotu.android.library:libCoverFlow:1.1'
-        compile('com.huotu.android.library:libCoverFlow:1.1') {
-            exclude module:'appcompat-v7', group:'com.android.support'
-        }
-    compile 'com.github.mikephil.charting:MPAndroidChart:1.1'
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.umeng.analytics:analytics:5.6.1'
+    compile('com.huotu.android.library:libCoverFlow:1.1') {
+        exclude module: 'appcompat-v7', group: 'com.android.support'
+    }
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
     compile project(':jlibrary')
-    compile 'com.google.zxing:core:3.2.1'
+    compile 'com.huotu.android.library:libcropper:1.0'
+    compile 'com.android.support:support-v4:23.3.0'
+    compile 'com.handmark.library:pulltorefresh:1.1'
+    //compile 'com.github.mikephil.charting:MPAndroidChart:1.1'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.umeng.analytics:analytics:5.6.1'
+    //compile 'com.google.zxing:core:3.2.1'
+    debugCompile 'com.github.moduth:blockcanary-ui:1.2.0'
+    releaseCompile 'com.github.moduth:blockcanary-no-op:1.2.0'
 }
+
+
 

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -90,6 +91,13 @@ public class Search1Widget  extends BaseLinearLayout implements ISearch{
     public void onClick(View v) {
         super.onClick(v);
         if( v.getId() == tvSearch.getId()){
+            //隐藏软键盘
+            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if( inputMethodManager.isActive()){
+                inputMethodManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
+            }
+
+
             if(isMainUi) {
                 String keyword = etText.getText().toString().trim();
                 String url = "/" + Constant.URL_SEARCH_ASPX + "?keyword=" + keyword;

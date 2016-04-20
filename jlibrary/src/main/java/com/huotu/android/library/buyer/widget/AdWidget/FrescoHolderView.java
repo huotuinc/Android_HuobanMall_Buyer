@@ -7,6 +7,7 @@ import com.bigkoo.convenientbanner.holder.Holder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.android.library.buyer.bean.AdBean.AdImageBean;
 import com.huotu.android.library.buyer.bean.Variable;
+import com.huotu.android.library.buyer.utils.FrescoControllerListener;
 import com.huotu.android.library.buyer.utils.FrescoDraweeController;
 
 
@@ -16,8 +17,11 @@ import com.huotu.android.library.buyer.utils.FrescoDraweeController;
 public class FrescoHolderView implements Holder<AdImageBean> {
     private SimpleDraweeView iv;
     private int width;
-    public FrescoHolderView(int w){
+    private FrescoControllerListener.ImageCallback imageCallback;
+
+    public FrescoHolderView(int w , FrescoControllerListener.ImageCallback imageCallback){
         this.width = w;
+        this.imageCallback = imageCallback;
     }
     @Override
     public View createView(Context context ) {
@@ -30,6 +34,6 @@ public class FrescoHolderView implements Holder<AdImageBean> {
     public void UpdateUI(Context context,int position, AdImageBean data) {
 
         String imageUrl = Variable.resourceUrl + data.getImageUrl();
-        FrescoDraweeController.loadImage(iv, width,  imageUrl );
+        FrescoDraweeController.loadImage(iv, width,  imageUrl , imageCallback );
     }
 }

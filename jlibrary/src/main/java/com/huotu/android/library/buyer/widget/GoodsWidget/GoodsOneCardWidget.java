@@ -12,6 +12,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.android.library.buyer.BizApiService;
 import com.huotu.android.library.buyer.bean.BizBean.BizBaseBean;
 import com.huotu.android.library.buyer.bean.BizBean.GoodsBean;
+import com.huotu.android.library.buyer.bean.BizBean.GoodsListBean;
 import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.Data.DataItem;
 import com.huotu.android.library.buyer.bean.Data.LoadCompleteEvent;
@@ -221,7 +222,7 @@ public class GoodsOneCardWidget extends BaseLinearLayout {
 
         call.enqueue(new Callback<BizBaseBean<List<GoodsBean>>>() {
             @Override
-            public void onResponse(Response<BizBaseBean<List<GoodsBean>>> response) {
+            public void onResponse( Call<BizBaseBean<List<GoodsBean>>> call, Response<BizBaseBean<List<GoodsBean>>> response) {
                 if( response ==null || response.code() != Constant.REQUEST_SUCCESS || response.body()==null||
                         response.body().getData()==null ){
                     Logger.e(response.message());
@@ -239,7 +240,7 @@ public class GoodsOneCardWidget extends BaseLinearLayout {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure( Call<BizBaseBean<List<GoodsBean>>> call, Throwable t) {
                 Logger.e( "error" , t );
             }
         });

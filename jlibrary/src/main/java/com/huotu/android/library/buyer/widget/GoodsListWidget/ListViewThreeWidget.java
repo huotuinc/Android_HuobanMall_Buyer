@@ -51,6 +51,10 @@ public class ListViewThreeWidget extends BaseLinearLayoutWidget implements IList
         addSortWidget();
     }
 
+    public ListViewThreeConfig getListViewThreeConfig() {
+        return listViewThreeConfig;
+    }
+
     protected void addSortWidget(){
         if( !this.listViewThreeConfig.isOrderRule() ) return;
 
@@ -138,5 +142,11 @@ public class ListViewThreeWidget extends BaseLinearLayoutWidget implements IList
         if( call!=null && !call.isCanceled()){
             call.cancel();
         }
+    }
+
+    @Override
+    public boolean isPuBuMode() {
+        if( listViewThreeConfig==null) return false;
+        return listViewThreeConfig.isStyleLayout();
     }
 }

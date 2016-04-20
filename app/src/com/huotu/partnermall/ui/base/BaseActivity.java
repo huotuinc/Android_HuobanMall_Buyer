@@ -15,7 +15,6 @@ import android.widget.Button;
 
 //import com.huotu.partnermall.AppManager;
 import com.huotu.partnermall.BaseApplication;
-import com.huotu.partnermall.ui.sis.GoodManageActivity;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.Util;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
@@ -87,7 +86,7 @@ public abstract class BaseActivity extends Activity {
     protected boolean canConnect(){
         //网络访问前先检测网络是否可用
         if(!Util.isConnect(BaseActivity.this)){
-            ToastUtils.showLongToast(this, NULL_NETWORK);
+            ToastUtils.showLongToast( NULL_NETWORK);
             return false;
         }
         return true;

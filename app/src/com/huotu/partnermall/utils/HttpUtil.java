@@ -40,6 +40,7 @@ import com.huotu.partnermall.model.OrderModel;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.ui.HomeActivity;
+import com.huotu.partnermall.ui.nativeui.FragMainActivity;
 import com.huotu.partnermall.ui.nativeui.NativeActivity;
 import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.widgets.NoticePopWindow;
@@ -297,7 +298,8 @@ public class HttpUtil{
                             String url = PreferenceHelper.readString(BaseApplication.single, NativeConstants.UI_CONFIG_FILE, NativeConstants.UI_CONFIG_SELF_HREF);
                             bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
                             bd.putBoolean(NativeConstants.KEY_ISMAINUI, true);
-                            ActivityUtils.getInstance().skipActivity(aty , NativeActivity.class,bd);
+                            ActivityUtils.getInstance().skipActivity(aty, FragMainActivity.class,bd);
+                            //ActivityUtils.getInstance().skipActivity(aty , NativeActivity.class,bd);
                             //ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
                         }
                         else

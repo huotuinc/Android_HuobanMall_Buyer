@@ -33,7 +33,6 @@
     <!-- V1.2.3新增的权限, GET_TASKS用于检测APP是否处于前台、是否活着；REORDER_TASKS用于将APP切换到前台 -->
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.REORDER_TASKS"/>
-    <!-- 蓝牙权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
@@ -71,7 +70,6 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -105,19 +103,28 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 
         <service android:name="com.huotu.partnermall.service.LocationService"/>
-        <!-- 极光配置 -->
-        <!-- Required SDK核心功能 -->
-        <activity
-            android:name="cn.jpush.android.ui.PushActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-            <intent-filter>
-                <action android:name="cn.jpush.android.ui.PushActivity"/>
+        <!-- 极光推送配置 -->
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="com.huotu.partnermall.inner"/>
-            </intent-filter>
+        <!-- Rich push 核心功能 since 2.0.6-->
+        <activity
+            android:name="cn.jpush.android.ui.PopWinActivity"
+            android:theme="@style/MyDialogStyle"
+            android:exported="false">
         </activity>
+
+        <!-- Required SDK核心功能 -->
+        <!--<activity-->
+            <!--android:name="cn.jpush.android.ui.PushActivity"-->
+            <!--android:configChanges="orientation|keyboardHidden"-->
+            <!--android:theme="@android:style/Theme.Translucent.NoTitleBar"-->
+            <!--android:exported="false">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="cn.jpush.android.ui.PushActivity"/>-->
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
+                <!--<category android:name="com.huotu.partnermall.inner"/>-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
         <!-- Required  SDK核心功能 -->
         <service
             android:name="cn.jpush.android.service.DownloadService"
@@ -137,80 +144,55 @@
             </intent-filter>
         </service>
         <!-- Required SDK核心功能 -->
-        <receiver
-            android:name="cn.jpush.android.service.PushReceiver"
-            android:enabled="true">
-            <intent-filter android:priority="1000">
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/>
-                <!-- Required  显示通知栏 -->
-                <category android:name="com.huotu.partnermall.inner"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-            <!-- Optional -->
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED"/>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-
-                <data android:scheme="package"/>
-            </intent-filter>
-        </receiver>
+        <!--<receiver-->
+            <!--android:name="cn.jpush.android.service.PushReceiver"-->
+            <!--android:enabled="true">-->
+            <!--<intent-filter android:priority="1000">-->
+                <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/>-->
+                <!--&lt;!&ndash; Required  显示通知栏 &ndash;&gt;-->
+                <!--<category android:name="com.huotu.partnermall.inner"/>-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.USER_PRESENT"/>-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>-->
+            <!--</intent-filter>-->
+            <!--&lt;!&ndash; Optional &ndash;&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.PACKAGE_ADDED"/>-->
+                <!--<action android:name="android.intent.action.PACKAGE_REMOVED"/>-->
+                <!--<data android:scheme="package"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
         <!-- Required SDK核心功能 -->
         <receiver android:name="cn.jpush.android.service.AlarmReceiver"/>
         <!-- User defined.  For test only  用户自定义的广播接收器 -->
-        <receiver
-            android:name="com.huotu.partnermall.receiver.JPushReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTRATION"/>
-                <!-- Required  用户注册SDK的intent -->
-                <action android:name="cn.jpush.android.intent.UNREGISTRATION"/>
-                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/>
-                <!-- Required  用户接收SDK消息的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/>
-                <!-- Required  用户接收SDK通知栏信息的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/>
-                <!-- Required  用户打开自定义通知栏的intent -->
-                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK"/>
-                <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
-                <action android:name="cn.jpush.android.intent.CONNECTION"/>
-                <!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <category android:name="com.huotu.partnermall.inner"/>
-            </intent-filter>
-        </receiver>
+        <!--<receiver-->
+            <!--android:name="com.huotu.partnermall.receiver.JPushReceiver"-->
+            <!--android:enabled="true">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="cn.jpush.android.intent.REGISTRATION"/>-->
+                <!--&lt;!&ndash; Required  用户注册SDK的intent &ndash;&gt;-->
+                <!--<action android:name="cn.jpush.android.intent.UNREGISTRATION"/>-->
+                <!--<action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/>-->
+                <!--&lt;!&ndash; Required  用户接收SDK消息的intent &ndash;&gt;-->
+                <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/>-->
+                <!--&lt;!&ndash; Required  用户接收SDK通知栏信息的intent &ndash;&gt;-->
+                <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/>-->
+                <!--&lt;!&ndash; Required  用户打开自定义通知栏的intent &ndash;&gt;-->
+                <!--<action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK"/>-->
+                <!--&lt;!&ndash; Optional 用户接受Rich Push Javascript 回调函数的intent &ndash;&gt;-->
+                <!--<action android:name="cn.jpush.android.intent.CONNECTION"/>-->
+                <!--&lt;!&ndash; 接收网络变化 连接/断开 since 1.6.3 &ndash;&gt;-->
+                <!--<category android:name="com.huotu.partnermall.inner"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <!-- Required  . Enable it you can get statistics data with channel -->
-        <meta-data
-            android:name="JPUSH_CHANNEL"
-            android:value="developer-default"/>
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="c58dcb2f6afd3ba39f33ea00"/>
+        <!--<meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>-->
+        <!--<meta-data android:name="JPUSH_APPKEY" android:value="c58dcb2f6afd3ba39f33ea00"/>-->
         <!-- </>值来自开发者平台取得的AppKey -->
-        <!-- 激光推送 -->
-        <!-- ShareSDK分享 -->
-        <!-- <activity -->
-        <!-- android:name="com.mob.tools.MobUIShell" -->
-        <!-- android:configChanges="keyboardHidden|orientation|screenSize" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar" -->
-        <!-- android:windowSoftInputMode="stateHidden|adjustResize"> -->
-        <!-- <intent-filter> -->
-        <!-- <data android:scheme="tencent1101260450"/> -->
 
 
-        <!-- <action android:name="android.intent.action.VIEW"/> -->
-
-
-        <!-- <category android:name="android.intent.category.BROWSABLE"/> -->
-        <!-- <category android:name="android.intent.category.DEFAULT"/> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-
-
-        <!-- ShareSDK分享 -->
         <!-- 支付宝钱包支付 -->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
@@ -233,31 +215,6 @@
         </receiver>
 
         <activity
-            android:name="com.huotu.partnermall.ui.sis.AddGoodsActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="com.huotu.partnermall.ui.sis.GoodsDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity
-            android:name="com.huotu.partnermall.ui.sis.SelectTempleteActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.huotu.partnermall.ui.sis.InfoActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="com.huotu.partnermall.ui.sis.GoodManageActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity
-            android:name="com.huotu.partnermall.ui.sis.EditSetActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name="com.huotu.partnermall.ui.login.PhoneLoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
@@ -269,8 +226,8 @@
         </activity>
         <activity
             android:name="com.huotu.partnermall.ui.nativeui.NativeActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/NativeTheme"
             android:windowSoftInputMode="adjustResize|stateHidden">
         </activity>
@@ -282,11 +239,16 @@
         <activity
             android:name="com.huotu.partnermall.ui.AppUpdateActivity"
             android:screenOrientation="portrait"/>
-        <!--<activity android:name="com.huotu.partnermall.ui.base.NativeBaseActivity">-->
-        <!--</activity>-->
-        <activity android:name="com.huotu.partnermall.ui.nativeui.SmartUIActivity"
-            android:theme="@style/NativeTheme"
-            android:screenOrientation="portrait"/>
-    </application>
 
+        <activity
+            android:name="com.huotu.partnermall.ui.nativeui.SmartUIActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NativeTheme"/>
+        <activity android:name="com.huotu.partnermall.ui.nativeui.FragMainActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:theme="@style/NativeTheme">
+        </activity>
+    </application>
 </manifest>

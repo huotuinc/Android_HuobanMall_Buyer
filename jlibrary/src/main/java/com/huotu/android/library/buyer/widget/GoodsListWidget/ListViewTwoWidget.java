@@ -18,6 +18,7 @@ import com.huotu.android.library.buyer.bean.GoodsListBean.ListViewTwoConfig;
 import com.huotu.android.library.buyer.bean.SortBean.SortOneConfig;
 import com.huotu.android.library.buyer.bean.Variable;
 import com.huotu.android.library.buyer.utils.DensityUtils;
+import com.huotu.android.library.buyer.utils.FrescoDraweeController;
 import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.android.library.buyer.utils.RetrofitUtil;
 import com.huotu.android.library.buyer.utils.SignUtil;
@@ -39,7 +40,7 @@ import retrofit2.Response;
 public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListView {
     List<LinearLayout> lls=null;
     int count;
-    ListViewTwoConfig config;
+    ListViewTwoConfig listViewTwoConfig;
     LinearLayout llContent;
     int columnCount=2;
     int pageIndex = 0;
@@ -50,13 +51,17 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
         super(context);
 
         this.count = 0;
-        this.config = config;
+        this.listViewTwoConfig = config;
 
         if( config.isStyleLayout() ){
             create_PuBuLayout();
         }else{
             create_NormalLayout();
         }
+    }
+
+    public ListViewTwoConfig getListViewTwoConfig() {
+        return listViewTwoConfig;
     }
 
     protected void create_NormalLayout(){
@@ -66,7 +71,7 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
     }
 
     protected void create_PuBuLayout(){
-        this.setOrientation( config.isOrderRule() ? VERTICAL : HORIZONTAL);
+        this.setOrientation( listViewTwoConfig.isOrderRule() ? VERTICAL : HORIZONTAL);
         ViewGroup rootView = addSortWidget();
         ((LinearLayout)rootView).setOrientation(HORIZONTAL);
 
@@ -88,7 +93,7 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
 
     protected ViewGroup addSortWidget(){
 
-        if( !this.config.isOrderRule()) {
+        if( !this.listViewTwoConfig.isOrderRule()) {
             llContent = this;
             return llContent;
         }
@@ -112,17 +117,22 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
             LinearLayout llItem = lls.get(position);
             count++;
 
+            //
+//            if(count >0 && count%30==0){
+//                FrescoDraweeController.clearMoneyCaches();
+//            }
+
             ListViewOneItemConfig listViewOneItemConfig = new ListViewOneItemConfig();
-            listViewOneItemConfig.setIsStatic( config.isStatic());
-            listViewOneItemConfig.setBindDataID(config.getBindDataID());
-            listViewOneItemConfig.setFilterRule(config.isOrderRule());
-            listViewOneItemConfig.setGoods_layer(config.getGoods_layer());
-            listViewOneItemConfig.setProduct_showname(config.getProduct_showname());
-            listViewOneItemConfig.setProduct_showprices(config.getProduct_showprices());
-            listViewOneItemConfig.setProduct_userInteger(config.getProduct_userInteger());
-            listViewOneItemConfig.setOrderRule(config.isOrderRule());
-            listViewOneItemConfig.setPagesize(config.getPagesize());
-            listViewOneItemConfig.setBackground(config.getBackground());
+            listViewOneItemConfig.setIsStatic( listViewTwoConfig.isStatic());
+            listViewOneItemConfig.setBindDataID(listViewTwoConfig.getBindDataID());
+            listViewOneItemConfig.setFilterRule(listViewTwoConfig.isOrderRule());
+            listViewOneItemConfig.setGoods_layer(listViewTwoConfig.getGoods_layer());
+            listViewOneItemConfig.setProduct_showname(listViewTwoConfig.getProduct_showname());
+            listViewOneItemConfig.setProduct_showprices(listViewTwoConfig.getProduct_showprices());
+            listViewOneItemConfig.setProduct_userInteger(listViewTwoConfig.getProduct_userInteger());
+            listViewOneItemConfig.setOrderRule(listViewTwoConfig.isOrderRule());
+            listViewOneItemConfig.setPagesize(listViewTwoConfig.getPagesize());
+            listViewOneItemConfig.setBackground(listViewTwoConfig.getBackground());
 
             ListViewOneItemWidget oneWidget = new ListViewOneItemWidget( getContext() , listViewOneItemConfig  ,itemWidth);
             llItem.addView( oneWidget );
@@ -143,17 +153,22 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
             llItem.setOrientation(HORIZONTAL);
             count++;
 
+            //
+//            if(count >0 && count%30==0){
+//                FrescoDraweeController.clearMoneyCaches();
+//            }
+
             ListViewOneItemConfig listViewOneItemConfig = new ListViewOneItemConfig();
-            listViewOneItemConfig.setIsStatic(config.isStatic());
-            listViewOneItemConfig.setBindDataID(config.getBindDataID());
-            listViewOneItemConfig.setFilterRule(config.isFilterRule());
-            listViewOneItemConfig.setGoods_layer(config.getGoods_layer());
-            listViewOneItemConfig.setProduct_showname(config.getProduct_showname());
-            listViewOneItemConfig.setProduct_showprices(config.getProduct_showprices());
-            listViewOneItemConfig.setProduct_userInteger(config.getProduct_userInteger());
-            listViewOneItemConfig.setOrderRule(config.isOrderRule());
-            listViewOneItemConfig.setPagesize(config.getPagesize());
-            listViewOneItemConfig.setBackground(config.getBackground());
+            listViewOneItemConfig.setIsStatic(listViewTwoConfig.isStatic());
+            listViewOneItemConfig.setBindDataID(listViewTwoConfig.getBindDataID());
+            listViewOneItemConfig.setFilterRule(listViewTwoConfig.isFilterRule());
+            listViewOneItemConfig.setGoods_layer(listViewTwoConfig.getGoods_layer());
+            listViewOneItemConfig.setProduct_showname(listViewTwoConfig.getProduct_showname());
+            listViewOneItemConfig.setProduct_showprices(listViewTwoConfig.getProduct_showprices());
+            listViewOneItemConfig.setProduct_userInteger(listViewTwoConfig.getProduct_userInteger());
+            listViewOneItemConfig.setOrderRule(listViewTwoConfig.isOrderRule());
+            listViewOneItemConfig.setPagesize(listViewTwoConfig.getPagesize());
+            listViewOneItemConfig.setBackground(listViewTwoConfig.getBackground());
 
             ListViewOneItemWidget oneWidget = new ListViewOneItemWidget( getContext() , listViewOneItemConfig  ,itemWidth);
 
@@ -191,7 +206,7 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
     }
 
     public void addItems( GoodsListBean goods ){
-        if(config.isStyleLayout()){
+        if(listViewTwoConfig.isStyleLayout()){
             addGoodsByPubu( goods );
         }else{
             addGoodsByNormal( goods );
@@ -204,7 +219,7 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
             pageIndex = 0;
             count=0;
             if( goods !=null) goods.clear();
-            if( config.isStyleLayout() ){
+            if( listViewTwoConfig.isStyleLayout() ){
                 if(lls!=null){
                     for(int i=0;i<lls.size();i++){
                         lls.get(i).removeAllViews();
@@ -221,7 +236,7 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
         int catid =0;
         if( classid==0) {
             try {
-                catid = Integer.valueOf( config.getBindDataID());
+                catid = Integer.valueOf( listViewTwoConfig.getBindDataID());
             }catch (Exception ex){}
         }else{
             catid = classid;
@@ -232,11 +247,11 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
         String filter= "";
         String searchKey = keyword;
         int pIndex = pageIndex+1;
-        if( config.isOrderRule() ){
+        if( listViewTwoConfig.isOrderRule() ){
             sortRule = sortOneWidget.getSortRule();
             filter = sortOneWidget.getFilter();
         }
-        int pageSize = config.getPagesize();
+        int pageSize = listViewTwoConfig.getPagesize();
 
         String key = Variable.BizKey;
         String random = String.valueOf(System.currentTimeMillis());
@@ -249,7 +264,7 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
 
         call.enqueue(new Callback<BizBaseBean<GoodsListBean>>() {
             @Override
-            public void onResponse(Response<BizBaseBean<GoodsListBean>> response) {
+            public void onResponse( Call<BizBaseBean<GoodsListBean>> call, Response<BizBaseBean<GoodsListBean>> response) {
                 if( response ==null || response.code() != Constant.REQUEST_SUCCESS ){
                     Logger.e( response.message());
                     EventBus.getDefault().post(new LoadCompleteEvent());
@@ -273,10 +288,16 @@ public class ListViewTwoWidget extends BaseLinearLayoutWidget implements IListVi
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<BizBaseBean<GoodsListBean>> call, Throwable t) {
                 Logger.e(t.getMessage());
                 EventBus.getDefault().post(new LoadCompleteEvent());
             }
         });
+    }
+
+    @Override
+    public boolean isPuBuMode() {
+        if(listViewTwoConfig==null) return false;
+        return listViewTwoConfig.isStyleLayout();
     }
 }

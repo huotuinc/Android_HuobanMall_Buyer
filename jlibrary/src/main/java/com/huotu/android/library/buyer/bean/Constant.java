@@ -124,6 +124,19 @@ public class Constant {
      */
     public final static String URL_SEARCH_ASPX="mall/search.aspx";
     /**
+     * 商品详情页面
+     */
+    public final static String URL_DETAIL_ASPX="mall/view.aspx";
+    /**
+     * 购物车页面
+     */
+    public final static String URL_SHOP_CART="mall/cart.aspx";
+    /**
+     * 个人中心 页面
+     */
+    public final static String URL_PERSON_INDEX="usercenter/index.aspx";
+
+    /**
      * 商品分类页面
      */
     public final static int PAGE_TYPE_1=1;

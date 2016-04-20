@@ -24,6 +24,7 @@ import com.huotu.android.library.buyer.bean.BizBean.MallInfoBean;
 import com.huotu.android.library.buyer.bean.Constant;
 import com.huotu.android.library.buyer.bean.Data.ClassEvent;
 import com.huotu.android.library.buyer.bean.Data.ClassificationConfig;
+import com.huotu.android.library.buyer.bean.Data.FooterEvent;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.Data.ScrollEvent;
 import com.huotu.android.library.buyer.bean.Data.SearchEvent;
@@ -132,7 +133,6 @@ public class CommonUtil {
 
     /**
      * 将一个 Map 对象转化为一个 JavaBean
-     * @param type 要转化的类型
      * @param map 包含属性值的 map
      * @return 转化出来的 JavaBean 对象
      */
@@ -159,7 +159,7 @@ public class CommonUtil {
                 }
             }
 
-            Gson gson = new GsonBuilder().serializeNulls().create(); //new Gson();
+            Gson gson = GsonUtil.getGson();
             String jsonString = gson.toJson(map);
             return (T) gson.fromJson(jsonString, thisObj.getClass());
         }catch ( Exception ex ){
@@ -222,6 +222,12 @@ public class CommonUtil {
         }else{
             EventBus.getDefault().post(new LinkEvent( linkName , url));
         }
+
+        if(path.endsWith(Constant.URL_DETAIL_ASPX)){
+            EventBus.getDefault().post(new FooterEvent(false));
+        }else{
+            EventBus.getDefault().post(new FooterEvent(true));
+        }
     }
 
     protected static void deal_search(Uri uri){
@@ -252,7 +258,7 @@ public class CommonUtil {
 
         call.enqueue(new Callback<ClassificationConfig>() {
             @Override
-            public void onResponse(Response<ClassificationConfig> response) {
+            public void onResponse( Call<ClassificationConfig> call, Response<ClassificationConfig> response) {
                 if (response == null || response.code() != Constant.REQUEST_SUCCESS ||
                         response.body() == null || response.body().get_links() == null) {
                     Logger.e(response.message());
@@ -268,7 +274,7 @@ public class CommonUtil {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<ClassificationConfig> call, Throwable t) {
                 Logger.e(t.getMessage());
             }
         });
@@ -297,7 +303,7 @@ public class CommonUtil {
 
         call.enqueue(new Callback<ClassificationConfig>() {
             @Override
-            public void onResponse(Response<ClassificationConfig> response) {
+            public void onResponse( Call<ClassificationConfig> call, Response<ClassificationConfig> response) {
                 if (response == null || response.code() != Constant.REQUEST_SUCCESS ||
                         response.body() == null || response.body().get_links() == null) {
                     Logger.e(response.message());
@@ -312,7 +318,7 @@ public class CommonUtil {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure( Call<ClassificationConfig> call, Throwable t) {
                 Logger.e(t.getMessage());
             }
         });

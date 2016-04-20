@@ -14,4 +14,10 @@ public interface IListView {
      void addItems(GoodsListBean data);
 
      void asyncGetGoodsData( boolean isRefreshData , int classificationid , String keyword);
+
+     /**
+      * 是否瀑布模式
+      * @return
+      */
+     boolean isPuBuMode();
 }

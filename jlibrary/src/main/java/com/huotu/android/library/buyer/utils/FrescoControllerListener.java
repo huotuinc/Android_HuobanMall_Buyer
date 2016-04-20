@@ -15,12 +15,19 @@ import java.lang.ref.WeakReference;
  */
 public class FrescoControllerListener extends BaseControllerListener<ImageInfo> {
     WeakReference< SimpleDraweeView> ref;
-    //SimpleDraweeView simpleDraweeView;
     int width;
+    ImageCallback imageCallback;
+
+    public interface ImageCallback{
+        void imageCallback(int width , int height);
+    }
+
+    public void setImageCallback(ImageCallback imageCallback){
+        this.imageCallback = imageCallback;
+    }
 
     public FrescoControllerListener(SimpleDraweeView iv, int width){
-        this.ref= new WeakReference<SimpleDraweeView>(iv);
-        //this.simpleDraweeView = iv;
+        this.ref= new WeakReference<>(iv);
         this.width=width;
     }
 
@@ -30,29 +37,29 @@ public class FrescoControllerListener extends BaseControllerListener<ImageInfo> 
         if( imageInfo==null) return;
         if( ref.get() ==null ) return;
 
-
         int h = imageInfo.getHeight();
         int w = imageInfo.getWidth();
 
         int ivw = width;
         int ivh = h* ivw / w;
         ViewGroup.LayoutParams layoutParams =  ref.get().getLayoutParams();
-        //layoutParams.height = ivh;
         layoutParams.width = ivw;
         layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
 
         ref.get().setLayoutParams(layoutParams);
 
-
         float ratio = w * 1.0f/h;
         ref.get().setAspectRatio(ratio);
-        //ref.get().postInvalidate();
+
+        if(imageCallback!=null){
+            imageCallback.imageCallback(ivw,ivh);
+        }
     }
 
     @Override
     public void onFailure(String id, Throwable throwable) {
         super.onFailure(id, throwable);
-        //if( ref.get() ==null ) return;
+        if( ref.get() ==null ) return;
 
         ViewGroup.LayoutParams layoutParams = ref.get().getLayoutParams();
         layoutParams.width = width;

@@ -2,7 +2,7 @@ package com.huotu.partnermall.service;
 
 import com.huotu.partnermall.config.Constants;
 
-import retrofit2.GsonConverterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.Retrofit;
 
 /**

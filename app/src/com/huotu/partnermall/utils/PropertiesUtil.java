@@ -1,9 +1,6 @@
 package com.huotu.partnermall.utils;
 
-import android.util.Log;
-
 import com.huotu.partnermall.model.ColorBean;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -14,9 +11,7 @@ import java.util.Properties;
 /**
  * 读取properties文件工具类
  */
-public
-class PropertiesUtil {
-
+public class PropertiesUtil {
     private static class Holder
     {
         private static final PropertiesUtil instance = new PropertiesUtil();

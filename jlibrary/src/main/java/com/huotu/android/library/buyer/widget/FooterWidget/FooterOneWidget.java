@@ -66,7 +66,6 @@ public class FooterOneWidget extends BaseLinearLayout implements Callback<BizBas
         this.addView(llContainer);
 
         if( footerOneConfig.getRows()==null || footerOneConfig.getRows().size()<1 ) return;
-        //int itemWidth = getResources().getDisplayMetrics().widthPixels/ footerOneConfig.getList().size();
         for(FooterImageBean item : footerOneConfig.getRows()){
             LinearLayout ll = new LinearLayout(context);
             ll.setId(item.hashCode());
@@ -79,7 +78,7 @@ public class FooterOneWidget extends BaseLinearLayout implements Callback<BizBas
 
             SimpleDraweeView iv = new SimpleDraweeView(context);
             int iconWidth = DensityUtils.dip2px(getContext(), Constant.FOOTER_ICON_WIDTH);
-            layoutParams = new LayoutParams( iconWidth , ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams = new LayoutParams( iconWidth , iconWidth );
             layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
             iv.setLayoutParams(layoutParams);
             ll.addView(iv);
@@ -132,7 +131,7 @@ public class FooterOneWidget extends BaseLinearLayout implements Callback<BizBas
     }
 
     @Override
-    public void onResponse(Response<BizBaseBean<MallInfoBean>> response) {
+    public void onResponse(Call<BizBaseBean<MallInfoBean>> call, Response<BizBaseBean<MallInfoBean>> response) {
         if (response == null || response.code() != 200 || response.body() == null || response.body().getData() == null) {
             Logger.e(response.message());
             return;
@@ -141,7 +140,7 @@ public class FooterOneWidget extends BaseLinearLayout implements Callback<BizBas
     }
 
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure(Call<BizBaseBean<MallInfoBean>> call, Throwable t) {
         Logger.e(t.getMessage());
     }
 }

@@ -8,11 +8,12 @@
     android:id="@+id/activity_native_root"
     tools:context="com.huotu.partnermall.ui.nativeui.NativeActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/activity_native_header"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+        <include layout="@layout/title_index"/>
+     </RelativeLayout>
 
     <com.handmark.pulltorefresh.library.PullToRefreshScrollView
         android:id="@+id/activity_native_scrollview"
@@ -27,7 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
-
 
     <RelativeLayout
         android:layout_alignParentBottom="true"

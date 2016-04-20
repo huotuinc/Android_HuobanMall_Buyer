@@ -139,6 +139,10 @@ public class SystemTools
         }
     }
 
+    public static void loadBackground(View view , int resid){
+        view.setBackgroundResource(resid);
+    }
+
 
     //获取系统颜色
     public static int obtainColor(String colorStr)

@@ -14,7 +14,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.huotu.android.library.buyer.Jlibrary;
-import com.huotu.android.library.buyer.bean.PageConfig;
+import com.huotu.android.library.buyer.bean.Data.FindIndexConfig;
 import com.huotu.android.library.buyer.utils.Logger;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
@@ -25,7 +25,6 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.MSiteModel;
 import com.huotu.partnermall.model.MerchantInfoModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
-import com.huotu.partnermall.model.Native.FindIndexConfig;
 import com.huotu.partnermall.service.ApiService;
 import com.huotu.partnermall.service.ZRetrofitUtil;
 import com.huotu.partnermall.ui.base.BaseActivity;
@@ -35,7 +34,6 @@ import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.BuyerSignUtil;
 import com.huotu.partnermall.utils.GsonRequest;
-import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.PreferenceHelper;
 import com.huotu.android.library.buyer.utils.SignUtil;
 import com.huotu.partnermall.utils.SystemTools;
@@ -207,7 +205,7 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
             if (ref.get() == null) return;
             //ref.get().dismissProgress();
             if (findIndexConfig == null) {
-                ToastUtils.showLongToast(ref.get(), "请求失败！");
+                ToastUtils.showLongToast( "请求失败！");
                 ref.get().loading_pbar.setVisibility(View.GONE);
                 ref.get().loading_tryagain.setVisibility(View.VISIBLE);
                 return;
@@ -216,7 +214,7 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
             if (findIndexConfig.get_links() == null ||
                     findIndexConfig.get_links().getSelf() == null ||
                     TextUtils.isEmpty(findIndexConfig.get_links().getSelf().getHref())) {
-                ToastUtils.showLongToast(ref.get(), "首页配置地址空！");
+                ToastUtils.showLongToast( "首页配置地址空！");
                 ref.get().loading_pbar.setVisibility(View.GONE);
                 ref.get().loading_tryagain.setVisibility(View.VISIBLE);
                 return;
@@ -232,7 +230,10 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
                 String url = selfhref;
                 bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
                 bd.putBoolean(NativeConstants.KEY_ISMAINUI, true);
-                ActivityUtils.getInstance().skipActivity(ref.get(), NativeActivity.class, bd);
+                //ActivityUtils.getInstance().skipActivity(ref.get(), NativeActivity.class, bd);
+
+                ActivityUtils.getInstance().skipActivity(ref.get(), FragMainActivity.class, bd);
+
             } else {
                 ActivityUtils.getInstance().skipActivity(ref.get(), LoginActivity.class);
             }
@@ -251,7 +252,7 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
 
             if (ref.get() == null) return;
             //ref.get().dismissProgress();
-            ToastUtils.showLongToast(ref.get(), "请求异常,请重试");
+            ToastUtils.showLongToast( "请求异常,请重试");
             Logger.e("请求异常");
             ref.get().loading_pbar.setVisibility(View.GONE);
             ref.get().loading_tryagain.setVisibility(View.VISIBLE);
@@ -324,7 +325,7 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
         public void onResponse(MSiteModel  mSiteModel ) {
             if (ref.get() == null) return;
             if (mSiteModel == null || mSiteModel.getCode()!=200) {
-                ToastUtils.showLongToast(ref.get(), "请求失败！");
+                ToastUtils.showLongToast( "请求失败！");
                 ref.get().loading_pbar.setVisibility(View.GONE);
                 ref.get().loading_tryagain.setVisibility(View.VISIBLE);
                 return;
@@ -362,9 +363,9 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
         Call<MerchantInfoModel> call = apiService.getMallConfig(version, operation, timestamp, appid, sign, customerId);
         call.enqueue(new Callback<MerchantInfoModel>() {
             @Override
-            public void onResponse(retrofit2.Response<MerchantInfoModel> response) {
+            public void onResponse( Call<MerchantInfoModel> call, retrofit2.Response<MerchantInfoModel> response) {
                 if (response == null || response.code() != 200 || response.body() == null) {
-                    ToastUtils.showLongToast(LoadingActivity.this, "请求失败！");
+                    ToastUtils.showLongToast( "请求失败！");
                     loading_pbar.setVisibility(View.GONE);
                     loading_tryagain.setVisibility(View.VISIBLE);
                     return;
@@ -390,9 +391,9 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure( Call<MerchantInfoModel> call, Throwable t) {
                 Logger.e(t.getMessage());
-                ToastUtils.showLongToast(LoadingActivity.this , "请求异常,请重试");
+                ToastUtils.showLongToast( "请求异常,请重试");
                 loading_pbar.setVisibility(View.GONE);
                 loading_tryagain.setVisibility(View.VISIBLE);
             }
@@ -424,9 +425,9 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
         Call<MerchantPayInfo> call = apiService.payConfig(version , operation , timestamp ,appid , sign , customerId );
         call.enqueue(new Callback<MerchantPayInfo>() {
             @Override
-            public void onResponse(retrofit2.Response<MerchantPayInfo> response) {
+            public void onResponse( Call<MerchantPayInfo>call, retrofit2.Response<MerchantPayInfo> response) {
                 if (response == null || response.code() != 200 || response.body() == null) {
-                    ToastUtils.showLongToast(LoadingActivity.this, "请求失败！");
+                    ToastUtils.showLongToast( "请求失败！");
                     loading_pbar.setVisibility(View.GONE);
                     loading_tryagain.setVisibility(View.VISIBLE);
                     return;
@@ -449,7 +450,7 @@ public class LoadingActivity extends BaseActivity implements View.OnClickListene
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<MerchantPayInfo> call, Throwable t) {
                 Logger.e(t.getMessage());
             }
         });

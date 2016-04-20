@@ -26,7 +26,7 @@ public class FrescoImagePipelineConfig {
     //使用的缓存数量
     private static final int MAX_MEMORY_CACHE_SIZE = MAX_HEAP_SIZE / 4;
     //默认图极低磁盘空间缓存的最大值
-    private static final int MAX_DISK_CACHE_VERYLOW_SIZE = 20 * ByteConstants.MB;
+    private static final int MAX_DISK_CACHE_VERYLOW_SIZE = 30 * ByteConstants.MB;
     //默认图低磁盘空间缓存的最大值
     private static final int MAX_DISK_CACHE_LOW_SIZE = 60 * ByteConstants.MB;
     //默认图磁盘缓存的最大值
@@ -68,7 +68,8 @@ public class FrescoImagePipelineConfig {
                 //.setSmallImageDiskCacheConfig(diskSmallCacheConfig)
                 .setMainDiskCacheConfig(diskCacheConfig)
                 .setMemoryTrimmableRegistry(NoOpMemoryTrimmableRegistry.getInstance())
-                .setResizeAndRotateEnabledForNetwork(true);
+                .setResizeAndRotateEnabledForNetwork(true)
+                .setDownsampleEnabled(true);
 
         // 就是这段代码，用于清理缓存
         NoOpMemoryTrimmableRegistry.getInstance().registerMemoryTrimmable(new MemoryTrimmable() {

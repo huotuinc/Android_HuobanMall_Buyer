@@ -4,8 +4,6 @@ import android.app.NativeActivity;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -20,18 +18,13 @@ import android.widget.TextView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.adapter.ViewPagerAdapter;
 import com.huotu.partnermall.config.NativeConstants;
-import com.huotu.partnermall.image.ImageUtil;
-import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
+import com.huotu.partnermall.ui.nativeui.FragMainActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.PreferenceHelper;
 import com.huotu.partnermall.utils.SystemTools;
-import com.huotu.partnermall.utils.ToastUtils;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,30 +34,51 @@ import butterknife.ButterKnife;
 /**
  * 引导界面
  */
-public class GuideActivity extends BaseActivity implements View.OnTouchListener ,View.OnClickListener{
+public class GuideActivity extends BaseActivity
+        implements View.OnTouchListener ,View.OnClickListener, ViewPager.OnPageChangeListener{
     static String TAG = GuideActivity.class.getName();
     @Bind(R.id.vp_activity)
     ViewPager viewPager;
-    private ViewPagerAdapter viewPagerAdapter;
-    private List<View> views;
-    private Resources resources;
-    //引导图片资源
-    private String[] pics;
-    int lastX=0;
+    @Bind(R.id.guide_index)
+    LinearLayout llIndex;
     TextView skipText;
+    ViewPagerAdapter viewPagerAdapter;
+    List<View> views;
+    List<ImageView> indexList;
+    Resources resources;
+    String[] pics;
+    int lastX=0;
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        resources = this.getResources();
         setContentView(R.layout.guide_ui);
         ButterKnife.bind(this);
         initView();
     }
 
+    private void initIndex( int count ){
+        llIndex.removeAllViews();
+        indexList = new ArrayList<>();
+        if(count<1)return;
+
+        for(int i=0;i<count;i++){
+            ImageView iv = new ImageView(this);
+            iv.setPadding(5, 0, 5, 0);
+            if(i==0){
+                iv.setImageResource(R.drawable.ic_page_indicator_focused);
+            }else {
+                iv.setImageResource(R.drawable.ic_page_indicator);
+            }
+            llIndex.addView(iv);
+            indexList.add(iv);
+        }
+    }
+
     @Override
     protected void initView() {
         try {
+            resources = this.getResources();
             views = new ArrayList<>();
             LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             pics = resources.getStringArray(R.array.guide_icon);
@@ -89,7 +103,9 @@ public class GuideActivity extends BaseActivity implements View.OnTouchListener 
             viewPager.setAdapter(viewPagerAdapter);
             viewPager.setOnTouchListener(this);
             //绑定回调
-            //viewPager.addOnPageChangeListener(this);
+            viewPager.addOnPageChangeListener(this);
+
+            initIndex(pics.length);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
@@ -123,10 +139,34 @@ public class GuideActivity extends BaseActivity implements View.OnTouchListener 
                 String url = PreferenceHelper.readString(BaseApplication.single, NativeConstants.UI_CONFIG_FILE, NativeConstants.UI_CONFIG_SELF_HREF);
                 bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
                 bd.putBoolean(NativeConstants.KEY_ISMAINUI, true);
-                ActivityUtils.getInstance().skipActivity(GuideActivity.this, NativeActivity.class,bd);
+                //ActivityUtils.getInstance().skipActivity(GuideActivity.this, NativeActivity.class,bd);
+                ActivityUtils.getInstance().skipActivity(GuideActivity.this , FragMainActivity.class , bd );
             } else {
                 ActivityUtils.getInstance().skipActivity(GuideActivity.this, LoginActivity.class);
             }
         }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if(indexList==null || indexList.size()<1) return;
+        int len = indexList.size();
+        for(int i=0;i< len ; i++) {
+            if( i == position) {
+                indexList.get(i).setImageResource(R.drawable.ic_page_indicator_focused);
+            }else {
+                indexList.get(position).setImageResource(R.drawable.ic_page_indicator);
+            }
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }

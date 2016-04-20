@@ -19,7 +19,6 @@ import com.huotu.android.library.buyer.bean.BizBean.GoodsBean;
 import com.huotu.android.library.buyer.bean.Data.DataItem;
 import com.huotu.android.library.buyer.bean.Data.LinkEvent;
 import com.huotu.android.library.buyer.bean.GoodsListBean.ListViewThreeConfig;
-import com.huotu.android.library.buyer.bean.GoodsListBean.ListViewThreeItemConfig;
 import com.huotu.android.library.buyer.bean.Variable;
 import com.huotu.android.library.buyer.utils.CommonUtil;
 import com.huotu.android.library.buyer.utils.DensityUtils;
@@ -67,9 +66,10 @@ public class ListViewThreeItemWidget extends BaseLinearLayoutWidget implements V
         if( v.getTag()==null ) return;
         if( v.getTag() instanceof GoodsBean) {
             GoodsBean good =( GoodsBean) v.getTag();
-            String detailurl = good.getDetailUrl();
-            String linkname = good.getGoodName();
-            EventBus.getDefault().post(new LinkEvent( linkname , detailurl));
+            String detailUrl = good.getDetailUrl();
+            String linkName = good.getGoodName();
+            //EventBus.getDefault().post(new LinkEvent( linkName , detailUrl));
+            CommonUtil.link( linkName , detailUrl );
         }
     }
 
