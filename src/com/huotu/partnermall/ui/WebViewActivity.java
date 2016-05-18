@@ -33,6 +33,7 @@ import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
+import com.huotu.partnermall.utils.ObtainParamsMap;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WindowUtils;
@@ -108,7 +109,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
             @Override
             public void onRefresh(PullToRefreshBase<WebView> pullToRefreshBase) {
-                if( viewPage ==null) return;
+                if (viewPage == null) return;
                 viewPage.reload();
             }
         });
@@ -139,8 +140,22 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                         msg.what = Constants.SHARE_CANCEL;
                         msg.obj = platform;
                         mHandler.sendMessage(msg);
-                    }});
+                    }
+                });
         share.setOnDismissListener(new PoponDismissListener(WebViewActivity.this));
+    }
+
+    private void signHeader( WebView webView ){
+        String userid= application.readMemberId();
+        String unionid = application.readUserUnionId();
+        String sign = ObtainParamsMap.SignHeaderString(userid, unionid);
+        String userAgent = webView.getSettings().getUserAgentString();
+        if( TextUtils.isEmpty(userAgent) ) {
+            userAgent = "mobile;"+sign;
+        }else{
+            userAgent +=";mobile;"+sign;
+        }
+        webView.getSettings().setUserAgentString(userAgent);
     }
 
     private void loadPage(){
@@ -149,13 +164,14 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         viewPage.setClickable(true);
         viewPage.getSettings().setUseWideViewPort(true);
 
-        String userAgent = viewPage.getSettings().getUserAgentString();
-        if( TextUtils.isEmpty(userAgent) ) {
-            userAgent = "mobile";
-        }else{
-            userAgent +=";mobile";
-        }
-        viewPage.getSettings().setUserAgentString(userAgent);
+//        String userAgent = viewPage.getSettings().getUserAgentString();
+//        if( TextUtils.isEmpty(userAgent) ) {
+//            userAgent = "mobile";
+//        }else{
+//            userAgent +=";mobile";
+//        }
+//        viewPage.getSettings().setUserAgentString(userAgent);
+        signHeader( viewPage );
 
         //是否需要避免页面放大缩小操作
         viewPage.getSettings().setSupportZoom(true);
@@ -200,7 +216,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                         if (pgBar == null) return;
                         pgBar.setVisibility(View.GONE);
 
-                        if( progress ==null) return;
+                        if (progress == null) return;
                         progress.dismissView();
                     }
                 }
@@ -255,7 +271,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 
     @OnClick(R.id.titleLeftImage)
     void doBack(){
-        WebViewActivity.this.finish ();
+        WebViewActivity.this.finish();
     }
 
     /**
@@ -277,6 +293,11 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             if( fileName.equals("view.aspx") ) {//商品详细界面
                 progress.showProgress("请稍等...");
                 progress.showAtLocation( getWindow().getDecorView() , Gravity.CENTER, 0, 0);
+                getShareContentByJS();
+                return;
+            }else if( fileName.equals("inviteOpenShop".toLowerCase())){
+                progress.showProgress("请稍等...");
+                progress.showAtLocation(getWindow().getDecorView() , Gravity.CENTER, 0, 0);
                 getShareContentByJS();
                 return;
             }
@@ -485,4 +506,52 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             }
         });
     }
+
+    @JavascriptInterface
+    public void sendSisShare(final String title, final String desc, final String link, final String img_url) {
+        if (this == null) return;
+        if (this.share == null) return;
+
+        //ToastUtils.showLongToast( getApplicationContext() , "title:"+title +", desc:"+ desc );
+
+        this.mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+
+                if( WebViewActivity.this ==null ) return;
+                if( progress!=null ){
+                    progress.dismissView();
+                }
+
+                String sTitle = title;
+                if( TextUtils.isEmpty( sTitle ) ){
+                    sTitle = application.obtainMerchantName ()+"分享";
+                }
+                String sDesc = desc;
+                if( TextUtils.isEmpty( sDesc ) ){
+                    sDesc = sTitle;
+                }
+                String imageUrl = img_url; //application.obtainMerchantLogo ();
+                if(TextUtils.isEmpty ( imageUrl )) {
+                    imageUrl = Constants.COMMON_SHARE_LOGO;
+                }
+
+                String sLink = link;
+                if( TextUtils.isEmpty( sLink ) ){
+                    sLink = application.obtainMerchantUrl();
+                }
+                ShareModel msgModel = new ShareModel ();
+                msgModel.setImageUrl(imageUrl);
+                msgModel.setText(sDesc);
+                msgModel.setTitle(sTitle);
+                msgModel.setUrl(sLink);
+                //msgModel.setImageData(BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ));
+                share.initShareParams(msgModel);
+                WindowUtils.backgroundAlpha( WebViewActivity.this , 0.4f);
+                share.showAtLocation( WebViewActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+
+            }
+        });
+    }
+
 }

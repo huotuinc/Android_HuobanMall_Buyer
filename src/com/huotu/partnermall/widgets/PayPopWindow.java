@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -38,7 +39,6 @@ class PayPopWindow extends PopupWindow {
     private Handler  mHandler;
     private BaseApplication application;
     private PayModel payModel;
-    //private Context context;
     public ProgressPopupWindow progress;
 
 
@@ -49,7 +49,6 @@ class PayPopWindow extends PopupWindow {
         this.mHandler = mHandler;
         this.application = application;
         this.payModel = payModel;
-        //this.context = context;
         progress = new ProgressPopupWindow ( aty );
         LayoutInflater inflater = ( LayoutInflater ) aty.getSystemService ( Context.LAYOUT_INFLATER_SERVICE );
 
@@ -57,6 +56,8 @@ class PayPopWindow extends PopupWindow {
         wxPayBtn = ( Button ) payView.findViewById ( R.id.wxPayBtn );
         alipayBtn = ( Button ) payView.findViewById ( R.id.alipayBtn );
         cancelBtn = ( Button ) payView.findViewById ( R.id.cancelBtn );
+
+        showPayType();
 
         wxPayBtn.setOnClickListener (
                 new View.OnClickListener ( ) {
@@ -144,6 +145,14 @@ class PayPopWindow extends PopupWindow {
     {
         setOnDismissListener ( new PoponDismissListener ( aty ) );
         dismiss ();
+    }
 
+
+    protected void showPayType(){
+        String key = application.readAlipayAppKey();
+        String partnerid = application.readAlipayParentId();
+        if(TextUtils.isEmpty( key ) || TextUtils.isEmpty( partnerid ) ){
+            alipayBtn.setVisibility(View.GONE);
+        }
     }
 }

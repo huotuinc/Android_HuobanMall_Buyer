@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">黄太纸</string>
+    <!--引导界面图片-->
+    <string-array name="guide_icon">
+        <item>newfeature_01</item>
+        <item>newfeature_02</item>
+        <item>newfeature_03</item>
+    </string-array>
+</resources>

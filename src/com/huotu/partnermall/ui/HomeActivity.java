@@ -31,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshWebView;
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
@@ -52,6 +53,7 @@ import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
+import com.huotu.partnermall.utils.ObtainParamsMap;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
@@ -260,6 +262,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                         Message msg = Message.obtain();
                         msg.what = Constants.SHARE_ERROR;
                         msg.obj = platform;
+                        //ToastUtils.showLongToast(HomeActivity.this, throwable.getMessage());
                         mHandler.sendMessage(msg);
                     }
 
@@ -283,13 +286,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         menuView.getSettings().setJavaScriptEnabled(true);
         menuView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         //
-        String userAgent = menuView.getSettings().getUserAgentString();
-        if( TextUtils.isEmpty(userAgent) ) {
-            userAgent = "mobile";
-        }else{
-            userAgent +=";mobile";
-        }
-        menuView.getSettings().setUserAgentString( userAgent );
+//        String userAgent = menuView.getSettings().getUserAgentString();
+//        if( TextUtils.isEmpty(userAgent) ) {
+//            userAgent = "mobile";
+//        }else{
+//            userAgent +=";mobile";
+//        }
+//        menuView.getSettings().setUserAgentString( userAgent );
+        signHeader( menuView );
 
         //首页默认为商户站点 + index
         String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
@@ -317,18 +321,32 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         );
     }
 
+    private void signHeader( WebView webView ){
+        String userid= application.readMemberId();
+        String unionid = application.readUserUnionId();
+        String sign = ObtainParamsMap.SignHeaderString(userid, unionid);
+        String userAgent = webView.getSettings().getUserAgentString();
+        if( TextUtils.isEmpty(userAgent) ) {
+            userAgent = "mobile;"+sign;
+        }else{
+            userAgent +=";mobile;"+sign;
+        }
+        webView.getSettings().setUserAgentString( userAgent );
+    }
+
     private void loadPage(){
         pageWeb.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         pageWeb.setVerticalScrollBarEnabled(false);
         pageWeb.setClickable(true);
         //设置app标志
-        String userAgent = pageWeb.getSettings().getUserAgentString();
-        if( TextUtils.isEmpty(userAgent) ) {
-            userAgent = "mobile";
-        }else{
-            userAgent +=";mobile";
-        }
-        pageWeb.getSettings().setUserAgentString(userAgent);
+//        String userAgent = pageWeb.getSettings().getUserAgentString();
+//        if( TextUtils.isEmpty(userAgent) ) {
+//            userAgent = "mobile";
+//        }else{
+//            userAgent +=";mobile";
+//        }
+//        pageWeb.getSettings().setUserAgentString(userAgent);
+        signHeader( pageWeb );
         //
         pageWeb.getSettings().setUseWideViewPort(true);
         //是否需要避免页面放大缩小操作
@@ -515,6 +533,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
     }
 
+    /**
+     *
+     */
     protected void getShareContentByJS(){
         pageWeb.loadUrl("javascript:__getShareStr();");
     }
@@ -535,11 +556,15 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
                     getShareContentByJS();
                     return;
+                }else if( fileName.equals("inviteOpenShop".toLowerCase())){
+                    progress.showProgress("请稍等...");
+                    progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
+                    getShareContentByJS();
+                    return;
                 }
             }catch (Exception ex){
             }
         }
-
 
         String text = application.obtainMerchantName ()+"分享";
         String imageurl = application.obtainMerchantLogo ();
@@ -1029,6 +1054,55 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         //share.showShareWindow();
         WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f);
         share.showAtLocation( HomeActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void sendSisShare(final String title, final String desc, final String link,final String img_url){
+        if(  this==null ) return;
+        if( this.share ==null ) return;
+
+        //ToastUtils.showShortToast( ref.get() , title+desc+link+img_url);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+
+                if( HomeActivity.this ==null ) return;
+
+                if( HomeActivity.this.progress !=null ){
+                    HomeActivity.this.progress.dismissView();
+                }
+
+                String sTitle = title;
+                if( TextUtils.isEmpty( sTitle ) ){
+                    sTitle = application.obtainMerchantName ()+"分享";
+                }
+                String sDesc = desc;
+                if( TextUtils.isEmpty( sDesc ) ){
+                    sDesc = sTitle;
+                }
+                String imageUrl = img_url; //application.obtainMerchantLogo ();
+                if(TextUtils.isEmpty ( imageUrl )) {
+                    imageUrl = Constants.COMMON_SHARE_LOGO;
+                }
+
+                String sLink = link;
+                if( TextUtils.isEmpty( sLink ) ){
+                    sLink = application.obtainMerchantUrl();
+                }
+                sLink = SystemTools.shareUrl(application, sLink);
+                ShareModel msgModel = new ShareModel ();
+                msgModel.setImageUrl(imageUrl);
+                msgModel.setText(sDesc);
+                msgModel.setTitle(sTitle);
+                msgModel.setUrl(sLink);
+                //msgModel.setImageData( BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ) );
+                share.initShareParams(msgModel);
+                //share.showShareWindow();
+                WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f);
+                share.showAtLocation( HomeActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
             }
         });

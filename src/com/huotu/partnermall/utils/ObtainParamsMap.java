@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.inner.BuildConfig;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -267,18 +268,17 @@ public class ObtainParamsMap {
         StringBuffer buffer = new StringBuffer();
         List arrayList = new ArrayList (resultMap.entrySet());
 
-        Collections.sort (
-                arrayList, new Comparator ( ) {
-                    public
-                    int compare ( Object arg1, Object arg2 ) {
-                        Map.Entry obj1 = ( Map.Entry ) arg1;
-                        Map.Entry obj2 = ( Map.Entry ) arg2;
-                        return ( obj1.getKey ( ) ).toString ( ).compareTo (
-                                ( String ) obj2.getKey ( )
-                                                                          );
+        Collections.sort(
+                arrayList, new Comparator() {
+                    public int compare(Object arg1, Object arg2) {
+                        Map.Entry obj1 = (Map.Entry) arg1;
+                        Map.Entry obj2 = (Map.Entry) arg2;
+                        return (obj1.getKey()).toString().compareTo(
+                                (String) obj2.getKey()
+                        );
                     }
                 }
-                         );
+        );
 
         //
         for (Iterator iter = arrayList.iterator(); iter.hasNext();)
@@ -291,5 +291,18 @@ public class ObtainParamsMap {
         }
 
         return buffer.toString();
+    }
+
+    /**
+     *
+     * @param userid
+     * @param unionid
+     * @return
+     */
+    public static String SignHeaderString(String userid , String unionid){
+        String temp = userid + unionid + BuildConfig.Header_Secret;
+        String sign =  EncryptUtil.getInstance().encryptMd532(temp);
+        String str= "hottec:"+sign+":"+ userid+":"+unionid+";";
+        return str;
     }
 }

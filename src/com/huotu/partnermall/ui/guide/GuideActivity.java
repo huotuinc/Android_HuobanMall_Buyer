@@ -42,9 +42,9 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
     ViewPager mVPActivity;
     private ViewPagerAdapter vpAdapter;
     private List< View > views;
-    private int lastValue = - 1;
+    //private int lastValue = - 1;
     private Resources resources;
-    public Handler mHandler;
+    //public Handler mHandler;
     //引导图片资源
     private String[] pics;
 
@@ -54,9 +54,9 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
         resources = this.getResources ();
         setContentView(R.layout.guide_ui);
         ButterKnife.bind(this);
-        mHandler = new Handler ( this );
-        views = new ArrayList< View > ( );
-        initImage ( );
+        //mHandler = new Handler ( this );
+        views = new ArrayList<> ( );
+        initImage();
         //初始化Adapter
         vpAdapter = new ViewPagerAdapter ( views );
         mVPActivity.setAdapter ( vpAdapter );
@@ -79,7 +79,7 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
                 RelativeLayout iv = ( RelativeLayout ) LayoutInflater.from(GuideActivity.this).inflate ( R.layout.guid_item, null );
                 TextView skipText = (TextView) iv.findViewById(R.id.skipText);
                 iv.setLayoutParams ( mParams );
-                //int iconId = resources.getIdentifier ( pics[i], "drawable", application.readSysInfo () );
+                iv.setOnClickListener(this);
                 int iconId = resources.getIdentifier( pics[i] , "drawable" , this.getPackageName() );
 
                 Drawable menuIconDraw = null;
@@ -90,18 +90,7 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
                 skipText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //延时2秒后跳入新界面
-                        //mHandler.postDelayed(new Runnable() {
-                        //    @Override
-                        //    public void run() {
-                                //判断是否登录
-                                if (application.isLogin()) {
-                                    ActivityUtils.getInstance().skipActivity(GuideActivity.this, HomeActivity.class);
-                                } else {
-                                    ActivityUtils.getInstance().skipActivity( GuideActivity.this, LoginActivity.class);
-                                }
-                        //    }
-                        //}, 1000);
+                               go();
                     }
                 });
                 views.add(iv);
@@ -114,25 +103,38 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
     /**
      *设置当前的引导页
      */
-    private void setCurView(int position)
-    {
-        if (position < 0 || position >= pics.length) {
-            return;
-        }
+//    private void setCurView(int position){
+//        if (position < 0 || position >= pics.length) {
+//            return;
+//        }
+//        mVPActivity.setCurrentItem(position);
+//    }
 
-        mVPActivity.setCurrentItem(position);
+    protected void go(){
+        //判断是否登录
+        if (application.isLogin()) {
+            ActivityUtils.getInstance().skipActivity(GuideActivity.this, HomeActivity.class);
+        } else {
+            ActivityUtils.getInstance().skipActivity( GuideActivity.this, LoginActivity.class);
+        }
     }
 
 
     @Override
-    public  void onClick ( View v ) {
-        int position = (Integer)v.getTag();
-        setCurView ( position );
+    public void onClick ( View v ) {
+       if(v.getId()== R.id.rl1){
+           if( mVPActivity.getCurrentItem() ==  (vpAdapter.getCount()-1) ){
+               go();
+           }
+       }else {
+//           int position = (Integer) v.getTag();
+//           setCurView(position);
+       }
     }
 
     @Override
     public void onPageScrolled ( int arg0, float v, int i1 ) {
-        lastValue = arg0;
+        //lastValue = arg0;
     }
 
     @Override
