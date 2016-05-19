@@ -29,6 +29,7 @@ import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.widgets.CountDownTimerButton;
 import com.huotu.partnermall.widgets.KJEditText;
 import java.lang.ref.WeakReference;
@@ -276,6 +277,10 @@ public class PhoneLoginActivity extends BaseActivity {
             if(null != menus && !menus.isEmpty ())
             {
                 ref.get().application.writeMenus(menus);
+
+                //绑定极光推送别名
+                UIUtils.bindPush();
+
                 //跳转到首页
                 ActivityUtils.getInstance ().skipActivity ( ref.get(), HomeActivity.class );
             }

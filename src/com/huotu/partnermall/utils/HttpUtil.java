@@ -3,7 +3,9 @@ package com.huotu.partnermall.utils;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -232,7 +234,8 @@ public class HttpUtil{
         VolleyUtil.getRequestQueue().add( re);
     }
 
-    public void doVolley( final Activity aty,  final Handler mHandler, final BaseApplication application, String url, Map param, final AccountModel account ){
+    public void doVolley(final Activity aty, final Handler mHandler, final BaseApplication application,
+                         String url, Map param, final AccountModel account , final Bundle bundlePush ){
         final GsonRequest re = new GsonRequest (
                 Request.Method.POST, url, AuthMallModel.class, null, param,
                 new Response.Listener<AuthMallModel >(){
@@ -244,6 +247,7 @@ public class HttpUtil{
                 authMallModel = response;
                 if( authMallModel !=null && 200 == authMallModel.getCode ())
                 {
+
                     AuthMallModel.AuthMall mall = authMallModel.getData ();
                     if(null != mall)
                     {
@@ -280,8 +284,20 @@ public class HttpUtil{
                         if(null != menus && !menus.isEmpty ())
                         {
                             application.writeMenus ( menus );
+
+
+                            //绑定极光推送别名
+                            UIUtils.bindPush();
+
+                            Intent intent = new Intent();
+                            intent.setClass( aty , HomeActivity.class);
+                            //传递推送信息
+                            if(null != bundlePush){
+                                intent.putExtra( Constants.HUOTU_PUSH_KEY ,  bundlePush );
+                            }
+
                             //跳转到首页
-                            ActivityUtils.getInstance ().skipActivity ( aty, HomeActivity.class );
+                            ActivityUtils.getInstance ().skipActivity ( aty, intent );
                         }
                         else
                         {

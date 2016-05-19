@@ -97,7 +97,7 @@ public class ObtainParamsMap {
             paramsMap.put("token", "");
         }
         paramsMap.put("imei",
-                      BaseApplication.getPhoneIMEI(context.getApplicationContext()));
+                      BaseApplication.getPhoneIMEI());
         paramsMap.put("cpaCode", Constants.CAP_CODE);
         return paramsMap;
     }
@@ -174,7 +174,7 @@ public class ObtainParamsMap {
 
             buffer.append("&imei=");
             buffer.append(URLEncoder.encode(
-                                  BaseApplication.getPhoneIMEI(context.getApplicationContext()),
+                                  BaseApplication.getPhoneIMEI(),
                                   "UTF-8"));
             buffer.append("&cpaCode=");
             buffer.append(URLEncoder.encode(Constants.CAP_CODE, "UTF-8"));

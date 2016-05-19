@@ -51,6 +51,11 @@
         <meta-data android:name="UMENG_APPKEY" android:value="56721dd567e58ecd3f002991" />
         <meta-data android:name="UMENG_CHANNEL" android:value="huotu" />
 
+        <!-- 极光推送 Required  . Enable it you can get statistics data with channel -->
+        <meta-data android:name="JPUSH_CHANNEL" android:value="huotu_fanmore"/>
+        <meta-data android:name="JPUSH_APPKEY" android:value="a36e00d3397bf5e69049ed41" /> <!--  </>值来自开发者平台取得的AppKey-->
+
+
     </application>
 
 </manifest>

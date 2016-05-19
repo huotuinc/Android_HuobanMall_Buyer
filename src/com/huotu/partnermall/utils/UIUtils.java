@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.huotu.android.library.libpush.BuildConfig;
+import com.huotu.android.library.libpush.PushHelper;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
@@ -53,8 +55,7 @@ public class UIUtils {
     /**
      * 动态加载菜单栏
      */
-    public
-    void loadMenus ( ) {
+    public void loadMenus ( ) {
         String menuStr = application.readMenus();
         //json格式转成list
         Gson gson = new Gson();
@@ -223,5 +224,19 @@ public class UIUtils {
             item.setMenuUrl("http://www.bindweixin.com");
             menus.add(item);
         }
+    }
+
+
+    /***
+     * 绑定推送信息
+     */
+    public static void bindPush(){
+        String userId = BaseApplication.single.readUserId();
+        String userKey = Constants.getSMART_KEY();
+        String userRandom = String.valueOf(System.currentTimeMillis());
+        String userSecure = Constants.getSMART_SECURITY();
+        String userSign = SignUtil.getSecure( userKey , userSecure , userRandom);
+        String alias = BaseApplication.single.getPhoneIMEI();
+        PushHelper.bindingUserId( userId ,alias, userKey,userRandom,userSign );
     }
 }

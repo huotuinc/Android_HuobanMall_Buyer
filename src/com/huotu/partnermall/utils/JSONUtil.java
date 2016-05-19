@@ -16,6 +16,10 @@ public class JSONUtil<T>
         }
     }
 
+    public static Gson getGson(){
+        return  gson;
+    }
+
     public String toJson(T t)
     {
         return gson.toJson(t);

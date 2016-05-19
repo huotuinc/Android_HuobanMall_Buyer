@@ -18,6 +18,10 @@ import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.Util;
 import com.umeng.analytics.MobclickAgent;
 
+import org.greenrobot.eventbus.EventBus;
+
+import cn.jpush.android.api.JPushInterface;
+
 public abstract class BaseActivity extends Activity {
 
     public BaseApplication application;
@@ -59,6 +63,7 @@ public abstract class BaseActivity extends Activity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+        JPushInterface.onPause(this);
     }
 
     @Override
@@ -70,6 +75,7 @@ public abstract class BaseActivity extends Activity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        JPushInterface.onResume(this);
     }
 
     @Override
@@ -145,4 +151,16 @@ public abstract class BaseActivity extends Activity {
         aty.finish();
     }
 
+
+    public void Register() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    public void UnRegister() {
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
 }

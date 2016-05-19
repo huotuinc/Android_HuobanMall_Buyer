@@ -49,6 +49,8 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
     public Resources res;
     MsgPopWindow msgPopWindow;
 
+    Bundle bundlePush;
+
     @Override
     protected
     void onCreate ( Bundle savedInstanceState ) {
@@ -59,6 +61,9 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
         setContentView ( R.layout.login_ui );
         ButterKnife.bind(this);
         initView();
+
+        initPush();
+
         wManager = this.getWindowManager();
         progress = new ProgressPopupWindow ( LoginActivity.this );
         successProgress = new ProgressPopupWindow (  LoginActivity.this );
@@ -66,7 +71,7 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
 
     @Override
     protected void initView ( ) {
-        //SystemTools.setFontStyle(loginText, application);
+
         Drawable[] drawables = new Drawable[2];
         drawables[0] = new PaintDrawable(res.getColor(R.color.theme_color));
         drawables[1] = new PaintDrawable(SystemTools.obtainColor( application.obtainMainColor()));
@@ -74,6 +79,20 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
         ld.setLayerInset(0, 0, 0, 0, 0);
         ld.setLayerInset(1, 0, 2, 0, 0);
         SystemTools.loadBackground(loginL, ld);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        initPush();
+    }
+
+    protected void initPush(){
+        //获得推送信息
+        if(null!= getIntent() && getIntent().hasExtra( Constants.HUOTU_PUSH_KEY)){
+            bundlePush = getIntent().getBundleExtra( Constants.HUOTU_PUSH_KEY);
+        }
     }
 
     @Override
@@ -180,7 +199,7 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
                 AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), "", LoginActivity.this );
                 final Map param = paramUtils.obtainParams ( account );
                 String authUrl = Constants.getINTERFACE_PREFIX() + "weixin/LoginAuthorize";
-                HttpUtil.getInstance ().doVolley ( LoginActivity.this, mHandler, application, authUrl, param, account );
+                HttpUtil.getInstance ().doVolley ( LoginActivity.this, mHandler, application, authUrl, param, account ,bundlePush );
             }
             break;
             case Constants.MSG_USERID_NO_FOUND:

@@ -38,12 +38,14 @@ import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
+import com.huotu.partnermall.model.LinkEvent;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.PhoneLoginModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.model.UpdateLeftInfoModel;
+import com.huotu.partnermall.receiver.PushProcess;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.login.BindPhoneActivity;
@@ -60,6 +62,10 @@ import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.util.ArrayList;
@@ -147,9 +153,15 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         am = this.getAssets();
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+
+        Register();
+
         //设置沉浸模式
         setImmerseLayout(homeTitle);
         initView();
+
+        initPush(getIntent());
+
         progress = new ProgressPopupWindow ( HomeActivity.this );
     }
 
@@ -157,6 +169,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     protected void onResume() {
         super.onResume();
         initUserInfo();
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        initPush( intent );
     }
 
     protected void initUserInfo(){
@@ -186,6 +206,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         if(menuView !=null){
             menuView.setVisibility(View.GONE);
         }
+
+        UnRegister();
     }
 
     @Override
@@ -281,6 +303,19 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         loadPage();
         loadMainMenu();
     }
+
+
+    /***
+     *  初始化极光推送
+     */
+    protected void initPush( Intent intent ) {
+        if (null == intent || ! intent.hasExtra( Constants.HUOTU_PUSH_KEY )) return;
+        Bundle bundle = intent.getBundleExtra( Constants.HUOTU_PUSH_KEY);
+        if( bundle==null) return;
+
+        PushProcess.process( this , bundle);
+    }
+
 
     private void loadMainMenu() {
         menuView.getSettings().setJavaScriptEnabled(true);
@@ -1108,5 +1143,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         });
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLinkEvnent(LinkEvent event) {
+        if(event==null)return;
+        String link = event.getLinkUrl();
+        Intent intent=new Intent(HomeActivity.this,WebViewActivity.class);
+        intent.putExtra(Constants.INTENT_URL, link);
+        HomeActivity.this.startActivity(intent);
+    }
 }
 

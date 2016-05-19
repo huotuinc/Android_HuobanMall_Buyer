@@ -95,4 +95,9 @@ public class ActivityUtils
         aty.startActivity(i);
         aty.finish ();
     }
+
+    public void skipActivity(Activity aty , Intent intent){
+        aty.startActivity(intent);
+        aty.finish ();
+    }
 }

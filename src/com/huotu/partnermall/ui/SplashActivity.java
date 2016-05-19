@@ -45,6 +45,9 @@ public class SplashActivity extends BaseActivity {
     private boolean isConnection = false;// 假定无网络连接
     private MsgPopWindow popWindow;
 
+    //推送信息
+    Bundle bundlePush;
+
     protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
@@ -60,6 +63,11 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        //获得推送信息
+        if(null!=getIntent() && getIntent().hasExtra( Constants.HUOTU_PUSH_KEY)){
+            bundlePush = getIntent().getBundleExtra(Constants.HUOTU_PUSH_KEY);
+        }
+
         String version = getString( R.string.app_name) + application.getAppVersion( this );
         tvVersion.setText( version );
 
@@ -96,20 +104,6 @@ public class SplashActivity extends BaseActivity {
                                     Log.e(TAG,"载入商户信息失败。");
                                 }
                             }
-                                                   /*if(!application.checkMenuInfo ())
-                                                   {
-                                                       //设置菜单
-                                                       List<MenuBean> menus = XMLParserUtils.getInstance ().readMenuInfo ( SplashActivity.this );
-                                                       //写入文件
-                                                       if(null != menus && !menus.isEmpty ())
-                                                       {
-                                                           application.writeMenus ( menus );
-                                                       }
-                                                       else
-                                                       {
-                                                           KJLoger.e ( "载入主菜单失败。" );
-                                                       }
-                                                   }*/
                             //设置
                             //加载颜色配置信息
                             if (!application.checkColorInfo()) {
@@ -123,11 +117,7 @@ public class SplashActivity extends BaseActivity {
                                     Log.e(TAG,e.getMessage());
                                 }
                             }
-                            //配置SYS信息
-//                            if (!application.checkSysInfo()) {
-//                                SysModel sysModel = XMLParserUtils.getInstance().readSys(SplashActivity.this);
-//                                application.writeSysInfo(sysModel);
-//                            }
+
                             //获取数据包更新信息
                             String packageUrl = Constants.getINTERFACE_PREFIX() + "mall/CheckDataPacket";
                             String packageVersion = application.readPackageVersion();
@@ -178,9 +168,19 @@ public class SplashActivity extends BaseActivity {
                             } else {
                                 //判断是否登录
                                 if (application.isLogin()) {
-                                    ActivityUtils.getInstance().skipActivity(SplashActivity.this, HomeActivity.class);
+                                    Intent intent = new Intent();
+                                    intent.setClass( SplashActivity.this , HomeActivity.class);
+                                    if(null!= bundlePush) {
+                                        intent.putExtra( Constants.HUOTU_PUSH_KEY , bundlePush);
+                                    }
+                                    ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent );
                                 } else {
-                                    ActivityUtils.getInstance().skipActivity(SplashActivity.this, LoginActivity.class);
+                                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                                    if(null!= bundlePush) {
+                                        intent.putExtra( Constants.HUOTU_PUSH_KEY , bundlePush);
+                                    }
+                                    ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
+                                    //ActivityUtils.getInstance().skipActivity(SplashActivity.this, LoginActivity.class);
                                 }
                             }
                         }

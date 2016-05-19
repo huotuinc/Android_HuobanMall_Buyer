@@ -171,6 +171,18 @@ public class Util {
         return false;
     }
 
+    public static boolean isAppLoaded(Context context , String className ){
+        String packageName = context.getPackageName();
+        ActivityManager activityManager = (ActivityManager) (context.getSystemService(android.content.Context.ACTIVITY_SERVICE));
+        List<ActivityManager.RunningTaskInfo > rti = activityManager.getRunningTasks(30);
+        for (ActivityManager.RunningTaskInfo item : rti){
+            if (item.baseActivity.getClassName().startsWith( className )
+                    || item.topActivity.getClassName().startsWith(className))
+                return true;
+        }
+        return false;
+    }
+
     /**
      * 返回指定范围的随机数(m-n之间)的公式[1] ：Math.random()*(n-m)+m；
      */

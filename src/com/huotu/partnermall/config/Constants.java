@@ -1,9 +1,7 @@
 package com.huotu.partnermall.config;
 
 import android.os.Environment;
-
 import com.huotu.partnermall.inner.BuildConfig;
-import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 
 public class Constants {
 	/**
@@ -12,17 +10,16 @@ public class Constants {
 	 */
 
 	// 保存参数文件夹名字
-	public static final String SHARED_PREFERENCE_NAME = "account_info";
+	//public static final String SHARED_PREFERENCE_NAME = "account_info";
 
 	// SDCard路径
-	public static final String SD_PATH = Environment
-			.getExternalStorageDirectory ( ).getAbsolutePath ( );
+	//public static final String SD_PATH = Environment.getExternalStorageDirectory ( ).getAbsolutePath ( );
 
 	// 手机IMEI号码
-	public static String IMEI = "";
+	//public static String IMEI = "";
 
 	// 手机号码
-	public static String TEL = "";
+	//public static String TEL = "";
 
 	// 屏幕高度
 	public static int SCREEN_HEIGHT = 800;
@@ -43,25 +40,25 @@ public class Constants {
 	public static final int SHARE_ERROR = 0X3000;
 
 	// 开始执行
-	public static final int EXECUTE_LOADING = 0X4000;
+	//public static final int EXECUTE_LOADING = 0X4000;
 
 	// 正在执行
-	public static final int EXECUTE_SUCCESS = 0X5000;
+	//public static final int EXECUTE_SUCCESS = 0X5000;
 
 	// 执行完成
-	public static final int EXECUTE_FAILED = 0X6000;
+	//public static final int EXECUTE_FAILED = 0X6000;
 
 	// 加载数据成功
-	public static final int LOAD_DATA_SUCCESS = 0X7000;
+	//public static final int LOAD_DATA_SUCCESS = 0X7000;
 
 	// 加载数据失败
-	public static final int LOAD_DATA_ERROR = 0X8000;
+	//public static final int LOAD_DATA_ERROR = 0X8000;
 
 	// 动态加载数据
-	public static final int SET_DATA = 0X9000;
+	//public static final int SET_DATA = 0X9000;
 
 	// 未登陆
-	public static final int NONE_LOGIN = 0X10000;
+	//public static final int NONE_LOGIN = 0X10000;
 
 	//左侧划状态
 	public static final int    LEFT_IMG_SIDE = 0X33310;
@@ -81,7 +78,7 @@ public class Constants {
 	 * ************************************商户信息xml节点***********************
 	 */
 	//app信息
-	public static final String APP_INFO    = "appinfo";
+	//public static final String APP_INFO    = "appinfo";
 	//app版本号
 	public static final String APP_VERSION = "app_version";
 	//app名称
@@ -90,18 +87,18 @@ public class Constants {
 	public static final String APP_BUILD   = "app_build";
 
 	//系统指定包名
-	public static final String SYS_PACKAGE_INI = "sys_package";
+//	public static final String SYS_PACKAGE_INI = "sys_package";
 	//系统菜单
-	public static final String SYS_MENU        = "sys_menu";
+//	public static final String SYS_MENU        = "sys_menu";
 
 
 	//商户信息
-	public static final String MERCHANT    = "MERCHANT";
+//	public static final String MERCHANT    = "MERCHANT";
 	//商户ID
 	public static final String MERCHANT_ID = "app_merchant_id";
 
 	//微信支付信息
-	public static final String WEIXIN_PAY         = "weixinpay";
+//	public static final String WEIXIN_PAY         = "weixinpay";
 	//微信商家编号
 	public static final String WEIXIN_MERCHANT_ID = "weixin_merchant_id";
 	//商家微信编号
@@ -228,12 +225,12 @@ public class Constants {
 	/**
 	 * 底部Tab菜单
 	 */
-	public static final String TAB_1 = "TAB_1";
-	public static final String TAB_2 = "TAB_2";
-	public static final String TAB_3 = "TAB_3";
-	public static final String TAB_4 = "TAB_4";
-	public static final String TAB_5 = "TAB_5";
-	public static final String TAB_6 = "TAB_6";
+//	public static final String TAB_1 = "TAB_1";
+//	public static final String TAB_2 = "TAB_2";
+//	public static final String TAB_3 = "TAB_3";
+//	public static final String TAB_4 = "TAB_4";
+//	public static final String TAB_5 = "TAB_5";
+//	public static final String TAB_6 = "TAB_6";
 
 	//http请求参数
 	//获取具体页面的商品类别
@@ -402,26 +399,6 @@ public class Constants {
 	public static final String CUSTOMER_ID = "customerid={}";
 	public static final String USER_ID     = "userid={}";
 
-	//测试
-	//public static final String APP_ID = "huotu686ad1fe2bd8a02bb";
-	//正式
-	//public static final String APP_ID = "huotuacf89c9231848c9f49";
-
-	//接口连接前缀
-	//测试
-	//public static final String INTERFACE_PREFIX = "http://mallapi.huobanj.cn/";
-	//正式
-	//public static final String INTERFACE_PREFIX = "http://mallapi.huobanmall.com/";
-	//接口连接前缀
-	//public static final String INTERFACE_PREFIX = "http://192.168.1.56:8089/";
-
-	// 平台安全码
-	//测试
-	//public static final String APP_SECRET = "483686ad1fe2bd8a02bbdca24e109953a4a96c";
-	//正式
-	//public static final String APP_SECRET = "0ad8abe244331aacf89c9231848c9f49";
-
-
 	public static final String ALIPAY_NOTIFY = "alipay_notify";
 	public static final String WEIXIN_NOTIFY = "weixin_notify";
 	public static final String IS_WEB_WEIXINPAY = "is_web_weixinpay";
@@ -443,4 +420,13 @@ public class Constants {
 	public static String getAPP_SECRET(){
 		return BuildConfig.APP_SECRET;
 	}
+
+	public static String getSMART_KEY(){
+		return BuildConfig.SMART_KEY;
+	}
+	public static String getSMART_SECURITY(){
+		return BuildConfig.SMART_SECURITY;
+	}
+
+	public final static String HUOTU_PUSH_KEY ="huotu_push_key";
 }

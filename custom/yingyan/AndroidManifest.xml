@@ -53,6 +53,12 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="1111111111"/>
 
+        <!-- 极光推送 Required  . Enable it you can get statistics data with channel -->
+        <meta-data android:name="JPUSH_CHANNEL" android:value="huotu_yingyan"/>
+        <meta-data android:name="JPUSH_APPKEY" android:value="1ebf16f80452534fcb72b058" />
+        <!--  </>值来自开发者平台取得的AppKey-->
+
+
     </application>
 
 </manifest>

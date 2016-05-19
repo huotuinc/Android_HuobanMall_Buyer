@@ -14,6 +14,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.google.gson.Gson;
+import com.huotu.android.library.libpush.PushHelper;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.BuildConfig;
@@ -60,6 +61,9 @@ public class BaseApplication extends Application {
      */
     public boolean isLeftImg = true;
 
+    public static BaseApplication single;
+
+
     @Override
     public void onConfigurationChanged ( Configuration newConfig ) {
         super.onConfigurationChanged ( newConfig );
@@ -68,6 +72,12 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate ( ) {
         super.onCreate ( );
+
+        single = this;
+
+        //加载异常处理模块
+        CrashHandler crashHandler = CrashHandler.getInstance ( );
+        crashHandler.init ( getApplicationContext ( ) );
 
         if(BuildConfig.DEBUG){
             LeakCanary.install(this);//内存检测工具
@@ -88,9 +98,11 @@ public class BaseApplication extends Application {
         ShareSDK.initSDK ( getApplicationContext ( ) );
         solveAsyncTaskOnPostExecuteBug ( );
 
-        //加载异常处理模块
-        CrashHandler crashHandler = CrashHandler.getInstance ( );
-        crashHandler.init ( getApplicationContext ( ) );
+
+
+        // 极光初始化
+        PushHelper.init(this, BuildConfig.DEBUG, BuildConfig.Push_Url );
+
     }
 
     @Override
@@ -126,8 +138,8 @@ public class BaseApplication extends Application {
     /**
      * 获取手机IMEI码
      */
-    public static String getPhoneIMEI ( Context cxt ) {
-        TelephonyManager tm = ( TelephonyManager ) cxt.getSystemService ( Context.TELEPHONY_SERVICE );
+    public static String getPhoneIMEI () {
+        TelephonyManager tm = ( TelephonyManager ) single.getSystemService ( Context.TELEPHONY_SERVICE );
         return tm.getDeviceId();
     }
 
