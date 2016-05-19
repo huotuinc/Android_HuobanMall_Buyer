@@ -21,16 +21,6 @@ allprojects {
 }
 
 android {
-
-//    signingConfigs {
-//        huotu {
-//            storeFile file("keystore/huotu_fm.keystore")
-//            storePassword "huotuheyun"
-//            keyAlias "huotu_fm.keystore"
-//            keyPassword "huotuheyun"
-//        }
-//    }
-
     compileSdkVersion COMPILE_SDK_VERSION.toInteger()
     buildToolsVersion "${BUILD_TOOLS_VERSION}"
 
