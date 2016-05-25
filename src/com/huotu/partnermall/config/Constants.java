@@ -155,18 +155,18 @@ public class Constants {
 	public static final String WEIXIN_SHARE_SECRET = "weixin_share_secret";
 
 
-	//主菜单
-	public static final String HOME_MENU  = "home_menu";
-	//主菜单名称
-	public static final String MENU_NAME  = "menu_name";
-	//主菜单标识
-	public static final String MENU_TAG   = "menu_tag";
-	//主菜单图标
-	public static final String MENU_ICON  = "menu_icon";
-	//主菜单url
-	public static final String MENU_URL   = "menu_url";
-	//主菜单分组
-	public static final String MENU_GROUP = "menu_group";
+//	//主菜单
+//	public static final String HOME_MENU  = "home_menu";
+//	//主菜单名称
+//	public static final String MENU_NAME  = "menu_name";
+//	//主菜单标识
+//	public static final String MENU_TAG   = "menu_tag";
+//	//主菜单图标
+//	public static final String MENU_ICON  = "menu_icon";
+//	//主菜单url
+//	public static final String MENU_URL   = "menu_url";
+//	//主菜单分组
+//	public static final String MENU_GROUP = "menu_group";
 
 	/**
 	 * *******************preference参数设置

@@ -132,11 +132,11 @@ public class SplashActivity extends BaseActivity {
 
                             //获取商家域名
                             //获取商户站点
-                            String rootUrl = Constants.getINTERFACE_PREFIX() + "mall/getmsiteurl";
-                            rootUrl += "?customerId=" + application.readMerchantId();
-                            AuthParamUtils paramUtil = new AuthParamUtils(application, System.currentTimeMillis(), rootUrl, SplashActivity.this);
-                            final String rootUrls = paramUtil.obtainUrls();
-                            HttpUtil.getInstance().doVolleySite( application, rootUrls);
+//                            String rootUrl = Constants.getINTERFACE_PREFIX() + "mall/getmsiteurl";
+//                            rootUrl += "?customerId=" + application.readMerchantId();
+//                            AuthParamUtils paramUtil = new AuthParamUtils(application, System.currentTimeMillis(), rootUrl, SplashActivity.this);
+//                            final String rootUrls = paramUtil.obtainUrls();
+//                            HttpUtil.getInstance().doVolleySite( application, rootUrls);
                             //获取商户logo信息
                             String logoUrl = Constants.getINTERFACE_PREFIX() + "mall/getConfig";
                             logoUrl += "?customerId=" + application.readMerchantId();
@@ -145,7 +145,7 @@ public class SplashActivity extends BaseActivity {
                             HttpUtil.getInstance().doVolleyLogo(  application, logoUrls);
                             //获取商户支付信息
                             String targetUrl = Constants.getINTERFACE_PREFIX() + "PayConfig?customerid=";
-                            targetUrl += application.readMerchantId();//动态获取商户编号，现在暂时使用3447////application.readMerchantId ();
+                            targetUrl += application.readMerchantId();
                             AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), targetUrl, SplashActivity.this);
                             final String url = paramUtils.obtainUrls();
                             HttpUtil.getInstance().doVolley( application, url);

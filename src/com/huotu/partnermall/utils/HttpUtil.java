@@ -155,7 +155,6 @@ public class HttpUtil{
     {
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
-
             @Override
             public void onResponse(JSONObject response) {
 
@@ -163,6 +162,8 @@ public class HttpUtil{
                 MerchantInfoModel merchantInfo = new MerchantInfoModel();
                 merchantInfo = jsonUtil.toBean(response.toString (), merchantInfo);
                 if(null != merchantInfo) {
+                    String site = merchantInfo.getMall_site();
+                    application.writeDomain(site);
                     String logo = null;
                     if ( null != merchantInfo.getMall_logo ( ) && null != merchantInfo.getMall_name () ) {
                         if(!TextUtils.isEmpty ( application.obtainMerchantUrl () ))
@@ -185,8 +186,6 @@ public class HttpUtil{
             public void onErrorResponse(VolleyError error) {
 
             }
-
-
         });
         VolleyUtil.getRequestQueue().add( re);
     }

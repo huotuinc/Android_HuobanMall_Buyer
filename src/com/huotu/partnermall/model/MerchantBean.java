@@ -1,14 +1,9 @@
 package com.huotu.partnermall.model;
 
-import java.util.List;
-
 /**
  * 商户信息bean
  */
-public
-class MerchantBean extends BaseBean {
-
-
+public class MerchantBean extends BaseBean {
     //商家ID
     private String merchantId;
     //商家名称
@@ -50,13 +45,11 @@ class MerchantBean extends BaseBean {
     //微信加密
     private String weixinShareSecret;
 
-    public
-    String getWeixinShareSecret ( ) {
+    public String getWeixinShareSecret() {
         return weixinShareSecret;
     }
 
-    public
-    void setWeixinShareSecret ( String weixinShareSecret ) {
+    public void setWeixinShareSecret(String weixinShareSecret) {
         this.weixinShareSecret = weixinShareSecret;
     }
 
@@ -65,213 +58,171 @@ class MerchantBean extends BaseBean {
     //location_key
     private String locationKey;
 
-    public
-    String getLocationKey ( ) {
+    public String getLocationKey() {
         return locationKey;
     }
 
-    public
-    void setLocationKey ( String locationKey ) {
+    public void setLocationKey(String locationKey) {
         this.locationKey = locationKey;
     }
 
-    public
-    String getWeixinMerchantId ( ) {
+    public String getWeixinMerchantId() {
         return weixinMerchantId;
     }
 
-    public
-    void setWeixinMerchantId ( String weixinMerchantId ) {
+    public void setWeixinMerchantId(String weixinMerchantId) {
         this.weixinMerchantId = weixinMerchantId;
     }
 
-    public
-    String getMerchantWeixinId ( ) {
+    public String getMerchantWeixinId() {
         return merchantWeixinId;
     }
 
-    public
-    void setMerchantWeixinId ( String merchantWeixinId ) {
+    public void setMerchantWeixinId(String merchantWeixinId) {
         this.merchantWeixinId = merchantWeixinId;
     }
 
-    public
-    String getAlipayMerchantId ( ) {
+    public String getAlipayMerchantId() {
         return alipayMerchantId;
     }
 
-    public
-    void setAlipayMerchantId ( String alipayMerchantId ) {
+    public void setAlipayMerchantId(String alipayMerchantId) {
         this.alipayMerchantId = alipayMerchantId;
     }
 
-    public
-    String getMerchantAlipayId ( ) {
+    public String getMerchantAlipayId() {
         return merchantAlipayId;
     }
 
-    public
-    void setMerchantAlipayId ( String merchantAlipayId ) {
+    public void setMerchantAlipayId(String merchantAlipayId) {
         this.merchantAlipayId = merchantAlipayId;
     }
 
-    public
-    String getUmengAppkey ( ) {
+    public String getUmengAppkey() {
         return umengAppkey;
     }
 
-    public
-    void setUmengAppkey ( String umengAppkey ) {
+    public void setUmengAppkey(String umengAppkey) {
         this.umengAppkey = umengAppkey;
     }
 
-    public
-    String getUmengChannel ( ) {
+    public String getUmengChannel() {
         return umengChannel;
     }
 
-    public
-    void setUmengChannel ( String umengChannel ) {
+    public void setUmengChannel(String umengChannel) {
         this.umengChannel = umengChannel;
     }
 
-    public
-    String getUmengMessageSecret ( ) {
+    public String getUmengMessageSecret() {
         return umengMessageSecret;
     }
 
-    public
-    void setUmengMessageSecret ( String umengMessageSecret ) {
+    public void setUmengMessageSecret(String umengMessageSecret) {
         this.umengMessageSecret = umengMessageSecret;
     }
 
-    public
-    String getHttpPrefix ( ) {
+    public String getHttpPrefix() {
         return httpPrefix;
     }
 
-    public
-    void setHttpPrefix ( String httpPrefix ) {
+    public void setHttpPrefix(String httpPrefix) {
         this.httpPrefix = httpPrefix;
     }
 
-    public
-    String getShareSDKKey ( ) {
+    public String getShareSDKKey() {
         return shareSDKKey;
     }
 
-    public
-    void setShareSDKKey ( String shareSDKKey ) {
+    public void setShareSDKKey(String shareSDKKey) {
         this.shareSDKKey = shareSDKKey;
     }
 
-    public
-    String getTencentKey ( ) {
+    public String getTencentKey() {
         return tencentKey;
     }
 
-    public
-    void setTencentKey ( String tencentKey ) {
+    public void setTencentKey(String tencentKey) {
         this.tencentKey = tencentKey;
     }
 
-    public
-    String getTencentSecret ( ) {
+    public String getTencentSecret() {
         return tencentSecret;
     }
 
-    public
-    void setTencentSecret ( String tencentSecret ) {
+    public void setTencentSecret(String tencentSecret) {
         this.tencentSecret = tencentSecret;
     }
 
-    public
-    String getSinaKey ( ) {
+    public String getSinaKey() {
         return sinaKey;
     }
 
-    public
-    void setSinaKey ( String sinaKey ) {
+    public void setSinaKey(String sinaKey) {
         this.sinaKey = sinaKey;
     }
 
-    public
-    String getSinaSecret ( ) {
+    public String getSinaSecret() {
         return sinaSecret;
     }
 
-    public
-    void setSinaSecret ( String sinaSecret ) {
+    public void setSinaSecret(String sinaSecret) {
         this.sinaSecret = sinaSecret;
     }
 
-    public
-    String getSinaRedirectUri ( ) {
+    public String getSinaRedirectUri() {
         return sinaRedirectUri;
     }
 
-    public
-    void setSinaRedirectUri ( String sinaRedirectUri ) {
+    public void setSinaRedirectUri(String sinaRedirectUri) {
         this.sinaRedirectUri = sinaRedirectUri;
     }
 
-    public
-    String getWeixinShareKey ( ) {
+    public String getWeixinShareKey() {
         return weixinShareKey;
     }
 
-    public
-    void setWeixinShareKey ( String weixinShareKey ) {
+    public void setWeixinShareKey(String weixinShareKey) {
         this.weixinShareKey = weixinShareKey;
     }
 
-    public
-    String getPushKey ( ) {
+    public String getPushKey() {
         return pushKey;
     }
 
-    public
-    void setPushKey ( String pushKey ) {
+    public void setPushKey(String pushKey) {
         this.pushKey = pushKey;
     }
 
-    public
-    String getMerchantId ( ) {
+    public String getMerchantId() {
         return merchantId;
     }
 
-    public
-    void setMerchantId ( String merchantId ) {
+    public void setMerchantId(String merchantId) {
         this.merchantId = merchantId;
     }
 
-    public
-    String getMerchantName ( ) {
+    public String getMerchantName() {
         return merchantName;
     }
 
-    public
-    void setMerchantName ( String merchantName ) {
+    public void setMerchantName(String merchantName) {
         this.merchantName = merchantName;
     }
 
-    public
-    String getAlipayKey ( ) {
+    public String getAlipayKey() {
         return alipayKey;
     }
 
-    public
-    void setAlipayKey ( String alipayKey ) {
+    public void setAlipayKey(String alipayKey) {
         this.alipayKey = alipayKey;
     }
 
-    public
-    String getWeixinKey ( ) {
+    public String getWeixinKey() {
         return weixinKey;
     }
 
-    public
-    void setWeixinKey ( String weixinKey ) {
+    public void setWeixinKey(String weixinKey) {
         this.weixinKey = weixinKey;
     }
 

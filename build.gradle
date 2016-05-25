@@ -24,13 +24,17 @@ android {
     compileSdkVersion COMPILE_SDK_VERSION.toInteger()
     buildToolsVersion "${BUILD_TOOLS_VERSION}"
 
+    lintOptions{
+        abortOnError false
+    }
+
     defaultConfig{
         applicationId "com.huotu.partnermall.inner"
         minSdkVersion MINSDKVERSION.toInteger()
         targetSdkVersion TARGETSDKVERSION.toInteger()
         versionCode BUYER_VERSIONCODE.toInteger()
         versionName "${BUYER_VERSIONNAME}"
-        signingConfig signingConfigs.huotu
+        //signingConfig signingConfigs.huotu
     }
 
     sourceSets {
@@ -125,9 +129,9 @@ android {
             buildConfigField 'String','APP_ID', '\"'+"${YUNYI_APP_ID}"+'\"'
             buildConfigField 'String','APP_SECRET','\"'+"${YUNYI_APP_SECRET}"+'\"'
             buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.acclife.cn:8081/\"'
-            buildConfigField 'String','Push_Url','\"\"'
-            buildConfigField 'String', 'SMART_KEY', '\"\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"\"'
+            buildConfigField 'String','Push_Url','\"http://api.open.acclife.cn:8081/\"'
+            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"01f295ce12a4f38ec9ccad574d787099\"'
             signingConfig signingConfigs.yunyi
         }
 
@@ -153,7 +157,7 @@ android {
             buildConfigField 'String','APP_ID', '\"'+"${OLQUAN_APP_ID}"+'\"'
             buildConfigField 'String','APP_SECRET', '\"'+"${OLQUAN_APP_SECRET}"+'\"'
             buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
-            buildConfigField 'String','Push_Url','\"\"'
+            buildConfigField 'String','Push_Url','\"http://api.open.olquan.cn/\"'
             buildConfigField 'String', 'SMART_KEY', '\"\"'
             buildConfigField 'String', 'SMART_SECURITY', '\"\"'
             signingConfig signingConfigs.olquan
@@ -167,9 +171,9 @@ android {
             buildConfigField 'String','APP_ID', '\"'+"${GUOZHENHAO_APP_ID}"+'\"'
             buildConfigField 'String','APP_SECRET', '\"'+"${GUOZHENHAO_APP_SECRET}"+'\"'
             buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.huobanplus.com/\"'
-            buildConfigField 'String','Push_Url','\"\"'
-            buildConfigField 'String', 'SMART_KEY', '\"\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"\"'
+            buildConfigField 'String','Push_Url','\"http://api.open.huobanplus.com/\"'
+            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
             signingConfig signingConfigs.guozhenhao
         }
 
@@ -181,16 +185,16 @@ android {
             buildConfigField 'String','APP_ID', '\"'+"${HTZ_APP_ID}"+'\"'
             buildConfigField 'String','APP_SECRET', '\"'+"${HTZ_APP_SECRET}"+'\"'
             buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
-            buildConfigField 'String','Push_Url','\"\"'
-            buildConfigField 'String', 'SMART_KEY', '\"\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"\"'
+            buildConfigField 'String','Push_Url','\"http://api.open.huobanplus.com/\"'
+            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
             signingConfig signingConfigs.huangtaizhi
         }
     }
 
     buildTypes{
         debug{
-//            signingConfig signingConfigs.huotu
+//            signingConfig signingConfigs.huangtaizhi
             buildConfigField 'String' , 'Header_Secret', '\"'+"${HEADER_SECRET}"+'\"'
         }
 

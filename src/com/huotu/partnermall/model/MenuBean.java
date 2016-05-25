@@ -3,8 +3,7 @@ package com.huotu.partnermall.model;
 /**
  * 底部菜单实体
  */
-public
-class MenuBean extends BaseBean {
+public class MenuBean extends BaseBean {
 
     //菜单名称
     private String menuName;
@@ -18,53 +17,43 @@ class MenuBean extends BaseBean {
     private String menuGroup;
 
 
-    public
-    String getMenuGroup ( ) {
+    public String getMenuGroup() {
         return menuGroup;
     }
 
-    public
-    void setMenuGroup ( String menuGroup ) {
+    public void setMenuGroup(String menuGroup) {
         this.menuGroup = menuGroup;
     }
 
-    public
-    String getMenuTag ( ) {
+    public String getMenuTag() {
         return menuTag;
     }
 
-    public
-    void setMenuTag ( String menuTag ) {
+    public void setMenuTag(String menuTag) {
         this.menuTag = menuTag;
     }
 
-    public
-    String getMenuName ( ) {
+    public String getMenuName() {
         return menuName;
     }
 
-    public
-    void setMenuName ( String menuName ) {
+    public void setMenuName(String menuName) {
         this.menuName = menuName;
     }
 
-    public
-    String getMenuIcon ( ) {
+    public String getMenuIcon() {
         return menuIcon;
     }
 
-    public
-    void setMenuIcon ( String menuIcon ) {
+    public void setMenuIcon(String menuIcon) {
         this.menuIcon = menuIcon;
     }
 
-    public
-    String getMenuUrl ( ) {
+    public String getMenuUrl() {
         return menuUrl;
     }
 
-    public
-    void setMenuUrl ( String menuUrl ) {
+    public void setMenuUrl(String menuUrl) {
         this.menuUrl = menuUrl;
     }
 }

@@ -50,6 +50,10 @@
         <meta-data android:name="UMENG_APPKEY" android:value="573444a367e58e62d300205f" />
         <meta-data android:name="UMENG_CHANNEL" android:value="huotu_huangtaizhi" />
 
+        <!-- 极光推送 Required  . Enable it you can get statistics data with channel -->
+        <meta-data android:name="JPUSH_CHANNEL" android:value="huotu_huangtaizhi"/>
+        <meta-data android:name="JPUSH_APPKEY" android:value="291a1c065b50e2765595ad22" />
+
     </application>
 
 </manifest>
