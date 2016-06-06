@@ -18,14 +18,24 @@
 
 -dontoptimize
 -dontpreverify
--dontwarn cn.share.**
--keep class cn.share.** { *;}
+-dontwarn cn.sharesdk.**
+-keep class cn.sharesdk.** { *;}
+-dontwarn com.mob.**
+-keep class com.mob.**{*;}
+-dontwarn **.R$*
+-keep class **.R$* {*;}
+-keep class **.R{*;}
+
 -dontwarn com.alipay.**
 -keep class com.alipay.** { *;}
 -dontwarn com.sina.**
 -keep class com.sina.** { *;}
 -dontwarn com.taobao.**
 -keep class com.taobao.** { *;}
+-dontwarn com.tencent.**
+-keep class com.tencent.**{*;}
+
+# jpush
 -dontwarn cn.jpush.**
 -keep class cn.jpush.** { *; }
 
@@ -60,8 +70,19 @@
 
 # Gson specific classes
 -keep class sun.misc.Unsafe { *; }
-#-keep class com.google.gson.stream.** { *; }
+-keep class com.huotu.partnermall.model.** { *; }
+
+-dontwarn com.google.**
+-keep class com.google.gson.** {*;}
 
 # Application classes that will be serialized/deserialized over Gson
 
 ##---------------End: proguard configuration for Gson  ----------
+
+
+#----------eventbus--------------------
+-keep class de.greenrobot.event.** {*;}
+-keepclassmembers class ** {
+    public void onEvent*(**);
+    void onEvent*(**);
+}

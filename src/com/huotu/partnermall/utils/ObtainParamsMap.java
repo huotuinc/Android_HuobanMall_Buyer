@@ -84,7 +84,7 @@ public class ObtainParamsMap {
         paramsMap.put("timestamp", timestamp);
         paramsMap.put("operation", Constants.OPERATION_CODE);
         paramsMap.put("version",
-                      BaseApplication.getAppVersion ( context.getApplicationContext ( ) ));
+                      BaseApplication.getAppVersion ());
         if (null != PreferenceHelper.readString(
                 context.getApplicationContext(), Constants.MEMBER_INFO,
                 Constants.MEMBER_TOKEN))
@@ -156,8 +156,7 @@ public class ObtainParamsMap {
             buffer.append("&operation=");
             buffer.append(URLEncoder.encode(Constants.OPERATION_CODE, "UTF-8"));
             buffer.append("&version=");
-            buffer.append(URLEncoder.encode(BaseApplication.getAppVersion(context
-                                                                                .getApplicationContext()), "UTF-8"));
+            buffer.append(URLEncoder.encode(BaseApplication.getAppVersion(), "UTF-8"));
             if (null != PreferenceHelper.readString(
                     context.getApplicationContext(), Constants.MEMBER_INFO,
                     Constants.MEMBER_TOKEN))

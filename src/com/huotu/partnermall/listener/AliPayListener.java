@@ -14,8 +14,7 @@ import com.huotu.partnermall.utils.ToastUtils;
 /**
  * 支付宝支付点击事件
  */
-public
-class AliPayListener implements View.OnClickListener {
+public class AliPayListener implements View.OnClickListener {
 
     private
     Context context;
@@ -29,8 +28,7 @@ class AliPayListener implements View.OnClickListener {
     FMPrepareBuy result;
     private Purchase selectedPurchase = null;
 
-    public
-    AliPayListener ( Activity aty,Context context, PayBodyModel body, FMPrepareBuy result, Purchase selectedPurchase, Handler handler  ) {
+    public AliPayListener(Activity aty, Context context, PayBodyModel body, FMPrepareBuy result, Purchase selectedPurchase, Handler handler) {
         this.context = context;
         this.body = body;
         this.result = result;
@@ -40,21 +38,18 @@ class AliPayListener implements View.OnClickListener {
     }
 
     @Override
-    public
-    void onClick ( View v ) {
-        ToastUtils.showShortToast ( context, "开始支付宝支付." );
+    public void onClick(View v) {
+        ToastUtils.showShortToast(context, "开始支付宝支付.");
 
-        if (null == selectedPurchase)
-        {
+        if (null == selectedPurchase) {
             ToastUtils.showLongToast(context, "请选择需要购买的流量套餐");
             return;
         }
-        if (result == null)
-        {
+        if (result == null) {
             ToastUtils.showLongToast(context, "支付信息空,无法进行支付操作");
             return;
         }
-        if( null == result.getResultData().getAlipayNotifyUri() || result.getResultData().getWxpayNotifyUri().length()<1 ){
+        if (null == result.getResultData().getAlipayNotifyUri() || result.getResultData().getWxpayNotifyUri().length() < 1) {
             ToastUtils.showLongToast(context, "支付通知地址空,无法进行支付操作");
             return;
         }

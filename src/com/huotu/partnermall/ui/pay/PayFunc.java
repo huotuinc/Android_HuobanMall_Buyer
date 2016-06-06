@@ -21,8 +21,7 @@ class PayFunc {
     private PayModel payModel;
     private
     BaseApplication application;
-    private
-    FMPrepareBuy    prepareBuy;
+    //private FMPrepareBuy    prepareBuy;
     private
     Handler         handler;
     private
@@ -49,10 +48,10 @@ class PayFunc {
         String price       = String.valueOf ( payModel.getAmount ( ) );
         int    productType = 0;
         long   productId   = 0;
-        prepareBuy = new FMPrepareBuy ();
+        //prepareBuy = new FMPrepareBuy ();
         progress.dismissView ();
         //调用微信支付模块
-        new WXPayAsyncTask (handler, body, price, productType, productId, context, prepareBuy, application, payModel.getNotifyurl (), payModel.getAttach (), payModel.getTradeNo ()).execute();
+        new WXPayAsyncTask (handler, body, price, productType, productId, context, application, payModel.getNotifyurl (), payModel.getAttach (), payModel.getTradeNo ()).execute();
     }
 
     public void aliPay()
@@ -64,7 +63,7 @@ class PayFunc {
         String subject = payModel.getDetail ();
         int productType= 0;
         long productId= 0;
-        prepareBuy = new FMPrepareBuy ();
+        //prepareBuy = new FMPrepareBuy ();
         progress.dismissView ();
         aliPay.pay(subject, body, price, payModel.getNotifyurl (), productType, productId);
     }

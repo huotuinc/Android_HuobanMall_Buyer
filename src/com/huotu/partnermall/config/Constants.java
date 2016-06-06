@@ -1,6 +1,5 @@
 package com.huotu.partnermall.config;
 
-import android.os.Environment;
 import com.huotu.partnermall.inner.BuildConfig;
 
 public class Constants {
@@ -39,27 +38,6 @@ public class Constants {
 	// 分享失败
 	public static final int SHARE_ERROR = 0X3000;
 
-	// 开始执行
-	//public static final int EXECUTE_LOADING = 0X4000;
-
-	// 正在执行
-	//public static final int EXECUTE_SUCCESS = 0X5000;
-
-	// 执行完成
-	//public static final int EXECUTE_FAILED = 0X6000;
-
-	// 加载数据成功
-	//public static final int LOAD_DATA_SUCCESS = 0X7000;
-
-	// 加载数据失败
-	//public static final int LOAD_DATA_ERROR = 0X8000;
-
-	// 动态加载数据
-	//public static final int SET_DATA = 0X9000;
-
-	// 未登陆
-	//public static final int NONE_LOGIN = 0X10000;
-
 	//左侧划状态
 	public static final int    LEFT_IMG_SIDE = 0X33310;
 	// 返回状态
@@ -85,11 +63,6 @@ public class Constants {
 	public static final String APP_NAME    = "app_name";
 	//app_build
 	public static final String APP_BUILD   = "app_build";
-
-	//系统指定包名
-//	public static final String SYS_PACKAGE_INI = "sys_package";
-	//系统菜单
-//	public static final String SYS_MENU        = "sys_menu";
 
 
 	//商户信息
@@ -154,20 +127,6 @@ public class Constants {
 	//微信分享加密
 	public static final String WEIXIN_SHARE_SECRET = "weixin_share_secret";
 
-
-//	//主菜单
-//	public static final String HOME_MENU  = "home_menu";
-//	//主菜单名称
-//	public static final String MENU_NAME  = "menu_name";
-//	//主菜单标识
-//	public static final String MENU_TAG   = "menu_tag";
-//	//主菜单图标
-//	public static final String MENU_ICON  = "menu_icon";
-//	//主菜单url
-//	public static final String MENU_URL   = "menu_url";
-//	//主菜单分组
-//	public static final String MENU_GROUP = "menu_group";
-
 	/**
 	 * *******************preference参数设置
 	 */
@@ -221,16 +180,6 @@ public class Constants {
 	public static final String LATITUDE      = "latitude";
 	public static final String LONGITUDE     = "Longitude";
 	public static final String CITY          = "city";
-
-	/**
-	 * 底部Tab菜单
-	 */
-//	public static final String TAB_1 = "TAB_1";
-//	public static final String TAB_2 = "TAB_2";
-//	public static final String TAB_3 = "TAB_3";
-//	public static final String TAB_4 = "TAB_4";
-//	public static final String TAB_5 = "TAB_5";
-//	public static final String TAB_6 = "TAB_6";
 
 	//http请求参数
 	//获取具体页面的商品类别

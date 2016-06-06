@@ -1145,7 +1145,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLinkEvnent(LinkEvent event) {
+    public void onEventLink(LinkEvent event) {
         if(event==null)return;
         String link = event.getLinkUrl();
         Intent intent=new Intent(HomeActivity.this,WebViewActivity.class);

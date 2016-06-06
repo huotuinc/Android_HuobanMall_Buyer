@@ -91,6 +91,20 @@ android {
             assets.srcDirs = ['custom/huangtaizhi/assets']
         }
 
+        mdrj{
+            manifest.srcFile 'custom/mdrj/AndroidManifest.xml'
+            java.srcDirs = ['custom/mdrj/src']
+            res.srcDirs = ['custom/mdrj/res']
+            assets.srcDirs = ['custom/mdrj/assets']
+        }
+
+        xiangcunlai{
+            manifest.srcFile 'custom/xiangcunlai/AndroidManifest.xml'
+            java.srcDirs = ['custom/xiangcunlai/src']
+            res.srcDirs = ['custom/xiangcunlai/res']
+            assets.srcDirs = ['custom/xiangcunlai/assets']
+        }
+
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
 
@@ -190,6 +204,35 @@ android {
             buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
             signingConfig signingConfigs.huangtaizhi
         }
+
+        mdrj{//摩登人家
+            applicationId 'com.huotu.mall.mdrj'
+            versionCode HTZ_VERSIONCODE.toInteger()
+            versionName "${HTZ_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanmall.com/\"'
+            buildConfigField 'String','APP_ID', '\"'+"${HTZ_APP_ID}"+'\"'
+            buildConfigField 'String','APP_SECRET', '\"'+"${HTZ_APP_SECRET}"+'\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
+            buildConfigField 'String','Push_Url','\"http://api.open.huobanplus.com/\"'
+            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+            signingConfig signingConfigs.mdrj
+        }
+
+        xiangcunlai{//乡村来
+            applicationId 'com.huotu.mall.xiangcunlai'
+            versionCode XIANGCUNLAI_VERSIONCODE.toInteger()
+            versionName "${XIANGCUNLAI_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"'+"${XIANGCUNLAI_MALLAPI_URL}"+'\"'
+            buildConfigField 'String','APP_ID', '\"'+"${XIANGCUNLAI_APP_ID}"+'\"'
+            buildConfigField 'String','APP_SECRET', '\"'+"${XIANGCUNLAI_APP_SECRET}"+'\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
+            buildConfigField 'String','Push_Url','\"'+"${XIANGCUNLAI_PUSH_URL}"+'\"'
+            buildConfigField 'String', 'SMART_KEY', '\"'+"${XIANGCUNLAI_PUSH_APP_KEY}"+'\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"'+"${XIANGCUNLAI_PUSH_APP_SECURITY}"+'\"'
+            signingConfig signingConfigs.xiangcunlai
+        }
+
     }
 
     buildTypes{
@@ -201,6 +244,11 @@ android {
         release{
 //            signingConfig signingConfigs.huotu
             buildConfigField 'String' , 'Header_Secret', '\"'+"${HEADER_SECRET}"+'\"'
+
+            //minifyEnabled true;
+            //shrinkResources true
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         }
     }
 

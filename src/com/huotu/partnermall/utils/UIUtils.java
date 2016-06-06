@@ -1,35 +1,26 @@
 package com.huotu.partnermall.utils;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.huotu.android.library.libpush.BuildConfig;
 import com.huotu.android.library.libpush.PushHelper;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.model.MainMenuModel;
 import com.huotu.partnermall.model.MenuBean;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;

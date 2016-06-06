@@ -3,31 +3,26 @@ package com.huotu.partnermall.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class JSONUtil<T>
-{
+public class JSONUtil<T> {
 
     private static Gson gson = null;
 
-    static
-    {
-        if (null == gson)
-        {
+    static {
+        if (null == gson) {
             gson = new GsonBuilder().serializeNulls().create();
         }
     }
 
-    public static Gson getGson(){
-        return  gson;
+    public static Gson getGson() {
+        return gson;
     }
 
-    public String toJson(T t)
-    {
+    public String toJson(T t) {
         return gson.toJson(t);
     }
 
     @SuppressWarnings("unchecked")
-    public T toBean(String msg, T t)
-    {
+    public T toBean(String msg, T t) {
         // 这里起初使用
         // Type type = TypeToken<T>() {}.getType());
         // return (T) gson.fromJson(msg,type);

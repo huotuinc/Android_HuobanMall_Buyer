@@ -1,17 +1,11 @@
 package com.huotu.partnermall.widgets;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -36,7 +30,7 @@ import cn.sharesdk.wechat.moments.WechatMoments;
 public class SharePopupWindow extends PopupWindow implements View.OnClickListener {
     private Context context;
     private PlatformActionListener platformActionListener;
-    private Platform.ShareParams   shareParams;
+    private Platform.ShareParams shareParams;
 
     public SharePopupWindow ( Context cx) {
         this.context = cx;

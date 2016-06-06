@@ -4,41 +4,34 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Looper;
-import android.util.Log;
-
-import com.huotu.partnermall.model.PageInfoModel;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  * Created by Administrator on 2015/10/9.
  */
-public
-class CrashHandler implements Thread.UncaughtExceptionHandler {
+public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     //系统默认的UncaughtException处理类
     private Thread.UncaughtExceptionHandler mDefaultHandler;
-    private static class Holder
-    {
+
+    private static class Holder {
         private static final CrashHandler instance = new CrashHandler();
     }
 
-    private CrashHandler()
-    {
+    private CrashHandler() {
 
     }
 
-    public static final CrashHandler getInstance()
-    {
+    public static final CrashHandler getInstance() {
         return Holder.instance;
     }
+
     //程序的Context对象
     private Context mContext;
     //
     //用来存储设备信息和异常信息
-    private Map< String, String > infos = new HashMap< String, String > ( );
+    private Map<String, String> infos = new HashMap<String, String>();
 
 
     /**
@@ -56,8 +49,7 @@ class CrashHandler implements Thread.UncaughtExceptionHandler {
 
 
     @Override
-    public
-    void uncaughtException ( Thread thread, Throwable ex ) {
+    public void uncaughtException(Thread thread, Throwable ex) {
 
         if (!handleException(ex) && mDefaultHandler != null) {
             //如果用户没有处理则让系统默认的异常处理器来处理
@@ -66,7 +58,7 @@ class CrashHandler implements Thread.UncaughtExceptionHandler {
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                KJLoger.e ( e.getMessage () );
+                KJLoger.e(e.getMessage());
             }
 
             //退出程序
@@ -89,11 +81,11 @@ class CrashHandler implements Thread.UncaughtExceptionHandler {
         new Thread() {
             @Override
             public void run() {
-                Looper.prepare ( );
-                ToastUtils.showShortToast (mContext, "很抱歉,程序出现异常,即将退出.");
+                Looper.prepare();
+                ToastUtils.showShortToast(mContext, "很抱歉,程序出现异常,即将退出.");
                 Looper.loop();
             }
-        }.start ( );
+        }.start();
         //收集设备参数信息
         //collectDeviceInfo ( mContext );
         return true;
@@ -101,6 +93,7 @@ class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     /**
      * 收集设备参数信息
+     *
      * @param ctx
      */
     public void collectDeviceInfo(Context ctx) {
@@ -114,7 +107,7 @@ class CrashHandler implements Thread.UncaughtExceptionHandler {
                 infos.put("versionCode", versionCode);
             }
         } catch (PackageManager.NameNotFoundException e) {
-            KJLoger.e ( "an error occured when collect package info" );
+            KJLoger.e("an error occured when collect package info");
         }
     }
 }

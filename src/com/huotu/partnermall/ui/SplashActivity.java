@@ -68,7 +68,7 @@ public class SplashActivity extends BaseActivity {
             bundlePush = getIntent().getBundleExtra(Constants.HUOTU_PUSH_KEY);
         }
 
-        String version = getString( R.string.app_name) + application.getAppVersion( this );
+        String version = getString( R.string.app_name) + application.getAppVersion();
         tvVersion.setText( version );
 
         AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
