@@ -345,61 +345,55 @@ public class HttpUtil{
         VolleyUtil.getRequestQueue().add(re);
     }
 
-    public void doVolleyObtainUser(final Activity aty,  final BaseApplication application, String url, final View view, final WindowManager wManager, final Handler mHandler)
-    {
-        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+    public void doVolleyObtainUser(final Activity aty,  final BaseApplication application, String url, final View view, final WindowManager wManager, final Handler mHandler) {
+        final KJJsonObjectRequest re = new KJJsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
 
             @Override
             public void onResponse(JSONObject response) {
-                if( aty ==null) return;
+                if (aty == null) return;
 
-                JSONUtil<SwitchUserModel > jsonUtil = new JSONUtil<SwitchUserModel>();
+                JSONUtil<SwitchUserModel> jsonUtil = new JSONUtil<SwitchUserModel>();
                 SwitchUserModel switchUser = new SwitchUserModel();
-                switchUser = jsonUtil.toBean(response.toString (), switchUser);
+                switchUser = jsonUtil.toBean(response.toString(), switchUser);
 
-                if(null != switchUser)
-                {
-                    List<SwitchUserModel.SwitchUser> userList = switchUser.getData ();
-                    if( (null != userList) && (!userList.isEmpty ()) && (userList.size () > 1) )
-                    {
+                if (null != switchUser) {
+                    List<SwitchUserModel.SwitchUser> userList = switchUser.getData();
+                    if ((null != userList) && (!userList.isEmpty()) && (userList.size() > 1)) {
                         //去重复数据
-                        List<SwitchUserModel.SwitchUser> sourceList = new ArrayList< SwitchUserModel.SwitchUser > (  );
+                        List<SwitchUserModel.SwitchUser> sourceList = new ArrayList<SwitchUserModel.SwitchUser>();
                         sourceList = clearData(userList);
                         //关闭载入数据条
-                        mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
+                        mHandler.sendEmptyMessage(Constants.LOAD_SWITCH_USER_OVER);
                         //弹出切换用户面板
-                        SwitchUserPopWin userPop = new SwitchUserPopWin ( aty, sourceList,  application, wManager, mHandler );
-                        userPop.initView ( );
-                        userPop.showAtLocation ( view, Gravity.CENTER, 0, 0 );
-                        userPop.setOnDismissListener ( new PoponDismissListener ( aty ) );
-                    }
-                    else if((null != userList) && (!userList.isEmpty ()) && (userList.size () == 1))
-                    {
+                        SwitchUserPopWin userPop = new SwitchUserPopWin(aty, sourceList, application, wManager, mHandler);
+                        userPop.initView();
+                        userPop.showAtLocation(view, Gravity.CENTER, 0, 0);
+                        userPop.setOnDismissListener(new PoponDismissListener(aty));
+                    } else if ((null != userList) && (!userList.isEmpty()) && (userList.size() == 1)) {
                         //关闭载入数据条
-                        mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
+                        mHandler.sendEmptyMessage(Constants.LOAD_SWITCH_USER_OVER);
 
-                        NoticePopWindow noticePop = new NoticePopWindow (  aty,  "无其他账户，请绑定其他账户。");
-                        noticePop.showNotice ();
-                        noticePop.showAtLocation (
+                        NoticePopWindow noticePop = new NoticePopWindow(aty, "无其他账户，请绑定其他账户。");
+                        noticePop.showNotice();
+                        noticePop.showAtLocation(
                                 view,
                                 Gravity.CENTER, 0, 0
                         );
-                    }else {
+                    } else {
                         //关闭载入数据条
-                        mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
-                        NoticePopWindow noticePop = new NoticePopWindow (  aty,  "无其他账户。");
-                        noticePop.showNotice ();
-                        noticePop.showAtLocation(view,Gravity.CENTER, 0, 0);
+                        mHandler.sendEmptyMessage(Constants.LOAD_SWITCH_USER_OVER);
+                        NoticePopWindow noticePop = new NoticePopWindow(aty, "无其他账户。");
+                        noticePop.showNotice();
+                        noticePop.showAtLocation(view, Gravity.CENTER, 0, 0);
                     }
-                } else
-                {
+                } else {
                     //关闭载入数据条
-                    mHandler.sendEmptyMessage ( Constants.LOAD_SWITCH_USER_OVER );
+                    mHandler.sendEmptyMessage(Constants.LOAD_SWITCH_USER_OVER);
 
-                    NoticePopWindow noticePop = new NoticePopWindow (  aty,  "未检测到你的账户信息，请确认。");
-                    noticePop.showNotice ();
-                    noticePop.showAtLocation (
+                    NoticePopWindow noticePop = new NoticePopWindow(aty, "未检测到你的账户信息，请确认。");
+                    noticePop.showNotice();
+                    noticePop.showAtLocation(
                             view,
                             Gravity.CENTER, 0, 0
                     );
@@ -413,8 +407,9 @@ public class HttpUtil{
 
 
         });
-        VolleyUtil.getRequestQueue().add( re);
+        VolleyUtil.getRequestQueue().add(re);
     }
+
     public void doVolleyName( final BaseApplication application, String url, final TextView userType ){
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
