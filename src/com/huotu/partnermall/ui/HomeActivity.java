@@ -395,6 +395,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         pageWeb.getSettings().setSavePassword(true);
         pageWeb.getSettings().setLoadsImagesAutomatically(true);
         pageWeb.getSettings().setDomStorageEnabled(true);
+        pageWeb.getSettings().setAppCacheEnabled(true);
+        pageWeb.getSettings().setDatabaseEnabled(true);
+
         pageWeb.addJavascriptInterface( HomeActivity.this ,"android");
         //首页鉴权
         AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );

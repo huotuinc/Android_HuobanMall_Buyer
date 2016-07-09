@@ -183,6 +183,9 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         viewPage.getSettings().setLoadWithOverviewMode(false);
         viewPage.getSettings().setSavePassword(true);
         viewPage.getSettings().setLoadsImagesAutomatically(true);
+        viewPage.getSettings().setDomStorageEnabled(true);
+        viewPage.getSettings().setAppCacheEnabled(true);
+        viewPage.getSettings().setDatabaseEnabled(true);
         viewPage.addJavascriptInterface(this, "android");
         viewPage.loadUrl(url);
 
