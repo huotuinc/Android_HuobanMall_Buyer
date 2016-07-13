@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.model.PayModel;
+import com.huotu.partnermall.model.SwitchUserByUserIDEvent;
 import com.huotu.partnermall.ui.WebViewActivity;
 import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
@@ -18,6 +19,9 @@ import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -144,6 +148,10 @@ public class UrlFilterUtils {
             application.logout ();
             //跳转到登录界面
             ActivityUtils.getInstance ().skipActivity ( ref.get() , LoginActivity.class );
+        }else if(url.toLowerCase().contains(Constants.URL_APPACCOUNTSWITCHER.toLowerCase())){//切换帐号 url
+            String userId= Uri.parse(url).getQueryParameter("u");
+            EventBus.getDefault().post(new SwitchUserByUserIDEvent(userId));
+            return true;
         }
         else
         {

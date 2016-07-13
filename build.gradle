@@ -121,63 +121,63 @@ android {
 
     //打包渠道
     productFlavors {
-        morefan_test{
-            applicationId 'cy.com.morefan'
-            versionCode BUYER_VERSIONCODE.toInteger()
-            versionName "${BUYER_VERSIONNAME}"
-            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.51flashmall.com/\"'
-            buildConfigField 'String','APP_ID','\"huotu686ad1fe2bd8a02bb\"'
-            buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
-            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
-            buildConfigField 'String','Push_Url','\"http://test.api.open.huobanplus.com:8081/\"'
-            buildConfigField 'String', 'SMART_KEY', '\"_demo\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"1f2f3f4f5f6f7f8f\"'
-            signingConfig signingConfigs.huotu
-        }
+//        morefan_test{
+//            applicationId 'cy.com.morefan'
+//            versionCode BUYER_VERSIONCODE.toInteger()
+//            versionName "${BUYER_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.51flashmall.com/\"'
+//            buildConfigField 'String','APP_ID','\"huotu686ad1fe2bd8a02bb\"'
+//            buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
+//            buildConfigField 'String','Push_Url','\"http://test.api.open.huobanplus.com:8081/\"'
+//            buildConfigField 'String', 'SMART_KEY', '\"_demo\"'
+//            buildConfigField 'String', 'SMART_SECURITY', '\"1f2f3f4f5f6f7f8f\"'
+//            signingConfig signingConfigs.huotu
+//        }
 
 
-        adtimetest_test{
-            applicationId 'cy.com.morefan'
-            versionCode BUYER_VERSIONCODE.toInteger()
-            versionName "${BUYER_VERSIONNAME}"
-            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanmall.com/\"'
-            buildConfigField 'String','APP_ID','\"huotu686ad1fe2bd8a02bb\"'
-            buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
-            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.huobanplus.com/\"'
-            buildConfigField 'String','Push_Url','\"http://api.open.huobanplus.com/\"'
-            buildConfigField 'String', 'SMART_KEY', '\"app\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-            signingConfig signingConfigs.huotu
-        }
+//        adtimetest_test{
+//            applicationId 'cy.com.morefan'
+//            versionCode BUYER_VERSIONCODE.toInteger()
+//            versionName "${BUYER_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanmall.com/\"'
+//            buildConfigField 'String','APP_ID','\"huotu686ad1fe2bd8a02bb\"'
+//            buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.huobanplus.com/\"'
+//            buildConfigField 'String','Push_Url','\"http://api.open.huobanplus.com/\"'
+//            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+//            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+//            signingConfig signingConfigs.huotu
+//        }
 
 
-        yunyi{//乔基
-            applicationId 'com.huotu.mall.yunyi'
-            versionCode YUNYI_VERSIONCODE.toInteger()
-            versionName "${YUNYI_VERSIONNAME}"
-            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.acclife.cn/\"'
-            buildConfigField 'String','APP_ID', '\"'+"${YUNYI_APP_ID}"+'\"'
-            buildConfigField 'String','APP_SECRET','\"'+"${YUNYI_APP_SECRET}"+'\"'
-            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.acclife.cn:8081/\"'
-            buildConfigField 'String','Push_Url','\"http://api.open.acclife.cn:8081/\"'
-            buildConfigField 'String', 'SMART_KEY', '\"app\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"01f295ce12a4f38ec9ccad574d787099\"'
-            signingConfig signingConfigs.yunyi
-        }
+//        yunyi{//乔基
+//            applicationId 'com.huotu.mall.yunyi'
+//            versionCode YUNYI_VERSIONCODE.toInteger()
+//            versionName "${YUNYI_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.acclife.cn/\"'
+//            buildConfigField 'String','APP_ID', '\"'+"${YUNYI_APP_ID}"+'\"'
+//            buildConfigField 'String','APP_SECRET','\"'+"${YUNYI_APP_SECRET}"+'\"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.acclife.cn:8081/\"'
+//            buildConfigField 'String','Push_Url','\"http://api.open.acclife.cn:8081/\"'
+//            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+//            buildConfigField 'String', 'SMART_SECURITY', '\"01f295ce12a4f38ec9ccad574d787099\"'
+//            signingConfig signingConfigs.yunyi
+//        }
 
-        yingyan{//行装
-            applicationId 'com.huotu.mall.yingyan'
-            versionCode YINGYAN_VERSIONCODE.toInteger()
-            versionName "${YINGYAN_VERSIONNAME}"
-            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.outfit.ren/\"'
-            buildConfigField 'String','APP_ID','\"app\"'
-            buildConfigField 'String','APP_SECRET','\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-            buildConfigField 'String',"SIS_INTERFACE_URL", '\"api.open.outfit.ren/\"'
-            buildConfigField 'String','Push_Url','\"api.open.outfit.ren/\"'
-            buildConfigField 'String', 'SMART_KEY', '\"app\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-            signingConfig signingConfigs.yingyan
-        }
+//        yingyan{//行装
+//            applicationId 'com.huotu.mall.yingyan'
+//            versionCode YINGYAN_VERSIONCODE.toInteger()
+//            versionName "${YINGYAN_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.outfit.ren/\"'
+//            buildConfigField 'String','APP_ID','\"app\"'
+//            buildConfigField 'String','APP_SECRET','\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"api.open.outfit.ren/\"'
+//            buildConfigField 'String','Push_Url','\"api.open.outfit.ren/\"'
+//            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+//            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+//            signingConfig signingConfigs.yingyan
+//        }
 
         olquan{//OL圈
             applicationId 'com.olquanapp.ttds.android'
@@ -193,53 +193,53 @@ android {
             signingConfig signingConfigs.olquan
         }
 
-        guozhenhao{//果真好
-            applicationId 'com.huotu.mall.guozhenhao'
-            versionCode GUOZHENHAO_VERSIONCODE.toInteger()
-            versionName "${GUOZHENHAO_VERSIONNAME}"
-            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanmall.com/\"'
-            buildConfigField 'String','APP_ID', '\"'+"${GUOZHENHAO_APP_ID}"+'\"'
-            buildConfigField 'String','APP_SECRET', '\"'+"${GUOZHENHAO_APP_SECRET}"+'\"'
-            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.huobanplus.com/\"'
-            buildConfigField 'String','Push_Url','\"http://api.open.huobanplus.com/\"'
-            buildConfigField 'String', 'SMART_KEY', '\"app\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-            signingConfig signingConfigs.guozhenhao
-        }
+//        guozhenhao{//果真好
+//            applicationId 'com.huotu.mall.guozhenhao'
+//            versionCode GUOZHENHAO_VERSIONCODE.toInteger()
+//            versionName "${GUOZHENHAO_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanmall.com/\"'
+//            buildConfigField 'String','APP_ID', '\"'+"${GUOZHENHAO_APP_ID}"+'\"'
+//            buildConfigField 'String','APP_SECRET', '\"'+"${GUOZHENHAO_APP_SECRET}"+'\"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.huobanplus.com/\"'
+//            buildConfigField 'String','Push_Url','\"http://api.open.huobanplus.com/\"'
+//            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+//            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+//            signingConfig signingConfigs.guozhenhao
+//        }
 
-        huangtaizhi{//黄太纸
-            applicationId 'com.huotu.mall.huangtaizhi'
-            versionCode HTZ_VERSIONCODE.toInteger()
-            versionName "${HTZ_VERSIONNAME}"
-            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanmall.com/\"'
-            buildConfigField 'String','APP_ID', '\"'+"${HTZ_APP_ID}"+'\"'
-            buildConfigField 'String','APP_SECRET', '\"'+"${HTZ_APP_SECRET}"+'\"'
-            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
-            buildConfigField 'String','Push_Url','\"http://api.open.huobanplus.com/\"'
-            buildConfigField 'String', 'SMART_KEY', '\"app\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-            signingConfig signingConfigs.huangtaizhi
-        }
+//        huangtaizhi{//黄太纸
+//            applicationId 'com.huotu.mall.huangtaizhi'
+//            versionCode HTZ_VERSIONCODE.toInteger()
+//            versionName "${HTZ_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.huobanmall.com/\"'
+//            buildConfigField 'String','APP_ID', '\"'+"${HTZ_APP_ID}"+'\"'
+//            buildConfigField 'String','APP_SECRET', '\"'+"${HTZ_APP_SECRET}"+'\"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
+//            buildConfigField 'String','Push_Url','\"http://api.open.huobanplus.com/\"'
+//            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+//            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+//            signingConfig signingConfigs.huangtaizhi
+//        }
 
-        xiangcunlai{//乡村来
-            applicationId 'com.huotu.mall.xiangcunlai'
-            versionCode XIANGCUNLAI_VERSIONCODE.toInteger()
-            versionName "${XIANGCUNLAI_VERSIONNAME}"
-            buildConfigField 'String','INTERFACE_URL','\"'+"${XIANGCUNLAI_MALLAPI_URL}"+'\"'
-            buildConfigField 'String','APP_ID', '\"'+"${XIANGCUNLAI_APP_ID}"+'\"'
-            buildConfigField 'String','APP_SECRET', '\"'+"${XIANGCUNLAI_APP_SECRET}"+'\"'
-            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
-            buildConfigField 'String','Push_Url','\"'+"${XIANGCUNLAI_PUSH_URL}"+'\"'
-            buildConfigField 'String', 'SMART_KEY', '\"'+"${XIANGCUNLAI_PUSH_APP_KEY}"+'\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"'+"${XIANGCUNLAI_PUSH_APP_SECURITY}"+'\"'
-            signingConfig signingConfigs.xiangcunlai
-        }
+//        xiangcunlai{//乡村来
+//            applicationId 'com.huotu.mall.xiangcunlai'
+//            versionCode XIANGCUNLAI_VERSIONCODE.toInteger()
+//            versionName "${XIANGCUNLAI_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','\"'+"${XIANGCUNLAI_MALLAPI_URL}"+'\"'
+//            buildConfigField 'String','APP_ID', '\"'+"${XIANGCUNLAI_APP_ID}"+'\"'
+//            buildConfigField 'String','APP_SECRET', '\"'+"${XIANGCUNLAI_APP_SECRET}"+'\"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
+//            buildConfigField 'String','Push_Url','\"'+"${XIANGCUNLAI_PUSH_URL}"+'\"'
+//            buildConfigField 'String', 'SMART_KEY', '\"'+"${XIANGCUNLAI_PUSH_APP_KEY}"+'\"'
+//            buildConfigField 'String', 'SMART_SECURITY', '\"'+"${XIANGCUNLAI_PUSH_APP_SECURITY}"+'\"'
+//            signingConfig signingConfigs.xiangcunlai
+//        }
 
     }
 
     buildTypes{
         debug{
-            signingConfig signingConfigs.huangtaizhi
+            signingConfig signingConfigs.olquan
             buildConfigField 'String' , 'Header_Secret', '\"'+"${HEADER_SECRET}"+'\"'
         }
 

@@ -1,6 +1,8 @@
 package com.huotu.partnermall.ui.guide;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.huotu.partnermall.adapter.ViewPagerAdapter;
+import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.ImageUtil;
 import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.inner.R;
@@ -42,11 +45,11 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
     ViewPager mVPActivity;
     private ViewPagerAdapter vpAdapter;
     private List< View > views;
-    //private int lastValue = - 1;
     private Resources resources;
-    //public Handler mHandler;
     //引导图片资源
     private String[] pics;
+
+    private List<Bitmap> bitmapList;
 
     @Override
     protected void onCreate ( Bundle arg0 ) {
@@ -56,17 +59,87 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
         ButterKnife.bind(this);
         //mHandler = new Handler ( this );
         views = new ArrayList<> ( );
-        initImage();
+
+
+        //initImage();
+
+
         //初始化Adapter
         vpAdapter = new ViewPagerAdapter ( views );
         mVPActivity.setAdapter ( vpAdapter );
         //绑定回调
         mVPActivity.setOnPageChangeListener ( this );
+
+
+        loadImages();
+
     }
 
     @Override
     protected
     void initView ( ) {
+    }
+
+    protected void loadImages(){
+        final String packageName = getPackageName();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                pics = resources.getStringArray ( R.array.guide_icon );
+                bitmapList = new ArrayList<>();
+                //初始化引导图片列表
+                for(int i=0; i<pics.length; i++) {
+                    int iconId = resources.getIdentifier( pics[i] , "drawable" , packageName );
+                    if( iconId >0) {
+                        Bitmap bmp = ImageUtils.decodeSampledBitmapFromResource( resources , iconId , Constants.SCREEN_WIDTH , Constants.SCREEN_HEIGHT);
+                        bitmapList.add(bmp);
+                    }
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showImages(bitmapList);
+                    }
+                });
+
+            }
+        }).start();
+    }
+
+
+    protected void showImages(List<Bitmap> bitmaps){
+        try {
+            LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            pics = resources.getStringArray ( R.array.guide_icon );
+
+            //初始化引导图片列表
+            for(int i=0; i<bitmaps.size() ; i++) {
+                RelativeLayout iv = ( RelativeLayout ) LayoutInflater.from(GuideActivity.this).inflate ( R.layout.guid_item, null );
+                TextView skipText = (TextView) iv.findViewById(R.id.skipText);
+                iv.setLayoutParams ( mParams );
+                iv.setOnClickListener(this);
+                //int iconId = resources.getIdentifier( pics[i] , "drawable" , this.getPackageName() );
+
+                //Drawable menuIconDraw = null;
+                //if( iconId >0) {
+                //    menuIconDraw = resources.getDrawable(iconId);
+                    SystemTools.loadBackground(iv, new BitmapDrawable(bitmaps.get(i)));
+                //}
+                skipText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        go();
+                    }
+                });
+                views.add(iv);
+            }
+
+            vpAdapter.notifyDataSetChanged();
+
+        } catch (Exception e) {
+            Log.e( TAG , e.getMessage());
+        }
     }
 
     private void initImage ( ) {
@@ -100,16 +173,6 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    /**
-     *设置当前的引导页
-     */
-//    private void setCurView(int position){
-//        if (position < 0 || position >= pics.length) {
-//            return;
-//        }
-//        mVPActivity.setCurrentItem(position);
-//    }
-
     protected void go(){
         //判断是否登录
         if (application.isLogin()) {
@@ -118,7 +181,6 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
             ActivityUtils.getInstance().skipActivity( GuideActivity.this, LoginActivity.class);
         }
     }
-
 
     @Override
     public void onClick ( View v ) {
@@ -143,7 +205,6 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onPageScrollStateChanged ( int arg0 ) {
-
     }
 
     @Override
@@ -155,5 +216,11 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+
+        if(bitmapList!=null){
+            for(Bitmap item : bitmapList){
+                item.recycle();
+            }
+        }
     }
 }

@@ -42,6 +42,7 @@ class AuthMallModel  {
     public class AuthMall
     {
         private int userid;
+        private int levelId;
         private String levelName;
         private String nickName;
         private String headImgUrl;
@@ -49,6 +50,12 @@ class AuthMallModel  {
         private int bindUserCount;
         private int userType;
         private int relatedType=-1;
+        private String unionId;
+        private String openId;
+        private boolean IsMobileBind;
+        private String loginName;
+        private String regTime;
+        private String realName;
 
         public int getBindUserCount() {
             return bindUserCount;
@@ -66,23 +73,19 @@ class AuthMallModel  {
             this.userType = userType;
         }
 
-        public
-        List< MenuModel > getHome_menus ( ) {
+        public  List< MenuModel > getHome_menus ( ) {
             return home_menus;
         }
 
-        public
-        void setHome_menus ( List< MenuModel > home_menus ) {
+        public  void setHome_menus ( List< MenuModel > home_menus ) {
             this.home_menus = home_menus;
         }
 
-        public
-        String getNickName ( ) {
+        public String getNickName ( ) {
             return nickName;
         }
 
-        public
-        void setNickName ( String nickName ) {
+        public void setNickName ( String nickName ) {
             this.nickName = nickName;
         }
 
@@ -122,6 +125,63 @@ class AuthMallModel  {
 
         public void setRelatedType(int relatedType) {
             this.relatedType = relatedType;
+        }
+
+        public int getLevelId() {
+            return levelId;
+        }
+
+        public void setLevelId(int levelId) {
+            this.levelId = levelId;
+        }
+
+        public String getUnionId() {
+            return unionId;
+        }
+
+        public void setUnionId(String unionId) {
+            this.unionId = unionId;
+        }
+
+
+        public String getOpenId() {
+            return openId;
+        }
+
+        public void setOpenId(String openId) {
+            this.openId = openId;
+        }
+
+        public boolean isMobileBind() {
+            return IsMobileBind;
+        }
+
+        public void setMobileBind(boolean mobileBind) {
+            IsMobileBind = mobileBind;
+        }
+
+        public String getLoginName() {
+            return loginName;
+        }
+
+        public void setLoginName(String loginName) {
+            this.loginName = loginName;
+        }
+
+        public String getRegTime() {
+            return regTime;
+        }
+
+        public void setRegTime(String regTime) {
+            this.regTime = regTime;
+        }
+
+        public String getRealName() {
+            return realName;
+        }
+
+        public void setRealName(String realName) {
+            this.realName = realName;
         }
     }
 

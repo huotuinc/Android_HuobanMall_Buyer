@@ -2,6 +2,11 @@ package com.huotu.partnermall.ui;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -14,7 +19,11 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.image.ImageUtil;
+import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.ColorBean;
@@ -28,10 +37,13 @@ import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PropertiesUtil;
+import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.XMLParserUtils;
 import com.huotu.partnermall.widgets.MsgPopWindow;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -42,11 +54,12 @@ public class SplashActivity extends BaseActivity {
     @Bind(R.id.splash_version)
     TextView tvVersion;
     private Intent locationI = null;
-    private boolean isConnection = false;// 假定无网络连接
+    private boolean isConnection = false;
     private MsgPopWindow popWindow;
-
     //推送信息
     Bundle bundlePush;
+
+    Bitmap bitmap;
 
     protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
@@ -58,7 +71,40 @@ public class SplashActivity extends BaseActivity {
         Constants.SCREEN_HEIGHT = metrics.heightPixels;
         Constants.SCREEN_WIDTH = metrics.widthPixels;
         mHandler = new Handler(getMainLooper());
-        initView();
+
+        //initView();
+
+        loadBackground();
+    }
+
+    protected void loadBackground(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    bitmap = ImageUtils.decodeSampledBitmapFromResource(getResources(), R.drawable.login_bg, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(bitmap!=null) {
+                                mSplashItem_iv.setBackgroundDrawable(new BitmapDrawable(bitmap));
+                            }
+                            initView();
+                        }
+                    });
+                } catch (Exception ex) {
+                    Log.e(TAG, ex.getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mSplashItem_iv.setBackgroundColor(SystemTools.obtainColor( BaseApplication.single.obtainMainColor() ));
+                            initView();
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -68,7 +114,7 @@ public class SplashActivity extends BaseActivity {
             bundlePush = getIntent().getBundleExtra(Constants.HUOTU_PUSH_KEY);
         }
 
-        String version = getString( R.string.app_name) + application.getAppVersion();
+        String version = getString( R.string.app_name) + BaseApplication.getAppVersion();
         tvVersion.setText( version );
 
         AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
@@ -207,6 +253,9 @@ public class SplashActivity extends BaseActivity {
         if (null != locationI)
         {
             stopService(locationI);
+        }
+        if( bitmap !=null){
+            bitmap.recycle();
         }
     }
 

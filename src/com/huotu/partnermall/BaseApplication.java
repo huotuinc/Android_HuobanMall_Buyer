@@ -10,6 +10,8 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.CookieManager;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -600,5 +602,9 @@ public class BaseApplication extends Application {
     //读取 用户登录类型 （1：微信授权登录，2:手机登录）
     public int readMemberLoginType() {
         return PreferenceHelper.readInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_LOGINTYPE, 1);
+    }
+
+    public void clearAllCookies(){
+        CookieManager.getInstance().removeAllCookie();
     }
 }

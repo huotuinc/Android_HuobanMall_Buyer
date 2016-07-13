@@ -28,6 +28,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshWebView;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
+import com.huotu.partnermall.model.CloseEvent;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
@@ -39,6 +40,11 @@ import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -82,6 +88,9 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        EventBus.getDefault().register(this);
+
         resources = this.getResources ( );
         this.setContentView(R.layout.new_load_page);
         ButterKnife.bind(this);
@@ -428,6 +437,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         if( progress !=null){
             progress.dismissView();
         }
+
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -529,4 +540,9 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         });
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventClose(CloseEvent event){
+        this.finish();
+    }
 }

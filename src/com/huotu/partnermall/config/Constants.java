@@ -211,6 +211,14 @@ public class Constants {
 	//鉴权失效
 	public static final String AUTH_FAILURE = "/UserCenter/Login.aspx";
 
+	//切换账户
+	public static final String URL_APPACCOUNTSWITCHER="/UserCenter/AppAccountSwitcher.aspx";
+
+	/**
+	 * 个人中心 页面
+	 */
+	public final static String URL_PERSON_INDEX="usercenter/index.aspx";
+
 	//鉴权失效
 	public static final int LOGIN_AUTH_ERROR = 2131;
 	//网页支付
@@ -329,7 +337,7 @@ public class Constants {
 	 */
 	public static final String CAP_CODE = "default";
 
-	public final static int ANIMATION_COUNT = 1000;
+	public final static int ANIMATION_COUNT = 2000;
 
 	/**
 	 * app系统配置

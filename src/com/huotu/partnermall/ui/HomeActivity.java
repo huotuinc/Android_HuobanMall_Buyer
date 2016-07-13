@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -38,11 +39,14 @@ import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
+import com.huotu.partnermall.model.AuthMallModel;
+import com.huotu.partnermall.model.CloseEvent;
 import com.huotu.partnermall.model.LinkEvent;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.PhoneLoginModel;
 import com.huotu.partnermall.model.ShareModel;
+import com.huotu.partnermall.model.SwitchUserByUserIDEvent;
 import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.model.UpdateLeftInfoModel;
 import com.huotu.partnermall.receiver.PushProcess;
@@ -63,6 +67,7 @@ import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -1146,7 +1151,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         });
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventLink(LinkEvent event) {
         if(event==null)return;
@@ -1155,5 +1159,110 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         intent.putExtra(Constants.INTENT_URL, link);
         HomeActivity.this.startActivity(intent);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventSwitchUser(SwitchUserByUserIDEvent event){
+       getUserInfo(event.getUserId());
+    }
+
+    protected void getUserInfo(String userid ){
+        String url = Constants.getINTERFACE_PREFIX() + "Account/getAppUserInfo";
+        Map<String, String> map = new HashMap<>();
+
+        url+="?userid="+userid +"&customerid="+ application.readMerchantId();
+
+        //map.put("userid", application.readMemberId() );
+        //map.put("customerid",application.readMerchantId());
+        AuthParamUtils authParamUtils =new AuthParamUtils(application, System.currentTimeMillis(), url , HomeActivity.this);
+        //Map<String,String> params = authParamUtils.obtainParams(map);
+
+        url = authParamUtils.obtainUrl();
+
+        GsonRequest<AuthMallModel> request =new GsonRequest<>(
+                Request.Method.GET,
+                url,
+                AuthMallModel.class,
+                null,
+                null,
+                new MyGetUserInfoListener(this),
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Log.e("homeactivity", volleyError.getMessage());
+                    }
+                }
+        );
+        VolleyUtil.getRequestQueue().add(request);
+    }
+
+    static class MyGetUserInfoListener implements Response.Listener<AuthMallModel>{
+        WeakReference<HomeActivity> ref;
+
+        MyGetUserInfoListener(HomeActivity act ){
+            ref=new WeakReference<>(act);
+        }
+        @Override
+        public void onResponse(AuthMallModel authMallModel ) {
+            if( ref.get()==null) return;
+            if( ref.get().progress!=null){
+                ref.get().progress.dismissView();
+            }
+            if( authMallModel ==null){
+                ToastUtils.showShortToast( ref.get() , "获取用户数据失败");
+                return;
+            }
+            if( authMallModel.getCode() != 200){
+                String msg ="获取用户数据失败";
+                if( !TextUtils.isEmpty(authMallModel.getMsg() )){
+                    msg = authMallModel.getMsg();
+                }
+                ToastUtils.showShortToast(ref.get(), msg);
+                return;
+            }
+            if( authMallModel.getData() ==null ){
+                ToastUtils.showShortToast(ref.get(),"获取用户数据失败");
+                return;
+            }
+
+            //ToastUtils.showShortToast(ref.get(), "获取用户数据成功");
+
+
+            BaseApplication.single.clearAllCookies();
+
+            EventBus.getDefault().post(new CloseEvent() );
+
+            //更新userId
+            BaseApplication.single.writeMemberId(String.valueOf(authMallModel.getData().getUserid()));
+            //更新昵称
+            BaseApplication.single.writeUserName(authMallModel.getData().getNickName());
+            BaseApplication.single.writeUserIcon( authMallModel.getData().getHeadImgUrl());
+            BaseApplication.single.writeUserUnionId( authMallModel.getData().getUnionId() );
+            BaseApplication.single.writeMemberLevel( authMallModel.getData().getLevelName());
+
+            //记录微信关联类型（0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号）
+            BaseApplication.single.writeMemberRelatedType(authMallModel.getData().getRelatedType());
+
+            //更新界面
+            ref.get().userName.setText(authMallModel.getData().getNickName());
+            ref.get().userType.setText(authMallModel.getData().getLevelName());
+            String logoUrl = authMallModel.getData().getHeadImgUrl();
+
+            new LoadLogoImageAyscTask ( ref.get().resources , ref.get().userLogo  , authMallModel.getData().getHeadImgUrl(), R.drawable.ic_login_username ).execute();
+
+            //动态加载侧滑菜单
+            UIUtils ui = new UIUtils ( BaseApplication.single , ref.get() , ref.get().resources , ref.get().mainMenuLayout , ref.get().mHandler );
+            ui.loadMenus();
+
+
+            String usercenterUrl = BaseApplication.single.obtainMerchantUrl() + "/" + Constants.URL_PERSON_INDEX+"?customerid="+BaseApplication.single.readMerchantId();
+
+            AuthParamUtils authParamUtils =new AuthParamUtils( BaseApplication.single , System.currentTimeMillis(), usercenterUrl , ref.get() );
+            usercenterUrl = authParamUtils.obtainUrl();
+
+            ref.get().pageWeb.loadUrl( usercenterUrl );
+
+        }
+    }
+
 }
 

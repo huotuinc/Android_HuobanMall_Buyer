@@ -199,16 +199,32 @@ public class ImageUtil {
 		BitmapFactory.decodeStream( inputStream , null , options );
 		int imageWidth = options.outWidth;
 		int imageHeight = options.outHeight;
-		int scale = 1;
+
 
 		//图片实际的宽与高，根据默认最大大小值，得到图片实际的缩放比例
-		while ((imageHeight / scale > Constants.SCREEN_HEIGHT )
-				|| (imageWidth / scale > Constants.SCREEN_WIDTH)) {
-			scale *= 2;
+//		while ((imageHeight / scale > Constants.SCREEN_HEIGHT )
+//				|| (imageWidth / scale > Constants.SCREEN_WIDTH)) {
+//			scale *= 2;
+//		}
+
+		float hh = Constants.SCREEN_HEIGHT;//这里设置高度为800f
+		float ww = Constants.SCREEN_WIDTH;//这里设置宽度为480f
+		//缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
+		int scale = 1;//be=1表示不缩放
+		if (imageWidth > imageHeight && imageWidth > ww) {//如果宽度大的话根据宽度固定大小缩放
+			scale = (int) (options.outWidth / ww);
+		} else if (imageWidth < imageHeight && imageHeight > hh) {//如果高度高的话根据宽度固定大小缩放
+			scale = (int) ( options.outHeight / hh);
 		}
+		if (scale <= 0)
+			scale = 1;
+		options.inSampleSize = scale;//设置缩放比例
 
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = scale;
+		options.inPurgeable=true;
+		options.inInputShareable=true;
+		//options.inPreferredConfig= Bitmap.Config.RGB_565;
 
 		Bitmap bmp=null;
 		BitmapDrawable drawable=null;
