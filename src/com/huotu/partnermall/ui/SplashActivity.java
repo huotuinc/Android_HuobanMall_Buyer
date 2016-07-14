@@ -1,5 +1,6 @@
 package com.huotu.partnermall.ui;
 
+import android.app.DownloadManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,28 +21,42 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.ImageUtil;
 import com.huotu.partnermall.image.ImageUtils;
+import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
+import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.service.LocationService;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.guide.GuideActivity;
-import com.huotu.partnermall.ui.login.LoginActivity;
+import com.huotu.partnermall.ui.login.PhoneLoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PropertiesUtil;
 import com.huotu.partnermall.utils.SystemTools;
+import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.XMLParserUtils;
 import com.huotu.partnermall.widgets.MsgPopWindow;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import butterknife.Bind;
@@ -58,7 +73,6 @@ public class SplashActivity extends BaseActivity {
     private MsgPopWindow popWindow;
     //推送信息
     Bundle bundlePush;
-
     Bitmap bitmap;
 
     protected void onCreate ( Bundle savedInstanceState ) {
@@ -195,6 +209,8 @@ public class SplashActivity extends BaseActivity {
                             AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), targetUrl, SplashActivity.this);
                             final String url = paramUtils.obtainUrls();
                             HttpUtil.getInstance().doVolley( application, url);
+                            //当用户登录状态时，则重新获得用户信息。
+                            initUserInfo();
                         }
                     }
 
@@ -213,21 +229,21 @@ public class SplashActivity extends BaseActivity {
                                 application.writeInitInfo("inited");
                             } else {
                                 //判断是否登录
-                                if (application.isLogin()) {
+//                                if (application.isLogin()) {
                                     Intent intent = new Intent();
                                     intent.setClass( SplashActivity.this , HomeActivity.class);
                                     if(null!= bundlePush) {
                                         intent.putExtra( Constants.HUOTU_PUSH_KEY , bundlePush);
                                     }
                                     ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent );
-                                } else {
-                                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                                    if(null!= bundlePush) {
-                                        intent.putExtra( Constants.HUOTU_PUSH_KEY , bundlePush);
-                                    }
-                                    ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
-                                    //ActivityUtils.getInstance().skipActivity(SplashActivity.this, LoginActivity.class);
-                                }
+//                                } else {
+//                                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+//                                    if(null!= bundlePush) {
+//                                        intent.putExtra( Constants.HUOTU_PUSH_KEY , bundlePush);
+//                                    }
+//                                    ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
+//                                }
+
                             }
                         }
                     }
@@ -246,8 +262,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected
-    void onDestroy ( ) {
+    protected void onDestroy ( ) {
         super.onDestroy ( );
         ButterKnife.unbind(this);
         if (null != locationI)
@@ -290,5 +305,59 @@ public class SplashActivity extends BaseActivity {
             closeSelf(SplashActivity.this);
         }
     }
+
+    /**
+     * 如果已经登录状态，则重新获得用户信息
+     */
+    protected void initUserInfo(){
+        if( application.isLogin() ) {
+            String url = Constants.getINTERFACE_PREFIX() + "Account/getAppUserInfo";
+            url += "?userid="+ application.readMemberId()+"&customerid="+ application.readMerchantId();
+            AuthParamUtils authParamUtils = new AuthParamUtils(application,  System.currentTimeMillis() , url , this);
+            url = authParamUtils.obtainUrl();
+
+            GsonRequest<AuthMallModel> request = new GsonRequest<AuthMallModel>(
+                    Request.Method.GET,
+                    url,
+                    AuthMallModel.class,
+                    null,
+                    null,
+                    new Response.Listener<AuthMallModel>() {
+                        @Override
+                        public void onResponse(AuthMallModel authMallModel) {
+
+                            if( authMallModel ==null || authMallModel.getCode() !=200 || authMallModel.getData()==null ){
+                                //ToastUtils.showLongToast("请求出错。");
+                                Log.e(TAG, "请求出错。");
+                                return;
+                            }
+
+                            AuthMallModel.AuthMall mall = authMallModel.getData();
+                            BaseApplication.single.writeMemberId( String.valueOf( mall.getUserid() ));
+                            BaseApplication.single.writeUserName( mall.getNickName() );
+                            BaseApplication.single.writeUserIcon( mall.getHeadImgUrl() );
+                            BaseApplication.single.writeUserUnionId( mall.getUnionId() );
+                            BaseApplication.single.writeOpenId( mall.getOpenId());
+                            BaseApplication.single.writeMemberLevel(mall.getLevelName());
+                            BaseApplication.single.writeMemberLevelId(mall.getLevelId());
+                            //记录微信关联类型（0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号）
+                            BaseApplication.single.writeMemberRelatedType(mall.getRelatedType());
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            Log.e( TAG ,  volleyError.getMessage()  );
+                            //ToastUtils.showLongToast("啊哦,请求失败了!");
+                        }
+                    }
+            );
+
+            VolleyUtil.getRequestQueue().add(request);
+
+        }else{
+        }
+    }
+
 }
 

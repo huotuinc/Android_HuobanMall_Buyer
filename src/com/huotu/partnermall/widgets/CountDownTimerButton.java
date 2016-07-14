@@ -9,7 +9,7 @@ import com.huotu.partnermall.utils.SystemTools;
 public class CountDownTimerButton extends CountDownTimer
 {
     public interface CountDownFinishListener{
-        void finish();
+        void timeFinish();
     }
     
     TextView view;
@@ -46,7 +46,7 @@ public class CountDownTimerButton extends CountDownTimer
         //view.setBackgroundResource(R.drawable.btn_red_sel);
         view.setBackgroundColor(SystemTools.obtainColor(((BaseApplication)view.getContext().getApplicationContext() ).obtainMainColor()));
         if( finishListener!=null){
-            finishListener.finish();
+            finishListener.timeFinish();
         }
     }
     

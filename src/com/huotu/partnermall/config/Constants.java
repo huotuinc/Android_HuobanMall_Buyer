@@ -140,6 +140,8 @@ public class Constants {
 	public static final String MEMBER_NAME              = "member_name";
 	//会员ID
 	public static final String MEMBER_ID                = "member_id";
+	//会员等级id
+	public static final String MEMBER_LEVELID			="member_levelid";
 	//会员token
 	public static final String MEMBER_UNIONID           = "member_unionid";
 	//会员token
@@ -148,6 +150,8 @@ public class Constants {
 	public static final String MEMBER_ICON              = "member_icon";
 	//会员类型
 	public static final String MEMBER_USERTYPE          ="member_usertype";
+	//OpenId
+	public static final String MEMBER_OPENID ="member_openid";
 	//手机用户 登录名
 	public static final String MEMBER_LOGINNAME         ="loginname";
 	//手机用户 管理类型
@@ -161,6 +165,10 @@ public class Constants {
 	//用户登录类型（1：微信登录，2：手机登录）
 	public static final String MEMBER_LOGINTYPE="loginType";
 
+	//登录方式
+	public static final String MERCHANT_INFO_LOGINMETHOD = "login_method";
+
+
 	//商户ID
 	public static final String MERCHANT_INFO_ID         = "merchant_id";
 	//商户支付宝key信息
@@ -171,6 +179,10 @@ public class Constants {
 	public static final String MERCHANT_INFO_MENUS      = "main_menus";
 	//商户分类菜单
 	public static final String MERCHANT_INFO_CATAGORY   = "catagory_menus";
+	//app最新版本
+	public static final String NEW_APP_VERSION = "new_app_version";
+	//app 升级地址
+	public static final String APP_UPDATE_URL = "app_update_url";
 
 	/**
 	 * ************************定位信息设置
@@ -221,6 +233,10 @@ public class Constants {
 
 	//鉴权失效
 	public static final int LOGIN_AUTH_ERROR = 2131;
+
+	//鉴权成功
+	public static final int LOGIN_AUTH_SUCCESS=2132;
+
 	//网页支付
 	public static final int PAY_NET = 2222;
 

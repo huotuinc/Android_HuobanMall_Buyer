@@ -38,10 +38,17 @@ public class TipAlertDialog implements View.OnClickListener{
         btn_right.setOnClickListener(this);
     }
 
-    public void show(String title , String message , String url ){
+    public void show(String title , String message , String url){
+        show( title , message , url , R.color.black ,  true ,true );
+    }
+
+    public void show(String title , String message , String url , int titleColor , boolean isShowLeft , boolean isShowRight){
         titleText.setText(title);
+        titleText.setTextColor( titleColor );
         messageText.setText(message);
         btn_right.setTag( url);
+        btn_left.setVisibility(isShowLeft? View.VISIBLE: View.GONE);
+        btn_right.setVisibility( isShowRight? View.VISIBLE:View.GONE );
         dialog.show();
     }
 
@@ -54,7 +61,7 @@ public class TipAlertDialog implements View.OnClickListener{
 
             if( null== btn_right.getTag() ) return;
             String linkUrl = btn_right.getTag().toString();
-            if(TextUtils.isEmpty(linkUrl)) return;
+            //if(TextUtils.isEmpty(linkUrl)) return;
 
             String linkName =titleText.getText().toString();
             LinkEvent event=new LinkEvent( linkName,linkUrl);

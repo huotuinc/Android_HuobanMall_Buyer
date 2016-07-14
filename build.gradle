@@ -121,19 +121,19 @@ android {
 
     //打包渠道
     productFlavors {
-//        morefan_test{
-//            applicationId 'cy.com.morefan'
-//            versionCode BUYER_VERSIONCODE.toInteger()
-//            versionName "${BUYER_VERSIONNAME}"
-//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.51flashmall.com/\"'
-//            buildConfigField 'String','APP_ID','\"huotu686ad1fe2bd8a02bb\"'
-//            buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
-//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
-//            buildConfigField 'String','Push_Url','\"http://test.api.open.huobanplus.com:8081/\"'
-//            buildConfigField 'String', 'SMART_KEY', '\"_demo\"'
-//            buildConfigField 'String', 'SMART_SECURITY', '\"1f2f3f4f5f6f7f8f\"'
-//            signingConfig signingConfigs.huotu
-//        }
+        morefan_test{
+            applicationId 'cy.com.morefan'
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.51flashmall.com/\"'
+            buildConfigField 'String','APP_ID','\"huotu686ad1fe2bd8a02bb\"'
+            buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
+            buildConfigField 'String','Push_Url','\"http://test.api.open.huobanplus.com:8081/\"'
+            buildConfigField 'String', 'SMART_KEY', '\"_demo\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"1f2f3f4f5f6f7f8f\"'
+            signingConfig signingConfigs.huotu
+        }
 
 
 //        adtimetest_test{
@@ -179,19 +179,19 @@ android {
 //            signingConfig signingConfigs.yingyan
 //        }
 
-        olquan{//OL圈
-            applicationId 'com.olquanapp.ttds.android'
-            versionCode OLQUAN_VERSIONCODE.toInteger()
-            versionName "${OLQUAN_VERSIONNAME}"
-            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.olquan.cn/\"'
-            buildConfigField 'String','APP_ID', '\"'+"${OLQUAN_APP_ID}"+'\"'
-            buildConfigField 'String','APP_SECRET', '\"'+"${OLQUAN_APP_SECRET}"+'\"'
-            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
-            buildConfigField 'String','Push_Url','\"http://api.open.olquan.cn/\"'
-            buildConfigField 'String', 'SMART_KEY', '\"app\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-            signingConfig signingConfigs.olquan
-        }
+//        olquan{//OL圈
+//            applicationId 'com.olquanapp.ttds.android'
+//            versionCode OLQUAN_VERSIONCODE.toInteger()
+//            versionName "${OLQUAN_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.olquan.cn/\"'
+//            buildConfigField 'String','APP_ID', '\"'+"${OLQUAN_APP_ID}"+'\"'
+//            buildConfigField 'String','APP_SECRET', '\"'+"${OLQUAN_APP_SECRET}"+'\"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
+//            buildConfigField 'String','Push_Url','\"http://api.open.olquan.cn/\"'
+//            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+//            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+//            signingConfig signingConfigs.olquan
+//        }
 
 //        guozhenhao{//果真好
 //            applicationId 'com.huotu.mall.guozhenhao'
@@ -239,7 +239,7 @@ android {
 
     buildTypes{
         debug{
-            signingConfig signingConfigs.olquan
+            signingConfig signingConfigs.huotu
             buildConfigField 'String' , 'Header_Secret', '\"'+"${HEADER_SECRET}"+'\"'
         }
 
@@ -276,5 +276,6 @@ dependencies {
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
     compile 'com.huotu.android.library:libPush:1.2.1'
+    compile 'com.huotu.android.library:libedittext:1.6'
 }
 

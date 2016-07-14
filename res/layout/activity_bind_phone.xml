@@ -7,7 +7,15 @@
     android:background="#F2F2F2"
     tools:context="com.huotu.partnermall.ui.login.BindPhoneActivity">
 
+    <RelativeLayout
+        android:id="@+id/bindPhoneActivity_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/title_index"/>
+    </RelativeLayout>
+
     <com.huotu.partnermall.widgets.KJEditText
+        android:layout_below="@id/bindPhoneActivity_header"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"

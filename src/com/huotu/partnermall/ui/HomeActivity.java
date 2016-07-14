@@ -1,5 +1,6 @@
 package com.huotu.partnermall.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -16,6 +17,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -45,6 +47,8 @@ import com.huotu.partnermall.model.LinkEvent;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.PhoneLoginModel;
+import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
+import com.huotu.partnermall.model.RefreshMenuEvent;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.SwitchUserByUserIDEvent;
 import com.huotu.partnermall.model.SwitchUserModel;
@@ -66,6 +70,7 @@ import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
+import com.huotu.partnermall.widgets.TipAlertDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -168,6 +173,34 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         initPush(getIntent());
 
         progress = new ProgressPopupWindow ( HomeActivity.this );
+
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkAppVersion();
+            }
+        },500);
+    }
+
+    /***
+     * 检索app版本
+     */
+    protected void checkAppVersion(){
+        int locaolId= BaseApplication.getAppVersionId();
+        int serverid= BaseApplication.readNewAppVersion();
+        String appUrl = BaseApplication.readAppUlr();
+        if( serverid > locaolId ){
+            if( TextUtils.isEmpty(appUrl) ) {
+                TipAlertDialog tipAlertDialog = new TipAlertDialog(this);
+                tipAlertDialog.show("升级提示", "我们发布了新版本，您可以去应用市场下载", "", R.color.black , false , true );
+                return;
+            }else{
+                TipAlertDialog tipAlertDialog = new TipAlertDialog(this);
+                tipAlertDialog.show("升级提示", "我们发布了新版本，是否去应用市场下载？", appUrl );
+                return;
+            }
+        }
     }
 
     @Override
@@ -213,6 +246,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         }
 
         UnRegister();
+
+        if(mHandler!=null){
+            mHandler.removeCallbacksAndMessages(null);
+        }
     }
 
     @Override
@@ -364,11 +401,17 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     private void signHeader( WebView webView ){
         String userid= application.readMemberId();
         String unionid = application.readUserUnionId();
-        String sign = ObtainParamsMap.SignHeaderString(userid, unionid);
+        String openId = BaseApplication.single.readOpenId();
+        String sign = ObtainParamsMap.SignHeaderString(userid, unionid , openId );
         String userAgent = webView.getSettings().getUserAgentString();
         if( TextUtils.isEmpty(userAgent) ) {
             userAgent = "mobile;"+sign;
         }else{
+            int idx = userAgent.lastIndexOf(";mobile;hottec:");
+            if(idx>=0){
+                userAgent = userAgent.substring(0,idx);
+            }
+
             userAgent +=";mobile;"+sign;
         }
         webView.getSettings().setUserAgentString( userAgent );
@@ -402,6 +445,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         pageWeb.getSettings().setDomStorageEnabled(true);
         pageWeb.getSettings().setAppCacheEnabled(true);
         pageWeb.getSettings().setDatabaseEnabled(true);
+        String dir = BaseApplication.single.getDir("database", Context.MODE_PRIVATE).getPath();
+        pageWeb.getSettings().setGeolocationDatabasePath(dir);
+        pageWeb.getSettings().setGeolocationEnabled(true);
 
         pageWeb.addJavascriptInterface( HomeActivity.this ,"android");
         //首页鉴权
@@ -500,6 +546,12 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
                 openFileChooser(uploadMsg);
 
+            }
+
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+                callback.invoke( origin, true, false );
+                super.onGeolocationPermissionsShowPrompt(origin, callback);
             }
         });
 
@@ -1024,7 +1076,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             ref.get().application.writeMemberInfo (
                     phoneLoginModel.getData().getNickName() , String.valueOf( phoneLoginModel.getData().getUserid() ),
                     phoneLoginModel.getData().getHeadImgUrl() , weixinModel.getAccountToken (),
-                    weixinModel.getAccountUnionId ()
+                    weixinModel.getAccountUnionId () , weixinModel.getOpenid()
             );
             ref.get().application.writeMemberLevel( phoneLoginModel.getData().getLevelName());
             //记录登录类型(1:微信登录，2：手机登录)
@@ -1155,6 +1207,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     public void onEventLink(LinkEvent event) {
         if(event==null)return;
         String link = event.getLinkUrl();
+        if(TextUtils.isEmpty(link)) return;
+
+
         Intent intent=new Intent(HomeActivity.this,WebViewActivity.class);
         intent.putExtra(Constants.INTENT_URL, link);
         HomeActivity.this.startActivity(intent);
@@ -1264,5 +1319,17 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         }
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRefreshLeftMenu(RefreshMenuEvent event){
+        UIUtils ui = new UIUtils ( BaseApplication.single , this , resources ,  mainMenuLayout , mHandler );
+        ui.loadMenus();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRefreshHttpHeader(RefreshHttpHeaderEvent event){
+        if( pageWeb ==null) return;
+        signHeader(pageWeb);
+    }
 }
 

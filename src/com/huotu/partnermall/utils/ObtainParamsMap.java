@@ -298,10 +298,10 @@ public class ObtainParamsMap {
      * @param unionid
      * @return
      */
-    public static String SignHeaderString(String userid , String unionid){
-        String temp = userid + unionid + BuildConfig.Header_Secret;
+    public static String SignHeaderString(String userid , String unionid , String openId){
+        String temp = userid + unionid + openId +  BuildConfig.Header_Secret;
         String sign =  EncryptUtil.getInstance().encryptMd532(temp);
-        String str= "hottec:"+sign+":"+ userid+":"+unionid+";";
+        String str= "hottec:"+sign+":"+ userid+":"+unionid+ ":" + openId + ";";
         return str;
     }
 }

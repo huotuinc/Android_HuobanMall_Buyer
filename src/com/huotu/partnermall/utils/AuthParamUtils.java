@@ -38,6 +38,12 @@ public class AuthParamUtils {
         this.context = context;
     }
 
+    public AuthParamUtils( String url ){
+        this.application = BaseApplication.single;
+        this.timestamp = System.currentTimeMillis();
+        this.url = url;
+    }
+
     public String obtainUrl()
     {
         StringBuilder builder = new StringBuilder (  );

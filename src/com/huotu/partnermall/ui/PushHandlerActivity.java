@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.ui.login.LoginActivity;
+import com.huotu.partnermall.ui.login.PhoneLoginActivity;
 import com.huotu.partnermall.utils.Util;
 
 public class PushHandlerActivity extends Activity {
@@ -28,9 +28,9 @@ public class PushHandlerActivity extends Activity {
             return;
         }
 
-        boolean loginActivityIsLoaded = Util.isAppLoaded(this , LoginActivity.class.getName());
+        boolean loginActivityIsLoaded = Util.isAppLoaded(this , PhoneLoginActivity.class.getName());
         if(loginActivityIsLoaded ){
-            Intent intent = new Intent(this, LoginActivity.class);
+            Intent intent = new Intent(this, PhoneLoginActivity.class);
             intent.putExtra( Constants.HUOTU_PUSH_KEY , bundle);
             this.startActivity(intent);
             this.finish();

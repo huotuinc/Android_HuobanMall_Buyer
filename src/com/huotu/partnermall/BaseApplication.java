@@ -181,7 +181,7 @@ public class BaseApplication extends Application {
         //商户类别菜单
         String merChantCatagory = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_CATAGORY);
 
-        if ((null == merchantId) && (null == merchantAlipayKey) && (null == merchantWeixinKey) && (null == merchantMenus) && (null == merChantCatagory)) {
+        if ((null == merchantId)  ) {
             //app端未设置商户信息
             return false;
         } else {
@@ -246,12 +246,13 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS, menuStr);
     }
 
-    public void writeMemberInfo(String userName, String userId, String userIcon, String userToken, String unionid) {
+    public void writeMemberInfo(String userName, String userId, String userIcon, String userToken, String unionid , String openid ) {
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID, userId);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_NAME, userName);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ICON, userIcon);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN, userToken);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID, unionid);
+        PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_OPENID , openid );
     }
 
     public void writeUserUnionId(String unionid) {
@@ -272,17 +273,30 @@ public class BaseApplication extends Application {
 
     //获取用户unionId
     public String readUserUnionId() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID);
+        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID,"");
     }
 
     //获取用户编号
     public String readUserId() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID);
+        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID,"");
     }
 
     //获取商户ID
     public String readMerchantId() {
         return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
+    }
+
+    public void writeMemberLevelId(int levelid) {
+        PreferenceHelper.writeInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_LEVELID, levelid);
+    }
+
+    //读取 Openid
+    public String readOpenId(){
+        return PreferenceHelper.readString( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_OPENID , "");
+    }
+
+    public void writeOpenId(String openid){
+        PreferenceHelper.writeString( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_OPENID , openid );
     }
 
     /**
@@ -604,7 +618,44 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_LOGINTYPE, 1);
     }
 
+    public void writeLoginMethod(int loginMethod){
+        PreferenceHelper.writeInt( getApplicationContext() , Constants.MERCHANT_INFO , Constants.MERCHANT_INFO_LOGINMETHOD , loginMethod );
+    }
+    public int readLoginMethod(){
+        return  PreferenceHelper.readInt( getApplicationContext(),Constants.MERCHANT_INFO,Constants.MERCHANT_INFO_LOGINMETHOD , 0 );
+    }
+
+
+    public static void writeNewVersion(int versionid){
+        PreferenceHelper.writeInt( single , Constants.MERCHANT_INFO , Constants.NEW_APP_VERSION , versionid );
+    }
+
+    public static int readNewAppVersion(){
+        return  PreferenceHelper.readInt( single , Constants.MERCHANT_INFO , Constants.NEW_APP_VERSION , 0 );
+    }
+
+    public static void writeAppUrl(String appurl){
+        PreferenceHelper.writeString( single , Constants.MERCHANT_INFO , Constants.APP_UPDATE_URL , appurl);
+    }
+    public static String readAppUlr(){
+        return PreferenceHelper.readString( single , Constants.MERCHANT_INFO , Constants.APP_UPDATE_URL, "");
+    }
+
+    public static int getAppVersionId() {
+        int version = 0;
+        try {
+            version = single.getPackageManager().getPackageInfo(single.getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(BaseApplication.class.getName(), e.getMessage());
+        }
+        return version;
+    }
+
+
     public void clearAllCookies(){
         CookieManager.getInstance().removeAllCookie();
     }
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.huotu.partnermall.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -25,11 +27,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshWebView;
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.CloseEvent;
 import com.huotu.partnermall.model.PayModel;
+import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
@@ -157,11 +161,16 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     private void signHeader( WebView webView ){
         String userid= application.readMemberId();
         String unionid = application.readUserUnionId();
-        String sign = ObtainParamsMap.SignHeaderString(userid, unionid);
+        String openId = BaseApplication.single.readOpenId();
+        String sign = ObtainParamsMap.SignHeaderString(userid, unionid , openId);
         String userAgent = webView.getSettings().getUserAgentString();
         if( TextUtils.isEmpty(userAgent) ) {
             userAgent = "mobile;"+sign;
         }else{
+            int idx = userAgent.lastIndexOf(";mobile;hottec:");
+            if(idx>=0){
+                userAgent = userAgent.substring(0,idx);
+            }
             userAgent +=";mobile;"+sign;
         }
         webView.getSettings().setUserAgentString(userAgent);
@@ -195,6 +204,9 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         viewPage.getSettings().setDomStorageEnabled(true);
         viewPage.getSettings().setAppCacheEnabled(true);
         viewPage.getSettings().setDatabaseEnabled(true);
+        String dir = BaseApplication.single.getDir("database", Context.MODE_PRIVATE).getPath();
+        viewPage.getSettings().setGeolocationDatabasePath(dir);
+        viewPage.getSettings().setGeolocationEnabled(true);
         viewPage.addJavascriptInterface(this, "android");
         viewPage.loadUrl(url);
 
@@ -277,6 +289,13 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             //For Android 4.1
             public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
                 openFileChooser(uploadMsg);
+            }
+
+
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+                callback.invoke( origin , true ,false );
+                super.onGeolocationPermissionsShowPrompt(origin, callback);
             }
         });
     }
@@ -544,5 +563,12 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventClose(CloseEvent event){
         this.finish();
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRefreshHttpHeader(RefreshHttpHeaderEvent event){
+        if( viewPage==null) return;
+        signHeader(viewPage);
     }
 }

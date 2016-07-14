@@ -7,20 +7,43 @@
     android:background="#F2F2F2"
     tools:context="com.huotu.partnermall.ui.login.PhoneLoginActivity">
 
-    <com.huotu.partnermall.widgets.KJEditText
+    <RelativeLayout
+        android:id="@+id/activity_phone_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/title_index"/>
+    </RelativeLayout>
+
+    <!-- 手机和微信 登录界面-->
+    <RelativeLayout
+        android:layout_below="@id/activity_phone_header"
+        android:id="@+id/PhoneLoginActivity_phone_weixin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_alignParentTop="true"
+        android:layout_above="@+id/rlBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <com.huotu.android.library.libedittext.EditText
         android:layout_marginTop="25dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:id="@+id/edtPhone"
         android:hint="请输入手机号"
+        android:maxLength="11"
+        android:inputType="phone"
         android:layout_width="match_parent"
         android:layout_height="45dp"/>
 
-    <com.huotu.partnermall.widgets.KJEditText
+    <com.huotu.android.library.libedittext.EditText
         android:layout_marginTop="15dp"
         android:layout_below="@id/edtPhone"
         android:id="@+id/edtCode"
         android:hint="请输入验证码"
+        android:inputType="number"
         android:layout_alignLeft="@id/edtPhone"
         android:layout_toLeftOf="@+id/tvGetCode"
         android:layout_width="match_parent"
@@ -50,19 +73,105 @@
         android:background="#FF3D00"
         android:textColor="@color/white"
         android:gravity="center"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/tvAuthorise"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/btnLogin"
-        android:textColor="#FF3D00"
-        android:padding="5dp"
-        android:textSize="16sp"
-        android:layout_alignRight="@id/tvGetCode"
-        android:text="重新授权"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <!--<TextView-->
+        <!--android:id="@+id/tvAuthorise"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_below="@id/btnLogin"-->
+        <!--android:textColor="#FF3D00"-->
+        <!--android:padding="5dp"-->
+        <!--android:textSize="16sp"-->
+        <!--android:layout_alignRight="@id/tvGetCode"-->
+        <!--android:text="重新授权"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"/>-->
+
+    </RelativeLayout>
+
+        <RelativeLayout
+        android:id="@+id/rlBottom"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content">
+        <FrameLayout
+            android:id="@+id/llSpace"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:background="@color/lightgray"
+                android:layout_width="match_parent"
+                android:layout_margin="6dp"
+                android:layout_gravity="center"
+                android:layout_height="1dp"/>
+            <TextView
+                android:background="#F2F2F2"
+                android:text="第三方登录"
+                android:paddingRight="4dp"
+                android:paddingLeft="4dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_below="@id/llSpace"
+            android:id="@+id/llWechat"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/ivWechat"
+                android:src="@drawable/wechat"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="微信"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    </RelativeLayout>
+
+    <!-- 微信登录界面 -->
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/PhoneLoginActivity_weixin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:background="@drawable/wechat"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/PhoneLoginActivity_weixin_login"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/PhoneLoginActivity_weixin_login"
+            android:text="微信授权登录"
+            android:padding="10dp"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@drawable/btn_circle_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

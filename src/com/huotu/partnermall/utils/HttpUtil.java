@@ -178,6 +178,12 @@ public class HttpUtil{
                         String name = merchantInfo.getMall_name ( );
                         application.writeMerchantLogo ( logo );
                         application.writeMerchantName ( name );
+
+                        //记录登录配置方式
+                        application.writeLoginMethod( merchantInfo.getAccountModel() );
+                        //记录服务器app最新版本信息
+                        application.writeNewVersion( merchantInfo.getVersionnumber() );
+                        application.writeAppUrl( merchantInfo.getApplinkurl() );
                     }
                 }
             }
@@ -259,7 +265,7 @@ public class HttpUtil{
                         application.writeMemberInfo (
                                 account.getAccountName ( ), account.getAccountId ( ),
                                 account.getAccountIcon ( ), account.getAccountToken ( ),
-                                account.getAccountUnionId ( )
+                                account.getAccountUnionId ( ), account.getOpenid()
                         );
                         application.writeMemberLevel(mall.getLevelName());
                         //记录登录类型(1:微信登录，2：手机登录)

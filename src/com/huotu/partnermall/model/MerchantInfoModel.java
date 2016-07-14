@@ -8,6 +8,11 @@ public class MerchantInfoModel {
     private String mall_logo;
     private String mall_name;
     private String mall_site;
+    private int mall_defaultlevelid;
+    private int versionnumber;
+    private String applinkurl;
+    //0:手机+微信 1：手机 2：微信
+    private int accountmodel;
 
     public String getMall_description() {
         return mall_description;
@@ -39,5 +44,37 @@ public class MerchantInfoModel {
 
     public void setMall_site(String mall_site) {
         this.mall_site = mall_site;
+    }
+
+    public int getMall_defaultlevelid() {
+        return mall_defaultlevelid;
+    }
+
+    public void setMall_defaultlevelid(int mall_defaultlevelid) {
+        this.mall_defaultlevelid = mall_defaultlevelid;
+    }
+
+    public int getVersionnumber() {
+        return versionnumber;
+    }
+
+    public void setVersionnumber(int versionnumber) {
+        this.versionnumber = versionnumber;
+    }
+
+    public String getApplinkurl() {
+        return applinkurl;
+    }
+
+    public void setApplinkurl(String applinkurl) {
+        this.applinkurl = applinkurl;
+    }
+
+    public int getAccountModel() {
+        return accountmodel;
+    }
+
+    public void setAccountModel(int accountmodel) {
+        this.accountmodel = accountmodel;
     }
 }

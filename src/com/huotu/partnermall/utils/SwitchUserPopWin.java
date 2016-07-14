@@ -20,7 +20,6 @@ import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.SwitchUserModel;
-import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 
 import java.util.List;

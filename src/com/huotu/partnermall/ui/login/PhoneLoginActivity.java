@@ -1,38 +1,54 @@
 package com.huotu.partnermall.ui.login;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.hardware.input.InputManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.huotu.android.library.libedittext.EditText;
+import com.huotu.android.library.libpush.PushHelper;
+import com.huotu.android.library.libpush.SetAliasEvent;
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
+import com.huotu.partnermall.model.AccountModel;
+import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.DataBase;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.PhoneLoginModel;
+import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
+import com.huotu.partnermall.model.RefreshMenuEvent;
 import com.huotu.partnermall.model.UpdateLeftInfoModel;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
+import com.huotu.partnermall.utils.SignUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
-import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.widgets.CountDownTimerButton;
-import com.huotu.partnermall.widgets.KJEditText;
+import com.huotu.partnermall.widgets.ProgressPopupWindow;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,25 +56,33 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.wechat.friends.Wechat;
 
 /*
  * 手机注册并登录
  */
-public class PhoneLoginActivity extends BaseActivity {
-
-    @Bind(R.id.edtPhone)
-    KJEditText edtPhone;
-    @Bind(R.id.edtCode)
-    KJEditText edtCode;
-    @Bind(R.id.tvGetCode)
-    TextView tvGetCode;
-    @Bind(R.id.btnLogin)
-    Button btnLogin;
-    @Bind(R.id.tvAuthorise)
-    TextView tvAuthorise;
-    ProgressDialog progressDialog;
+public class PhoneLoginActivity extends BaseActivity implements Handler.Callback , CountDownTimerButton.CountDownFinishListener{
+    @Bind(R.id.edtPhone) EditText edtPhone;
+    @Bind(R.id.edtCode) EditText edtCode;
+    @Bind(R.id.tvGetCode) TextView tvGetCode;
+    @Bind(R.id.btnLogin) Button btnLogin;
+    @Bind(R.id.llWechat) LinearLayout llWechat;
+    @Bind(R.id.titleLeftImage) ImageView ivLeft;
+    @Bind(R.id.titleRightImage) ImageView ivRight;
+    @Bind(R.id.titleText) TextView tvTitle;
+    @Bind(R.id.activity_phone_header) RelativeLayout rlHeader;
+    @Bind(R.id.PhoneLoginActivity_phone_weixin) RelativeLayout rlPhoneWeixin;
+    @Bind(R.id.PhoneLoginActivity_weixin)  RelativeLayout rlWeixin;
+    @Bind(R.id.rlBottom) RelativeLayout rlBottom;
+    ProgressPopupWindow progressPopupWindow;
     Long secure;
     CountDownTimerButton countDownBtn;
+    ShareSDKLogin shareSDKLogin;
+    Handler handler;
+    Bundle bundlePush;
+    boolean isVoiceSMS=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +90,75 @@ public class PhoneLoginActivity extends BaseActivity {
         setContentView(R.layout.activity_phone_login);
         ButterKnife.bind(this);
 
-        tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
-        btnLogin.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
-        tvAuthorise.setTextColor( SystemTools.obtainColor(application.obtainMainColor()));
+        initPush();
+
+        initView();
+
+        handler = new Handler(this);
+        shareSDKLogin = new ShareSDKLogin(handler);
+
+    }
+
+    /**
+     * 检测是否安装微信客户端
+     */
+    protected void checkWechatClient(){
+        Platform platform = ShareSDK.getPlatform(Wechat.NAME);
+        if( null == platform || !platform.isClientValid()){
+            llWechat.setVisibility(View.GONE);
+        }else{
+            llWechat.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     protected void initView() {
+        int loginMethod = BaseApplication.single.readLoginMethod();
+        if( loginMethod == 0 ){
+            rlPhoneWeixin.setVisibility(View.VISIBLE);
+            rlBottom.setVisibility(View.VISIBLE);
+            rlWeixin.setVisibility(View.GONE);
+        }else if( loginMethod==1){
+            rlPhoneWeixin.setVisibility(View.VISIBLE);
+            rlBottom.setVisibility(View.GONE);
+            rlWeixin.setVisibility(View.GONE);
+        }else if(loginMethod==2){
+            rlPhoneWeixin.setVisibility(View.GONE);
+            rlBottom.setVisibility(View.GONE);
+            rlWeixin.setVisibility(View.VISIBLE);
+        }
+
+        tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        btnLogin.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        //tvAuthorise.setTextColor( SystemTools.obtainColor(application.obtainMainColor()));
+        tvTitle.setText("登录");
+        rlHeader.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()) );
+        ivLeft.setBackgroundResource( R.drawable.main_title_left_back );
+
+        checkWechatClient();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        initPush();
+    }
+
+    protected void initPush(){
+        //获得推送信息
+        if(null!= getIntent() && getIntent().hasExtra(Constants.PUSH_KEY)){
+            bundlePush = getIntent().getBundleExtra(Constants.PUSH_KEY);
+        }
+    }
+
+    @OnClick(R.id.titleLeftImage)
+    protected void onBack(){
+        this.finish();
+    }
+
+    /***
+     * 手机登录
+     */
     @OnClick(R.id.btnLogin)
     protected void onBtnLoginClick(){
         String phone = edtPhone.getText().toString().trim();
@@ -91,6 +175,8 @@ public class PhoneLoginActivity extends BaseActivity {
             return;
         }
 
+        ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
         login( phone , code );
     }
 
@@ -102,8 +188,25 @@ public class PhoneLoginActivity extends BaseActivity {
         map.put("mobile", phone);
         map.put("code", code);
         map.put("secure",  String.valueOf( secure ));
-        AuthParamUtils authParamUtils = new AuthParamUtils(application,  secure , url, this);
+        AuthParamUtils authParamUtils = new AuthParamUtils(application,  secure , url , PhoneLoginActivity.this );
         Map<String, String> params = authParamUtils.obtainParams(map);
+
+//        ApiService apiService = ZRetrofitUtil.getInstance().create(ApiService.class);
+//        Call<PhoneLoginModel> call = apiService.phoneLoginAuthorize( params );
+//        call.enqueue(new Callback<PhoneLoginModel>() {
+//            @Override
+//            public void onResponse(Call<PhoneLoginModel> call, retrofit2.Response<PhoneLoginModel> response) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<PhoneLoginModel> call, Throwable t) {
+//
+//            }
+//        });
+
+
+
         GsonRequest<PhoneLoginModel> request = new GsonRequest<>(
                 Request.Method.POST,
                 url,
@@ -113,20 +216,17 @@ public class PhoneLoginActivity extends BaseActivity {
                 new MyLoginListener(this),
                 new MyLoginErrorListener(this)
         );
-
         VolleyUtil.getRequestQueue().add(request);
 
-        if( progressDialog ==null){
-            progressDialog=new ProgressDialog( PhoneLoginActivity.this);
-            progressDialog.setCanceledOnTouchOutside(false);
+        if( progressPopupWindow ==null){
+            progressPopupWindow=new ProgressPopupWindow( PhoneLoginActivity.this);
         }
-        progressDialog.setMessage("正在登录，请稍等...");
-        progressDialog.show();
+        progressPopupWindow.showProgress("正在登录，请稍等...");
+        progressPopupWindow.showAtLocation(this.getWindow().getDecorView(), Gravity.CENTER , 0 , 0);
     }
 
     @OnClick(R.id.tvGetCode)
     protected void onTvGetCodeClick(){
-
         String phone = edtPhone.getText().toString().trim();
         if( TextUtils.isEmpty( phone ) ){
             edtPhone.setError("请输入手机号");
@@ -139,33 +239,106 @@ public class PhoneLoginActivity extends BaseActivity {
             return;
         }
 
-        getCode( phone );
-        countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取验证码", 60000,null);
-        countDownBtn.start();
+//        getCode( phone );
+//        countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取验证码", 60000,null);
+//        countDownBtn.start();
+
+        if( isVoiceSMS ) {
+            getCode(true , phone);
+            countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取语音验证码", 60000, this);
+            countDownBtn.start();
+        }else{
+            getCode(false , phone);
+            countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取验证码", 60000, this);
+            countDownBtn.start();
+        }
+
     }
 
-    protected void getCode(String phone) {
+    @Override
+    public void timeFinish(){
+        if( tvGetCode==null)return;
+        if(countDownBtn!=null){
+            countDownBtn.Stop();
+            countDownBtn=null;
+        }
+        isVoiceSMS=true;
+        tvGetCode.setText("获取语音验证码");
+    }
 
-        String url = Constants.getINTERFACE_PREFIX() + "Account/sendCode";
+    protected void getCode( boolean isVoice , String phone) {
+        String url ;
+        if( isVoice) {
+            url = Constants.getINTERFACE_PREFIX() + "Account/sendVoiceCode";
+        }else{
+            url = Constants.getINTERFACE_PREFIX() + "Account/sendCode";
+        }
+
         Map<String, String> map = new HashMap<>();
         map.put("customerid", application.readMerchantId());
         map.put("mobile", phone);
         //map.put("second");
-
-        AuthParamUtils authParamUtils = new AuthParamUtils(application, System.currentTimeMillis(), url, this);
+        AuthParamUtils authParamUtils = new AuthParamUtils( url);
         Map<String, String> params = authParamUtils.obtainParams(map);
 
-        GsonRequest<DataBase> request = new GsonRequest<DataBase>(
-                Request.Method.POST,
-                url,
-                DataBase.class,
-                null,
-                params,
-                new MyGetCodeListener(this),
-                new MyGetCodeErrorListener(this)
-        );
 
-        VolleyUtil.getRequestQueue().add(request);
+        GsonRequest<DataBase> request = new GsonRequest<DataBase>(Request.Method.POST,
+                url, DataBase.class, null, params, new Response.Listener<DataBase>() {
+            @Override
+            public void onResponse(DataBase dataBase) {
+                if (progressPopupWindow != null) {
+                    progressPopupWindow.dismissView();
+                }
+                if (dataBase == null || dataBase.getCode() != 200 ) {
+                    ToastUtils.showShortToast( "获取验证码失败。");
+                    return;
+                }
+
+                edtCode.requestFocus();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (progressPopupWindow != null) {
+                    progressPopupWindow.dismissView();
+                }
+                ToastUtils.showShortToast("请求失败");
+            }
+        });
+
+        VolleyUtil.getRequestQueue().add( request );
+
+
+
+//        ApiService apiService = ZRetrofitUtil.getInstance().create(ApiService.class);
+//        Call<DataBase> call = apiService.sendCode(params);
+//        call.enqueue(new Callback<DataBase>() {
+//            @Override
+//            public void onResponse(Call<DataBase> call, retrofit2.Response<DataBase> response) {
+//                if (progressPopupWindow != null) {
+//                    progressPopupWindow.dismissView();
+//                }
+//                if (response == null || response.code() != 200 || response.body() == null) {
+//                    ToastUtils.showShortToast( "获取验证码失败。");
+//                    return;
+//                }
+//                if (response.body().getCode() != 200) {
+//                    ToastUtils.showShortToast( "获取验证码失败。");
+//                    return;
+//                }
+//
+//                edtCode.requestFocus();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<DataBase> call, Throwable t) {
+//                if (progressPopupWindow != null) {
+//                    progressPopupWindow.dismissView();
+//                }
+//                ToastUtils.showShortToast("请求失败");
+//            }
+//        });
+
     }
 
     @Override
@@ -177,22 +350,43 @@ public class PhoneLoginActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    /*
-    重新授权事件
+    /***
+     * 微信授权登录
      */
-    @OnClick(R.id.tvAuthorise)
-    protected void onTvAuthoriseClick(){
-        this.startActivity(new Intent(this,LoginActivity.class));
-        this.finish();
+    @OnClick({R.id.llWechat , R.id.PhoneLoginActivity_weixin_login })
+    protected void onWechat(){
+        if( null == progressPopupWindow){
+            progressPopupWindow = new ProgressPopupWindow(this);
+        }
+        progressPopupWindow.showProgress("正在调用微信登录,请稍等...");
+
+        progressPopupWindow.showAtLocation(this.getWindow().getDecorView(),Gravity.CENTER , 0,0 );
+
+        llWechat.setEnabled(false);
+
+        Platform platform = ShareSDK.getPlatform( Wechat.NAME);
+        shareSDKLogin.authorize(platform);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        tvGetCode.setText("获取验证码");
+
+        if( isVoiceSMS ) {
+            tvGetCode.setText("获取语音验证码");
+        }else{
+            tvGetCode.setText("获取验证码");
+        }
+
         tvGetCode.setClickable(true);
         tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+
+        llWechat.setEnabled(true);
+
+        if( progressPopupWindow!=null){
+            progressPopupWindow.dismissView();
+        }
     }
 
     @Override
@@ -200,153 +394,198 @@ public class PhoneLoginActivity extends BaseActivity {
         super.onDestroy();
         ButterKnife.unbind(this);
 
-        if(null != countDownBtn){
+        if (null != countDownBtn) {
             countDownBtn.Stop();
         }
+        if (null != progressPopupWindow) {
+            progressPopupWindow.dismissView();
+            progressPopupWindow = null;
+        }
     }
 
+    /***
+     * 获得左侧菜单数据
+     */
     protected void getLeftMenuData(){
-        String url = Constants.getINTERFACE_PREFIX() + "weixin/UpdateLeftInfo";
-        url +="?customerId="+application.readMerchantId();
-        url +="&userId=" + application.readMemberId();
-        url +="&clientUserType=" + application.readMemberType();
-        AuthParamUtils authParamUtils = new AuthParamUtils(application , System.currentTimeMillis(), url , PhoneLoginActivity.this );
-        url = authParamUtils.obtainUrlName();
+        String url = Constants.getINTERFACE_PREFIX() + "/weixin/UpdateLeftInfo";
+        String customerId = BaseApplication.single.readMerchantId();
+        String userId= BaseApplication.single.readMemberId();
+        String userType = String.valueOf( BaseApplication.single.readMemberType());
+        url +="?customerId="+customerId+"&userId="+userId +"&userType="+userType;
 
-        GsonRequest<UpdateLeftInfoModel> request = new GsonRequest<UpdateLeftInfoModel>(
-                Request.Method.GET,
-                url,
-                UpdateLeftInfoModel.class,
-                null,
-                new MyGetMenuListener(this),
-                new MyGetCodeErrorListener(this)
-        );
+        AuthParamUtils authParamUtils = new AuthParamUtils(BaseApplication.single ,System.currentTimeMillis() , url , PhoneLoginActivity.this);
+        url = authParamUtils.obtainUrl();
+        GsonRequest<UpdateLeftInfoModel> request = new GsonRequest<UpdateLeftInfoModel>(Request.Method.GET
+                , url, UpdateLeftInfoModel.class, null, new Response.Listener<UpdateLeftInfoModel>() {
+            @Override
+            public void onResponse(UpdateLeftInfoModel updateLeftInfoModel) {
+                getLeftMenu( updateLeftInfoModel );
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if(progressPopupWindow!=null) progressPopupWindow.dismissView();
+            }
+        });
+
         VolleyUtil.getRequestQueue().add(request);
 
-        if( progressDialog ==null){
-            progressDialog=new ProgressDialog( PhoneLoginActivity.this);
-            progressDialog.setCanceledOnTouchOutside(false);
+        if( progressPopupWindow ==null){
+            progressPopupWindow=new ProgressPopupWindow( PhoneLoginActivity.this);
         }
-        progressDialog.setMessage("正在获取菜单信息，请稍等...");
-        progressDialog.show();
+        progressPopupWindow.showProgress("正在获取菜单信息,请稍等...");
+        progressPopupWindow.showAtLocation(this.getWindow().getDecorView(),Gravity.CENTER,0,0);
+
+
+
+
+//        ApiService apiService = ZRetrofitUtil.getInstance().create(ApiService.class);
+//        String version = BaseApplication.getAppVersion();
+//        String operation = Constants.OPERATION_CODE;
+//        String timestamp = String.valueOf(System.currentTimeMillis());
+//        String appId="";
+//        String customerId = BaseApplication.single.readMerchantId();
+//        String userId= BaseApplication.single.readMemberId();
+//        String userType = String.valueOf( BaseApplication.single.readMemberType());
+
+//        try {
+//            appId = URLEncoder.encode(Constants.getAPP_ID(), "UTF-8");
+//        }catch (UnsupportedEncodingException ex){}
+
+//        Map<String,String> map = new HashMap<>();
+//        map.put("version", version);
+//        map.put("operation",operation);
+//        map.put("timestamp",timestamp);
+//        map.put("appid",appId);
+//        map.put("customerid",customerId);
+//        map.put("userId", userId );
+//        map.put("clientUserType", userType );
+
+//        String sign = BuyerSignUtil.getSign(map);
+//
+//        Call<UpdateLeftInfoModel> call=apiService.updateLeftInfo(version,operation,timestamp,appId,sign,customerId, userId , userType);
+//        call.enqueue(new Callback<UpdateLeftInfoModel>() {
+//            @Override
+//            public void onResponse(Call<UpdateLeftInfoModel> call, retrofit2.Response<UpdateLeftInfoModel> response) {
+//                if (progressPopupWindow != null) {
+//                    progressPopupWindow.dismissView();
+//                }
+//                if (response.body() == null) {
+//                    ToastUtils.showShortToast( "获取菜单信息失败。");
+//                    return;
+//                }
+//                if (response.body().getCode() != 200) {
+//                    String msg = "获取菜单信息失败";
+//                    if (!TextUtils.isEmpty(response.body().getMsg())) {
+//                        msg = response.body().getMsg();
+//                    }
+//                    ToastUtils.showShortToast( msg);
+//                    return;
+//                }
+//                if (response.body().getData() == null || response.body().getData().getHome_menus() == null) {
+//                    ToastUtils.showShortToast( "获取菜单信息失败");
+//                    return;
+//                }
+//
+//                //设置侧滑栏菜单
+//                List<MenuBean> menus = new ArrayList<>();
+//                MenuBean menu;
+//                List<UpdateLeftInfoModel.MenuModel> home_menus = response.body().getData().getHome_menus();
+//                for (UpdateLeftInfoModel.MenuModel home_menu : home_menus) {
+//                    menu = new MenuBean();
+//                    menu.setMenuGroup(String.valueOf(home_menu.getMenu_group()));
+//                    menu.setMenuIcon(home_menu.getMenu_icon());
+//                    menu.setMenuName(home_menu.getMenu_name());
+//                    menu.setMenuUrl(home_menu.getMenu_url());
+//                    menus.add(menu);
+//                }
+//                if (null != menus && !menus.isEmpty()) {
+//                    BaseApplication.single.writeMenus(menus);
+//                    //绑定极光推送别名
+//                    //UIUtils.bindPush();
+//
+//                    EventBus.getDefault().post(new RefreshMenuEvent());
+//                    //跳转到首页
+//                    //ActivityUtils.getInstance ().skipActivity ( ref.get(), HomeActivity.class );
+//                } else {
+//                    ToastUtils.showShortToast( "获取菜单信息失败。");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UpdateLeftInfoModel> call, Throwable t) {
+//                if(progressPopupWindow!=null) progressPopupWindow.dismissView();
+//            }
+//        });
+//
+//        if( progressPopupWindow ==null){
+//            progressPopupWindow=new ProgressPopupWindow( PhoneLoginActivity.this);
+//        }
+//        progressPopupWindow.showProgress("正在获取菜单信息,请稍等...");
+//        progressPopupWindow.showAtLocation(this.getWindow().getDecorView(),Gravity.CENTER,0,0);
     }
 
-    static class MyGetMenuListener implements Response.Listener<UpdateLeftInfoModel>{
-        WeakReference<PhoneLoginActivity> ref;
-        public MyGetMenuListener(PhoneLoginActivity act) {
-            ref=new WeakReference<PhoneLoginActivity>(act);
+    protected void getLeftMenu(UpdateLeftInfoModel model ){
+        if (progressPopupWindow != null) {
+            progressPopupWindow.dismissView();
         }
-        @Override
-        public void onResponse(UpdateLeftInfoModel updateLeftInfoModel) {
-            if( ref.get()==null)return;
-
-            if( ref.get().progressDialog !=null){
-                ref.get().progressDialog.dismiss();
-            }
-
-            if( updateLeftInfoModel ==null ){
-                ToastUtils.showShortToast(ref.get(), "获取菜单信息失败。");
-                return;
-            }
-            if( updateLeftInfoModel.getCode() != 200) {
-                String  msg = "获取菜单信息失败";
-                if( !TextUtils.isEmpty( updateLeftInfoModel.getMsg() )){
-                    msg = updateLeftInfoModel.getMsg();
-                }
-                ToastUtils.showShortToast(ref.get(), msg );
-                return;
-            }
-            if( updateLeftInfoModel.getData() ==null || updateLeftInfoModel.getData().getHome_menus() ==null){
-                ToastUtils.showShortToast(ref.get(),"获取菜单信息失败");
-                return;
-            }
-
-            //设置侧滑栏菜单
-            List<MenuBean > menus = new ArrayList< MenuBean >(  );
-            MenuBean menu = null;
-            List<UpdateLeftInfoModel.MenuModel> home_menus = updateLeftInfoModel.getData().getHome_menus();
-            for(UpdateLeftInfoModel.MenuModel home_menu:home_menus)
-            {
-                menu = new MenuBean ();
-                menu.setMenuGroup ( String.valueOf ( home_menu.getMenu_group () ) );
-                menu.setMenuIcon ( home_menu.getMenu_icon ( ) );
-                menu.setMenuName ( home_menu.getMenu_name ( ) );
-                menu.setMenuUrl ( home_menu.getMenu_url ( ) );
-                menus.add ( menu );
-            }
-            if(null != menus && !menus.isEmpty ())
-            {
-                ref.get().application.writeMenus(menus);
-
-                //绑定极光推送别名
-                UIUtils.bindPush();
-
-                //跳转到首页
-                ActivityUtils.getInstance ().skipActivity ( ref.get(), HomeActivity.class );
-            }
-            else
-            {
-                ToastUtils.showShortToast(ref.get(),"获取菜单信息失败。");
-            }
+        if (model == null) {
+            ToastUtils.showShortToast( "获取菜单信息失败。");
+            return;
         }
-    }
-
-    static class MyGetCodeListener implements Response.Listener<DataBase> {
-        WeakReference<PhoneLoginActivity> ref;
-        public MyGetCodeListener(PhoneLoginActivity act) {
-            ref=new WeakReference<PhoneLoginActivity>(act);
+        if (model.getCode() != 200) {
+            String msg = "获取菜单信息失败";
+            if (!TextUtils.isEmpty(model.getMsg())) {
+                msg = model.getMsg();
+            }
+            ToastUtils.showShortToast( msg);
+            return;
         }
-        @Override
-        public void onResponse(DataBase dataBase) {
-            if( ref.get()==null)return;
-
-            if( ref.get().progressDialog !=null){
-                ref.get().progressDialog.dismiss();
-            }
-
-            if( dataBase ==null ){
-                ToastUtils.showShortToast( ref.get() ,"获取验证码失败。" );
-                return;
-            }
-            if( dataBase.getCode() != 200) {
-                ToastUtils.showShortToast(ref.get(), "获取验证码失败。");
-                return;
-            }
+        if (model.getData() == null || model.getData().getHome_menus() == null) {
+            ToastUtils.showShortToast( "获取菜单信息失败");
+            return;
         }
-    }
 
-    static class MyGetCodeErrorListener implements Response.ErrorListener {
-        WeakReference<PhoneLoginActivity> ref;
-        public MyGetCodeErrorListener(PhoneLoginActivity act) {
-            ref = new WeakReference<PhoneLoginActivity>(act);
+        //设置侧滑栏菜单
+        List<MenuBean> menus = new ArrayList<>();
+        MenuBean menu;
+        List<UpdateLeftInfoModel.MenuModel> home_menus = model.getData().getHome_menus();
+        for (UpdateLeftInfoModel.MenuModel home_menu : home_menus) {
+            menu = new MenuBean();
+            menu.setMenuGroup(String.valueOf(home_menu.getMenu_group()));
+            menu.setMenuIcon(home_menu.getMenu_icon());
+            menu.setMenuName(home_menu.getMenu_name());
+            menu.setMenuUrl(home_menu.getMenu_url());
+            menus.add(menu);
         }
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            if( ref.get()==null ) return;
+        if (null != menus && !menus.isEmpty()) {
+            BaseApplication.single.writeMenus(menus);
+            //绑定极光推送别名
+            //UIUtils.bindPush();
 
-            if(ref.get().progressDialog !=null ){
-                ref.get().progressDialog.dismiss();
-            }
-
-            ToastUtils.showShortToast(ref.get(),"请求失败");
+            EventBus.getDefault().post(new RefreshMenuEvent());
+            //跳转到首页
+            //ActivityUtils.getInstance ().skipActivity ( ref.get(), HomeActivity.class );
+        } else {
+            ToastUtils.showShortToast( "获取菜单信息失败。");
         }
     }
 
     static class MyLoginListener implements Response.Listener<PhoneLoginModel> {
         WeakReference<PhoneLoginActivity> ref;
         public MyLoginListener(PhoneLoginActivity act) {
-            ref=new WeakReference<PhoneLoginActivity>(act);
+            ref=new WeakReference<>(act);
         }
         @Override
         public void onResponse(PhoneLoginModel phoneLoginModel) {
             if( ref.get()==null)return;
 
-            if( ref.get().progressDialog !=null){
-                ref.get().progressDialog.dismiss();
+            if( ref.get().progressPopupWindow !=null){
+                ref.get().progressPopupWindow.dismissView();
             }
 
             if( phoneLoginModel ==null ){
-                ToastUtils.showShortToast( ref.get() ,"登录失败。" );
+                ToastUtils.showShortToast( "登录失败。" );
                 return;
             }
             if( phoneLoginModel.getCode() != 200) {
@@ -354,27 +593,55 @@ public class PhoneLoginActivity extends BaseActivity {
                 if( !TextUtils.isEmpty( phoneLoginModel.getMsg()  )){
                     msg = phoneLoginModel.getMsg();
                 }
-                ToastUtils.showShortToast(ref.get(), msg );
+                ToastUtils.showShortToast( msg );
                 return;
             }
 
             PhoneLoginModel.PhoneModel model = phoneLoginModel.getData();
 
             //写入userID
-            //phoneLoginModel.getData().setAccountId ( String.valueOf ( mall.getUserid ( ) ) );
-            //account.setAccountName ( mall.getNickName ( ) );
-            //account.setAccountIcon ( mall.getHeadImgUrl ( ) );
             //和商城用户系统交互
             ref.get().application.writeMemberInfo(
                     model.getNickName(), String.valueOf(model.getUserid()),
-                    model.getHeadImgUrl(), String.valueOf( ref.get().secure )  , model.getAuthorizeCode());
+                    model.getHeadImgUrl(), String.valueOf( ref.get().secure )  , model.getAuthorizeCode() , model.getOpenId() );
             ref.get().application.writeMemberLevel(model.getLevelName());
+
+            BaseApplication.single.writeMemberLevelId(model.getLevelId());
+
+            //设置 用户的登级Id
+            //Jlibrary.initUserLevelId( model.getLevelId() );
 
             ref.get().application.writePhoneLogin(model.getLoginName(), model.getRealName(), model.getRelatedType(), model.getAuthorizeCode() , String.valueOf( ref.get().secure ) );
             //记录登录类型（1:微信登录，2：手机登录）
             ref.get().application.writeMemberLoginType( 2 );
 
             ref.get().getLeftMenuData();
+
+            ref.get().bindPush();
+
+
+            Bundle bd = new Bundle();
+            //String url = PreferenceHelper.readString(BaseApplication.single, NativeConstants.UI_CONFIG_FILE, NativeConstants.UI_CONFIG_SELF_HREF);
+            //bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
+            //bd.putBoolean(NativeConstants.KEY_ISMAINUI, true);
+            Intent intent = new Intent();
+            intent.setClass(ref.get(), HomeActivity.class);
+            intent.putExtras(bd);
+            //传递推送信息
+            if(null !=ref.get().bundlePush){
+                intent.putExtra( Constants.PUSH_KEY, ref.get().bundlePush );
+            }
+
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
+            //设置调转页面
+            String redirecturl = ref.get().getIntent().getExtras().getString("redirecturl");
+            intent.putExtra("redirecturl", redirecturl);
+
+            ActivityUtils.getInstance().skipActivity(ref.get(), intent );
+
+            EventBus.getDefault().post(new RefreshHttpHeaderEvent());
         }
     }
 
@@ -387,12 +654,262 @@ public class PhoneLoginActivity extends BaseActivity {
         public void onErrorResponse(VolleyError volleyError) {
             if( ref.get()==null ) return;
 
-            if( ref.get().progressDialog != null ){
-                ref.get().progressDialog.dismiss();
+            if( ref.get().progressPopupWindow != null ){
+                ref.get().progressPopupWindow.dismissView();
             }
 
-            ToastUtils.showShortToast(ref.get(),"登录失败");
+            ToastUtils.showShortToast("登录失败");
         }
     }
 
+    @Override
+    public boolean handleMessage(Message msg) {
+        if(progressPopupWindow !=null){
+            progressPopupWindow.dismissView();
+        }
+        llWechat.setEnabled(true);
+        if( msg.what == ShareSDKLogin.MSG_AUTH_COMPLETE ){
+            AccountModel accountModel = (AccountModel) msg.obj;
+            wechatToMall( accountModel );
+        }else if( msg.what == ShareSDKLogin.MSG_AUTH_CANCEL){
+        }else if( msg.what == ShareSDKLogin.MSG_AUTH_ERROR){
+            String error = "授权失败";
+            ToastUtils.showLongToast( error );
+        }else if(msg.what== Constants.LOGIN_AUTH_SUCCESS){
+
+            AuthMallModel.AuthMall data = (AuthMallModel.AuthMall) msg.obj;
+            if( !data.isMobileBind()){
+                bindPhone();
+            }else{
+                goToHome();
+            }
+
+            //跳转到首页
+//            Bundle bd = new Bundle();
+//            String url = PreferenceHelper.readString(BaseApplication.single, NativeConstants.UI_CONFIG_FILE, NativeConstants.UI_CONFIG_SELF_HREF);
+//            bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
+//            bd.putBoolean(NativeConstants.KEY_ISMAINUI, true);
+//
+//            Intent intent = new Intent();
+//            intent.setClass( this , FragMainActivity.class);
+//            intent.putExtras(bd);
+//            if(null != bundlePush){
+//                intent.putExtra( NativeConstants.PUSH_KEY, bundlePush );
+//            }
+//
+//            ActivityUtils.getInstance().skipActivity( this , intent );
+//            //ActivityUtils.getInstance().skipActivity(this, FragMainActivity.class, bd);
+//
+//            EventBus.getDefault().post(new RefreshHttpHeaderEvent());
+
+        }else if(msg.what==Constants.LOGIN_AUTH_ERROR){
+            String error = msg.obj.toString();
+            ToastUtils.showLongToast(error);
+        }
+        return false;
+    }
+
+    protected void getinfo( String accountToken , String unionid , AuthMallModel model ){
+        if (model == null || model.getCode() != 200 || model.getData() == null ) {
+            Message msg = handler.obtainMessage(Constants.LOGIN_AUTH_ERROR);
+            msg.obj = "请求失败,请重试!";
+            msg.sendToTarget();
+            return;
+        }
+
+        AuthMallModel.AuthMall mall = model.getData();
+        //和商城用户系统交互
+        application.writeMemberInfo(mall.getNickName(), String.valueOf(mall.getUserid()),
+                mall.getHeadImgUrl(),  accountToken , unionid , mall.getOpenId() );
+        application.writeMemberLevel(mall.getLevelName());
+        //
+        application.writeMemberLevelId(mall.getLevelId());
+        //设置 用户的登级Id
+        //Jlibrary.initUserLevelId( mall.getLevelId() );
+
+        //记录登录类型(1:微信登录，2：手机登录)
+        application.writeMemberLoginType(1);
+        //记录微信关联类型（0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号）
+        application.writeMemberRelatedType(mall.getRelatedType());
+
+        //设置侧滑栏菜单
+        List<MenuBean> menus = new ArrayList<>();
+        MenuBean menu;
+        List<AuthMallModel.MenuModel> home_menus = mall.getHome_menus();
+        for (AuthMallModel.MenuModel home_menu : home_menus) {
+            menu = new MenuBean();
+            menu.setMenuGroup(String.valueOf(home_menu.getMenu_group()));
+            menu.setMenuIcon(home_menu.getMenu_icon());
+            menu.setMenuName(home_menu.getMenu_name());
+            menu.setMenuUrl(home_menu.getMenu_url());
+            menus.add(menu);
+        }
+        application.writeMenus(menus);
+
+        bindPush();
+
+        Message msg = handler.obtainMessage(Constants.LOGIN_AUTH_SUCCESS);
+        msg.obj = mall;
+        msg.sendToTarget();
+    }
+
+    /**
+     *
+     * @param account
+     */
+    protected void wechatToMall(final AccountModel account ) {
+        if (progressPopupWindow == null)  progressPopupWindow = new ProgressPopupWindow(PhoneLoginActivity.this);
+        progressPopupWindow.showProgress("正在登录，请稍等...");
+        progressPopupWindow.showAtLocation(this.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+
+       String url = Constants.getINTERFACE_PREFIX() + "/weixin/LoginAuthorize";
+
+        AuthParamUtils paramUtils = new AuthParamUtils( "");
+        Map param = paramUtils.obtainParams(account);
+
+        GsonRequest<AuthMallModel> gsonRequest = new GsonRequest<AuthMallModel>(
+                Request.Method.POST, url, AuthMallModel.class, null, param,
+                new Response.Listener<AuthMallModel>() {
+                    @Override
+                    public void onResponse(AuthMallModel authMallModel) {
+                        getinfo( account.getAccountToken() , account.getAccountUnionId() , authMallModel);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Message msg = new Message();
+                        msg.what = Constants.LOGIN_AUTH_ERROR;
+                        msg.obj = "调用授权接口失败，请确认！";
+                        handler.sendMessage(msg);
+                    }
+                }
+        );
+
+        VolleyUtil.getRequestQueue().add( gsonRequest );
+
+
+//        ApiService apiService = ZRetrofitUtil.getInstance().create(ApiService.class);
+//        Call<AuthMallModel> call = apiService.LoginAuthorize(param);
+//        call.enqueue(new Callback<AuthMallModel>() {
+//            @Override
+//            public void onResponse(Call<AuthMallModel> call, retrofit2.Response<AuthMallModel> response) {
+//                if (response == null || response.code() != 200 || response.body() == null || null == response.body().getData()) {
+//                    Message msg = handler.obtainMessage(Constants.LOGIN_AUTH_ERROR);
+//                    msg.obj = "请求失败,请重试!";
+//                    msg.sendToTarget();
+//                    return;
+//                }
+//
+//                AuthMallModel.AuthMall mall = response.body().getData();
+//                //和商城用户系统交互
+//                application.writeMemberInfo(mall.getNickName(), String.valueOf(mall.getUserid()),
+//                        mall.getHeadImgUrl(), account.getAccountToken(), account.getAccountUnionId() , mall.getOpenId() );
+//                application.writeMemberLevel(mall.getLevelName());
+//                //
+//                application.writeMemberLevelId(mall.getLevelId());
+//                //设置 用户的登级Id
+//                //Jlibrary.initUserLevelId( mall.getLevelId() );
+//
+//                //记录登录类型(1:微信登录，2：手机登录)
+//                application.writeMemberLoginType(1);
+//                //记录微信关联类型（0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号）
+//                application.writeMemberRelatedType(mall.getRelatedType());
+//
+//                //设置侧滑栏菜单
+//                List<MenuBean> menus = new ArrayList<>();
+//                MenuBean menu;
+//                List<AuthMallModel.MenuModel> home_menus = mall.getHome_menus();
+//                for (AuthMallModel.MenuModel home_menu : home_menus) {
+//                    menu = new MenuBean();
+//                    menu.setMenuGroup(String.valueOf(home_menu.getMenu_group()));
+//                    menu.setMenuIcon(home_menu.getMenu_icon());
+//                    menu.setMenuName(home_menu.getMenu_name());
+//                    menu.setMenuUrl(home_menu.getMenu_url());
+//                    menus.add(menu);
+//                }
+//                application.writeMenus(menus);
+//
+//                bindPush();
+//
+//                Message msg = handler.obtainMessage(Constants.LOGIN_AUTH_SUCCESS);
+//                msg.obj = mall;
+//                msg.sendToTarget();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<AuthMallModel> call, Throwable t) {
+//                Message msg = new Message();
+//                msg.what = Constants.LOGIN_AUTH_ERROR;
+//                msg.obj = "调用授权接口失败，请确认！";
+//                handler.sendMessage(msg);
+//            }
+//        });
+    }
+
+    /***
+     * 绑定推送信息
+     */
+    protected void bindPush(){
+        String userId = BaseApplication.single.readUserId();
+        String userKey = Constants.getSMART_KEY();
+        String userRandom = String.valueOf(System.currentTimeMillis());
+        String userSecure = Constants.getSMART_SECURITY();
+        String userSign = SignUtil.getSecure( userKey , userSecure , userRandom);
+        String alias = BaseApplication.getPhoneIMEI();
+
+        PushHelper.bindingUserId( userId ,alias, userKey,userRandom,userSign );
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSetAliase(SetAliasEvent event){
+        int code = event.getCode();
+    }
+
+
+    /***
+     * 微信登录成功以后，根据返回的参数IsMobileBind,显示绑定手机界面
+     */
+    protected void bindPhone(){
+        Intent intent = new Intent(PhoneLoginActivity.this, BindPhoneActivity.class);
+
+        String redirectUrl = getIntent().getExtras() ==null? "" : getIntent().getExtras().getString("redirecturl");
+        intent.putExtra("redirecturl", redirectUrl);
+
+        startActivityForResult ( intent , HomeActivity.BINDPHONE_REQUESTCODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if( requestCode == HomeActivity.BINDPHONE_REQUESTCODE && resultCode == RESULT_OK){
+            goToHome();
+        }
+    }
+
+    protected void goToHome(){
+        //跳转到首页
+        Bundle bd = new Bundle();
+        //String url = PreferenceHelper.readString(BaseApplication.single, NativeConstants.UI_CONFIG_FILE, NativeConstants.UI_CONFIG_SELF_HREF);
+        //bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
+        //bd.putBoolean(NativeConstants.KEY_ISMAINUI, true);
+
+        Intent intent = new Intent();
+        intent.setClass( this , HomeActivity.class);
+        intent.putExtras(bd);
+        if(null != bundlePush){
+            intent.putExtra( Constants.PUSH_KEY, bundlePush );
+        }
+
+        //设置调转页面
+        String redirecturl = getIntent().getExtras() ==null ? "": getIntent().getExtras().getString("redirecturl");
+        intent.putExtra("redirecturl", redirecturl);
+
+        ActivityUtils.getInstance().skipActivity( this , intent );
+        //ActivityUtils.getInstance().skipActivity(this, FragMainActivity.class, bd);
+
+        EventBus.getDefault().post(new RefreshHttpHeaderEvent());
+
+    }
 }

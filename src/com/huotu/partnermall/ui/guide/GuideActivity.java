@@ -23,7 +23,6 @@ import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
-import com.huotu.partnermall.ui.login.LoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
@@ -175,11 +174,11 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
 
     protected void go(){
         //判断是否登录
-        if (application.isLogin()) {
+//        if (application.isLogin()) {
             ActivityUtils.getInstance().skipActivity(GuideActivity.this, HomeActivity.class);
-        } else {
-            ActivityUtils.getInstance().skipActivity( GuideActivity.this, LoginActivity.class);
-        }
+//        } else {
+//            ActivityUtils.getInstance().skipActivity( GuideActivity.this, LoginActivity.class);
+//        }
     }
 
     @Override

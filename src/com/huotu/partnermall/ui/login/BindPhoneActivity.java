@@ -6,11 +6,14 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
@@ -32,7 +35,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BindPhoneActivity extends BaseActivity {
+public class BindPhoneActivity extends BaseActivity implements CountDownTimerButton.CountDownFinishListener{
 
     @Bind(R.id.edtPhone)
     KJEditText edtPhone;
@@ -42,9 +45,17 @@ public class BindPhoneActivity extends BaseActivity {
     TextView tvGetCode;
     @Bind(R.id.btnBind)
     Button btnBind;
+    @Bind(R.id.titleText)
+    TextView tvTitle;
+    @Bind(R.id.bindPhoneActivity_header)
+    RelativeLayout rlHeader;
+    @Bind(R.id.titleLeftImage)
+    ImageView ivLeft;
 
     ProgressDialog progressDialog;
     CountDownTimerButton countDownBtn;
+    boolean isVoiceSMS=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +64,19 @@ public class BindPhoneActivity extends BaseActivity {
 
         tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         btnBind.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        tvTitle.setText("绑定手机");
+        rlHeader.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()) );
+        ivLeft.setBackgroundResource( R.drawable.main_title_left_back );
 
     }
 
     @Override
     protected void initView() {
+    }
+
+    @OnClick(R.id.titleLeftImage)
+    protected void onBack(){
+        finish();
     }
 
     @OnClick(R.id.btnBind)
@@ -124,21 +143,50 @@ public class BindPhoneActivity extends BaseActivity {
             return;
         }
 
-        getCode( phone );
-        countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取验证码", 60000,null);
-        countDownBtn.start();
+        if( isVoiceSMS ) {
+            getCode(true , phone);
+            countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取语音验证码", 60000, this);
+            countDownBtn.start();
+        }else{
+            getCode(false , phone);
+            countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取验证码", 60000, this);
+            countDownBtn.start();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        tvGetCode.setText("获取验证码");
+
+        if( isVoiceSMS ) {
+            tvGetCode.setText("获取语音验证码");
+        }else{
+            tvGetCode.setText("获取验证码");
+        }
+
         tvGetCode.setClickable(true);
         tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
     }
 
-    protected void getCode(String phone) {
-        String url = Constants.getINTERFACE_PREFIX() + "Account/sendCode";
+    @Override
+    public void finish(){
+        if( tvGetCode==null)return;
+        if(countDownBtn!=null){
+            countDownBtn.Stop();
+            countDownBtn=null;
+        }
+        isVoiceSMS=true;
+        tvGetCode.setText("获取语音验证码");
+    }
+
+    protected void getCode(boolean isVoice , String phone) {
+        String url;
+        if( isVoice ) {
+            url = Constants.getINTERFACE_PREFIX() + "Account/sendVoiceCode";
+        }else{
+            url = Constants.getINTERFACE_PREFIX() + "Account/sendCode";
+        }
+
         Map<String, String> map = new HashMap<>();
         map.put("customerid", application.readMerchantId());
         map.put("mobile", phone);
