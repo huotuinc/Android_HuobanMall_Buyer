@@ -287,6 +287,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         //设置右侧图标
         Drawable rightDraw = resources.getDrawable(R.drawable.home_title_right_share);
         SystemTools.loadBackground(titleRightImage, rightDraw);
+
+        titleRightImage.setVisibility(View.GONE);
+
         //设置侧滑界面
         loginLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
 
@@ -460,12 +463,18 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 new WebViewClient() {
                     //重写此方法，浏览器内部跳转
                     public boolean shouldOverrideUrlLoading( WebView view, String url ) {
+
                         UrlFilterUtils filter = new UrlFilterUtils( HomeActivity.this, mHandler, application  );
                         return filter.shouldOverrideUrlBySFriend(pageWeb, url);
                     }
 
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
+
+//                        if( titleRightImage !=null){
+//                            titleRightImage.setVisibility(View.GONE);
+//                        }
+
                         super.onPageStarted(view, url, favicon);
                     }
 
@@ -576,6 +585,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         // 2秒以内按两次推出程序
         if (event.getKeyCode () == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if(pageWeb.canGoBack ()){
+                titleRightImage.setVisibility(View.GONE);
                 pageWeb.goBack ( );
             }
             else{
@@ -636,7 +646,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
     @OnClick(R.id.titleRightImage)
-    void doShare(){
+    void doShare_old(){
         String sourceUrl = pageWeb.getUrl();
         if( !TextUtils.isEmpty( sourceUrl )){
             try {
@@ -688,6 +698,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f );
         share.showAtLocation(titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
+
+    @OnClick(R.id.titleRightImage)
+    void doShare(){
+        progress.showProgress("请稍等...");
+        progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
+        getShareContentByJS();
+    }
+
 
     @Override
     public boolean handleMessage ( Message msg ) {
@@ -1201,6 +1219,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             }
         });
+    }
+
+    @JavascriptInterface
+    public void enableShare(){
+        titleRightImage.setVisibility(View.VISIBLE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

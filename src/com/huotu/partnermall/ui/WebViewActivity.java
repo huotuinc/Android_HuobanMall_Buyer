@@ -118,6 +118,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         //设置右侧图标
         Drawable rightDraw = resources.getDrawable ( R.drawable.home_title_right_share );
         SystemTools.loadBackground(titleRightImage, rightDraw);
+        titleRightImage.setVisibility(View.GONE);
+
         viewPage = refreshWebView.getRefreshableView();
         refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
             @Override
@@ -215,12 +217,19 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                     //重写此方法，浏览器内部跳转
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
                         if (titleText == null) return false;
+
+
                         UrlFilterUtils filter = new UrlFilterUtils(WebViewActivity.this, mHandler, application);
                         return filter.shouldOverrideUrlBySFriend(viewPage, url);
                     }
 
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
+
+                        if( titleRightImage !=null  ) {
+                            titleRightImage.setVisibility(View.GONE);
+                        }
+
                         super.onPageStarted(view, url, favicon);
                     }
 
@@ -313,7 +322,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     }
 
     @OnClick(R.id.titleRightImage)
-    void doShare(){
+    void doShare_old(){
         String sourceUrl = viewPage.getUrl();
         if( !TextUtils.isEmpty( sourceUrl )) {
             Uri u = Uri.parse( sourceUrl );
@@ -355,6 +364,14 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         msgModel.setUrl(url);
         share.initShareParams(msgModel);
         share.showAtLocation(titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+
+    @OnClick(R.id.titleRightImage)
+    void doShare(){
+        progress.showProgress("请稍等...");
+        progress.showAtLocation( getWindow().getDecorView() , Gravity.CENTER, 0, 0);
+        getShareContentByJS();
     }
 
     @Override
@@ -559,6 +576,10 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         });
     }
 
+    @JavascriptInterface
+    public void enableShare(){
+        titleRightImage.setVisibility(View.VISIBLE);
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventClose(CloseEvent event){

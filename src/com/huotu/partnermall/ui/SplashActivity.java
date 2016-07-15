@@ -329,6 +329,9 @@ public class SplashActivity extends BaseActivity {
                             if( authMallModel ==null || authMallModel.getCode() !=200 || authMallModel.getData()==null ){
                                 //ToastUtils.showLongToast("请求出错。");
                                 Log.e(TAG, "请求出错。");
+
+                                BaseApplication.single.logout();
+
                                 return;
                             }
 

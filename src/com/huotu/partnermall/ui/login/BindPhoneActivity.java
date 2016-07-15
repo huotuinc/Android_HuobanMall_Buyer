@@ -169,7 +169,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
     }
 
     @Override
-    public void finish(){
+    public void timeFinish(){
         if( tvGetCode==null)return;
         if(countDownBtn!=null){
             countDownBtn.Stop();
