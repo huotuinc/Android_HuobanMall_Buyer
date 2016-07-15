@@ -40,8 +40,8 @@ public abstract class BaseActivity extends Activity {
         if (application.isKITKAT ()) {
             Window window = getWindow();
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            int statusBarHeight = this.getStatusBarHeight ( this.getBaseContext ( ) );
-            view.setPadding(0, statusBarHeight, 0, 0);
+//            int statusBarHeight = this.getStatusBarHeight ( this.getBaseContext ( ) );
+//            view.setPadding(0, 0, 0, 0);
         }
     }
 

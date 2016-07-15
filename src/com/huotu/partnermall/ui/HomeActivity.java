@@ -24,6 +24,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -150,6 +151,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     DrawerLayout layDrag;
     @Bind(R.id.main_pgbar)
     ProgressBar pgBar;
+    @Bind(R.id.ff1)
+    FrameLayout ff1;
 
     @Override
     protected void onCreate ( Bundle savedInstanceState ) {
@@ -256,8 +259,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     protected void initView ( ) {
         //获取系统标题栏高度
         if (application.isKITKAT()) {
-            int statusBarHeight = getStatusBarHeight(HomeActivity.this);
-            loginLayout.setPadding(0, statusBarHeight, 0, 0);
+//            int statusBarHeight = getStatusBarHeight(HomeActivity.this);
+//            loginLayout.setPadding(0, 0, 0, 0);
         }
         //初始化侧滑菜单面板
         layDrag.setDrawerListener(new DrawerLayout.DrawerListener() {
@@ -281,6 +284,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         //设置title背景
         homeTitle.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        ff1.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         //设置左侧图标
         Drawable leftDraw = resources.getDrawable(R.drawable.main_title_left_sideslip);
         SystemTools.loadBackground(titleLeftImage, leftDraw);

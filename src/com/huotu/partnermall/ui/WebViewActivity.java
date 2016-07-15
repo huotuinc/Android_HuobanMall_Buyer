@@ -87,6 +87,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 
     @Bind(R.id.main_pgbar)
     ProgressBar pgBar;
+    @Bind(R.id.statuslayout)
+    RelativeLayout statuslayout;
 
     @Override
     protected void onCreate ( Bundle savedInstanceState ) {
@@ -112,6 +114,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     protected void initView() {
         //设置title背景
         newtitleLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        statuslayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         //设置左侧图标
         Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_back );
         SystemTools.loadBackground(titleLeftImage, leftDraw);
