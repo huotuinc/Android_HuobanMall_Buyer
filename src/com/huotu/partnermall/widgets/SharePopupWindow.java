@@ -42,9 +42,15 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
 
     public void showShareWindow ( ) {
         View view = LayoutInflater.from ( context ).inflate (  R.layout.share_layout, null  );
-        LinearLayout shareItems = ( LinearLayout ) view.findViewById ( R.id.shareItem );
-        initShareItems(shareItems);
         Button btn_cancel = ( Button ) view.findViewById ( R.id.btn_cancel );
+        LinearLayout sharewechat = (LinearLayout) view.findViewById(R.id.sharewechat);
+        LinearLayout sharewechatmoments = (LinearLayout) view.findViewById(R.id.sharewechatmoments);
+        LinearLayout shareqzone = (LinearLayout) view.findViewById(R.id.shareqzone);
+        LinearLayout sharesinaweibo = (LinearLayout) view.findViewById(R.id.sharesinaweibo);
+        sharewechat.setOnClickListener(this);
+        sharewechatmoments.setOnClickListener(this);
+        shareqzone.setOnClickListener(this);
+        sharesinaweibo.setOnClickListener(this);
         // 取消按钮
         btn_cancel.setOnClickListener (
                 new View.OnClickListener ( ) {
@@ -72,89 +78,119 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
         this.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.share_window_bg));
     }
 
-    private void initShareItems(LinearLayout shareItems) {
-        List<ShareItem> items = new ArrayList<ShareItem>();
-        //微信好友
-        ShareItem wechat = new ShareItem(1, "微信好友", R.drawable.logo_wechat);
-        items.add(wechat);
-        //微信朋友圈
-        ShareItem wechatmoments = new ShareItem(2, "微信朋友圈", R.drawable.logo_wechatmoments);
-        items.add(wechatmoments);
-        //QQ空间分享
-        ShareItem Qzone = new ShareItem(3, "QQ空间", R.drawable.logo_qzone);
-        items.add(Qzone);
-        //sina微博
-        ShareItem sinaweibo = new ShareItem(4, "新浪微博", R.drawable.logo_sinaweibo);
-        items.add(sinaweibo);
-
-        int itemWidth = Constants.SCREEN_WIDTH/4*80/100; //DensityUtils.dip2px( context , 58 );
-        int itemHeight = itemWidth; //DensityUtils.dip2px(context , 58);
-        int itemspace = (Constants.SCREEN_WIDTH - itemWidth * 4 ) /8;
-        //构建ui
-        for(ShareItem item:items){
-            View view = LayoutInflater.from ( context ).inflate ( R.layout.share_item, null);
-            view.setOnClickListener(this);
-            view.setId(item.getId());
-            ImageView img = (ImageView) view.findViewById(R.id.share_icon);
-            img.setImageResource(item.getShareIcon());
-            RelativeLayout.LayoutParams params =(RelativeLayout.LayoutParams) img.getLayoutParams();
-            params.rightMargin = itemspace;
-            params.leftMargin = itemspace;
-            params.width = itemWidth;
-            params.height = itemHeight;
-            img.setLayoutParams(params);
-
-            TextView txt = (TextView) view.findViewById(R.id.share_title);
-            txt.setText(item.getShareName());
-            shareItems.addView(view);
-        }
-    }
+//    private void initShareItems(LinearLayout shareItems) {
+//        List<ShareItem> items = new ArrayList<ShareItem>();
+//        //微信好友
+//        ShareItem wechat = new ShareItem(1, "微信好友", R.drawable.logo_wechat);
+//        items.add(wechat);
+//        //微信朋友圈
+//        ShareItem wechatmoments = new ShareItem(2, "微信朋友圈", R.drawable.logo_wechatmoments);
+//        items.add(wechatmoments);
+//        //QQ空间分享
+//        ShareItem Qzone = new ShareItem(3, "QQ空间", R.drawable.logo_qzone);
+//        items.add(Qzone);
+//        //sina微博
+//        ShareItem sinaweibo = new ShareItem(4, "新浪微博", R.drawable.logo_sinaweibo);
+//        items.add(sinaweibo);
+//
+//        int itemWidth = Constants.SCREEN_WIDTH/4*80/100; //DensityUtils.dip2px( context , 58 );
+//        int itemHeight = itemWidth; //DensityUtils.dip2px(context , 58);
+//        int itemspace = (Constants.SCREEN_WIDTH - itemWidth * 4 ) /8;
+//        //构建ui
+//        for(ShareItem item:items){
+//            View view = LayoutInflater.from ( context ).inflate ( R.layout.share_item, null);
+//            view.setOnClickListener(this);
+//            view.setId(item.getId());
+//            ImageView img = (ImageView) view.findViewById(R.id.share_icon);
+//            img.setImageResource(item.getShareIcon());
+//            RelativeLayout.LayoutParams params =(RelativeLayout.LayoutParams) img.getLayoutParams();
+//            params.rightMargin = itemspace;
+//            params.leftMargin = itemspace;
+//            params.width = itemWidth;
+//            params.height = itemHeight;
+//            img.setLayoutParams(params);
+//
+//            TextView txt = (TextView) view.findViewById(R.id.share_title);
+//            txt.setText(item.getShareName());
+//            shareItems.addView(view);
+//        }
+//    }
 
     @Override
     public void onClick(View v) {
-        share(v.getId());
+        switch (v.getId()){
+            case R.id.sharewechat:
+                //微信好友
+                Platform plat1 = null;
+                plat1 = ShareSDK.getPlatform ( context, Wechat.NAME );
+                if (platformActionListener != null) {
+                    plat1.setPlatformActionListener ( platformActionListener );
+                }
+
+                plat1.share(shareParams);
+                break;
+            case R.id.sharewechatmoments:
+                Platform plat = null;
+                plat = ShareSDK.getPlatform ( context, WechatMoments.NAME );
+                if (platformActionListener != null) {
+                    plat.setPlatformActionListener ( platformActionListener );
+                }
+
+                plat.share(shareParams);
+                break;
+            case R.id.shareqzone:
+                //qq控件分享
+                qzone ( );
+                break;
+            case R.id.sharesinaweibo:
+                //sina
+                sinaWeibo();
+                break;
+            default:
+                break;
+        }
         this.dismiss();
     }
 
-    /**
-     * 分享
-     *
-     * @param position
-     */
-    public void share(int position) {
-
-       if(3 == position){
-            //qq控件分享
-            qzone ( );
-        }
-       else if(4 == position)
-       {
-           //sina
-           sinaWeibo();
-       }
-       else if(2 == position)
-       {
-           //微信朋友圈
-            Platform plat = null;
-            plat = ShareSDK.getPlatform ( context, WechatMoments.NAME );
-            if (platformActionListener != null) {
-                plat.setPlatformActionListener ( platformActionListener );
-            }
-
-            plat.share(shareParams);
-        }
-        else if(1 == position)
-       {
-           //微信好友
-           Platform plat = null;
-           plat = ShareSDK.getPlatform ( context, Wechat.NAME );
-           if (platformActionListener != null) {
-               plat.setPlatformActionListener ( platformActionListener );
-           }
-
-           plat.share(shareParams);
-       }
-    }
+//    /**
+//     * 分享
+//     *
+//     * @param position
+//     */
+//    public void share(int position) {
+//
+//       if(3 == position){
+//            //qq控件分享
+//            qzone ( );
+//        }
+//       else if(4 == position)
+//       {
+//           //sina
+//           sinaWeibo();
+//       }
+//       else if(2 == position)
+//       {
+//           //微信朋友圈
+//            Platform plat = null;
+//            plat = ShareSDK.getPlatform ( context, WechatMoments.NAME );
+//            if (platformActionListener != null) {
+//                plat.setPlatformActionListener ( platformActionListener );
+//            }
+//
+//            plat.share(shareParams);
+//        }
+//        else if(1 == position)
+//       {
+//           //微信好友
+//           Platform plat = null;
+//           plat = ShareSDK.getPlatform ( context, Wechat.NAME );
+//           if (platformActionListener != null) {
+//               plat.setPlatformActionListener ( platformActionListener );
+//           }
+//
+//           plat.share(shareParams);
+//       }
+//    }
 
     /**
      * 初始化分享参数
