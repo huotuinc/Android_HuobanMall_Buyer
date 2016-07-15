@@ -27,6 +27,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.DataBase;
+import com.huotu.partnermall.model.GoIndexEvent;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.PhoneLoginModel;
 import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
@@ -344,6 +345,9 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+
+            EventBus.getDefault().post(new GoIndexEvent());
+
             this.finish();
             return true;
         }
@@ -636,7 +640,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
 
 
             //设置调转页面
-            String redirecturl = ref.get().getIntent().getExtras().getString("redirecturl");
+            String redirecturl = ref.get().getIntent().getExtras() ==null? "" : ref.get().getIntent().getExtras().getString("redirecturl");
             intent.putExtra("redirecturl", redirecturl);
 
             ActivityUtils.getInstance().skipActivity(ref.get(), intent );

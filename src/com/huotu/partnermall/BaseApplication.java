@@ -375,9 +375,13 @@ public class BaseApplication extends Application {
 
         PreferenceHelper.clean(getApplicationContext(), Constants.MEMBER_INFO);
 
+        clearAllCookies();
+
         SisConstant.CATEGORY = null;
         SisConstant.SHOPINFO = null;
     }
+
+
 
     //获取用户图片
     public String getUserLogo() {

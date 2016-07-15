@@ -87,14 +87,14 @@ public class UrlFilterUtils {
             Uri uri = Uri.parse(url.toLowerCase());
             String redirectURL = uri.getQueryParameter("redirecturl");
             if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.startsWith("http://") ){
-                redirectURL = uri.getHost() + "/" + redirectURL;
+                if( !redirectURL.startsWith("/") ) redirectURL = "/"+ redirectURL;
+                redirectURL = uri.getHost() + redirectURL;
             }
             //跳转到登录界面
             Bundle bd = new Bundle();
             bd.putString("redirecturl", redirectURL);
-
             //跳转到登录界面
-            ActivityUtils.getInstance ().skipActivity ( ref.get() , PhoneLoginActivity.class , bd );
+            ActivityUtils.getInstance ().showActivity( ref.get() , PhoneLoginActivity.class , bd );
         }else if(url.contains(Constants.WEB_TAG_INFO)){
             //处理信息保护
             return true;
@@ -158,8 +158,21 @@ public class UrlFilterUtils {
             //鉴权失效
             //清除登录信息
             application.logout ();
+
+
+            Uri uri = Uri.parse(url.toLowerCase());
+            String redirectURL = uri.getQueryParameter("redirecturl");
+            if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.startsWith("http://") ){
+                if( !redirectURL.startsWith("/") ) redirectURL = "/"+ redirectURL;
+                redirectURL = uri.getHost() + redirectURL;
+            }
             //跳转到登录界面
-            ActivityUtils.getInstance ().skipActivity ( ref.get() , PhoneLoginActivity.class );
+
+            Bundle bd = new Bundle();
+            bd.putString("redirecturl", redirectURL);
+
+            ActivityUtils.getInstance ().showActivity ( ref.get() , PhoneLoginActivity.class );
+            return true;
         }else if(url.toLowerCase().contains(Constants.URL_APPACCOUNTSWITCHER.toLowerCase())){//切换帐号 url
             String userId= Uri.parse(url).getQueryParameter("u");
             EventBus.getDefault().post(new SwitchUserByUserIDEvent(userId));

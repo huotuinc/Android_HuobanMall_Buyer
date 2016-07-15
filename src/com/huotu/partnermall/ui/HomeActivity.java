@@ -44,6 +44,7 @@ import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.CloseEvent;
+import com.huotu.partnermall.model.GoIndexEvent;
 import com.huotu.partnermall.model.LinkEvent;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.PayModel;
@@ -58,6 +59,7 @@ import com.huotu.partnermall.receiver.PushProcess;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.login.BindPhoneActivity;
+import com.huotu.partnermall.ui.login.PhoneLoginActivity;
 import com.huotu.partnermall.ui.sis.GoodManageActivity;
 import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
@@ -175,8 +177,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         initPush(getIntent());
 
-        progress = new ProgressPopupWindow ( HomeActivity.this );
+        initRedrectUrl(getIntent());
 
+        progress = new ProgressPopupWindow ( HomeActivity.this );
 
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -210,6 +213,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     protected void onResume() {
         super.onResume();
         initUserInfo();
+
+        judgeLoginStatus();
     }
 
 
@@ -218,6 +223,22 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         super.onNewIntent(intent);
 
         initPush( intent );
+
+        initRedrectUrl(intent);
+    }
+
+
+    /***
+     * 判断 登录以后，是否需要调转
+     */
+    protected void initRedrectUrl( Intent intent ){
+        String redirecturl="";
+        if( intent.hasExtra("redirecturl")){
+            redirecturl = intent.getStringExtra("redirecturl");
+        }
+        if( TextUtils.isEmpty(redirecturl) ) return;
+
+        pageWeb.loadUrl( redirecturl );
     }
 
     protected void initUserInfo(){
@@ -300,6 +321,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         //设置设置图标
         SystemTools.loadBackground(loginSetting, resources.getDrawable(R.drawable.switch_white));
         getAuthLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        loginSetting.setVisibility(View.GONE);
 
         //设置登录界面
         getAuthLayout.setVisibility(View.VISIBLE);
@@ -354,6 +376,17 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
 
+    protected void judgeLoginStatus(){
+        boolean isLogin = BaseApplication.single.isLogin();
+        if(!isLogin){
+            userName.setText("未登录");
+            userType.setText("点击登录");
+            userLogo.setImageResource( R.drawable.ic_login_username);
+        }else{
+        }
+    }
+
+
     /***
      *  初始化极光推送
      */
@@ -388,7 +421,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     //重写此方法，浏览器内部跳转
                     public boolean shouldOverrideUrlLoading( WebView view, String url ) {
                         if( pageWeb ==null ) return true;
-                        pageWeb.loadUrl(url);
+
+                        AuthParamUtils paramUtils = new AuthParamUtils(BaseApplication.single, System.currentTimeMillis(), url, HomeActivity.this);
+                        String urlStr = paramUtils.obtainUrl();
+
+                        pageWeb.loadUrl(urlStr);
                         return true;
                     }
 
@@ -621,6 +658,15 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             if( pageWeb.canGoBack() ) {
                 pageWeb.goBack();
             }
+        }
+    }
+
+    @OnClick(R.id.getAuth)
+    void doLogin(){
+        if(!BaseApplication.single.isLogin()){
+            layDrag.closeDrawer(Gravity.LEFT);
+            Intent intent=new Intent(this, PhoneLoginActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -942,7 +988,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     private void refreshLeftMenu(){
         String url = Constants.getINTERFACE_PREFIX() + "weixin/UpdateLeftInfo";
         url +="?customerId="+ application.readMerchantId();
-        url +="&userId="+ application.readMemberId();
+        url +="&userId="+ (TextUtils.isEmpty( application.readMemberId())? "0": application.readMemberId());
         url +="&clientUserType="+ application.readMemberType();
         AuthParamUtils authParamUtils=new AuthParamUtils(application , System.currentTimeMillis() , url , HomeActivity.this);
         url = authParamUtils.obtainUrlName();
@@ -977,7 +1023,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             if( updateLeftInfoModel.getData().getMenusCode()==0) return;
 
             ref.get().application.writeMemberLevel(updateLeftInfoModel.getData().getLevelName());
-            ref.get().userType.setText( ref.get().application.readMemberLevel());
+
+            if( BaseApplication.single.isLogin() ) {
+                ref.get().userType.setText(ref.get().application.readMemberLevel());
+            }
 
             //设置侧滑栏菜单
             List<MenuBean > menus = new ArrayList< MenuBean >(  );
@@ -1357,6 +1406,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     public void onEventRefreshHttpHeader(RefreshHttpHeaderEvent event){
         if( pageWeb ==null) return;
         signHeader(pageWeb);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventGoIndex(GoIndexEvent event){
+        if(pageWeb==null) return;
+        AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
+        String url = paramUtils.obtainUrl ();
+        pageWeb.loadUrl(url);
     }
 }
 
