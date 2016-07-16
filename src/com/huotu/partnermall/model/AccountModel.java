@@ -5,8 +5,7 @@ import java.io.Serializable;
 /**
  * 绑定微信账户信息
  */
-public
-class AccountModel implements Serializable {
+public class AccountModel implements Serializable {
 
     //微信用户ID
     private String accountId;
@@ -24,6 +23,9 @@ class AccountModel implements Serializable {
     private String nickname;
     //openId
     private String openid;
+
+    //
+    private String redirecturl;
 
     public
     int getSex ( ) {
@@ -140,5 +142,13 @@ class AccountModel implements Serializable {
     public
     void setAccountIcon ( String accountIcon ) {
         this.accountIcon = accountIcon;
+    }
+
+    public String getRedirecturl() {
+        return redirecturl;
+    }
+
+    public void setRedirecturl(String redirecturl) {
+        this.redirecturl = redirecturl;
     }
 }

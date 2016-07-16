@@ -154,6 +154,9 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
 
     @OnClick(R.id.titleLeftImage)
     protected void onBack(){
+
+        EventBus.getDefault().post(new GoIndexEvent());
+
         this.finish();
     }
 
@@ -375,7 +378,6 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
     @Override
     protected void onResume() {
         super.onResume();
-
 
         if( isVoiceSMS ) {
             tvGetCode.setText("获取语音验证码");
@@ -638,6 +640,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
 
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+            EventBus.getDefault().post(new RefreshHttpHeaderEvent());
 
             //设置调转页面
             String redirecturl = ref.get().getIntent().getExtras() ==null? "" : ref.get().getIntent().getExtras().getString("redirecturl");
@@ -645,7 +648,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
 
             ActivityUtils.getInstance().skipActivity(ref.get(), intent );
 
-            EventBus.getDefault().post(new RefreshHttpHeaderEvent());
+
         }
     }
 
@@ -876,6 +879,8 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
      * 微信登录成功以后，根据返回的参数IsMobileBind,显示绑定手机界面
      */
     protected void bindPhone(){
+        EventBus.getDefault().post(new RefreshHttpHeaderEvent());
+
         Intent intent = new Intent(PhoneLoginActivity.this, BindPhoneActivity.class);
 
         String redirectUrl = getIntent().getExtras() ==null? "" : getIntent().getExtras().getString("redirecturl");

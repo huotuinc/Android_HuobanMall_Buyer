@@ -43,7 +43,8 @@ public class ProgressPopupWindow extends PopupWindow {
         // 设置SelectPicPopupWindow弹出窗体的高
         this.setHeight ( (Constants.SCREEN_WIDTH/10) * 2 );
         // 设置SelectPicPopupWindow弹出窗体可点击
-        this.setFocusable(false);
+        this.setFocusable(true);
+        this.setOutsideTouchable(true);
         WindowUtils.backgroundAlpha ( aty, 0.4f );
     }
 

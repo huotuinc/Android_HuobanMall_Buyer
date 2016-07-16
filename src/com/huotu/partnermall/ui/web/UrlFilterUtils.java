@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.webkit.WebView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.model.BindEvent;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.SwitchUserByUserIDEvent;
 import com.huotu.partnermall.ui.WebViewActivity;
@@ -173,7 +174,19 @@ public class UrlFilterUtils {
 
             ActivityUtils.getInstance ().showActivity ( ref.get() , PhoneLoginActivity.class );
             return true;
-        }else if(url.toLowerCase().contains(Constants.URL_APPACCOUNTSWITCHER.toLowerCase())){//切换帐号 url
+        }else if( url.toLowerCase().contains( Constants.URL_BINDINGWEIXING.toLowerCase() )){//拦截绑定微信url
+
+            Uri uri = Uri.parse(url.toLowerCase());
+            String redirectURL = uri.getQueryParameter("redirecturl");
+            if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.startsWith("http://") ){
+                if( !redirectURL.startsWith("/") ) redirectURL = "/"+ redirectURL;
+                redirectURL = uri.getHost() + redirectURL;
+            }
+
+            EventBus.getDefault().post(new BindEvent(true , redirectURL ));
+            return true;
+        }
+        else if(url.toLowerCase().contains(Constants.URL_APPACCOUNTSWITCHER.toLowerCase())){//切换帐号 url
             String userId= Uri.parse(url).getQueryParameter("u");
             EventBus.getDefault().post(new SwitchUserByUserIDEvent(userId));
             return true;

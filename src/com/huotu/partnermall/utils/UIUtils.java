@@ -57,7 +57,7 @@ public class UIUtils {
             KJLoger.e("未加载商家定义的菜单");
         } else {
             //根据登录类型，添加相关的绑定菜单
-            addRelateTypeMenu(menuList);
+            //addRelateTypeMenu(menuList);
             //按分组排序
             menuSort(menuList);
 

@@ -223,6 +223,9 @@ public class Constants {
 	//鉴权失效
 	public static final String AUTH_FAILURE = "/UserCenter/Login.aspx";
 
+	//绑定微信
+	public static final String URL_BINDINGWEIXING="/UserCenter/BindingWeixin.aspx";
+
 	//切换账户
 	public static final String URL_APPACCOUNTSWITCHER="/UserCenter/AppAccountSwitcher.aspx";
 

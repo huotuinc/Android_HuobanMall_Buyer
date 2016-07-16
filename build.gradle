@@ -132,7 +132,7 @@ android {
             buildConfigField 'String','Push_Url','\"http://test.api.open.huobanplus.com:8081/\"'
             buildConfigField 'String', 'SMART_KEY', '\"_demo\"'
             buildConfigField 'String', 'SMART_SECURITY', '\"1f2f3f4f5f6f7f8f\"'
-            signingConfig signingConfigs.huotu
+            signingConfig signingConfigs.fanmore
         }
 
 
@@ -239,7 +239,7 @@ android {
 
     buildTypes{
         debug{
-            signingConfig signingConfigs.huotu
+            signingConfig signingConfigs.fanmore
             buildConfigField 'String' , 'Header_Secret', '\"'+"${HEADER_SECRET}"+'\"'
         }
 

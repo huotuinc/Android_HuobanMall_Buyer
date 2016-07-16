@@ -18,8 +18,11 @@ import cn.sharesdk.framework.PlatformDb;
 public class AutnLogin {
     private Handler mHandler;
 
-    public AutnLogin ( Handler mHandler ) {
+    private String redrecturl;
+
+    public AutnLogin ( Handler mHandler , String redirecturl ) {
         this.mHandler = mHandler;
+        this.redrecturl = redirecturl;
     }
 
     public void authorize ( Platform plat ) {
@@ -105,7 +108,11 @@ public class AutnLogin {
         account.setProvince(accountDb.get("province"));
         account.setNickname ( accountDb.get ( "nickname" ) );
 
+        account.setRedirecturl( this.redrecturl );
+
         msg.obj = account;
+
+
         mHandler.sendMessage ( msg );
     }
 }

@@ -43,6 +43,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.AuthMallModel;
+import com.huotu.partnermall.model.BindEvent;
 import com.huotu.partnermall.model.CloseEvent;
 import com.huotu.partnermall.model.GoIndexEvent;
 import com.huotu.partnermall.model.LinkEvent;
@@ -51,6 +52,7 @@ import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.PhoneLoginModel;
 import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
 import com.huotu.partnermall.model.RefreshMenuEvent;
+import com.huotu.partnermall.model.RefreshPageEvent;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.SwitchUserByUserIDEvent;
 import com.huotu.partnermall.model.SwitchUserModel;
@@ -105,7 +107,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     public ProgressPopupWindow progress;
     public AssetManager am;
     public static ValueCallback< Uri > mUploadMessage;
+    public static ValueCallback<Uri[]> mUploadMessages;
     public static final int FILECHOOSER_RESULTCODE = 1;
+    public static final int FILECHOOSER_RESULTCODE_5 = 5;
     public static final int BINDPHONE_REQUESTCODE = 1001;
     private AutnLogin autnLogin;
 
@@ -238,7 +242,17 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         }
         if( TextUtils.isEmpty(redirecturl) ) return;
 
-        pageWeb.loadUrl( redirecturl );
+
+        //AuthParamUtils authParamUtils = new AuthParamUtils(BaseApplication.single , System.currentTimeMillis(), redirecturl, this);
+        //String temp = authParamUtils.obtainUrl();
+
+        String temp = redirecturl;
+
+        if( !temp.toLowerCase().startsWith("http://")){
+            temp = "http://"+temp;
+        }
+
+        pageWeb.loadUrl( temp );
     }
 
     protected void initUserInfo(){
@@ -291,6 +305,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             @Override
             public void onDrawerOpened(View drawerView) {
+
+
+                //pageWeb.loadUrl("javascript:customerServiceChat();");
+
                 refreshLeftMenu();
             }
 
@@ -422,8 +440,28 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     public boolean shouldOverrideUrlLoading( WebView view, String url ) {
                         if( pageWeb ==null ) return true;
 
-                        AuthParamUtils paramUtils = new AuthParamUtils(BaseApplication.single, System.currentTimeMillis(), url, HomeActivity.this);
-                        String urlStr = paramUtils.obtainUrl();
+                        titleRightImage.setVisibility(View.GONE);
+
+//                        if( 1==1) {
+//                            pageWeb.loadUrl("http://192.168.1.7:8080/cs/webChannel?customerId=3447&userId=2");
+//                            return true;
+//                        }
+
+
+
+//                        if( 1==1) {
+//                            pageWeb.loadUrl("javascript:customerServiceChat();");
+//                            //return true;
+//                        }
+
+
+
+
+
+
+                        //AuthParamUtils paramUtils = new AuthParamUtils(BaseApplication.single, System.currentTimeMillis(), url, HomeActivity.this);
+                        //String urlStr = paramUtils.obtainUrl();
+                        String urlStr = url;
 
                         pageWeb.loadUrl(urlStr);
                         return true;
@@ -440,6 +478,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     }
                 }
         );
+    }
+
+    private void signHeader(){
+        if( pageWeb==null) return;
+        signHeader(pageWeb);
     }
 
     private void signHeader( WebView webView ){
@@ -495,8 +538,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         pageWeb.addJavascriptInterface( HomeActivity.this ,"android");
         //首页鉴权
-        AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
-        String url = paramUtils.obtainUrl ();
+        //AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
+        //String url = paramUtils.obtainUrl ();
+        String url = application.obtainMerchantUrl();
         //首页默认为商户站点 + index
         pageWeb.loadUrl(url);
 
@@ -583,7 +627,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     HomeActivity.mUploadMessage = uploadMsg;
                     Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                     i.addCategory(Intent.CATEGORY_OPENABLE);
-                    i.setType("*/*");
+                    i.setType("image/*");
                     HomeActivity.this.startActivityForResult(Intent.createChooser(i, "File Chooser"), HomeActivity.FILECHOOSER_RESULTCODE);
             }
 
@@ -603,6 +647,25 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 callback.invoke( origin, true, false );
                 super.onGeolocationPermissionsShowPrompt(origin, callback);
             }
+
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+
+                HomeActivity.mUploadMessages = filePathCallback;
+
+                Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                contentSelectionIntent.setType("image/*");
+
+                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "选择图片");
+
+                HomeActivity.this.startActivityForResult( chooserIntent , HomeActivity.FILECHOOSER_RESULTCODE_5);
+
+                return  true;
+                //return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
+            }
         });
 
     }
@@ -618,6 +681,15 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         }else if( requestCode == BINDPHONE_REQUESTCODE && resultCode == RESULT_OK){
             UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, mHandler);
             ui.loadMenus();
+        }else if( requestCode == FILECHOOSER_RESULTCODE_5 ){
+            if(null == mUploadMessages) return;
+            Uri result = intent == null || resultCode != RESULT_OK ? null : intent.getData();
+            if( result !=null ) {
+                mUploadMessages.onReceiveValue(new Uri[]{result});
+            }else{
+                mUploadMessages.onReceiveValue(new Uri[]{});
+            }
+            mUploadMessages=null;
         }
     }
 
@@ -751,8 +823,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
     @OnClick(R.id.titleRightImage)
     void doShare(){
-        progress.showProgress("请稍等...");
-        progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
+        //progress.showProgress("请稍等...");
+        //progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
         getShareContentByJS();
     }
 
@@ -772,7 +844,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 String url = msg.obj.toString ();
                 if( url.toLowerCase().contains("http://www.bindweixin.com") ){
                     //绑定微信
-                    callWeixin();
+                    callWeixin("");
                 }
                 else if( url.toLowerCase().trim().contains("http://www.bindphone.com") ){
                     //绑定手机
@@ -899,6 +971,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, mHandler );
                 ui.loadMenus();
 
+
+
                 dealUserid();
             }
             break;
@@ -969,8 +1043,13 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     protected void dealUserid(){
         pageWeb.clearHistory();
         pageWeb.clearCache(true);
-        AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
-        String url = paramUtils.obtainUrl ();
+        signHeader(pageWeb);
+
+        //AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
+        //String url = paramUtils.obtainUrl ();
+
+        String  url = application.obtainMerchantUrl();
+
         //首页默认为商户站点 + index
         pageWeb.loadUrl(url);
 
@@ -1065,11 +1144,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     /*
      * 手机绑定微信
      */
-    private void callWeixin() {
+    private void callWeixin( String redirectUrl ) {
         progress.showProgress("正在调用微信授权,请稍等");
         progress.showAtLocation( titleLeftImage , Gravity.CENTER, 0, 0);
         //微信授权登录
-        autnLogin = new AutnLogin( mHandler);
+        autnLogin = new AutnLogin( mHandler , redirectUrl );
         autnLogin.authorize(new Wechat(HomeActivity.this));
     }
 
@@ -1158,6 +1237,13 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             ui.loadMenus();
 
             ref.get().initUserInfo();
+
+            ref.get().signHeader();
+
+            //当 重定响 url 不为空 ，则 调转到指定的url
+            if( !TextUtils.isEmpty( weixinModel.getRedirecturl())){
+                ref.get().pageWeb.loadUrl( weixinModel.getRedirecturl() );
+            }
         }
     }
 
@@ -1296,11 +1382,26 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
        getUserInfo(event.getUserId());
     }
 
-    protected void getUserInfo(String userid ){
+    protected void getUserInfo(String userId ){
+
+        if(TextUtils.isEmpty(userId)){
+            EventBus.getDefault().post(new RefreshPageEvent(false,true));
+            ToastUtils.showLongToast("参数userid错误");
+            return;
+        }
+        String suserid = BaseApplication.single.readUserId();
+        if(!TextUtils.isEmpty( suserid) && userId.equals( suserid )){
+            EventBus.getDefault().post(new RefreshPageEvent(false,true));
+            ToastUtils.showLongToast("账号相同，不需要切换。");
+            return;
+        }
+
+
+
         String url = Constants.getINTERFACE_PREFIX() + "Account/getAppUserInfo";
         Map<String, String> map = new HashMap<>();
 
-        url+="?userid="+userid +"&customerid="+ application.readMerchantId();
+        url+="?userid="+userId +"&customerid="+ application.readMerchantId();
 
         //map.put("userid", application.readMemberId() );
         //map.put("customerid",application.readMerchantId());
@@ -1360,6 +1461,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             BaseApplication.single.clearAllCookies();
 
+
             EventBus.getDefault().post(new CloseEvent() );
 
             //更新userId
@@ -1387,8 +1489,13 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             String usercenterUrl = BaseApplication.single.obtainMerchantUrl() + "/" + Constants.URL_PERSON_INDEX+"?customerid="+BaseApplication.single.readMerchantId();
 
-            AuthParamUtils authParamUtils =new AuthParamUtils( BaseApplication.single , System.currentTimeMillis(), usercenterUrl , ref.get() );
-            usercenterUrl = authParamUtils.obtainUrl();
+
+            ref.get().signHeader();
+
+            //AuthParamUtils authParamUtils =new AuthParamUtils( BaseApplication.single , System.currentTimeMillis(), usercenterUrl , ref.get() );
+            //usercenterUrl = authParamUtils.obtainUrl();
+
+
 
             ref.get().pageWeb.loadUrl( usercenterUrl );
 
@@ -1411,9 +1518,30 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventGoIndex(GoIndexEvent event){
         if(pageWeb==null) return;
-        AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
-        String url = paramUtils.obtainUrl ();
+        //AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
+        //String url = paramUtils.obtainUrl ();
+        pageWeb.clearHistory();
+
+        String url = application.obtainMerchantUrl();
         pageWeb.loadUrl(url);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBind(BindEvent event){
+        if( event.isBindWeiXin()){
+            callWeixin( event.getRedirectUrl() );
+        }else {
+            callPhone();
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRefreshPage(RefreshPageEvent event){
+        if( !event.isRefreshMainUI() ) return;
+
+        pageWeb.reload();
+    }
+
 }
 

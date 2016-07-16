@@ -23,10 +23,14 @@ import com.huotu.partnermall.inner.BuildConfig;
 import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
+import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
 import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.utils.CrashHandler;
 import com.huotu.partnermall.utils.PreferenceHelper;
 import com.squareup.leakcanary.LeakCanary;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -135,7 +139,7 @@ public class BaseApplication extends Application {
     }
 
     public String readMemberId() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID);
+        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID,"0");
     }
 
     public void writeMemberId(String userId) {
@@ -247,9 +251,10 @@ public class BaseApplication extends Application {
     }
 
     public void writeMemberInfo(String userName, String userId, String userIcon, String userToken, String unionid , String openid ) {
+
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID, userId);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_NAME, userName);
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ICON, userIcon);
+        PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ICON, userIcon == null ? "": userIcon );
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN, userToken);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID, unionid);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_OPENID , openid );
@@ -379,6 +384,8 @@ public class BaseApplication extends Application {
 
         SisConstant.CATEGORY = null;
         SisConstant.SHOPINFO = null;
+
+        EventBus.getDefault().post(new RefreshHttpHeaderEvent() );
     }
 
 

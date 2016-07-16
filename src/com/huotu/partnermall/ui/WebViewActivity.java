@@ -34,6 +34,7 @@ import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.CloseEvent;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
+import com.huotu.partnermall.model.RefreshPageEvent;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
@@ -50,6 +51,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -372,8 +375,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 
     @OnClick(R.id.titleRightImage)
     void doShare(){
-        progress.showProgress("请稍等...");
-        progress.showAtLocation( getWindow().getDecorView() , Gravity.CENTER, 0, 0);
+        //progress.showProgress("请稍等...");
+        //progress.showAtLocation( getWindow().getDecorView() , Gravity.CENTER, 0, 0);
         getShareContentByJS();
     }
 
@@ -594,5 +597,14 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     public void onEventRefreshHttpHeader(RefreshHttpHeaderEvent event){
         if( viewPage==null) return;
         signHeader(viewPage);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRefreshPage(RefreshPageEvent event){
+        try {
+            viewPage.reload();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }

@@ -126,7 +126,7 @@ public class LoginActivity extends BaseActivity implements Handler.Callback {
         progress.showProgress(null);
         progress.showAtLocation ( loginL, Gravity.CENTER, 0, 0 );
         //微信授权登录
-        login = new AutnLogin (  mHandler );
+        login = new AutnLogin (  mHandler , "" );
         //login.authorize(new Wechat(LoginActivity.this));
         login.authorize(ShareSDK.getPlatform( Wechat.NAME ));
         loginL.setClickable(false);

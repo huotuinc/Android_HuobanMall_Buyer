@@ -1,6 +1,7 @@
 package com.huotu.partnermall.utils;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import com.huotu.partnermall.BaseApplication;
@@ -44,6 +45,42 @@ public class AuthParamUtils {
         this.url = url;
     }
 
+
+
+    /***
+     * 移除url中的特殊参数（unionid，sign，userid , timestamp）
+     */
+    protected String removeUrlSpecialParameter(String url ) {
+
+        Uri uri = Uri.parse(url);
+        String path = uri.getPath().toLowerCase();
+
+        String params = uri.getQuery();
+        String nparams = "";
+        String[] str = params.split("&");
+        if (str.length > 0) {
+            for (String map : str) {
+                //获取参数
+                String[] values = map.split("=");
+                if (values.length < 1) continue;
+                String k = values[0].toLowerCase().trim();
+                if (k.equals("unionid") || k.equals("buserid") || k.equals("operation") || k.equals("version")
+                        || k.equals("sign") || k.equals("timestamp") || k.equals("appid") ) {
+                    continue;
+                }
+                if (!TextUtils.isEmpty(nparams)) nparams += "&";
+                nparams += map;
+            }
+        }
+
+        String ho = url.substring(0, url.indexOf("?"));
+        String nurl = ho + (TextUtils.isEmpty(nparams) ? "" : "?" + nparams);
+        return nurl;
+    }
+
+
+
+
     public String obtainUrl()
     {
         StringBuilder builder = new StringBuilder (  );
@@ -51,6 +88,9 @@ public class AuthParamUtils {
             Map< String, String > paramMap = new HashMap< String, String > ( );
             if(!application.obtainMerchantUrl ().equals ( url ))
             {
+
+                url = removeUrlSpecialParameter(url);
+
                 //获取url中的参数
                 //String params = url.substring ( url.indexOf ( ".aspx?" ) + 6, url.length ( ) );
                 String params  = "";
@@ -66,7 +106,8 @@ public class AuthParamUtils {
                         //获取参数
                         String[] values = map.split ( "=" );
                         if ( 2 == values.length ) {
-                            paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
+                            //paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
+                            paramMap.put(values[0], values[1]);
                         }
                         else if ( 1 == values.length ) {
                             //paramMap.put ( values[ 0 ], null );
@@ -79,8 +120,7 @@ public class AuthParamUtils {
                 paramMap.put ( "operation", Constants.OPERATION_CODE );
                 paramMap.put ( "buserId", application.readUserId ( ) );
                 //1、timestamp
-                paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ),
-                                                                "UTF-8" ) );
+                paramMap.put ( "timestamp", URLEncoder.encode ( String.valueOf ( timestamp ), "UTF-8" ) );
                 //appid
                 paramMap.put ( "appid", URLEncoder.encode ( Constants.getAPP_ID() , "UTF-8" ));
                 //unionid
@@ -197,7 +237,8 @@ public class AuthParamUtils {
                         //获取参数
                         String[] values = map.split ( "=" );
                         if ( 2 == values.length ) {
-                            paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
+                            //paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
+                            paramMap.put( values[0], values[1]);
                         }
                         else if ( 1 == values.length ) {
                             paramMap.put ( values[ 0 ], null );
@@ -246,7 +287,8 @@ public class AuthParamUtils {
                     //获取参数
                     String[] values = map.split ( "=" );
                     if ( 2 == values.length ) {
-                        paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
+                        //paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
+                        paramMap.put( values[0], values[1]);
                     }
                     else if ( 1 == values.length ) {
                         paramMap.put ( values[ 0 ], "" );
@@ -295,7 +337,8 @@ public class AuthParamUtils {
                     //获取参数
                     String[] values = map.split ( "=" );
                     if ( 2 == values.length ) {
-                        paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
+                        //paramMap.put ( values[ 0 ], URLEncoder.encode ( values[ 1 ], "UTF-8" ) );
+                        paramMap.put(values[0], values[1]);
                     }
                     else if ( 1 == values.length ) {
                         paramMap.put ( values[ 0 ], "" );

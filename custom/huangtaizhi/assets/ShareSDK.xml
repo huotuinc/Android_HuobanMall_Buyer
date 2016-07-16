@@ -60,5 +60,5 @@
         SortId="6"
         AppId="wx098959415b52798e"
         AppSecret="e6f4201024212a6bcc6b8e2eac9cc9e2"
-        Enable="false" />
+        Enable="true" />
 </DevInfor>
