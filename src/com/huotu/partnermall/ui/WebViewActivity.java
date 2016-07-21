@@ -40,6 +40,7 @@ import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.ObtainParamsMap;
+import com.huotu.partnermall.utils.SignUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WindowUtils;
@@ -63,15 +64,12 @@ import cn.sharesdk.framework.PlatformActionListener;
  * 单张展示web页面
  */
 public class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadcastReceiver.BroadcastListener {
-    //获取资源文件对象
     private Resources  resources;
     private Handler  mHandler;
-    //web视图
     private WebView viewPage;
     private String url;
     private SharePopupWindow share;
     private MyBroadcastReceiver myBroadcastReceiver;
-    //tilte组件
     @Bind(R.id.newtitleLayout)
     RelativeLayout newtitleLayout;
     //标题栏左侧图标
@@ -93,6 +91,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     @Bind(R.id.statuslayout)
     RelativeLayout statuslayout;
 
+    UrlFilterUtils urlFilterUtils;
+
     @Override
     protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
@@ -108,6 +108,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         progress = new ProgressPopupWindow ( WebViewActivity.this );
         share = new SharePopupWindow ( WebViewActivity.this );
         myBroadcastReceiver = new MyBroadcastReceiver(WebViewActivity.this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
+        urlFilterUtils = new UrlFilterUtils(WebViewActivity.this, mHandler, application);
+
         Bundle bundle = this.getIntent().getExtras();
         url = bundle.getString ( Constants.INTENT_URL );
         initView();
@@ -189,19 +191,9 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         viewPage.setVerticalScrollBarEnabled(false);
         viewPage.setClickable(true);
         viewPage.getSettings().setUseWideViewPort(true);
-
-//        String userAgent = viewPage.getSettings().getUserAgentString();
-//        if( TextUtils.isEmpty(userAgent) ) {
-//            userAgent = "mobile";
-//        }else{
-//            userAgent +=";mobile";
-//        }
-//        viewPage.getSettings().setUserAgentString(userAgent);
-        signHeader( viewPage );
-
         //是否需要避免页面放大缩小操作
-        viewPage.getSettings().setSupportZoom(true);
-        viewPage.getSettings().setBuiltInZoomControls(true);
+        //viewPage.getSettings().setSupportZoom(true);
+        //viewPage.getSettings().setBuiltInZoomControls(true);
         viewPage.getSettings().setJavaScriptEnabled(true);
         viewPage.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         viewPage.getSettings().setSaveFormData(true);
@@ -216,25 +208,25 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         viewPage.getSettings().setGeolocationDatabasePath(dir);
         viewPage.getSettings().setGeolocationEnabled(true);
         viewPage.addJavascriptInterface(this, "android");
-        viewPage.loadUrl(url);
+
+        signHeader( viewPage );
+
+        viewPage.loadUrl(url, SignUtil.signHeader());
 
         viewPage.setWebViewClient(
                 new WebViewClient() {
                     //重写此方法，浏览器内部跳转
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
                         if (titleText == null) return false;
-
-
-                        UrlFilterUtils filter = new UrlFilterUtils(WebViewActivity.this, mHandler, application);
-                        return filter.shouldOverrideUrlBySFriend(viewPage, url);
+                        //UrlFilterUtils filter = new UrlFilterUtils(WebViewActivity.this, mHandler, application);
+                        return urlFilterUtils.shouldOverrideUrlBySFriend(viewPage, url);
                     }
 
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
-
-                        if( titleRightImage !=null  ) {
-                            titleRightImage.setVisibility(View.GONE);
-                        }
+//                        if( titleRightImage !=null  ) {
+//                            titleRightImage.setVisibility(View.GONE);
+//                        }
 
                         super.onPageStarted(view, url, favicon);
                     }
@@ -326,52 +318,6 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     protected void getShareContentByJS(){
         viewPage.loadUrl("javascript:__getShareStr();");
     }
-
-    @OnClick(R.id.titleRightImage)
-    void doShare_old(){
-        String sourceUrl = viewPage.getUrl();
-        if( !TextUtils.isEmpty( sourceUrl )) {
-            Uri u = Uri.parse( sourceUrl );
-            String path = u.getPath().toLowerCase().trim();
-            int idx = path.lastIndexOf("/");
-            String fileName = path.substring(idx + 1);
-
-            if( fileName.equals("view.aspx") ) {//商品详细界面
-                progress.showProgress("请稍等...");
-                progress.showAtLocation( getWindow().getDecorView() , Gravity.CENTER, 0, 0);
-                getShareContentByJS();
-                return;
-            }else if( fileName.equals("inviteOpenShop".toLowerCase())){
-                progress.showProgress("请稍等...");
-                progress.showAtLocation(getWindow().getDecorView() , Gravity.CENTER, 0, 0);
-                getShareContentByJS();
-                return;
-            }
-        }
-
-        String text = application.obtainMerchantName ()+"分享";
-        String imageurl = application.obtainMerchantLogo ();
-        if(!imageurl.contains ( "http://" ))
-        {
-            //加上域名
-            imageurl = application.obtainMerchantUrl () + imageurl;
-        }
-        else if( TextUtils.isEmpty ( imageurl ))
-        {
-            imageurl = Constants.COMMON_SHARE_LOGO;
-        }
-        String title = application.obtainMerchantName ()+"分享";
-        String url = null;
-        url = viewPage.getUrl();
-        ShareModel msgModel = new ShareModel ();
-        msgModel.setImageUrl(imageurl);
-        msgModel.setText(text);
-        msgModel.setTitle(title);
-        msgModel.setUrl(url);
-        share.initShareParams(msgModel);
-        share.showAtLocation(titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-    }
-
 
     @OnClick(R.id.titleRightImage)
     void doShare(){
@@ -583,8 +529,23 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     }
 
     @JavascriptInterface
-    public void enableShare(){
-        titleRightImage.setVisibility(View.VISIBLE);
+    public void enableShare( String state ){
+        if(TextUtils.isEmpty( state ) || state.equals("1")) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    titleRightImage.setVisibility(View.VISIBLE);
+                }
+            });
+
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    titleRightImage.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

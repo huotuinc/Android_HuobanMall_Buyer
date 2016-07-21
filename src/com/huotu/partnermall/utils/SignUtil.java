@@ -1,47 +1,16 @@
 package com.huotu.partnermall.utils;
 
+import com.huotu.partnermall.BaseApplication;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/3/10.
  */
 public class SignUtil {
-    /**
-     *
-     * @param map
-     * @return
-     */
-//    public static String Sign(Map<String,String> map){
-//        Map<String, String> resultMap = new TreeMap<String, String>();
-//        for (Object key : map.keySet()) {
-//            resultMap.put(key.toString(), map.get(key));
-//        }
-//
-//        StringBuilder strB = new StringBuilder();
-//        for (String key : resultMap.keySet()) {
-//            if (!"sign".equals(key) && !TextUtils.isEmpty(resultMap.get(key))) {
-//                strB.append("&" + key + "=" + resultMap.get(key));
-//            }
-//        }
-//
-//        String toSign = (strB.toString().length() > 0 ? strB.toString().substring(1) : "") + Jlibrary.BizApiSecurity;
-//        Logger.i(toSign);
-//        String sign="";
-//        try {
-//            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-//            messageDigest.update(toSign.getBytes("utf-8"));
-//            byte[] sign1 = messageDigest.digest();//加密
-//            sign = bytesToHexString(sign1).toLowerCase();
-//            Logger.i(sign);
-//        }catch (NoSuchAlgorithmException ex2) {
-//            Logger.e(ex2.getMessage());
-//        }catch (UnsupportedEncodingException ex1){
-//            Logger.e(ex1.getMessage());
-//        }
-//        return sign;
-//    }
 
     public static String getSecure(String app_key , String app_security , String random) {
 
@@ -96,5 +65,19 @@ public class SignUtil {
         }
         return buffer;
     }
+
+    public static Map<String,String> signHeader(){
+        String userid= BaseApplication.single.readMemberId();
+        String unionid = BaseApplication.single.readUserUnionId();
+        String openId = BaseApplication.single.readOpenId();
+        String sign = ObtainParamsMap.SignHeaderString(userid, unionid , openId );
+
+        String hotString= "mobile;"+sign;
+
+        Map<String,String> header= new HashMap<>();
+        header.put("Hot", hotString);
+        return header;
+    }
+
 
 }

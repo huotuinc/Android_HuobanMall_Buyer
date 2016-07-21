@@ -13,6 +13,8 @@ public class MerchantInfoModel {
     private String applinkurl;
     //0:手机+微信 1：手机 2：微信
     private int accountmodel;
+    //客服地址
+    private String webchannel;
 
     public String getMall_description() {
         return mall_description;
@@ -76,5 +78,13 @@ public class MerchantInfoModel {
 
     public void setAccountModel(int accountmodel) {
         this.accountmodel = accountmodel;
+    }
+
+    public String getWebchannel() {
+        return webchannel;
+    }
+
+    public void setWebchannel(String webchannel) {
+        this.webchannel = webchannel;
     }
 }

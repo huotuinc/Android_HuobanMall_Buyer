@@ -6,7 +6,6 @@ android:layout_width="match_parent"
 android:layout_height="@dimen/menu_layout_height"
 android:clickable="true"
 android:gravity="center_vertical"
-android:onClick="onClick"
 android:orientation="horizontal"
 android:padding="@dimen/menu_item_padding">
 

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -69,6 +70,7 @@ import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.ObtainParamsMap;
+import com.huotu.partnermall.utils.SignUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
@@ -80,6 +82,7 @@ import com.huotu.partnermall.widgets.TipAlertDialog;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.w3c.dom.Text;
 
 import java.lang.ref.WeakReference;
 import java.net.URI;
@@ -99,9 +102,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     //获取资源文件对象
     private Resources resources;
     private long exitTime = 0l;
-    //handler对象
     public Handler mHandler;
-    //windows类
     private WindowManager wManager;
     private SharePopupWindow share;
     public ProgressPopupWindow progress;
@@ -160,6 +161,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     @Bind(R.id.ff1)
     FrameLayout ff1;
 
+    UrlFilterUtils urlFilterUtils;
+
     @Override
     protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
@@ -191,6 +194,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 checkAppVersion();
             }
         },500);
+
+
     }
 
     /***
@@ -217,10 +222,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     protected void onResume() {
         super.onResume();
         initUserInfo();
-
         judgeLoginStatus();
     }
-
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -230,7 +233,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         initRedrectUrl(intent);
     }
-
 
     /***
      * 判断 登录以后，是否需要调转
@@ -242,17 +244,13 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         }
         if( TextUtils.isEmpty(redirecturl) ) return;
 
-
-        //AuthParamUtils authParamUtils = new AuthParamUtils(BaseApplication.single , System.currentTimeMillis(), redirecturl, this);
-        //String temp = authParamUtils.obtainUrl();
-
         String temp = redirecturl;
 
         if( !temp.toLowerCase().startsWith("http://")){
             temp = "http://"+temp;
         }
 
-        pageWeb.loadUrl( temp );
+        pageWeb.loadUrl( temp , SignUtil.signHeader() );
     }
 
     protected void initUserInfo(){
@@ -292,58 +290,27 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
     @Override
     protected void initView ( ) {
-        //获取系统标题栏高度
-        if (application.isKITKAT()) {
-//            int statusBarHeight = getStatusBarHeight(HomeActivity.this);
-//            loginLayout.setPadding(0, 0, 0, 0);
-        }
-        //初始化侧滑菜单面板
-        layDrag.setDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-            }
 
-            @Override
-            public void onDrawerOpened(View drawerView) {
-
-
-                //pageWeb.loadUrl("javascript:customerServiceChat();");
-
-                refreshLeftMenu();
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-            }
-        });
+        urlFilterUtils = new UrlFilterUtils( this, mHandler, application  );
 
         //设置title背景
         homeTitle.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         ff1.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         //设置左侧图标
-        Drawable leftDraw = resources.getDrawable(R.drawable.main_title_left_sideslip);
+        Drawable leftDraw = ContextCompat.getDrawable( this , R.drawable.main_title_left_sideslip);
         SystemTools.loadBackground(titleLeftImage, leftDraw);
         //设置右侧图标
-        Drawable rightDraw = resources.getDrawable(R.drawable.home_title_right_share);
+        Drawable rightDraw = ContextCompat.getDrawable( this, R.drawable.home_title_right_share);
         SystemTools.loadBackground(titleRightImage, rightDraw);
-
         titleRightImage.setVisibility(View.GONE);
-
         //设置侧滑界面
         loginLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
-
         //设置设置图标
-        SystemTools.loadBackground(loginSetting, resources.getDrawable(R.drawable.switch_white));
+        SystemTools.loadBackground(loginSetting, ContextCompat.getDrawable(this ,R.drawable.switch_white));
         getAuthLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         loginSetting.setVisibility(View.GONE);
-
         //设置登录界面
         getAuthLayout.setVisibility(View.VISIBLE);
-
         //动态加载侧滑菜单
         UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, mHandler);
         ui.loadMenus();
@@ -356,7 +323,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 pageWeb.reload();
             }
         });
-
 
         share.setPlatformActionListener(
                 new PlatformActionListener() {
@@ -373,7 +339,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                         Message msg = Message.obtain();
                         msg.what = Constants.SHARE_ERROR;
                         msg.obj = platform;
-                        //ToastUtils.showLongToast(HomeActivity.this, throwable.getMessage());
                         mHandler.sendMessage(msg);
                     }
 
@@ -393,7 +358,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         loadMainMenu();
     }
 
-
     protected void judgeLoginStatus(){
         boolean isLogin = BaseApplication.single.isLogin();
         if(!isLogin){
@@ -403,7 +367,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         }else{
         }
     }
-
 
     /***
      *  初始化极光推送
@@ -416,54 +379,27 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         PushProcess.process( this , bundle);
     }
 
-
     private void loadMainMenu() {
         menuView.getSettings().setJavaScriptEnabled(true);
         menuView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        //
-//        String userAgent = menuView.getSettings().getUserAgentString();
-//        if( TextUtils.isEmpty(userAgent) ) {
-//            userAgent = "mobile";
-//        }else{
-//            userAgent +=";mobile";
-//        }
-//        menuView.getSettings().setUserAgentString( userAgent );
+        menuView.getSettings().setDomStorageEnabled(true);
+        menuView.getSettings().setAllowFileAccess(true);
+        menuView.getSettings().setAppCacheEnabled(true);
+        menuView.getSettings().setDatabaseEnabled(true);
+
         signHeader( menuView );
 
         //首页默认为商户站点 + index
         String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
-        menuView.loadUrl(menuUrl);
+        menuView.loadUrl(menuUrl , SignUtil.signHeader() );
 
         menuView.setWebViewClient(
                 new WebViewClient() {
                     //重写此方法，浏览器内部跳转
                     public boolean shouldOverrideUrlLoading( WebView view, String url ) {
                         if( pageWeb ==null ) return true;
-
                         titleRightImage.setVisibility(View.GONE);
-
-//                        if( 1==1) {
-//                            pageWeb.loadUrl("http://192.168.1.7:8080/cs/webChannel?customerId=3447&userId=2");
-//                            return true;
-//                        }
-
-
-
-//                        if( 1==1) {
-//                            pageWeb.loadUrl("javascript:customerServiceChat();");
-//                            //return true;
-//                        }
-
-
-
-
-
-
-                        //AuthParamUtils paramUtils = new AuthParamUtils(BaseApplication.single, System.currentTimeMillis(), url, HomeActivity.this);
-                        //String urlStr = paramUtils.obtainUrl();
-                        String urlStr = url;
-
-                        pageWeb.loadUrl(urlStr);
+                        pageWeb.loadUrl(url , SignUtil.signHeader() );
                         return true;
                     }
 
@@ -498,7 +434,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             if(idx>=0){
                 userAgent = userAgent.substring(0,idx);
             }
-
             userAgent +=";mobile;"+sign;
         }
         webView.getSettings().setUserAgentString( userAgent );
@@ -508,20 +443,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         pageWeb.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         pageWeb.setVerticalScrollBarEnabled(false);
         pageWeb.setClickable(true);
-        //设置app标志
-//        String userAgent = pageWeb.getSettings().getUserAgentString();
-//        if( TextUtils.isEmpty(userAgent) ) {
-//            userAgent = "mobile";
-//        }else{
-//            userAgent +=";mobile";
-//        }
-//        pageWeb.getSettings().setUserAgentString(userAgent);
-        signHeader( pageWeb );
-        //
         pageWeb.getSettings().setUseWideViewPort(true);
-        //是否需要避免页面放大缩小操作
-        pageWeb.getSettings().setSupportZoom(true);
-        pageWeb.getSettings().setBuiltInZoomControls(true);
+        //pageWeb.getSettings().setSupportZoom(true);
+        //pageWeb.getSettings().setBuiltInZoomControls(true);
         pageWeb.getSettings().setJavaScriptEnabled(true);
         pageWeb.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         pageWeb.getSettings().setSaveFormData(true);
@@ -535,43 +459,35 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         String dir = BaseApplication.single.getDir("database", Context.MODE_PRIVATE).getPath();
         pageWeb.getSettings().setGeolocationDatabasePath(dir);
         pageWeb.getSettings().setGeolocationEnabled(true);
-
         pageWeb.addJavascriptInterface( HomeActivity.this ,"android");
+
+        //设置app标志
+        signHeader( pageWeb );
         //首页鉴权
         //AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         //String url = paramUtils.obtainUrl ();
         String url = application.obtainMerchantUrl();
         //首页默认为商户站点 + index
-        pageWeb.loadUrl(url);
+        pageWeb.loadUrl(url , SignUtil.signHeader() );
 
         pageWeb.setWebViewClient(
                 new WebViewClient() {
                     //重写此方法，浏览器内部跳转
                     public boolean shouldOverrideUrlLoading( WebView view, String url ) {
-
-                        UrlFilterUtils filter = new UrlFilterUtils( HomeActivity.this, mHandler, application  );
-                        return filter.shouldOverrideUrlBySFriend(pageWeb, url);
+                        //UrlFilterUtils filter = new UrlFilterUtils( HomeActivity.this, mHandler, application  );
+                        return urlFilterUtils.shouldOverrideUrlBySFriend(pageWeb, url);
                     }
 
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {
-
-//                        if( titleRightImage !=null){
-//                            titleRightImage.setVisibility(View.GONE);
-//                        }
-
                         super.onPageStarted(view, url, favicon);
                     }
 
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        //页面加载完成后,读取菜单项
                         super.onPageFinished(view, url);
                         if( titleText ==null || pageWeb ==null ) return;
-
                         titleText.setText(view.getTitle());
-
-                        //boolean r = url.startsWith( application.obtainMerchantUrl() );
 
                         if(url.contains ( "&back" ) || url.contains ( "?back" )){
                             mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
@@ -667,7 +583,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 //return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
             }
         });
-
     }
 
     @Override
@@ -728,6 +643,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             layDrag.openDrawer(Gravity.LEFT);
         } else {
             if( pageWeb.canGoBack() ) {
+                titleRightImage.setVisibility(View.GONE);
                 pageWeb.goBack();
             }
         }
@@ -765,60 +681,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
      */
     protected void getShareContentByJS(){
         pageWeb.loadUrl("javascript:__getShareStr();");
-    }
-
-    @OnClick(R.id.titleRightImage)
-    void doShare_old(){
-        String sourceUrl = pageWeb.getUrl();
-        if( !TextUtils.isEmpty( sourceUrl )){
-            try {
-                URI u = URI.create(sourceUrl);
-                String path = u.getPath().toLowerCase().trim();
-
-                int idx = path.lastIndexOf("/");
-                String fileName = path.substring( idx + 1);
-
-                if (fileName.equals("view.aspx")) {
-                    progress.showProgress("请稍等...");
-                    progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
-                    getShareContentByJS();
-                    return;
-                }else if( fileName.equals("inviteOpenShop".toLowerCase())){
-                    progress.showProgress("请稍等...");
-                    progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
-                    getShareContentByJS();
-                    return;
-                }
-            }catch (Exception ex){
-            }
-        }
-
-        String text = application.obtainMerchantName ()+"分享";
-        String imageurl = application.obtainMerchantLogo ();
-        if(!imageurl.contains ( "http://" ))
-        {
-            //加上域名
-            imageurl = application.obtainMerchantUrl () + imageurl;
-        }
-        else if(TextUtils.isEmpty ( imageurl ))
-        {
-            imageurl = Constants.COMMON_SHARE_LOGO;
-        }
-        String title = application.obtainMerchantName ()+"分享";
-        String url = null;
-        url = pageWeb.getUrl();
-        if( url == null ){
-            url = application.obtainMerchantUrl();
-        }
-        url = SystemTools.shareUrl(application, url);
-        ShareModel msgModel = new ShareModel ();
-        msgModel.setImageUrl(imageurl);
-        msgModel.setText(text);
-        msgModel.setTitle(title);
-        msgModel.setUrl(url);
-        share.initShareParams(msgModel);
-        WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f );
-        share.showAtLocation(titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
     @OnClick(R.id.titleRightImage)
@@ -1051,7 +913,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         String  url = application.obtainMerchantUrl();
 
         //首页默认为商户站点 + index
-        pageWeb.loadUrl(url);
+        pageWeb.loadUrl(url , SignUtil.signHeader() );
 
         //设置左侧图标
         Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
@@ -1242,7 +1104,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             //当 重定响 url 不为空 ，则 调转到指定的url
             if( !TextUtils.isEmpty( weixinModel.getRedirecturl())){
-                ref.get().pageWeb.loadUrl( weixinModel.getRedirecturl() );
+                ref.get().pageWeb.loadUrl( weixinModel.getRedirecturl() , SignUtil.signHeader() );
+            }else{
+                ref.get().pageWeb.reload();
             }
         }
     }
@@ -1311,58 +1175,73 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         });
     }
 
+//    @JavascriptInterface
+//    public void sendSisShare(final String title, final String desc, final String link,final String img_url){
+//        if(  this==null ) return;
+//        if( this.share ==null ) return;
+//
+//        //ToastUtils.showShortToast( ref.get() , title+desc+link+img_url);
+//        mHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                if( HomeActivity.this ==null ) return;
+//
+//                if( HomeActivity.this.progress !=null ){
+//                    HomeActivity.this.progress.dismissView();
+//                }
+//
+//                String sTitle = title;
+//                if( TextUtils.isEmpty( sTitle ) ){
+//                    sTitle = application.obtainMerchantName ()+"分享";
+//                }
+//                String sDesc = desc;
+//                if( TextUtils.isEmpty( sDesc ) ){
+//                    sDesc = sTitle;
+//                }
+//                String imageUrl = img_url; //application.obtainMerchantLogo ();
+//                if(TextUtils.isEmpty ( imageUrl )) {
+//                    imageUrl = Constants.COMMON_SHARE_LOGO;
+//                }
+//
+//                String sLink = link;
+//                if( TextUtils.isEmpty( sLink ) ){
+//                    sLink = application.obtainMerchantUrl();
+//                }
+//                sLink = SystemTools.shareUrl(application, sLink);
+//                ShareModel msgModel = new ShareModel ();
+//                msgModel.setImageUrl(imageUrl);
+//                msgModel.setText(sDesc);
+//                msgModel.setTitle(sTitle);
+//                msgModel.setUrl(sLink);
+//                //msgModel.setImageData( BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ) );
+//                share.initShareParams(msgModel);
+//                //share.showShareWindow();
+//                WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f);
+//                share.showAtLocation( HomeActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+//
+//            }
+//        });
+//    }
+
     @JavascriptInterface
-    public void sendSisShare(final String title, final String desc, final String link,final String img_url){
-        if(  this==null ) return;
-        if( this.share ==null ) return;
-
-        //ToastUtils.showShortToast( ref.get() , title+desc+link+img_url);
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-
-                if( HomeActivity.this ==null ) return;
-
-                if( HomeActivity.this.progress !=null ){
-                    HomeActivity.this.progress.dismissView();
+    public void enableShare( String state ){
+        if(TextUtils.isEmpty( state ) || state.equals("1")) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    titleRightImage.setVisibility(View.VISIBLE);
                 }
+            });
 
-                String sTitle = title;
-                if( TextUtils.isEmpty( sTitle ) ){
-                    sTitle = application.obtainMerchantName ()+"分享";
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    titleRightImage.setVisibility(View.GONE);
                 }
-                String sDesc = desc;
-                if( TextUtils.isEmpty( sDesc ) ){
-                    sDesc = sTitle;
-                }
-                String imageUrl = img_url; //application.obtainMerchantLogo ();
-                if(TextUtils.isEmpty ( imageUrl )) {
-                    imageUrl = Constants.COMMON_SHARE_LOGO;
-                }
-
-                String sLink = link;
-                if( TextUtils.isEmpty( sLink ) ){
-                    sLink = application.obtainMerchantUrl();
-                }
-                sLink = SystemTools.shareUrl(application, sLink);
-                ShareModel msgModel = new ShareModel ();
-                msgModel.setImageUrl(imageUrl);
-                msgModel.setText(sDesc);
-                msgModel.setTitle(sTitle);
-                msgModel.setUrl(sLink);
-                //msgModel.setImageData( BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ) );
-                share.initShareParams(msgModel);
-                //share.showShareWindow();
-                WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f);
-                share.showAtLocation( HomeActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-
-            }
-        });
-    }
-
-    @JavascriptInterface
-    public void enableShare(){
-        titleRightImage.setVisibility(View.VISIBLE);
+            });
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1497,7 +1376,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
 
 
-            ref.get().pageWeb.loadUrl( usercenterUrl );
+            ref.get().pageWeb.loadUrl( usercenterUrl , SignUtil.signHeader() );
 
         }
     }
@@ -1516,14 +1395,17 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventGoIndex(GoIndexEvent event){
-        if(pageWeb==null) return;
-        //AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
-        //String url = paramUtils.obtainUrl ();
-        pageWeb.clearHistory();
+    public void onEventGoIndex(final GoIndexEvent event) {
+        if (pageWeb == null) return;
 
-        String url = application.obtainMerchantUrl();
-        pageWeb.loadUrl(url);
+
+        String url = application.obtainMerchantUrl().toLowerCase();
+        if (!url.startsWith("http://")) {
+            url = "http://" + url;
+        }
+
+        pageWeb.clearHistory();
+        pageWeb.loadUrl(url, SignUtil.signHeader());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

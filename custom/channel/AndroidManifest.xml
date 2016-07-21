@@ -100,11 +100,7 @@
             android:theme="@style/SplashTheme"
             android:screenOrientation="portrait">
         </activity>
-        <activity
-            android:name="com.huotu.partnermall.ui.login.LoginActivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
-        </activity>
+
 
         <activity
             android:name="com.huotu.partnermall.ui.HomeActivity"

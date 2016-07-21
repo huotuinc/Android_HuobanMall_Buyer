@@ -21,11 +21,9 @@ import java.net.URL;
 /**
  * 异步加载网络头像
  */
-public
-class LoadLogoImageAyscTask extends AsyncTask<Void, Void, Bitmap> {
+public class LoadLogoImageAyscTask extends AsyncTask<Void, Void, Bitmap> {
 
-    private
-    ImageView view;
+    private ImageView view;
     private String url;
     private Resources resources;
     private int defaultImg;

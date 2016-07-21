@@ -429,7 +429,7 @@ public class AuthParamUtils {
         }
         paramMap.put ( "timestamp", String.valueOf ( timestamp ) );
         paramMap.put ( "appid", Constants.getAPP_ID() );
-        paramMap.put ( "version", application.getAppVersion () );
+        paramMap.put ( "version", BaseApplication.getAppVersion () );
         paramMap.put ( "operation", Constants.OPERATION_CODE );
         paramMap.put ( "sign", getSign ( paramMap ) );
         //去掉null值

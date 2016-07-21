@@ -73,12 +73,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
         </activity>
-        <activity
-            android:name="com.huotu.partnermall.ui.login.LoginActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-            android:theme="@style/LoginTheme">
-        </activity>
+
         <activity
             android:name="com.huotu.partnermall.ui.HomeActivity"
             android:configChanges="keyboardHidden|orientation"

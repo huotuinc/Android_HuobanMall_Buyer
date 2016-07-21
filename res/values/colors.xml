@@ -317,7 +317,8 @@
     <!-- 黑色 -->
     <color name="transparent">#00000000</color>
     <!-- 透明 -->
-
+    <!--半透明-->
+    <color name="translucent">#a0000000</color>
     <color name="limit_buy_border_bg">#ffd4bc77</color>
     <color name="search_toolbar_bg">#ff484B50</color>
     <color name="toast_color">#ff2E76B9</color>

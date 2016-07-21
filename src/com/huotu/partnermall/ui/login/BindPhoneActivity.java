@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.huotu.android.library.libedittext.EditText;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
@@ -24,9 +26,8 @@ import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
-import com.huotu.partnermall.utils.UIUtils;
+import com.huotu.partnermall.utils.Util;
 import com.huotu.partnermall.widgets.CountDownTimerButton;
-import com.huotu.partnermall.widgets.KJEditText;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -37,24 +38,20 @@ import butterknife.OnClick;
 
 public class BindPhoneActivity extends BaseActivity implements CountDownTimerButton.CountDownFinishListener{
 
-    @Bind(R.id.edtPhone)
-    KJEditText edtPhone;
-    @Bind(R.id.edtCode)
-    KJEditText edtCode;
-    @Bind(R.id.tvGetCode)
-    TextView tvGetCode;
-    @Bind(R.id.btnBind)
-    Button btnBind;
-    @Bind(R.id.titleText)
-    TextView tvTitle;
-    @Bind(R.id.bindPhoneActivity_header)
-    RelativeLayout rlHeader;
-    @Bind(R.id.titleLeftImage)
-    ImageView ivLeft;
+    @Bind(R.id.edtPhone) EditText edtPhone;
+    @Bind(R.id.edtCode)  EditText edtCode;
+    @Bind(R.id.tvGetCode) TextView tvGetCode;
+    @Bind(R.id.btnBind) Button btnBind;
+    @Bind(R.id.titleText) TextView tvTitle;
+    @Bind(R.id.bindPhoneActivity_header) RelativeLayout rlHeader;
+    @Bind(R.id.titleLeftImage) ImageView ivLeft;
+    @Bind(R.id.tvNoCode) TextView tvNoCode;
+    @Bind(R.id.titleRightText) TextView titleRightText;
+    @Bind(R.id.titleRightImage) ImageView titleRightImage;
+    @Bind(R.id.titleRightLeftImage) ImageView titleRightLeftImage;
 
     ProgressDialog progressDialog;
     CountDownTimerButton countDownBtn;
-    boolean isVoiceSMS=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +65,16 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
         rlHeader.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()) );
         ivLeft.setBackgroundResource( R.drawable.main_title_left_back );
 
+        titleRightImage.setVisibility(View.GONE);
+        titleRightLeftImage.setVisibility(View.GONE);
+        titleRightText.setText("跳过");
     }
 
     @Override
     protected void initView() {
     }
 
-    @OnClick(R.id.titleLeftImage)
+    @OnClick({R.id.titleLeftImage, R.id.titleRightText} )
     protected void onBack(){
         finish();
     }
@@ -88,14 +88,40 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
             ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(edtPhone , 0);
             return;
         }
-
         if(TextUtils.isEmpty(code)){
             edtCode.setError("请输入验证码");
             ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(edtCode,0);
             return;
         }
+        if(!Util.isPhone( phone )){
+            edtPhone.setError("请输入正确的手机号码");
+            edtPhone.setFocusable(true);
+            return;
+        }
 
         bindPhone(phone, code);
+    }
+
+    @OnClick(R.id.tvNoCode)
+    protected void onSendVoiceCode() {
+        String phone = edtPhone.getText().toString().trim();
+        if( TextUtils.isEmpty( phone ) ){
+            edtPhone.setError("请输入手机号");
+            ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(edtCode, 0);
+            return;
+        }
+        if( phone.length()<11 ){
+            edtPhone.setError("请输入合法的手机号");
+            edtPhone.setFocusable(true);
+            return;
+        }
+        if(!Util.isPhone( phone )){
+            edtPhone.setError("请输入正确的手机号码");
+            edtPhone.setFocusable(true);
+            return;
+        }
+
+        getCode(true , phone);
     }
 
     protected void bindPhone(String phone ,String code ){
@@ -130,7 +156,6 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
 
     @OnClick(R.id.tvGetCode)
     protected void onTvGetCodeClick(){
-
         String phone = edtPhone.getText().toString().trim();
         if( TextUtils.isEmpty( phone ) ){
             edtPhone.setError("请输入手机号");
@@ -142,28 +167,20 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
             edtPhone.setFocusable(true);
             return;
         }
-
-        if( isVoiceSMS ) {
-            getCode(true , phone);
-            countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取语音验证码", 60000, this);
-            countDownBtn.start();
-        }else{
-            getCode(false , phone);
-            countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取验证码", 60000, this);
-            countDownBtn.start();
+        if(!Util.isPhone( phone )){
+            edtPhone.setError("请输入正确的手机号码");
+            edtPhone.setFocusable(true);
+            return;
         }
+
+        getCode(false , phone);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if( isVoiceSMS ) {
-            tvGetCode.setText("获取语音验证码");
-        }else{
-            tvGetCode.setText("获取验证码");
-        }
-
+        tvGetCode.setText("获取验证码");
         tvGetCode.setClickable(true);
         tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
     }
@@ -175,8 +192,18 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
             countDownBtn.Stop();
             countDownBtn=null;
         }
-        isVoiceSMS=true;
-        tvGetCode.setText("获取语音验证码");
+        tvGetCode.setText("获取验证码");
+    }
+
+    @Override
+    public void timeProgress() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if( tvNoCode ==null ) return;
+                tvNoCode.setVisibility( View.VISIBLE );
+            }
+        });
     }
 
     protected void getCode(boolean isVoice , String phone) {
@@ -190,7 +217,6 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
         Map<String, String> map = new HashMap<>();
         map.put("customerid", application.readMerchantId());
         map.put("mobile", phone);
-        //map.put("second");
 
         AuthParamUtils authParamUtils = new AuthParamUtils(application, System.currentTimeMillis(), url, this);
         Map<String, String> params = authParamUtils.obtainParams(map);
@@ -201,17 +227,15 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
                 DataBase.class,
                 null,
                 params,
-                new MyGetCodeListener(this),
+                new MyGetCodeListener(this, isVoice ),
                 new MyGetCodeErrorListener(this)
         );
-
         VolleyUtil.getRequestQueue().add(request);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if( keyCode == KeyEvent.KEYCODE_BACK &&
-                event.getAction() == KeyEvent.ACTION_DOWN){
+        if( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             this.finish();
             return true;
         }
@@ -224,14 +248,21 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
         ButterKnife.unbind(this);
         if(null != countDownBtn){
             countDownBtn.Stop();
+            countDownBtn=null;
+        }
+        if( progressDialog !=null ){
+            progressDialog.dismiss();
+            progressDialog=null;
         }
     }
 
-
     static class MyGetCodeListener implements Response.Listener<DataBase> {
         WeakReference<BindPhoneActivity> ref;
-        public MyGetCodeListener(BindPhoneActivity act) {
-            ref=new WeakReference<BindPhoneActivity>(act);
+        boolean isVoice=false;
+
+        public MyGetCodeListener(BindPhoneActivity act , boolean isVoice ) {
+            ref=new WeakReference<>(act);
+            this.isVoice = isVoice;
         }
         @Override
         public void onResponse(DataBase dataBase) {
@@ -242,12 +273,27 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
             }
 
             if( dataBase ==null ){
-                ToastUtils.showShortToast(ref.get(), "获取验证码失败。");
+                ToastUtils.showShortToast( "获取验证码失败。");
                 return;
             }
             if( dataBase.getCode() != 200) {
-                ToastUtils.showShortToast(ref.get(), "获取验证码失败。");
+                if( !TextUtils.isEmpty( dataBase.getMsg()) ){
+                    ToastUtils.showShortToast( dataBase.getMsg() );
+                }else {
+                    ToastUtils.showShortToast( "获取验证码失败。");
+                }
                 return;
+            }
+
+            if(isVoice) {
+                ToastUtils.showLongToast("语音验证码已经发送成功");
+            }else{
+                ToastUtils.showLongToast("短信验证码已经发送成功");
+
+                if( ref.get().countDownBtn ==null ) {
+                   ref.get().countDownBtn = new CountDownTimerButton( ref.get().tvGetCode, "%dS", "获取验证码", Constants.SMS_Wait_Time, ref.get() , Constants.SMS_SEND_VOICE_TIME);
+                }
+                ref.get().countDownBtn.start();
             }
         }
     }
@@ -255,7 +301,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
     static class MyGetCodeErrorListener implements Response.ErrorListener {
         WeakReference<BindPhoneActivity> ref;
         public MyGetCodeErrorListener(BindPhoneActivity act) {
-            ref = new WeakReference<BindPhoneActivity>(act);
+            ref = new WeakReference<>(act);
         }
         @Override
         public void onErrorResponse(VolleyError volleyError) {
@@ -265,14 +311,14 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
                 ref.get().progressDialog.dismiss();
             }
 
-            ToastUtils.showShortToast(ref.get(),"请求失败");
+            ToastUtils.showShortToast("请求服务失败");
         }
     }
 
     static class MyBindListener implements Response.Listener<DataBase> {
         WeakReference<BindPhoneActivity> ref;
         public MyBindListener(BindPhoneActivity act) {
-            ref=new WeakReference<BindPhoneActivity>(act);
+            ref=new WeakReference<>(act);
         }
         @Override
         public void onResponse(DataBase dataBase) {
@@ -283,11 +329,11 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
             }
 
             if( dataBase ==null ){
-                ToastUtils.showShortToast( ref.get() ,"绑定失败。" );
+                ToastUtils.showShortToast( "绑定手机失败" );
                 return;
             }
             if( dataBase.getCode() != 200) {
-                String msg = "绑定失败";
+                String msg = "绑定手机失败";
                 if( !TextUtils.isEmpty( dataBase.getMsg()  )){
                     msg = dataBase.getMsg();
                 }
@@ -300,10 +346,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
             ref.get().application.writeMemberRelatedType(2);//重写 关联类型=2 已经绑定
             //ref.get().application.writePhoneLogin(model.getLoginName(), model.getRealName(), model.getRelatedType(), model.getAuthorizeCode(), String.valueOf(ref.get().secure));
 
-            //动态加载侧滑菜单
-            //UIUtils ui = new UIUtils ( ref.get().application, ref.get() , resources, mainMenuLayout, wManager, mHandler, am );
-            //ui.loadMenus();
-            ToastUtils.showShortToast( ref.get() ,"绑定手机成功" );
+            ToastUtils.showShortToast( "绑定手机成功" );
             ref.get().setResult( RESULT_OK );
             ref.get().finish();
         }
@@ -312,7 +355,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
     static class MyBindErrorListener implements Response.ErrorListener {
         WeakReference<BindPhoneActivity> ref;
         public MyBindErrorListener(BindPhoneActivity act) {
-            ref = new WeakReference<BindPhoneActivity>(act);
+            ref = new WeakReference<>(act);
         }
         @Override
         public void onErrorResponse(VolleyError volleyError) {
@@ -322,9 +365,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
                 ref.get().progressDialog.dismiss();
             }
 
-            ToastUtils.showShortToast(ref.get(), "绑定失败");
+            ToastUtils.showShortToast("绑定手机失败");
         }
     }
-
-
 }

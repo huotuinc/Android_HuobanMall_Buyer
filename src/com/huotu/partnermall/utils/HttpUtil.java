@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -53,6 +54,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.AccessControlContext;
 import java.security.KeyStore;
@@ -184,6 +186,19 @@ public class HttpUtil{
                         //记录服务器app最新版本信息
                         application.writeNewVersion( merchantInfo.getVersionnumber() );
                         application.writeAppUrl( merchantInfo.getApplinkurl() );
+
+                        //记录客服地址
+                        String webChannel = merchantInfo.getWebchannel();
+                        String webChannelStr="";
+                        if(!TextUtils.isEmpty( webChannel)) {
+                            try {
+                                webChannelStr = URLDecoder.decode(webChannel);
+                            }catch ( Exception ex){
+                                Log.e( "httpUtil" , ex.getMessage() );
+                            }
+                        }
+                        application.writeMerchanntWebChannel( webChannelStr );
+
                     }
                 }
             }

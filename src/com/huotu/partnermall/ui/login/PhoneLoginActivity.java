@@ -41,6 +41,7 @@ import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.SignUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.utils.Util;
 import com.huotu.partnermall.widgets.CountDownTimerButton;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
@@ -71,19 +72,21 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
     @Bind(R.id.btnLogin) Button btnLogin;
     @Bind(R.id.llWechat) LinearLayout llWechat;
     @Bind(R.id.titleLeftImage) ImageView ivLeft;
-    @Bind(R.id.titleRightImage) ImageView ivRight;
+    //@Bind(R.id.titleRightImage) ImageView ivRight;
     @Bind(R.id.titleText) TextView tvTitle;
     @Bind(R.id.activity_phone_header) RelativeLayout rlHeader;
     @Bind(R.id.PhoneLoginActivity_phone_weixin) RelativeLayout rlPhoneWeixin;
     @Bind(R.id.PhoneLoginActivity_weixin)  RelativeLayout rlWeixin;
     @Bind(R.id.rlBottom) RelativeLayout rlBottom;
+    @Bind(R.id.tvNoCode) TextView tvNoCode;
+
     ProgressPopupWindow progressPopupWindow;
     Long secure;
     CountDownTimerButton countDownBtn;
     ShareSDKLogin shareSDKLogin;
     Handler handler;
     Bundle bundlePush;
-    boolean isVoiceSMS=false;
+    String redirectUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,12 +140,16 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         ivLeft.setBackgroundResource( R.drawable.main_title_left_back );
 
         checkWechatClient();
+
+       redirectUrl =  getIntent().getExtras() ==null? "" : getIntent().getExtras().getString("redirecturl");
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         initPush();
+
+        redirectUrl = intent.getExtras() ==null? "" : intent.getExtras().getString("redirecturl");
     }
 
     protected void initPush(){
@@ -195,22 +202,6 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         AuthParamUtils authParamUtils = new AuthParamUtils(application,  secure , url , PhoneLoginActivity.this );
         Map<String, String> params = authParamUtils.obtainParams(map);
 
-//        ApiService apiService = ZRetrofitUtil.getInstance().create(ApiService.class);
-//        Call<PhoneLoginModel> call = apiService.phoneLoginAuthorize( params );
-//        call.enqueue(new Callback<PhoneLoginModel>() {
-//            @Override
-//            public void onResponse(Call<PhoneLoginModel> call, retrofit2.Response<PhoneLoginModel> response) {
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<PhoneLoginModel> call, Throwable t) {
-//
-//            }
-//        });
-
-
-
         GsonRequest<PhoneLoginModel> request = new GsonRequest<>(
                 Request.Method.POST,
                 url,
@@ -242,21 +233,35 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
             edtPhone.setFocusable(true);
             return;
         }
-
-//        getCode( phone );
-//        countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取验证码", 60000,null);
-//        countDownBtn.start();
-
-        if( isVoiceSMS ) {
-            getCode(true , phone);
-            countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取语音验证码", 60000, this);
-            countDownBtn.start();
-        }else{
-            getCode(false , phone);
-            countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取验证码", 60000, this);
-            countDownBtn.start();
+        if(!Util.isPhone( phone )){
+            edtPhone.setError("请输入正确的手机号码");
+            edtPhone.setFocusable(true);
+            return;
         }
 
+        getCode(false , phone);
+    }
+
+    @OnClick(R.id.tvNoCode)
+    protected void onSendVoiceCode(){
+        String phone = edtPhone.getText().toString().trim();
+        if( TextUtils.isEmpty( phone ) ){
+            edtPhone.setError("请输入手机号");
+            ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(edtCode, 0);
+            return;
+        }
+        if( phone.length()<11 ){
+            edtPhone.setError("请输入合法的手机号");
+            edtPhone.setFocusable(true);
+            return;
+        }
+        if(! Util.isPhone( phone )){
+            edtPhone.setError("请输入正确的手机号码");
+            edtPhone.setFocusable(true);
+            return;
+        }
+
+        getCode(true , phone);
     }
 
     @Override
@@ -266,11 +271,21 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
             countDownBtn.Stop();
             countDownBtn=null;
         }
-        isVoiceSMS=true;
-        tvGetCode.setText("获取语音验证码");
+        tvGetCode.setText("获取验证码");
     }
 
-    protected void getCode( boolean isVoice , String phone) {
+    @Override
+    public void timeProgress() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if( tvNoCode ==null ) return;
+                tvNoCode.setVisibility( View.VISIBLE );
+            }
+        });
+    }
+
+    protected void getCode(final boolean isVoice , String phone) {
         String url ;
         if( isVoice) {
             url = Constants.getINTERFACE_PREFIX() + "Account/sendVoiceCode";
@@ -281,10 +296,8 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         Map<String, String> map = new HashMap<>();
         map.put("customerid", application.readMerchantId());
         map.put("mobile", phone);
-        //map.put("second");
         AuthParamUtils authParamUtils = new AuthParamUtils( url);
         Map<String, String> params = authParamUtils.obtainParams(map);
-
 
         GsonRequest<DataBase> request = new GsonRequest<DataBase>(Request.Method.POST,
                 url, DataBase.class, null, params, new Response.Listener<DataBase>() {
@@ -294,9 +307,27 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
                     progressPopupWindow.dismissView();
                 }
                 if (dataBase == null || dataBase.getCode() != 200 ) {
-                    ToastUtils.showShortToast( "获取验证码失败。");
+
+                    if( dataBase!=null && !TextUtils.isEmpty(dataBase.getMsg()) ){
+                        ToastUtils.showShortToast( dataBase.getMsg() );
+                    }else {
+                        ToastUtils.showShortToast("获取验证码失败。");
+                    }
                     return;
                 }
+
+                if(  isVoice) {
+                    ToastUtils.showLongToast("语音验证码已经发送成功");
+                }else{
+
+                    if( countDownBtn==null) {
+                        countDownBtn = new CountDownTimerButton(tvGetCode, "%dS", "获取验证码", Constants.SMS_Wait_Time, PhoneLoginActivity.this , Constants.SMS_SEND_VOICE_TIME);
+                    }
+                    countDownBtn.start();
+
+                    ToastUtils.showLongToast("短信验证码已经发送成功");
+                }
+
 
                 edtCode.requestFocus();
             }
@@ -311,38 +342,6 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         });
 
         VolleyUtil.getRequestQueue().add( request );
-
-
-
-//        ApiService apiService = ZRetrofitUtil.getInstance().create(ApiService.class);
-//        Call<DataBase> call = apiService.sendCode(params);
-//        call.enqueue(new Callback<DataBase>() {
-//            @Override
-//            public void onResponse(Call<DataBase> call, retrofit2.Response<DataBase> response) {
-//                if (progressPopupWindow != null) {
-//                    progressPopupWindow.dismissView();
-//                }
-//                if (response == null || response.code() != 200 || response.body() == null) {
-//                    ToastUtils.showShortToast( "获取验证码失败。");
-//                    return;
-//                }
-//                if (response.body().getCode() != 200) {
-//                    ToastUtils.showShortToast( "获取验证码失败。");
-//                    return;
-//                }
-//
-//                edtCode.requestFocus();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<DataBase> call, Throwable t) {
-//                if (progressPopupWindow != null) {
-//                    progressPopupWindow.dismissView();
-//                }
-//                ToastUtils.showShortToast("请求失败");
-//            }
-//        });
-
     }
 
     @Override
@@ -370,6 +369,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         progressPopupWindow.showAtLocation(this.getWindow().getDecorView(),Gravity.CENTER , 0,0 );
 
         llWechat.setEnabled(false);
+        rlPhoneWeixin.setEnabled(false);
 
         Platform platform = ShareSDK.getPlatform( Wechat.NAME);
         shareSDKLogin.authorize(platform);
@@ -379,16 +379,13 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
     protected void onResume() {
         super.onResume();
 
-        if( isVoiceSMS ) {
-            tvGetCode.setText("获取语音验证码");
-        }else{
-            tvGetCode.setText("获取验证码");
-        }
+        tvGetCode.setText("获取验证码");
 
         tvGetCode.setClickable(true);
         tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
 
         llWechat.setEnabled(true);
+        rlPhoneWeixin.setEnabled(true);
 
         if( progressPopupWindow!=null){
             progressPopupWindow.dismissView();
@@ -643,8 +640,8 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
             EventBus.getDefault().post(new RefreshHttpHeaderEvent());
 
             //设置调转页面
-            String redirecturl = ref.get().getIntent().getExtras() ==null? "" : ref.get().getIntent().getExtras().getString("redirecturl");
-            intent.putExtra("redirecturl", redirecturl);
+            //String redirecturl = ref.get().getIntent().getExtras() ==null? "" : ref.get().getIntent().getExtras().getString("redirecturl");
+            intent.putExtra("redirecturl", ref.get().redirectUrl );
 
             ActivityUtils.getInstance().skipActivity(ref.get(), intent );
 
@@ -675,6 +672,8 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
             progressPopupWindow.dismissView();
         }
         llWechat.setEnabled(true);
+        rlPhoneWeixin.setEnabled(true);
+
         if( msg.what == ShareSDKLogin.MSG_AUTH_COMPLETE ){
             AccountModel accountModel = (AccountModel) msg.obj;
             wechatToMall( accountModel );
@@ -883,7 +882,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
 
         Intent intent = new Intent(PhoneLoginActivity.this, BindPhoneActivity.class);
 
-        String redirectUrl = getIntent().getExtras() ==null? "" : getIntent().getExtras().getString("redirecturl");
+        //String redirectUrl = getIntent().getExtras() ==null? "" : getIntent().getExtras().getString("redirecturl");
         intent.putExtra("redirecturl", redirectUrl);
 
         startActivityForResult ( intent , HomeActivity.BINDPHONE_REQUESTCODE);
@@ -894,16 +893,14 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         super.onActivityResult(requestCode, resultCode, data);
         if( requestCode == HomeActivity.BINDPHONE_REQUESTCODE && resultCode == RESULT_OK){
             goToHome();
+        }else if( requestCode == HomeActivity.BINDPHONE_REQUESTCODE && resultCode != RESULT_OK){
+            goToHome();
         }
     }
 
     protected void goToHome(){
         //跳转到首页
         Bundle bd = new Bundle();
-        //String url = PreferenceHelper.readString(BaseApplication.single, NativeConstants.UI_CONFIG_FILE, NativeConstants.UI_CONFIG_SELF_HREF);
-        //bd.putString(NativeConstants.KEY_SMARTUICONFIGURL, url);
-        //bd.putBoolean(NativeConstants.KEY_ISMAINUI, true);
-
         Intent intent = new Intent();
         intent.setClass( this , HomeActivity.class);
         intent.putExtras(bd);
@@ -912,11 +909,11 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         }
 
         //设置调转页面
-        String redirecturl = getIntent().getExtras() ==null ? "": getIntent().getExtras().getString("redirecturl");
-        intent.putExtra("redirecturl", redirecturl);
+        //String redirecturl = getIntent().getExtras() ==null ? "": getIntent().getExtras().getString("redirecturl");
+
+        intent.putExtra("redirecturl", redirectUrl );
 
         ActivityUtils.getInstance().skipActivity( this , intent );
-        //ActivityUtils.getInstance().skipActivity(this, FragMainActivity.class, bd);
 
         EventBus.getDefault().post(new RefreshHttpHeaderEvent());
 

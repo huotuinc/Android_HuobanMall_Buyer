@@ -84,6 +84,13 @@ android {
             assets.srcDirs = ['custom/olquan/assets']
         }
 
+        olquan_test{
+            manifest.srcFile 'custom/olquan_test/AndroidManifest.xml'
+            java.srcDirs = ['custom/olquan_test/src']
+            res.srcDirs = ['custom/olquan_test/res']
+            assets.srcDirs = ['custom/olquan_test/assets']
+        }
+
         guozhenhao{
             manifest.srcFile 'custom/guozhenhao/AndroidManifest.xml'
             java.srcDirs = ['custom/guozhenhao/src']
@@ -130,8 +137,8 @@ android {
             buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
             buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
             buildConfigField 'String','Push_Url','\"http://test.api.open.huobanplus.com:8081/\"'
-            buildConfigField 'String', 'SMART_KEY', '\"_demo\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"1f2f3f4f5f6f7f8f\"'
+            buildConfigField 'String', 'SMART_KEY', '\"huoban\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"319ea9ad29ef4a50d6801c2f406dd208\"'
             signingConfig signingConfigs.fanmore
         }
 
@@ -147,7 +154,7 @@ android {
 //            buildConfigField 'String','Push_Url','\"http://api.open.huobanplus.com/\"'
 //            buildConfigField 'String', 'SMART_KEY', '\"app\"'
 //            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-//            signingConfig signingConfigs.huotu
+//            signingConfig signingConfigs.fanmore
 //        }
 
 
@@ -179,19 +186,33 @@ android {
 //            signingConfig signingConfigs.yingyan
 //        }
 
-//        olquan{//OL圈
-//            applicationId 'com.olquanapp.ttds.android'
-//            versionCode OLQUAN_VERSIONCODE.toInteger()
-//            versionName "${OLQUAN_VERSIONNAME}"
-//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.olquan.cn/\"'
-//            buildConfigField 'String','APP_ID', '\"'+"${OLQUAN_APP_ID}"+'\"'
-//            buildConfigField 'String','APP_SECRET', '\"'+"${OLQUAN_APP_SECRET}"+'\"'
-//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
-//            buildConfigField 'String','Push_Url','\"http://api.open.olquan.cn/\"'
-//            buildConfigField 'String', 'SMART_KEY', '\"app\"'
-//            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-//            signingConfig signingConfigs.olquan
-//        }
+        olquan{//OL圈
+            applicationId 'com.olquanapp.ttds.android'
+            versionCode OLQUAN_VERSIONCODE.toInteger()
+            versionName "${OLQUAN_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.olquan.cn/\"'
+            buildConfigField 'String','APP_ID', '\"'+"${OLQUAN_APP_ID}"+'\"'
+            buildConfigField 'String','APP_SECRET', '\"'+"${OLQUAN_APP_SECRET}"+'\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
+            buildConfigField 'String','Push_Url','\"http://api.open.olquan.cn/\"'
+            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+            signingConfig signingConfigs.olquan
+        }
+
+        olquan_test{//OL圈
+            applicationId 'com.olquanapp.ttds.android'
+            versionCode OLQUAN_VERSIONCODE.toInteger()
+            versionName "${OLQUAN_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.olquan.cn/\"'
+            buildConfigField 'String','APP_ID', '\"'+"${OLQUAN_APP_ID}"+'\"'
+            buildConfigField 'String','APP_SECRET', '\"'+"${OLQUAN_APP_SECRET}"+'\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://api.open.olquan.cn/\"'
+            buildConfigField 'String','Push_Url','\"http://api.open.olquan.cn/\"'
+            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+            signingConfig signingConfigs.olquan
+        }
 
 //        guozhenhao{//果真好
 //            applicationId 'com.huotu.mall.guozhenhao'

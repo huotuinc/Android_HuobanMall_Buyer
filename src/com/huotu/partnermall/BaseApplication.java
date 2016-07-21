@@ -652,6 +652,15 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString( single , Constants.MERCHANT_INFO , Constants.APP_UPDATE_URL, "");
     }
 
+    public void writeMerchanntWebChannel(String url){
+        PreferenceHelper.writeString( getApplicationContext() ,Constants.MERCHANT_INFO , Constants.MERCHANT_WEBCHANNEL , url  );
+    }
+
+    public String readMerchantWebChannel(){
+        return PreferenceHelper.readString( getApplicationContext(), Constants.MERCHANT_INFO,Constants.MERCHANT_WEBCHANNEL );
+    }
+
+
     public static int getAppVersionId() {
         int version = 0;
         try {

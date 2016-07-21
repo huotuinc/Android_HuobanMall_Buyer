@@ -33,7 +33,9 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.ColorBean;
+import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
+import com.huotu.partnermall.model.UpdateLeftInfoModel;
 import com.huotu.partnermall.service.LocationService;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.guide.GuideActivity;
@@ -46,6 +48,7 @@ import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PropertiesUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.utils.XMLParserUtils;
 import com.huotu.partnermall.widgets.MsgPopWindow;
 
@@ -54,8 +57,11 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -178,25 +184,20 @@ public class SplashActivity extends BaseActivity {
                                 }
                             }
 
-                            //获取数据包更新信息
-                            String packageUrl = Constants.getINTERFACE_PREFIX() + "mall/CheckDataPacket";
-                            String packageVersion = application.readPackageVersion();
-                            if (TextUtils.isEmpty(packageVersion)) {
-                                packageVersion = "0.0.1";
-                                application.writePackageVersion(packageVersion);
-                            }
-                            packageUrl += "?customerId=" + application.readMerchantId() + "&dataPacketVersion=" + packageVersion;
-                            AuthParamUtils paramPackage = new AuthParamUtils(application, System.currentTimeMillis(), packageUrl, SplashActivity.this);
-                            final String packageUrls = paramPackage.obtainUrls();
-                            HttpUtil.getInstance().doVolleyPackage( application, packageUrls);
 
-                            //获取商家域名
-                            //获取商户站点
-//                            String rootUrl = Constants.getINTERFACE_PREFIX() + "mall/getmsiteurl";
-//                            rootUrl += "?customerId=" + application.readMerchantId();
-//                            AuthParamUtils paramUtil = new AuthParamUtils(application, System.currentTimeMillis(), rootUrl, SplashActivity.this);
-//                            final String rootUrls = paramUtil.obtainUrls();
-//                            HttpUtil.getInstance().doVolleySite( application, rootUrls);
+                            getLeftMenu();
+                            //获取数据包更新信息
+//                            String packageUrl = Constants.getINTERFACE_PREFIX() + "mall/CheckDataPacket";
+//                            String packageVersion = application.readPackageVersion();
+//                            if (TextUtils.isEmpty(packageVersion)) {
+//                                packageVersion = "0.0.1";
+//                                application.writePackageVersion(packageVersion);
+//                            }
+//                            packageUrl += "?customerId=" + application.readMerchantId() + "&dataPacketVersion=" + packageVersion;
+//                            AuthParamUtils paramPackage = new AuthParamUtils(application, System.currentTimeMillis(), packageUrl, SplashActivity.this);
+//                            final String packageUrls = paramPackage.obtainUrls();
+//                            HttpUtil.getInstance().doVolleyPackage( application, packageUrls);
+
                             //获取商户logo信息
                             String logoUrl = Constants.getINTERFACE_PREFIX() + "mall/getConfig";
                             logoUrl += "?customerId=" + application.readMerchantId();
@@ -215,9 +216,7 @@ public class SplashActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
+                    public void onAnimationRepeat(Animation animation) {}
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
@@ -251,8 +250,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected
-    void onResume ( ) {
+    protected void onResume ( ) {
         super.onResume ( );
     }
 
@@ -362,5 +360,73 @@ public class SplashActivity extends BaseActivity {
         }
     }
 
+    private void getLeftMenu(){
+        String url = Constants.getINTERFACE_PREFIX() + "weixin/UpdateLeftInfo";
+        url +="?customerId="+ application.readMerchantId();
+        url +="&userId="+ (TextUtils.isEmpty( application.readMemberId())? "0": application.readMemberId());
+        url +="&clientUserType="+ application.readMemberType();
+        AuthParamUtils authParamUtils=new AuthParamUtils(application , System.currentTimeMillis() , url , SplashActivity.this);
+        url = authParamUtils.obtainUrlName();
+        GsonRequest<UpdateLeftInfoModel> request = new GsonRequest<UpdateLeftInfoModel>(
+                Request.Method.GET,
+                url,
+                UpdateLeftInfoModel.class,
+                null,
+                new MyRefreshMenuListener(SplashActivity.this),
+                new MyRefreshMenuErrorListener(SplashActivity.this));
+
+        VolleyUtil.getRequestQueue().add(request);
+    }
+
+    static class MyRefreshMenuListener implements Response.Listener<UpdateLeftInfoModel>{
+        WeakReference<SplashActivity> ref;
+        public MyRefreshMenuListener(SplashActivity aty){
+            ref= new WeakReference<>(aty);
+        }
+
+        @Override
+        public void onResponse(UpdateLeftInfoModel updateLeftInfoModel) {
+            if( ref.get() ==null) return;
+            if( updateLeftInfoModel==null ) return;
+
+            if( updateLeftInfoModel.getCode() != 200 ){
+                ToastUtils.showShortToast( ref.get().application , updateLeftInfoModel.getMsg());
+                return;
+            }
+
+            if( updateLeftInfoModel.getData()==null ) return;
+            if( updateLeftInfoModel.getData().getMenusCode()==0) return;
+
+            BaseApplication.single.writeMemberLevel(updateLeftInfoModel.getData().getLevelName());
+
+            //设置侧滑栏菜单
+            List<MenuBean > menus = new ArrayList<>(  );
+            MenuBean menu;
+            List<UpdateLeftInfoModel.MenuModel > home_menus = updateLeftInfoModel.getData().getHome_menus ();
+            for(UpdateLeftInfoModel.MenuModel home_menu:home_menus){
+                menu = new MenuBean ();
+                menu.setMenuGroup ( String.valueOf ( home_menu.getMenu_group () ) );
+                menu.setMenuIcon ( home_menu.getMenu_icon ( ) );
+                menu.setMenuName ( home_menu.getMenu_name ( ) );
+                menu.setMenuUrl ( home_menu.getMenu_url ( ) );
+                menus.add ( menu );
+            }
+            if(null != menus && !menus.isEmpty ()) {
+                BaseApplication.single.writeMenus(menus);
+            }
+        }
+    }
+
+    static class MyRefreshMenuErrorListener implements Response.ErrorListener{
+        WeakReference<SplashActivity> ref;
+        public MyRefreshMenuErrorListener(SplashActivity aty){
+            ref = new WeakReference<>(aty);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            if( ref.get()==null) return;
+        }
+    }
 }
 

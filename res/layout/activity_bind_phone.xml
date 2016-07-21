@@ -14,17 +14,19 @@
         <include layout="@layout/title_index"/>
     </RelativeLayout>
 
-    <com.huotu.partnermall.widgets.KJEditText
+    <com.huotu.android.library.libedittext.EditText
         android:layout_below="@id/bindPhoneActivity_header"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:id="@+id/edtPhone"
+        android:maxLength="11"
+        android:inputType="phone"
         android:hint="请输入手机号"
         android:layout_width="match_parent"
         android:layout_height="45dp"/>
 
-    <com.huotu.partnermall.widgets.KJEditText
+    <com.huotu.android.library.libedittext.EditText
         android:layout_marginTop="15dp"
         android:layout_below="@id/edtPhone"
         android:id="@+id/edtCode"
@@ -47,10 +49,23 @@
         android:layout_width="80dp"
         android:layout_height="45dp"/>
 
+    <TextView
+        android:layout_below="@id/tvGetCode"
+        android:layout_alignParentRight="true"
+        android:id="@+id/tvNoCode"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:layout_margin="8dp"
+        android:visibility="gone"
+        android:textColor="@color/black"
+        android:text="无法获得验证码？"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <Button
         android:id="@+id/btnBind"
-        android:layout_marginTop="25dp"
-        android:layout_below="@id/edtCode"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/tvNoCode"
         android:layout_alignLeft="@id/edtCode"
         android:layout_alignRight="@id/tvGetCode"
         android:text="绑定手机"
@@ -59,6 +74,23 @@
         android:textColor="@color/white"
         android:gravity="center"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:id="@+id/tvTip"
+        android:layout_below="@id/btnBind"
+        android:layout_alignLeft="@id/edtCode"
+        android:text="提示："
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_marginTop="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_below="@id/tvTip"
+        android:layout_alignLeft="@id/edtCode"
+        android:text="绑定手机后，可以快速找回支付密码，接受账户异常变动提醒"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
 </RelativeLayout>

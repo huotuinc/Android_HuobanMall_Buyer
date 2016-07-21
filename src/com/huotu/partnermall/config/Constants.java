@@ -175,6 +175,9 @@ public class Constants {
 	public static final String MERCHANT_INFO_ALIPAY_KEY = "merchant_alipay_key";
 	//商户微信支付KEY信息
 	public static final String MERCHANT_INFO_WEIXIN_KEY = "merchant_weixin_key";
+
+	public static final String MERCHANT_WEBCHANNEL="merchant_webchannel";
+
 	//商户菜单
 	public static final String MERCHANT_INFO_MENUS      = "main_menus";
 	//商户分类菜单
@@ -222,6 +225,8 @@ public class Constants {
 	public static final String WEB_PAY      = "/Mall/AppAlipay.aspx";
 	//鉴权失效
 	public static final String AUTH_FAILURE = "/UserCenter/Login.aspx";
+
+	public static final String AUTH_FAILURE_PHONE = "/invite/MobileLogin.aspx";
 
 	//绑定微信
 	public static final String URL_BINDINGWEIXING="/UserCenter/BindingWeixin.aspx";
@@ -405,4 +410,14 @@ public class Constants {
 	}
 
 	public final static String HUOTU_PUSH_KEY ="huotu_push_key";
+
+	/**
+	 * 接收短信等待时间（毫米）
+	 */
+	public static int SMS_Wait_Time = 60000;
+
+	/**
+	 * 发送语音验证码等待时间（毫秒）
+	 */
+	public static int SMS_SEND_VOICE_TIME = 8000;
 }

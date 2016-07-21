@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -49,23 +50,19 @@ public class UIUtils {
     public void loadMenus ( ) {
         String menuStr = application.readMenus();
         //json格式转成list
-        Gson gson = new Gson();
+        Gson gson = JSONUtil.getGson();
         List<MenuBean> menuList = gson.fromJson(menuStr, new TypeToken<List<MenuBean>>() {
         }.getType());
         //
         if (null == menuList || menuList.isEmpty()) {
-            KJLoger.e("未加载商家定义的菜单");
+            Log.e("UIUtils","未加载商家定义的菜单");
         } else {
-            //根据登录类型，添加相关的绑定菜单
-            //addRelateTypeMenu(menuList);
             //按分组排序
             menuSort(menuList);
-
             int size = menuList.size();
             for (int i = 0; i < size; i++) {
                 int leftWidth = Constants.SCREEN_WIDTH * 80 / 100;
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(leftWidth, (Constants.SCREEN_HEIGHT / 15));
-
                 //取出分组
                 String menuGroup = menuList.get(i).getMenuGroup();
 
@@ -97,23 +94,17 @@ public class UIUtils {
                 menuLayout.setId(i);
                 //设置图标
                 ImageView menuIcon = (ImageView) menuLayout.findViewById(R.id.menuIcon);
-                //从sd卡上获取图标
-                /*int iconId = resources.getIdentifier ( menu.getMenuIcon (), "drawable", application.readSysInfo () );
-                Drawable menuIconDraw = resources.getDrawable ( iconId );*/
-                Bitmap map = null; //SystemTools.readBitmapFromSD ( menu.getMenuIcon () );
+                Bitmap map = null;
                 if (null != map) {
                     Drawable menuIconDraw = new BitmapDrawable(context.getResources(), map);
                     SystemTools.loadBackground(menuIcon, menuIconDraw);
                 } else {
-                    //int iconId = resources.getIdentifier ( "menu_default", "drawable", application.readSysInfo () );
-                    //int iconId = resources.getIdentifier( menu.getMenuIcon() , "drawable" ,application.readSysInfo() );
                     int iconId = resources.getIdentifier(menu.getMenuIcon(), "drawable", application.getPackageName());
                     Drawable menuIconDraw = null;
                     if (iconId > 0) {
                         menuIconDraw = resources.getDrawable(iconId);
                     }
                     if (menuIconDraw == null) {
-                        //iconId = resources.getIdentifier( "menu_default" ,"drawable" ,application.readSysInfo ()  );
                         iconId = resources.getIdentifier("menu_default", "drawable", application.getPackageName());
                         menuIconDraw = resources.getDrawable(iconId);
                     }
@@ -122,9 +113,6 @@ public class UIUtils {
 
                 //设置文本
                 TextView menuText = (TextView) menuLayout.findViewById(R.id.menuText);
-                //mParam =new RelativeLayout.LayoutParams(200, ViewGroup.LayoutParams.WRAP_CONTENT);
-                //menuText.setLayoutParams( mParam );
-                //SystemTools.setFontStyle ( menuText, application );
                 menuText.setTextColor(Color.GRAY);
                 menuText.setText(menu.getMenuName());
 
@@ -158,7 +146,6 @@ public class UIUtils {
                 );
 
                 menuLayout.setLayoutParams(lp);
-
             }
         }
     }
@@ -168,56 +155,21 @@ public class UIUtils {
      * @param menus
      * @return
      */
-    private void menuSort(List<MenuBean> menus)
-    {
+    private void menuSort(List<MenuBean> menus){
         ComparatorMenu comparatorMenu = new ComparatorMenu ();
         Collections.sort ( menus, comparatorMenu );
     }
 
     public class ComparatorMenu implements Comparator {
-
         @Override
         public
         int compare ( Object lhs, Object rhs ) {
-
             MenuBean menu01 = ( MenuBean ) lhs;
             MenuBean menu02 = ( MenuBean ) rhs;
             //比较分组序号
             return menu01.getMenuGroup ( ).compareTo ( menu02.getMenuGroup () );
         }
     }
-
-    public void addRelateTypeMenu(List<MenuBean> menus){
-        //int loginType = application.readMemberLoginType();
-        //if( loginType== 1){
-            int relateType = application.readMemberRelatedType();
-            if( relateType == 1 ){//0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号
-
-            MenuBean item = new MenuBean();
-            item.setMenuGroup("888");
-            item.setMenuIcon("home_menu_bindphone");
-            item.setMenuName("绑定手机");
-            item.setMenuTag("");
-            item.setMenuUrl("http://www.bindphone.com");
-            menus.add(item);
-            return;
-        }//微信登录。
-        else if( relateType == 0) {
-//            int relateType = application.readMemberRelatedType();
-//            if (relateType != 0) {//0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号
-//                return;
-//            }
-            MenuBean item = new MenuBean();
-            item.setMenuGroup("888");
-            item.setMenuIcon("home_menu_bindweixin");
-            item.setMenuName("绑定微信");
-            item.setMenuTag("");
-            item.setMenuUrl("http://www.bindweixin.com");
-            menus.add(item);
-        }
-    }
-
-
     /***
      * 绑定推送信息
      */
@@ -227,7 +179,7 @@ public class UIUtils {
         String userRandom = String.valueOf(System.currentTimeMillis());
         String userSecure = Constants.getSMART_SECURITY();
         String userSign = SignUtil.getSecure( userKey , userSecure , userRandom);
-        String alias = BaseApplication.single.getPhoneIMEI();
+        String alias = BaseApplication.getPhoneIMEI();
         PushHelper.bindingUserId( userId ,alias, userKey,userRandom,userSign );
     }
 }

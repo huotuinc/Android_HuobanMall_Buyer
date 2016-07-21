@@ -20,6 +20,7 @@ import com.huotu.partnermall.ui.login.PhoneLoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
+import com.huotu.partnermall.utils.SignUtil;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
@@ -58,8 +59,7 @@ public class UrlFilterUtils {
             bundle.putString ( Constants.INTENT_URL, urlStr );
             ActivityUtils.getInstance ( ).showActivity ( ref.get() , WebViewActivity.class, bundle );
             return true;
-        }
-        else if ( url.contains ( Constants.WEB_CONTACT ) ){
+        } else if ( url.contains ( Constants.WEB_CONTACT ) ){
             //拦截客服联系
             //获取QQ号码
             String qq = url.substring ( 0, url.indexOf ( "&version=" ));
@@ -87,7 +87,13 @@ public class UrlFilterUtils {
 
             Uri uri = Uri.parse(url.toLowerCase());
             String redirectURL = uri.getQueryParameter("redirecturl");
-            if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.startsWith("http://") ){
+
+            if(!TextUtils.isEmpty( redirectURL )){
+                redirectURL = Uri.decode( redirectURL );
+            }
+
+
+            if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.toLowerCase().startsWith("http://") ){
                 if( !redirectURL.startsWith("/") ) redirectURL = "/"+ redirectURL;
                 redirectURL = uri.getHost() + redirectURL;
             }
@@ -154,7 +160,7 @@ public class UrlFilterUtils {
             return true;
 
         }
-        else if(url.contains ( Constants.AUTH_FAILURE ))
+        else if(url.contains ( Constants.AUTH_FAILURE ) || url.contains( Constants.AUTH_FAILURE_PHONE) )
         {
             //鉴权失效
             //清除登录信息
@@ -163,24 +169,43 @@ public class UrlFilterUtils {
 
             Uri uri = Uri.parse(url.toLowerCase());
             String redirectURL = uri.getQueryParameter("redirecturl");
-            if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.startsWith("http://") ){
+
+            if(!TextUtils.isEmpty( redirectURL )){
+                redirectURL = Uri.decode( redirectURL );
+            }
+
+            if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.toLowerCase().startsWith("http://") ){
                 if( !redirectURL.startsWith("/") ) redirectURL = "/"+ redirectURL;
                 redirectURL = uri.getHost() + redirectURL;
+
+                if( !redirectURL.toLowerCase().startsWith("http://") ){
+                    redirectURL = "http://"+ redirectURL;
+                }
             }
             //跳转到登录界面
 
             Bundle bd = new Bundle();
             bd.putString("redirecturl", redirectURL);
 
-            ActivityUtils.getInstance ().showActivity ( ref.get() , PhoneLoginActivity.class );
+            ActivityUtils.getInstance ().showActivity ( ref.get() , PhoneLoginActivity.class , bd);
             return true;
         }else if( url.toLowerCase().contains( Constants.URL_BINDINGWEIXING.toLowerCase() )){//拦截绑定微信url
 
             Uri uri = Uri.parse(url.toLowerCase());
             String redirectURL = uri.getQueryParameter("redirecturl");
-            if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.startsWith("http://") ){
+
+            if(!TextUtils.isEmpty( redirectURL )){
+                redirectURL = Uri.decode( redirectURL );
+            }
+
+            if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.toLowerCase().startsWith("http://") ){
                 if( !redirectURL.startsWith("/") ) redirectURL = "/"+ redirectURL;
                 redirectURL = uri.getHost() + redirectURL;
+
+                if( !redirectURL.toLowerCase().startsWith("http://") ){
+                    redirectURL = "http://"+ redirectURL;
+                }
+
             }
 
             EventBus.getDefault().post(new BindEvent(true , redirectURL ));
@@ -191,11 +216,11 @@ public class UrlFilterUtils {
             EventBus.getDefault().post(new SwitchUserByUserIDEvent(userId));
             return true;
         }
-        else
-        {
+        else{
+
             //跳转到新界面
-            view.loadUrl(url);
-            return false;
+            view.loadUrl(url , SignUtil.signHeader());
+            return true;
         }
         return false;
     }

@@ -45,6 +45,19 @@ import javax.crypto.spec.DESKeySpec;
  */
 public class Util {
 
+
+    /***
+     * 检索手机号码是否合法
+     * @param phone
+     * @return
+     */
+    public static boolean isPhone(String phone) {
+        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9])|(17[0-9]))\\d{8}$");
+        Matcher m = p.matcher(phone);
+        //logger.info(m.matches()+"---");
+        return m.matches();
+    }
+
     public static String opeDouble(double num) {
         String num2 = String.valueOf(num);
         int last = num2.lastIndexOf(".") + 3;

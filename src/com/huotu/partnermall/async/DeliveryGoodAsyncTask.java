@@ -17,8 +17,7 @@ import java.util.Map;
 /**
  * 商品支付任务
  */
-public
-class DeliveryGoodAsyncTask extends AsyncTask<Void,Void, FMDeliveryGood > {
+public class DeliveryGoodAsyncTask extends AsyncTask<Void,Void, FMDeliveryGood > {
     String      orderNo;
     int         productType;
     long        productId;
