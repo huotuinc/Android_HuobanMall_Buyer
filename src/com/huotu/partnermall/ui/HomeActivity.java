@@ -594,6 +594,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             mUploadMessage.onReceiveValue(result);
             mUploadMessage = null;
         }else if( requestCode == BINDPHONE_REQUESTCODE && resultCode == RESULT_OK){
+            mainMenuLayout.removeAllViews();
             UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, mHandler);
             ui.loadMenus();
         }else if( requestCode == FILECHOOSER_RESULTCODE_5 ){
@@ -829,6 +830,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 SisConstant.SHOPINFO = null;
                 SisConstant.CATEGORY = null;
 
+
+                mainMenuLayout.removeAllViews();
                 //动态加载侧滑菜单
                 UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, mHandler );
                 ui.loadMenus();
@@ -1095,6 +1098,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             ref.get().application.writeMemberLoginType( 1 );
             ref.get().application.writeMemberRelatedType( phoneLoginModel.getData().getRelatedType() );//重写 关联类型=2 已经绑定
             //动态加载侧滑菜单
+            ref.get().mainMenuLayout.removeAllViews();
             UIUtils ui = new UIUtils (  ref.get().application,  ref.get() ,  ref.get().resources,  ref.get().mainMenuLayout,  ref.get().mHandler );
             ui.loadMenus();
 
@@ -1362,8 +1366,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             new LoadLogoImageAyscTask ( ref.get().resources , ref.get().userLogo  , authMallModel.getData().getHeadImgUrl(), R.drawable.ic_login_username ).execute();
 
             //动态加载侧滑菜单
-            UIUtils ui = new UIUtils ( BaseApplication.single , ref.get() , ref.get().resources , ref.get().mainMenuLayout , ref.get().mHandler );
-            ui.loadMenus();
+            //UIUtils ui = new UIUtils ( BaseApplication.single , ref.get() , ref.get().resources , ref.get().mainMenuLayout , ref.get().mHandler );
+            //ui.loadMenus();
 
 
             String usercenterUrl = BaseApplication.single.obtainMerchantUrl() + "/" + Constants.URL_PERSON_INDEX+"?customerid="+BaseApplication.single.readMerchantId();
@@ -1384,6 +1388,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventRefreshLeftMenu(RefreshMenuEvent event){
+        mainMenuLayout.removeAllViews();
         UIUtils ui = new UIUtils ( BaseApplication.single , this , resources ,  mainMenuLayout , mHandler );
         ui.loadMenus();
     }
