@@ -76,6 +76,11 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
 
     @OnClick({R.id.titleLeftImage, R.id.titleRightText} )
     protected void onBack(){
+
+        if( this.getCurrentFocus() !=null ) {
+            ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+
         finish();
     }
 
