@@ -419,6 +419,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     private void signHeader(){
         if( pageWeb==null) return;
         signHeader(pageWeb);
+        if(menuView==null) return;
+        signHeader(menuView);
     }
 
     private void signHeader( WebView webView ){
@@ -446,6 +448,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         pageWeb.getSettings().setUseWideViewPort(true);
         //pageWeb.getSettings().setSupportZoom(true);
         //pageWeb.getSettings().setBuiltInZoomControls(true);
+
         pageWeb.getSettings().setJavaScriptEnabled(true);
         pageWeb.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         pageWeb.getSettings().setSaveFormData(true);
@@ -909,6 +912,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         pageWeb.clearHistory();
         pageWeb.clearCache(true);
         signHeader(pageWeb);
+        signHeader(menuView);
 
         //AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         //String url = paramUtils.obtainUrl ();
@@ -1397,6 +1401,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     public void onEventRefreshHttpHeader(RefreshHttpHeaderEvent event){
         if( pageWeb ==null) return;
         signHeader(pageWeb);
+        if(menuView==null) return;
+        signHeader(menuView);
+        String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
+        menuView.loadUrl(menuUrl , SignUtil.signHeader() );
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
