@@ -7,8 +7,8 @@
     <SinaWeibo
         Id="1"
         SortId="1"
-        AppKey="404719112"
-        AppSecret="eff87f24b2c5cce4aa3885a26871d0c2"
+        AppKey="4166445243"
+        AppSecret="ed482c8efc9b2cc9052e42057feca408"
         RedirectUrl="https://api.weibo.com/oauth2/default.html"
         ShareByAppClient="true"
         Enable="true" />
@@ -32,24 +32,24 @@
     <Wechat
         Id="2"
         SortId="2"
-        AppId="wx9f1532c551a66a61"
-        AppSecret="c015c0f807a5a5a4247a0c87fdd0f5d7"
+        AppId="wxd11870350b554de1"
+        AppSecret="3a55c2e3ae989182d4642b4382347628"
         BypassApproval="false"
         Enable="true" />
     
     <WechatMoments
         Id="3"
         SortId="3"
-        AppId="wx9f1532c551a66a61"
-        AppSecret="c015c0f807a5a5a4247a0c87fdd0f5d7"
+        AppId="wxd11870350b554de1"
+        AppSecret="3a55c2e3ae989182d4642b4382347628"
         BypassApproval="false"
         Enable="true" />
         
 	<WechatFavorite
         Id="6"
         SortId="6"
-        AppId="wx9f1532c551a66a61"
-        AppSecret="c015c0f807a5a5a4247a0c87fdd0f5d7"
+        AppId="wxd11870350b554de1"
+        AppSecret="3a55c2e3ae989182d4642b4382347628"
         Enable="true" />
 
 </DevInfor>

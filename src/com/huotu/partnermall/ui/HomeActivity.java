@@ -399,6 +399,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     public boolean shouldOverrideUrlLoading( WebView view, String url ) {
                         if( pageWeb ==null ) return true;
                         titleRightImage.setVisibility(View.GONE);
+
+
+//                        url="http://olquan.huobanj.cn/Arvato/UserCenter/Index.aspx?customerid=4471";
+
+
                         pageWeb.loadUrl(url , SignUtil.signHeader() );
                         return true;
                     }
@@ -419,12 +424,15 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     private void signHeader(){
         if( pageWeb==null) return;
         signHeader(pageWeb);
+        if(menuView==null) return;
+        signHeader(menuView);
     }
 
     private void signHeader( WebView webView ){
         String userid= application.readMemberId();
         String unionid = application.readUserUnionId();
         String openId = BaseApplication.single.readOpenId();
+
         String sign = ObtainParamsMap.SignHeaderString(userid, unionid , openId );
         String userAgent = webView.getSettings().getUserAgentString();
         if( TextUtils.isEmpty(userAgent) ) {
@@ -446,6 +454,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         pageWeb.getSettings().setUseWideViewPort(true);
         //pageWeb.getSettings().setSupportZoom(true);
         //pageWeb.getSettings().setBuiltInZoomControls(true);
+
         pageWeb.getSettings().setJavaScriptEnabled(true);
         pageWeb.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         pageWeb.getSettings().setSaveFormData(true);
@@ -467,6 +476,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         //AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         //String url = paramUtils.obtainUrl ();
         String url = application.obtainMerchantUrl();
+
         //首页默认为商户站点 + index
         pageWeb.loadUrl(url , SignUtil.signHeader() );
 
@@ -609,11 +619,40 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         }
     }
 
+    /**
+     * 判断 当前页面是否商城首页
+     * @return
+     */
+    protected boolean isIndexPage( String url){
+        try {
+            if (TextUtils.isEmpty(url)) {
+                return false;
+            }
+            String indexUrl1 = BaseApplication.single.obtainMerchantUrl().toLowerCase().trim();
+            Uri uri1 = Uri.parse(indexUrl1);
+            Uri uri2 = Uri.parse(url);
+
+            if (uri1.getHost().equals(uri2.getHost()) &&
+                    uri1.getPath().equals(uri2.getPath())) {
+                return true;
+            }
+            if (uri1.getHost().equals(uri2.getHost()) &&
+                    uri2.getPath().toLowerCase().equals("/" + BaseApplication.single.readMerchantId() + "/index.aspx")) {
+                return true;
+            }
+
+            return false;
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return true;
+        }
+    }
+
     @Override
     public boolean dispatchKeyEvent(KeyEvent event){
         // 2秒以内按两次推出程序
         if (event.getKeyCode () == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if(pageWeb.canGoBack ()){
+            if(pageWeb.canGoBack () && !isIndexPage(pageWeb.getUrl())){
                 titleRightImage.setVisibility(View.GONE);
                 pageWeb.goBack ( );
             }
@@ -909,6 +948,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         pageWeb.clearHistory();
         pageWeb.clearCache(true);
         signHeader(pageWeb);
+        signHeader(menuView);
 
         //AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         //String url = paramUtils.obtainUrl ();
@@ -1397,6 +1437,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     public void onEventRefreshHttpHeader(RefreshHttpHeaderEvent event){
         if( pageWeb ==null) return;
         signHeader(pageWeb);
+        if(menuView==null) return;
+        signHeader(menuView);
+        String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
+        menuView.loadUrl(menuUrl , SignUtil.signHeader() );
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

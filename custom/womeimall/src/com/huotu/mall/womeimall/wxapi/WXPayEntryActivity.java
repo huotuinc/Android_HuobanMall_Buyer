@@ -1,11 +1,10 @@
-package com.huotu.mall.huobanjia.wxapi;
+package com.huotu.mall.womeimall.wxapi;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.DeliveryGoodAsyncTask;
 import com.huotu.partnermall.inner.R;
@@ -25,9 +24,10 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 /**
  * 微信支付回调类
  */
-public class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEventHandler {
+public
+class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEventHandler {
 
-    private Handler handler    = new Handler ( this );
+    private       Handler handler    = new Handler ( this );
     private IWXAPI api;
     private
     BaseApplication application;

@@ -768,7 +768,9 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         progressPopupWindow.showProgress("正在登录，请稍等...");
         progressPopupWindow.showAtLocation(this.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
 
-       String url = Constants.getINTERFACE_PREFIX() + "/weixin/LoginAuthorize";
+       String url = Constants.getINTERFACE_PREFIX();//  + "/weixin/LoginAuthorize";
+        if( !url.endsWith("/") ) url +="/";
+        url +="weixin/LoginAuthorize";
 
         AuthParamUtils paramUtils = new AuthParamUtils( "");
         Map param = paramUtils.obtainParams(account);
