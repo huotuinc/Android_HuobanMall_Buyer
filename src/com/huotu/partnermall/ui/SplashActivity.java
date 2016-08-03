@@ -1,13 +1,10 @@
 package com.huotu.partnermall.ui;
 
-import android.app.DownloadManager;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -26,7 +23,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.image.ImageUtil;
 import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
@@ -39,31 +35,21 @@ import com.huotu.partnermall.model.UpdateLeftInfoModel;
 import com.huotu.partnermall.service.LocationService;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.guide.GuideActivity;
-import com.huotu.partnermall.ui.login.PhoneLoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.PropertiesUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
-import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.utils.XMLParserUtils;
 import com.huotu.partnermall.widgets.MsgPopWindow;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -71,7 +57,7 @@ import butterknife.ButterKnife;
 public class SplashActivity extends BaseActivity {
     public static final String TAG = SplashActivity.class.getSimpleName();
     @Bind(R.id.welcomeTips)
-    RelativeLayout mSplashItem_iv;
+    RelativeLayout rlSplashItem;
     @Bind(R.id.splash_version)
     TextView tvVersion;
     private Intent locationI = null;
@@ -108,17 +94,18 @@ public class SplashActivity extends BaseActivity {
                         @Override
                         public void run() {
                             if(bitmap!=null) {
-                                mSplashItem_iv.setBackgroundDrawable(new BitmapDrawable(bitmap));
+                                rlSplashItem.setBackgroundDrawable(new BitmapDrawable(bitmap));
                             }
                             initView();
                         }
                     });
                 } catch (Exception ex) {
+
                     Log.e(TAG, ex.getMessage());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mSplashItem_iv.setBackgroundColor(SystemTools.obtainColor( BaseApplication.single.obtainMainColor() ));
+                            rlSplashItem.setBackgroundColor(SystemTools.obtainColor( BaseApplication.single.obtainMainColor() ));
                             initView();
                         }
                     });
@@ -139,7 +126,7 @@ public class SplashActivity extends BaseActivity {
 
         AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
         anima.setDuration(Constants.ANIMATION_COUNT);// 设置动画显示时间
-        mSplashItem_iv.setAnimation(anima);
+        rlSplashItem.setAnimation(anima);
         anima.setAnimationListener(
                 new AnimationListener() {
                     @Override
@@ -150,7 +137,7 @@ public class SplashActivity extends BaseActivity {
                             application.isConn = false;
                             //无网络日志
                             popWindow = new MsgPopWindow(SplashActivity.this, new SettingNetwork(), new CancelNetwork(), "网络连接错误", "请打开你的网络连接！", false);
-                            popWindow.showAtLocation( mSplashItem_iv , Gravity.CENTER, 0, 0);
+                            popWindow.showAtLocation( rlSplashItem , Gravity.CENTER, 0, 0);
                             popWindow.setOnDismissListener(new PoponDismissListener(SplashActivity.this));
                         } else {
                             application.isConn = true;
@@ -216,7 +203,9 @@ public class SplashActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animation animation) {}
+                    public void onAnimationRepeat(Animation animation) {
+                        //必须重新方法
+                    }
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
@@ -250,16 +239,6 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume ( ) {
-        super.onResume ( );
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     protected void onDestroy ( ) {
         super.onDestroy ( );
         ButterKnife.unbind(this);
@@ -276,7 +255,7 @@ public class SplashActivity extends BaseActivity {
     private class SettingNetwork implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Intent intent = null;
+            Intent intent;
             // 判断手机系统的版本 即API大于10 就是3.0或以上版本
             if (android.os.Build.VERSION.SDK_INT > 10) {
                 intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
@@ -314,7 +293,7 @@ public class SplashActivity extends BaseActivity {
             AuthParamUtils authParamUtils = new AuthParamUtils(application,  System.currentTimeMillis() , url , this);
             url = authParamUtils.obtainUrl();
 
-            GsonRequest<AuthMallModel> request = new GsonRequest<AuthMallModel>(
+            GsonRequest<AuthMallModel> request = new GsonRequest<>(
                     Request.Method.GET,
                     url,
                     AuthMallModel.class,
@@ -325,7 +304,7 @@ public class SplashActivity extends BaseActivity {
                         public void onResponse(AuthMallModel authMallModel) {
 
                             if( authMallModel ==null || authMallModel.getCode() !=200 || authMallModel.getData()==null ){
-                                //ToastUtils.showLongToast("请求出错。");
+
                                 Log.e(TAG, "请求出错。");
 
                                 BaseApplication.single.logout();
@@ -349,14 +328,12 @@ public class SplashActivity extends BaseActivity {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
                             Log.e( TAG ,  volleyError.getMessage()  );
-                            //ToastUtils.showLongToast("啊哦,请求失败了!");
                         }
                     }
             );
 
             VolleyUtil.getRequestQueue().add(request);
 
-        }else{
         }
     }
 
@@ -367,7 +344,7 @@ public class SplashActivity extends BaseActivity {
         url +="&clientUserType="+ application.readMemberType();
         AuthParamUtils authParamUtils=new AuthParamUtils(application , System.currentTimeMillis() , url , SplashActivity.this);
         url = authParamUtils.obtainUrlName();
-        GsonRequest<UpdateLeftInfoModel> request = new GsonRequest<UpdateLeftInfoModel>(
+        GsonRequest<UpdateLeftInfoModel> request = new GsonRequest<>(
                 Request.Method.GET,
                 url,
                 UpdateLeftInfoModel.class,
@@ -402,8 +379,8 @@ public class SplashActivity extends BaseActivity {
             //设置侧滑栏菜单
             List<MenuBean > menus = new ArrayList<>(  );
             MenuBean menu;
-            List<UpdateLeftInfoModel.MenuModel > home_menus = updateLeftInfoModel.getData().getHome_menus ();
-            for(UpdateLeftInfoModel.MenuModel home_menu:home_menus){
+            List<UpdateLeftInfoModel.MenuModel > homeMenus = updateLeftInfoModel.getData().getHome_menus ();
+            for(UpdateLeftInfoModel.MenuModel home_menu:homeMenus){
                 menu = new MenuBean ();
                 menu.setMenuGroup ( String.valueOf ( home_menu.getMenu_group () ) );
                 menu.setMenuIcon ( home_menu.getMenu_icon ( ) );
@@ -411,7 +388,7 @@ public class SplashActivity extends BaseActivity {
                 menu.setMenuUrl ( home_menu.getMenu_url ( ) );
                 menus.add ( menu );
             }
-            if(null != menus && !menus.isEmpty ()) {
+            if( !menus.isEmpty ()) {
                 BaseApplication.single.writeMenus(menus);
             }
         }

@@ -3,13 +3,13 @@
     <!--程序信息-->
     <appinfo>
         <app_version>1.0.3</app_version>
-        <app_name></app_name>
+        <app_name>B2V</app_name>
         <app_build>3</app_build>
     </appinfo>
     <!--商家信息-->
     <merchant>
         <!--504/3447/4493/5455/正式版行装：4886-->
-        <app_merchant_id>6905</app_merchant_id>
+        <app_merchant_id>6772</app_merchant_id>
     </merchant>
     <!--微信支付信息-->
     <weixinpay>

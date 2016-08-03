@@ -5,7 +5,5 @@
     <!--引导界面图片-->
     <string-array name="guide_icon">
         <item>newfeature01</item>
-        <item>newfeature02</item>
-        <item>newfeature03</item>
     </string-array>
 </resources>

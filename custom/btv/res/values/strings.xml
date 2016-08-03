@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">btv</string>
+    <string name="app_name">B2V</string>
     <!--引导界面图片-->
     <string-array name="guide_icon">
         <item>guide01</item>

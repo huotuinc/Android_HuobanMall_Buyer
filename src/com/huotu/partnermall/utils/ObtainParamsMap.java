@@ -299,7 +299,7 @@ public class ObtainParamsMap {
      * @return
      */
     public static String SignHeaderString(String userid , String unionid , String openId){
-        String temp = userid + unionid + openId +  BuildConfig.Header_Secret;
+        String temp = userid + unionid + openId + BuildConfig.Header_Secret;
         String sign =  EncryptUtil.getInstance().encryptMd532(temp);
         String str= "hottec:"+sign+":"+ userid+":"+unionid+ ":" + openId + ";";
         return str;
