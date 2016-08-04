@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DevInfor>
+    <ShareSDK AppKey = "1588835874fd0"/>
+    
+    <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
+    <SinaWeibo
+        Id="1"
+        SortId="1"
+        AppKey="1000919385"
+        AppSecret="87724c17ef0b834a81838cc5ab1ce702"
+        RedirectUrl="https://api.weibo.com/oauth2/default.html"
+        ShareByAppClient="true"
+        Enable="true" />
+
+    <QZone
+        Id="4"
+        SortId="4 "
+        AppId="1105088538"
+        AppKey="eW9v61Jh1c2wOOtz"
+        ShareByAppClient="true"
+        Enable="true" />
+
+    <Wechat
+        Id="2"
+        SortId="2"
+        AppId="wx16a5589cff4c76d5"
+        AppSecret="d4624c36b6795d1d99dcf0547af5443d"
+        BypassApproval="false"
+        Enable="true" />
+    
+    <WechatMoments
+        Id="3"
+        SortId="3"
+        AppId="wx16a5589cff4c76d5"
+        AppSecret="d4624c36b6795d1d99dcf0547af5443d"
+        BypassApproval="false"
+        Enable="true" />
+        
+	<WechatFavorite
+        Id="6"
+        SortId="6"
+        AppId="wx16a5589cff4c76d5"
+        AppSecret="d4624c36b6795d1d99dcf0547af5443d"
+        Enable="true" />
+    
+	<!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
+	<QQ
+        Id="7"
+        SortId="7"
+        AppId="1105088538"
+        AppKey="eW9v61Jh1c2wOOtz"
+        ShareByAppClient="false"
+        Enable="false" />
+
+</DevInfor>
