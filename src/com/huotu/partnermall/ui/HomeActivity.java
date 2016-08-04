@@ -619,40 +619,12 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         }
     }
 
-    /**
-     * 判断 当前页面是否商城首页
-     * @return
-     */
-    protected boolean isIndexPage( String url){
-        try {
-            if (TextUtils.isEmpty(url)) {
-                return false;
-            }
-            String indexUrl1 = BaseApplication.single.obtainMerchantUrl().toLowerCase().trim();
-            Uri uri1 = Uri.parse(indexUrl1);
-            Uri uri2 = Uri.parse(url);
-
-            if (uri1.getHost().equals(uri2.getHost()) &&
-                    uri1.getPath().equals(uri2.getPath())) {
-                return true;
-            }
-            if (uri1.getHost().equals(uri2.getHost()) &&
-                    uri2.getPath().toLowerCase().equals("/" + BaseApplication.single.readMerchantId() + "/index.aspx")) {
-                return true;
-            }
-
-            return false;
-        }catch (Exception ex){
-            ex.printStackTrace();
-            return true;
-        }
-    }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event){
         // 2秒以内按两次推出程序
         if (event.getKeyCode () == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if(pageWeb.canGoBack () && !isIndexPage(pageWeb.getUrl())){
+            if(pageWeb.canGoBack () && ! UIUtils.isIndexPage(pageWeb.getUrl())){
                 titleRightImage.setVisibility(View.GONE);
                 pageWeb.goBack ( );
             }

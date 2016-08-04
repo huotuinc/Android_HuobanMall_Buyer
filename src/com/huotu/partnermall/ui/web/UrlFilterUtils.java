@@ -14,6 +14,7 @@ import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.model.BindEvent;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.SwitchUserByUserIDEvent;
+import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.WebViewActivity;
 
 import com.huotu.partnermall.ui.login.PhoneLoginActivity;
@@ -21,6 +22,7 @@ import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.SignUtil;
+import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
@@ -215,9 +217,13 @@ public class UrlFilterUtils {
             String userId= Uri.parse(url).getQueryParameter("u");
             EventBus.getDefault().post(new SwitchUserByUserIDEvent(userId));
             return true;
-        }
-        else{
-
+        }else if(UIUtils.isIndexPage( url )){//当用户点击商品详情的首页按钮时，需要处理判断
+            ActivityUtils.getInstance().showActivity( ref.get() , HomeActivity.class ,"redirecturl", url);
+            return true;
+        }else if( url.toLowerCase().contains( Constants.URL_PERSON_INDEX ) ){//当用户点击商品详情的个人中心按钮时，需要处理判断
+            ActivityUtils.getInstance().showActivity( ref.get() , HomeActivity.class ,"redirecturl", url);
+            return true;
+        } else{
             //跳转到新界面
             view.loadUrl(url , SignUtil.signHeader());
             return true;

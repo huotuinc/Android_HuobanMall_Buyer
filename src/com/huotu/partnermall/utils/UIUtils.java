@@ -6,8 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -182,4 +184,43 @@ public class UIUtils {
         String alias = BaseApplication.getPhoneIMEI();
         PushHelper.bindingUserId( userId ,alias, userKey,userRandom,userSign );
     }
+
+
+    /**
+     * 判断 当前页面是否商城首页
+     * @return
+     */
+    public static boolean isIndexPage( String url){
+        try {
+            if (TextUtils.isEmpty(url)) {
+                return false;
+            }
+            String indexUrl1 = BaseApplication.single.obtainMerchantUrl().toLowerCase().trim();
+            if( indexUrl1.endsWith("/") ) indexUrl1 = indexUrl1.substring(0,indexUrl1.length()-1);
+            if(url.endsWith("/")) url = url.substring(0,url.length()-1);
+
+            Uri uri1 = Uri.parse(indexUrl1);
+            Uri uri2 = Uri.parse(url);
+
+            if (uri1.getHost().equals(uri2.getHost()) &&
+                    uri1.getPath().equals(uri2.getPath())) {
+                return true;
+            }
+            if (uri1.getHost().equals(uri2.getHost()) &&
+                    uri2.getPath().toLowerCase().equals("/" + BaseApplication.single.readMerchantId() + "/index.aspx")) {
+                return true;
+            }
+            if(uri1.getHost().equals(uri2.getHost()) &&
+                    uri2.getPath().equals("/")){
+                return true;
+            }
+
+            return false;
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return true;
+        }
+    }
+
+
 }
