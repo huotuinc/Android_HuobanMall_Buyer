@@ -203,19 +203,19 @@ android {
 //            signingConfig signingConfigs.yunyi
 //        }
 
-//        yingyan{//行装
-//            applicationId 'com.huotu.mall.yingyan'
-//            versionCode YINGYAN_VERSIONCODE.toInteger()
-//            versionName "${YINGYAN_VERSIONNAME}"
-//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.outfit.ren/\"'
-//            buildConfigField 'String','APP_ID','\"app\"'
-//            buildConfigField 'String','APP_SECRET','\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"api.open.outfit.ren/\"'
-//            buildConfigField 'String','Push_Url','\"api.open.outfit.ren/\"'
-//            buildConfigField 'String', 'SMART_KEY', '\"app\"'
-//            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-//            signingConfig signingConfigs.yingyan
-//        }
+        yingyan{//行装
+            applicationId 'com.huotu.mall.yingyan'
+            versionCode YINGYAN_VERSIONCODE.toInteger()
+            versionName "${YINGYAN_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.outfit.ren/\"'
+            buildConfigField 'String','APP_ID','\"app\"'
+            buildConfigField 'String','APP_SECRET','\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"api.open.outfit.ren/\"'
+            buildConfigField 'String','Push_Url','\"api.open.outfit.ren/\"'
+            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+            signingConfig signingConfigs.yingyan
+        }
 
 //        olquan{//OL圈
 //            applicationId 'com.olquanapp.ttds.android'
