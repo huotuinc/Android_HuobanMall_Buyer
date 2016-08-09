@@ -24,7 +24,7 @@ import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
-import com.huotu.partnermall.ui.sis.SisConstant;
+//import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.utils.CrashHandler;
 import com.huotu.partnermall.utils.PreferenceHelper;
 import com.squareup.leakcanary.LeakCanary;
@@ -382,8 +382,8 @@ public class BaseApplication extends Application {
 
         clearAllCookies();
 
-        SisConstant.CATEGORY = null;
-        SisConstant.SHOPINFO = null;
+        //SisConstant.CATEGORY = null;
+        //SisConstant.SHOPINFO = null;
 
         EventBus.getDefault().post(new RefreshHttpHeaderEvent() );
     }

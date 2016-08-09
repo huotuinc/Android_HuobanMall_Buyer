@@ -63,8 +63,8 @@ import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.login.BindPhoneActivity;
 import com.huotu.partnermall.ui.login.PhoneLoginActivity;
-import com.huotu.partnermall.ui.sis.GoodManageActivity;
-import com.huotu.partnermall.ui.sis.SisConstant;
+//import com.huotu.partnermall.ui.sis.GoodManageActivity;
+//import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
@@ -74,6 +74,7 @@ import com.huotu.partnermall.utils.SignUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
+import com.huotu.partnermall.utils.Util;
 import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
@@ -499,10 +500,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                         if( titleText ==null || pageWeb ==null ) return;
                         titleText.setText(view.getTitle());
 
-                        if(url.contains ( "&back" ) || url.contains ( "?back" )){
+                        if( UIUtils.isIndexPage( url ) || url.contains ( "&back" ) || url.contains ( "?back" )){
                             mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
-                        }
-                        else {
+                        } else {
                             if ( pageWeb.canGoBack ( ) ) {
                                 mHandler.sendEmptyMessage ( Constants.LEFT_IMG_BACK );
                             }
@@ -725,7 +725,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     callPhone();
                 }
                 else if( url.toLowerCase().contains("http://www.dzd.com") ){
-                    openSis();
+                    //openSis();
                 }else {
                     pageWeb.loadUrl(url);
                 }
@@ -838,8 +838,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute ( );
 
                 //切换用户，需要清空 店中店的 缓存数据
-                SisConstant.SHOPINFO = null;
-                SisConstant.CATEGORY = null;
+                //SisConstant.SHOPINFO = null;
+                //SisConstant.CATEGORY = null;
 
 
                 mainMenuLayout.removeAllViews();
@@ -937,9 +937,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         return;
     }
 
-    private void openSis(){
-        HomeActivity.this.startActivity(new Intent(HomeActivity.this, GoodManageActivity.class));
-    }
+//    private void openSis(){
+//        HomeActivity.this.startActivity(new Intent(HomeActivity.this, GoodManageActivity.class));
+//    }
 
     private void refreshLeftMenu(){
         String url = Constants.getINTERFACE_PREFIX() + "weixin/UpdateLeftInfo";
@@ -1424,6 +1424,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         if (!url.startsWith("http://")) {
             url = "http://" + url;
         }
+
+        //mHandler.sendEmptyMessage( Constants.LEFT_IMG_SIDE);
 
         pageWeb.clearHistory();
         pageWeb.loadUrl(url, SignUtil.signHeader());
