@@ -56,7 +56,7 @@ public class BaseApplication extends Application {
     public LocationClient mLocationClient;
     public MyLocationListener mMyLocationListener;
     //底部菜单是否隐藏 true显示， false隐藏
-    public boolean isMenuHide = false;
+    //public boolean isMenuHide = false;
     /**
      * 是否是左划或者返回
      * true 左划

@@ -73,24 +73,24 @@
     <Wechat
         Id="2"
         SortId="2"
-        AppId="wx16a5589cff4c76d5"
-        AppSecret="d4624c36b6795d1d99dcf0547af5443d"
+        AppId="wx76bd81d45f4933fa"
+        AppSecret="cc02dd68c6bcbce37297221e53fe579c"
         BypassApproval="false"
         Enable="true" />
     
     <WechatMoments
         Id="3"
         SortId="3"
-        AppId="wx16a5589cff4c76d5"
-        AppSecret="d4624c36b6795d1d99dcf0547af5443d"
+        AppId="wx76bd81d45f4933fa"
+        AppSecret="cc02dd68c6bcbce37297221e53fe579c"
         BypassApproval="false"
         Enable="true" />
         
 	<WechatFavorite
         Id="6"
         SortId="6"
-        AppId="wx16a5589cff4c76d5"
-        AppSecret="d4624c36b6795d1d99dcf0547af5443d"
+        AppId="wx76bd81d45f4933fa"
+        AppSecret="cc02dd68c6bcbce37297221e53fe579c"
         Enable="true" />
     
 	<!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
@@ -101,23 +101,4 @@
         AppKey="eW9v61Jh1c2wOOtz"
         ShareByAppClient="false"
         Enable="false" />
-
-    <!-- 
-    	Yixin易信和YixinMoments易信朋友圈的appid是一样的；
-    
-                       注意：开发者不能用我们这两个平台的appid,否则分享不了
-    
-       	 易信测试的时候需要先签名打包出apk,
-		sample测试易信，要先签名打包，keystore在sample项目中，密码123456
-		
-		BypassApproval是绕过审核的标记，设置为true后AppId将被忽略，故不经过
-		审核的应用也可以执行分享，但是仅限于分享文字或图片，不能分享其他类型，
-		默认值为false。
-	-->
-
-     <Alipay
-        Id="52"
-        SortId="52"  
-        AppId="2015072400185895"
-        Enable="false"/>
 </DevInfor>
