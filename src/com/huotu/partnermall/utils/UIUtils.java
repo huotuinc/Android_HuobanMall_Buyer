@@ -185,6 +185,16 @@ public class UIUtils {
         PushHelper.bindingUserId( userId ,alias, userKey,userRandom,userSign );
     }
 
+    public static void bindPushDevice(){
+        String userKey = Constants.getSMART_KEY();
+        String userRandom = String.valueOf(System.currentTimeMillis());
+        String userSecure = Constants.getSMART_SECURITY();
+        String userSign = SignUtil.getSecure( userKey , userSecure , userRandom);
+        String alias = BaseApplication.getPhoneIMEI();
+        String customerId = BaseApplication.single.readMerchantId();
+        PushHelper.bindingTokenOrAlias( customerId ,alias, userKey,userRandom,userSign );
+    }
+
 
     /**
      * 判断 当前页面是否商城首页

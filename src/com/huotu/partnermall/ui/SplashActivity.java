@@ -42,6 +42,7 @@ import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.PropertiesUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.utils.XMLParserUtils;
 import com.huotu.partnermall.widgets.MsgPopWindow;
 
@@ -334,6 +335,9 @@ public class SplashActivity extends BaseActivity {
 
             VolleyUtil.getRequestQueue().add(request);
 
+        }else{
+            //未登录状态绑定设备
+            UIUtils.bindPushDevice();
         }
     }
 
