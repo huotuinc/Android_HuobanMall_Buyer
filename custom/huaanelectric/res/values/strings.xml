@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">黄太纸</string>
+    <string name="app_name">桦桉电器</string>
     <!--引导界面图片-->
     <string-array name="guide_icon">
         <item>newfeature_01</item>
