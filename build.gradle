@@ -345,7 +345,7 @@ android {
 //            signingConfig signingConfigs.zhujunzhi
 //        }
 
-        womeimall{//我美商城
+        womeimall{//我美名品
             applicationId 'com.huotu.mall.womeimall'
             versionCode BUYER_VERSIONCODE.toInteger()
             versionName "${BUYER_VERSIONNAME}"
@@ -373,7 +373,7 @@ android {
             signingConfig signingConfigs.youbi
         }
 
-        huaanelectric{//桦桉电器
+        huaanelectric{//桦桉灯饰
             applicationId 'com.huotu.mall.huaanelectric'
             versionCode BUYER_VERSIONCODE.toInteger()
             versionName "${BUYER_VERSIONNAME}"

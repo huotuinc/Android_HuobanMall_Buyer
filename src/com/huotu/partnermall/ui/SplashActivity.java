@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -81,7 +82,9 @@ public class SplashActivity extends BaseActivity {
         //initView();
 
         loadBackground();
+
     }
+
 
     protected void loadBackground(){
         new Thread(new Runnable() {

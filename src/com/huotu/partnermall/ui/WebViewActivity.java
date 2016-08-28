@@ -534,6 +534,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if(titleRightImage==null) return;
                     titleRightImage.setVisibility(View.VISIBLE);
                 }
             });
@@ -542,6 +543,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if(titleRightImage==null)return;
                     titleRightImage.setVisibility(View.GONE);
                 }
             });
