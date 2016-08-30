@@ -6,8 +6,8 @@
     <SinaWeibo
         Id="1"
         SortId="1"
-        AppKey="1000919385"
-        AppSecret="87724c17ef0b834a81838cc5ab1ce702"
+        AppKey="178501671"
+        AppSecret="f9a2471a4265dabe9265c6a9a11300fd"
         RedirectUrl="https://api.weibo.com/oauth2/default.html"
         ShareByAppClient="true"
         Enable="true" />
@@ -15,8 +15,8 @@
     <QZone
         Id="4"
         SortId="4 "
-        AppId="1105088538"
-        AppKey="eW9v61Jh1c2wOOtz"
+        AppId="1105554833"
+        AppKey="Lne9uVX6znoAvOe5"
         ShareByAppClient="true"
         Enable="true" />
 
@@ -47,8 +47,8 @@
 	<QQ
         Id="7"
         SortId="7"
-        AppId="1105088538"
-        AppKey="eW9v61Jh1c2wOOtz"
+        AppId="1105554833"
+        AppKey="Lne9uVX6znoAvOe5"
         ShareByAppClient="false"
         Enable="false" />
 
