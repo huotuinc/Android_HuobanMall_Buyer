@@ -4,6 +4,6 @@
         android:width="1dp"
         android:color="@color/dimgrey"
         />
-    <solid android:color="@color/theme_color" />
+    <solid android:color="@color/activity_bg" />
     <corners android:radius="3dp" ></corners>
 </shape>

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DevInfor>
 
-    <ShareSDK 
-        AppKey = "e81233c08013"/> <!-- 修改成你在sharesdk后台注册的应用的appkey"-->
+    <ShareSDK AppKey = "1703f3c699c2b"/> <!-- 修改成你在sharesdk后台注册的应用的appkey"-->
     
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <SinaWeibo
         Id="1"
         SortId="1"
-        AppKey="1000919385"
-        AppSecret="87724c17ef0b834a81838cc5ab1ce702"
+        AppKey="156955083"
+        AppSecret="7f6ed64db033aca903152b188a779114"
         RedirectUrl="https://api.weibo.com/oauth2/default.html"
         ShareByAppClient="true"
         Enable="true" />
@@ -17,8 +16,8 @@
     <QZone
         Id="4"
         SortId="4 "
-        AppId="1105088538"
-        AppKey="eW9v61Jh1c2wOOtz"
+        AppId="1105579932"
+        AppKey="1URNjIbHFrzaunip"
         ShareByAppClient="true"
         Enable="true" />
 
@@ -49,8 +48,8 @@
 	<QQ
         Id="7"
         SortId="7"
-        AppId="1105088538"
-        AppKey="eW9v61Jh1c2wOOtz"
+        AppId="1105579932"
+        AppKey="1URNjIbHFrzaunip"
         ShareByAppClient="false"
         Enable="false" />
 </DevInfor>

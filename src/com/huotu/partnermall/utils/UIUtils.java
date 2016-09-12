@@ -69,7 +69,8 @@ public class UIUtils {
                 String menuGroup = menuList.get(i).getMenuGroup();
 
                 RelativeLayout menuLayout = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.main_menu, null);
-                menuLayout.setBackgroundColor(resources.getColor(R.color.theme_color));
+                //menuLayout.setBackgroundColor(resources.getColor(R.color.theme_color));
+                menuLayout.setBackgroundColor(resources.getColor(R.color.leftmenu_bg_color));
                 mainMenuLayout.addView(menuLayout);
 
                 if (i < (size - 1)) {

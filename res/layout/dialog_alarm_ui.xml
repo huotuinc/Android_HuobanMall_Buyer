@@ -13,7 +13,6 @@
         android:layout_centerVertical="true"
         android:text="TextView" 
         android:gravity="center"
-        android:textColor="@color/theme_color"
         android:textSize="@dimen/notice_text_size"
         android:background="@drawable/circle_text"
         android:ellipsize="marquee"

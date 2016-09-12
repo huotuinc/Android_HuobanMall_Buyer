@@ -3,7 +3,7 @@
     <!-- 主体背景颜色值 -->
     <item>
         <shape>
-            <solid android:color="@color/theme_color" />
+            <solid android:color="@color/leftmenu_bg_color" />
         </shape>
     </item>
 </layer-list>

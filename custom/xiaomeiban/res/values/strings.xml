@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">小美伴</string>
+    <!--引导界面图片-->
+    <string-array name="guide_icon">
+        <item>newfeature_01</item>
+        <item>newfeature_02</item>
+        <item>newfeature_03</item>
+        <item>newfeature_04</item>
+    </string-array>
+</resources>
