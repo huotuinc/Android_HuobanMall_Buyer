@@ -19,7 +19,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_above="@+id/menuL">
-            <include layout="@layout/page_load_view"></include>
+            <include layout="@layout/page_web_view"></include>
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/menuL"
