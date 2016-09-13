@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,9 +15,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
@@ -67,6 +70,7 @@ import com.huotu.partnermall.ui.login.PhoneLoginActivity;
 //import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.DensityUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.ObtainParamsMap;
@@ -156,8 +160,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     @Bind(R.id.accountName)
     TextView userName;
     //用户类型
-    @Bind(R.id.accountType)
-    TextView userType;
+    //@Bind(R.id.accountType)
+    //TextView userType;
     @Bind(R.id.viewPage)
     PtrClassicFrameLayout ptrClassicFrameLayout;
     //PullToRefreshWebView refreshWebView;
@@ -167,6 +171,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     ProgressBar pgBar;
     @Bind(R.id.ff1)
     FrameLayout ff1;
+    @Bind(R.id.accountTypeList)
+    LinearLayout accountTypeList;
 
     UrlFilterUtils urlFilterUtils;
 
@@ -265,8 +271,34 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         //渲染用户名
         userName.setText(application.getUserName());
         userName.setTextColor(resources.getColor(R.color.theme_color));
-        userType.setTextColor(SystemTools.obtainColor(application.obtainMainColor()));
-        userType.setText(application.readMemberLevel());
+
+        //userType.setTextColor(SystemTools.obtainColor(application.obtainMainColor()));
+        //userType.setText(application.readMemberLevel());
+
+        showAccountType(application.readMemberLevel());
+    }
+
+    protected void showAccountType(String dataArray ){
+        if( dataArray ==null || dataArray.isEmpty() ) return;
+        String[] data= dataArray.split(","); //new String[]{"普通会员","小伙伴","大伙伴","dasdfs"};
+        accountTypeList.removeAllViews();
+        //int leftMargin = DensityUtils.dip2px(this,2);
+        int leftPadding = DensityUtils.dip2px(this,2);
+        int topPadding = DensityUtils.dip2px(this,2);
+        for(String item : data ) {
+            LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            //layoutParams.setMargins(leftMargin,0,0,0);
+            TextView tv = new TextView(this);
+            tv.setId(item.hashCode());
+            tv.setSingleLine();
+            tv.setLayoutParams(layoutParams);
+            tv.setTextColor(SystemTools.obtainColor(application.obtainMainColor()));
+            tv.setText(item);
+            tv.setBackgroundResource(R.drawable.member_shape);
+            tv.setTextSize( TypedValue.COMPLEX_UNIT_PX , getResources().getDimensionPixelSize( R.dimen.notice_text_size));
+            tv.setPadding(leftPadding,topPadding,leftPadding,topPadding);
+            accountTypeList.addView(tv);
+        }
     }
 
     @Override
@@ -383,7 +415,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         boolean isLogin = BaseApplication.single.isLogin();
         if(!isLogin){
             userName.setText("未登录");
-            userType.setText("点击登录");
+
+            //userType.setText("点击登录");
+            showAccountType("点击登录");
+
             userLogo.setImageResource( R.drawable.ic_login_username);
         }else{
         }
@@ -856,7 +891,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
                 //更新界面
                 userName.setText(user.getWxNickName());
-                userType.setText(user.getLevelName());
+                //userType.setText(user.getLevelName());
+                showAccountType( user.getLevelName() );
+
                 new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute ( );
 
                 //切换用户，需要清空 店中店的 缓存数据
@@ -1003,7 +1040,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             ref.get().application.writeMemberLevel(updateLeftInfoModel.getData().getLevelName());
 
             if( BaseApplication.single.isLogin() ) {
-                ref.get().userType.setText(ref.get().application.readMemberLevel());
+                //ref.get().userType.setText(ref.get().application.readMemberLevel());
+                ref.get().showAccountType( ref.get().application.readMemberLevel() );
             }
 
             //设置侧滑栏菜单
@@ -1394,7 +1432,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             //更新界面
             ref.get().userName.setText(authMallModel.getData().getNickName());
-            ref.get().userType.setText(authMallModel.getData().getLevelName());
+            //ref.getge().userType.setText(authMallModel.getData().getLevelName());
+            ref.get().showAccountType(authMallModel.getData().getLevelName());
+
             String logoUrl = authMallModel.getData().getHeadImgUrl();
 
             new LoadLogoImageAyscTask ( ref.get().resources , ref.get().userLogo  , authMallModel.getData().getHeadImgUrl(), R.drawable.ic_login_username ).execute();
