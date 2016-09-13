@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.logging.Logger;
 
 import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
@@ -19,6 +20,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -133,6 +136,21 @@ public class SystemTools {
     public static int obtainAlphaColor(String colorStr) {
         String[] colors = colorStr.split(",");
         return Color.argb(12, Integer.parseInt(colors[1]), Integer.parseInt(colors[2]), Integer.parseInt(colors[3]));
+    }
+
+    /**
+     * 解析 color 字符串
+     * @param color
+     * @return
+     */
+    public static int parseColor(String color){
+        if( TextUtils.isEmpty( color)) return Color.WHITE;
+        try {
+            return Color.parseColor(color);
+        }catch (Exception ex){
+            Log.e( "error", ex.getMessage());
+            return Color.WHITE;
+        }
     }
 
     /**

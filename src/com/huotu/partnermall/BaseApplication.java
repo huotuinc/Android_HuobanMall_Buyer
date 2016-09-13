@@ -15,6 +15,7 @@ import android.webkit.CookieManager;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
 import com.huotu.android.library.libpush.PushHelper;
 import com.huotu.partnermall.config.Constants;
@@ -100,6 +101,9 @@ public class BaseApplication extends Application {
 
         // 极光初始化
         PushHelper.init(this, BuildConfig.DEBUG, BuildConfig.Push_Url);
+
+        //初始化 fresco
+        Fresco.initialize(this);
     }
 
     @Override
