@@ -34,8 +34,8 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshWebView;
+//import com.handmark.pulltorefresh.library.PullToRefreshBase;
+//import com.handmark.pulltorefresh.library.PullToRefreshWebView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
@@ -98,6 +98,10 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.wechat.friends.Wechat;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 public class HomeActivity extends BaseActivity implements Handler.Callback {
     //获取资源文件对象
@@ -128,6 +132,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     @Bind(R.id.titleRightImage)
     ImageView titleRightImage;
     //web视图
+    @Bind(R.id.main_webview)
     public WebView pageWeb;
     //单独加载菜单
     @Bind(R.id.menuPage)
@@ -154,7 +159,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     @Bind(R.id.accountType)
     TextView userType;
     @Bind(R.id.viewPage)
-    PullToRefreshWebView refreshWebView;
+    PtrClassicFrameLayout ptrClassicFrameLayout;
+    //PullToRefreshWebView refreshWebView;
     @Bind(R.id.layDrag)
     DrawerLayout layDrag;
     @Bind(R.id.main_pgbar)
@@ -316,11 +322,25 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, mHandler);
         ui.loadMenus();
         //监听web控件
-        pageWeb = refreshWebView.getRefreshableView();
-        refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
+//        pageWeb = refreshWebView.getRefreshableView();
+//        refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
+//            @Override
+//            public void onRefresh(PullToRefreshBase<WebView> pullToRefreshBase) {
+//                //刷新界面
+//                pageWeb.reload();
+//            }
+//        });
+
+        ptrClassicFrameLayout.setLastUpdateTimeRelateObject(this);
+        ptrClassicFrameLayout.setPtrHandler(new PtrHandler() {
             @Override
-            public void onRefresh(PullToRefreshBase<WebView> pullToRefreshBase) {
-                //刷新界面
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                //return false;
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame , pageWeb,header);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
                 pageWeb.reload();
             }
         });
@@ -515,8 +535,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     @Override
                     public void onReceivedError( WebView view, int errorCode, String description,String failingUrl ){
                         super.onReceivedError(view, errorCode, description, failingUrl);
-                        if( refreshWebView ==null) return;
-                        refreshWebView.onRefreshComplete();
+//                        if( refreshWebView ==null) return;
+//                        refreshWebView.onRefreshComplete();
+                        if(ptrClassicFrameLayout==null)return;
+                        ptrClassicFrameLayout.refreshComplete();
 
                         if( pgBar == null) return;
                         pgBar.setVisibility(View.GONE);
@@ -535,10 +557,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if( refreshWebView ==null || pgBar ==null ) return;
+                if( ptrClassicFrameLayout ==null || pgBar ==null ) return;
 
                 if(100 == newProgress) {
-                    refreshWebView.onRefreshComplete();
+                    ptrClassicFrameLayout.refreshComplete();
 
                     pgBar.setVisibility(View.GONE);
                 }else {
