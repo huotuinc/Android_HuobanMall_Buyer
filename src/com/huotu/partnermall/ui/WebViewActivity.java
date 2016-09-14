@@ -143,6 +143,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 //            }
 //        });
 
+        ptrClassicFrameLayout.disableWhenHorizontalMove(true);
         ptrClassicFrameLayout.setLastUpdateTimeRelateObject(this);
         ptrClassicFrameLayout.setPtrHandler(new PtrHandler() {
             @Override

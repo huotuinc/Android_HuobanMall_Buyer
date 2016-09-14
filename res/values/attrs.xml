@@ -14,19 +14,4 @@
     <attr name="unselectedColor" format="color" />
 
 
-    <declare-styleable name="KJEditText">
-        <attr name="edit_style">
-            <enum name="orange" value="0" />
-            <enum name="blue" value="1" />
-            <enum name="transparent" value="2" />
-        </attr>
-    </declare-styleable>
-
-    <declare-styleable name="CircleImageView">
-        <attr name="civ_border_width" format="dimension" />
-        <attr name="civ_border_color" format="color" />
-        <attr name="civ_border_overlay" format="boolean" />
-        <attr name="civ_fill_color" format="color" />
-    </declare-styleable>
-
 </resources>

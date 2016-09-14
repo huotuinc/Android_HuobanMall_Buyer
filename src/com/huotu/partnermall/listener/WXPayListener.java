@@ -17,7 +17,6 @@ import com.huotu.partnermall.model.Purchase;
 import com.huotu.partnermall.model.WXPayResult;
 import com.huotu.partnermall.utils.EncryptUtil;
 import com.huotu.partnermall.utils.HttpUtil;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WXPayUtilEx;
 import com.tencent.mm.sdk.modelpay.PayReq;

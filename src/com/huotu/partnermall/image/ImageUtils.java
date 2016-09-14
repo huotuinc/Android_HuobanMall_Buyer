@@ -13,8 +13,7 @@ public class ImageUtils {
      * @param targetWidth
      * @return
      */
-	public static Bitmap resizeImageByWidth(Bitmap defaultBitmap,
-			int targetWidth) {
+	public static Bitmap resizeImageByWidth(Bitmap defaultBitmap,int targetWidth) {
 		int rawWidth = defaultBitmap.getWidth();
 		int rawHeight = defaultBitmap.getHeight();
 		float targetHeight = targetWidth * (float) rawHeight / (float) rawWidth;
@@ -42,8 +41,7 @@ public class ImageUtils {
 		return BitmapFactory.decodeResource(res, resId, options);
 	}
 
-	public static int calculateInSampleSize(
-			BitmapFactory.Options options,int reqWidth,int reqHeight){
+	public static int calculateInSampleSize(BitmapFactory.Options options,int reqWidth,int reqHeight){
 		// Raw height and width of image
 		final int height = options.outHeight;
 		final int width = options.outWidth;

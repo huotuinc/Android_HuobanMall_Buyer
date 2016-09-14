@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.ScrollView;
 
-import com.huotu.partnermall.utils.KJLoger;
 
 
 /**
@@ -48,7 +48,7 @@ public class BounceScrollView extends ScrollView {
     protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent){
         //这块是关键性代码
 		this. scrollRangeY = scrollRangeY;
-    	KJLoger.i ( ">>>>>>deltaY:" + deltaY + ",scrollY：" + scrollY + ",scrollRangeY：" + scrollRangeY );
+    	Log.i ( "error" , ">>>>>>deltaY:" + deltaY + ",scrollY：" + scrollY + ",scrollRangeY：" + scrollRangeY );
     	int dy = deltaY/2;
     	if(Math.abs(dy) > 5 && (scrollY > scrollRangeY || scrollY < 0) ){
     		//int dy = deltaY/2;

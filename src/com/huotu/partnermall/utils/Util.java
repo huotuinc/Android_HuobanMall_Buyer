@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
+import android.util.Log;
+
 import com.huotu.partnermall.config.Constants;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -104,7 +106,7 @@ public class Util {
     public static boolean classIsTop(Activity activity) {
 
         String packageName = activity.getLocalClassName();
-        KJLoger.i(">>>>" + packageName);
+        Log.i( "error" , ">>>>" + packageName);
         ActivityManager activityManager = (ActivityManager) (activity
                 .getSystemService(android.content.Context.ACTIVITY_SERVICE));
         List<ActivityManager.RunningTaskInfo> rti = activityManager.getRunningTasks(1);

@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.widgets.CircleImageDrawable;
 
 

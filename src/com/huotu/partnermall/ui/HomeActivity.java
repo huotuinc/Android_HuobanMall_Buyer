@@ -363,6 +363,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 //            }
 //        });
 
+
+        ptrClassicFrameLayout.disableWhenHorizontalMove(true);
         ptrClassicFrameLayout.setLastUpdateTimeRelateObject(this);
         ptrClassicFrameLayout.setPtrHandler(new PtrHandler() {
             @Override

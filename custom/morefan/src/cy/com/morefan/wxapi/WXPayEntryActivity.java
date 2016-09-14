@@ -9,7 +9,6 @@ import android.os.Message;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;

@@ -1,5 +1,7 @@
 package com.huotu.partnermall.utils;
 
+import android.util.Log;
+
 import com.huotu.partnermall.model.ColorBean;
 
 import java.io.IOException;
@@ -54,7 +56,7 @@ class PropertiesUtil {
             return color;
         }
         catch ( IOException e ) {
-            KJLoger.e ( e.getMessage () );
+            Log.e ( "error" , e.getMessage () );
             return null;
         }
 

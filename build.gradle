@@ -188,19 +188,19 @@ android {
     //打包渠道
     productFlavors {
 
-//        morefan_test{
-//            applicationId 'cy.com.morefan'
-//            versionCode BUYER_VERSIONCODE.toInteger()
-//            versionName "${BUYER_VERSIONNAME}"
-//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.51flashmall.com/\"'
-//            buildConfigField 'String','APP_ID','\"huotu686ad1fe2bd8a02bb\"'
-//            buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
-//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
-//            buildConfigField 'String','Push_Url','\"http://test.api.open.huobanplus.com:8081/\"'
-//            buildConfigField 'String', 'SMART_KEY', '\"huoban\"'
-//            buildConfigField 'String', 'SMART_SECURITY', '\"319ea9ad29ef4a50d6801c2f406dd208\"'
-//            signingConfig signingConfigs.fanmore
-//        }
+        morefan_test{
+            applicationId 'cy.com.morefan'
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.51flashmall.com/\"'
+            buildConfigField 'String','APP_ID','\"huotu686ad1fe2bd8a02bb\"'
+            buildConfigField 'String','APP_SECRET','\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"http://test.api.open.huobanplus.com:8081/\"'
+            buildConfigField 'String','Push_Url','\"http://test.api.open.huobanplus.com:8081/\"'
+            buildConfigField 'String', 'SMART_KEY', '\"huoban\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"319ea9ad29ef4a50d6801c2f406dd208\"'
+            signingConfig signingConfigs.fanmore
+        }
 
 
 //        adtimetest_test{

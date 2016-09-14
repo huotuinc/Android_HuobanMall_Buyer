@@ -71,7 +71,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                KJLoger.e(e.getMessage());
+                Log.e( TAG , e.getMessage());
             }
 
             //退出程序
@@ -123,7 +123,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 infos.put("versionCode", versionCode);
             }
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e("error", "an error occured when collect package info");
+            Log.e( TAG , "an error occured when collect package info");
         }
         Field[] fields = Build.class.getDeclaredFields();
         for (Field field : fields) {

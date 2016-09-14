@@ -3,23 +3,6 @@ package com.huotu.partnermall.config;
 import com.huotu.partnermall.inner.BuildConfig;
 
 public class Constants {
-	/**
-	 ******************************************* 参数设置信息开始
-	 * ******************************************
-	 */
-
-	// 保存参数文件夹名字
-	//public static final String SHARED_PREFERENCE_NAME = "account_info";
-
-	// SDCard路径
-	//public static final String SD_PATH = Environment.getExternalStorageDirectory ( ).getAbsolutePath ( );
-
-	// 手机IMEI号码
-	//public static String IMEI = "";
-
-	// 手机号码
-	//public static String TEL = "";
-
 	// 屏幕高度
 	public static int SCREEN_HEIGHT = 800;
 

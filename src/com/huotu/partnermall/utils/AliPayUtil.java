@@ -3,6 +3,7 @@ package com.huotu.partnermall.utils;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.alipay.sdk.app.PayTask;
 import com.huotu.partnermall.BaseApplication;
@@ -19,8 +20,8 @@ import java.util.Random;
 /**
  * 支付宝支付工具类
  */
-public
-class AliPayUtil {
+public class AliPayUtil {
+    protected static String TAG = AliPayUtil.class.getName();
 
     // 商户私钥，pkcs8格式
     public static final String RSA_PRIVATE =
@@ -81,7 +82,7 @@ class AliPayUtil {
             // 仅需对sign做URL编码
             sign = URLEncoder.encode ( sign, "UTF-8" );
         } catch (UnsupportedEncodingException e) {
-            KJLoger.e ( e.getMessage () );
+            Log.e ( TAG , e.getMessage () );
         }
 
         // 完整的符合支付宝参数规范的订单信息

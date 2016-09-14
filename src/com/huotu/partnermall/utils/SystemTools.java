@@ -45,14 +45,12 @@ public class SystemTools {
             }
             return outStream.toByteArray();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            KJLoger.e(e.getMessage());
+            Log.e( "error" , e.getMessage());
         } finally {
             try {
                 inStream.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                KJLoger.e(e.getMessage());
+                Log.e("error",e.getMessage());
             }
         }
         return null;

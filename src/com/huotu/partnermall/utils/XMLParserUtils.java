@@ -2,6 +2,8 @@ package com.huotu.partnermall.utils;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.util.Log;
+
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.MerchantBean;
@@ -100,10 +102,10 @@ public class XMLParserUtils {
             }
             return merchant;
         } catch (XmlPullParserException e) {
-            KJLoger.e(e.getMessage());
+            Log.e( "error" ,  e.getMessage());
             return null;
         } catch (IOException e) {
-            KJLoger.e(e.getMessage());
+            Log.e( "error" , e.getMessage());
             return null;
         }
 

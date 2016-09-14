@@ -2,6 +2,7 @@ package com.huotu.partnermall.utils;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 import android.util.Xml;
 
 import com.huotu.partnermall.BaseApplication;
@@ -145,7 +146,7 @@ class WXPayUtilEx {
                 .format(Constants.WX_URL);
         String entity = genProductArgs();
 
-        KJLoger.i( entity );
+        //Log.i( entity );
 
         byte[] buf = WXPayUtil.httpPost(url, entity);
 
@@ -153,7 +154,7 @@ class WXPayUtilEx {
             return null;
 
         String content = new String(buf);
-        KJLoger.i( content );
+        //Log.i( content );
         Map<String, String> xml = decodeXml(content);
 
         return xml;
@@ -210,7 +211,7 @@ class WXPayUtilEx {
         String packageSign;
         packageSign = getMessageDigest(sb.toString().getBytes()).toUpperCase(
                 Locale.getDefault());
-        KJLoger.i( packageSign);
+        //KJLoger.i( packageSign);
 
         return packageSign;
     }
@@ -228,7 +229,7 @@ class WXPayUtilEx {
         }
         sb.append("</xml>");
 
-        KJLoger.i( sb.toString() );
+        //KJLoger.i( sb.toString() );
         return sb.toString();
     }
 
@@ -267,7 +268,7 @@ class WXPayUtilEx {
             return xml;
         } catch (Exception e)
         {
-            KJLoger.e( e.toString());
+            Log.e("error" , e.toString());
         }
         return null;
 
@@ -308,7 +309,7 @@ class WXPayUtilEx {
 
         } catch (Exception e)
         {
-            KJLoger.e( "genProductArgs fail, ex = " + e.getMessage());
+            Log.e("error" , "genProductArgs fail, ex = " + e.getMessage());
             return null;
         }
 
@@ -336,7 +337,7 @@ class WXPayUtilEx {
         this.sb.append("sign str\n" + sb.toString() + "\n\n");
         String appSign = getMessageDigest(sb.toString().getBytes())
                 .toUpperCase(Locale.getDefault());
-        KJLoger.e( appSign );
+        //Log.e("", appSign );
         return appSign;
     }
 
@@ -364,7 +365,7 @@ class WXPayUtilEx {
 
         // show.setText(sb.toString());
 
-        KJLoger.e( signParams.toString() );
+        //Loger.e( signParams.toString() );
 
     }
 
