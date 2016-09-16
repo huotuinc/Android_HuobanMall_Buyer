@@ -477,5 +477,7 @@ dependencies {
 
     compile 'com.facebook.fresco:fresco:0.13.0'
     compile 'com.facebook.fresco:animated-gif:0.13.0'
+
+    compile 'com.huotu.android.library:libPay:1.0.0'
 }
 
