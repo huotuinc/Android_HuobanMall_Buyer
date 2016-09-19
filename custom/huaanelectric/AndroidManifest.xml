@@ -52,7 +52,7 @@
 
         <!-- 极光推送 Required  . Enable it you can get statistics data with channel -->
         <meta-data android:name="JPUSH_CHANNEL" android:value="huotu_huaanelectric"/>
-        <meta-data android:name="JPUSH_APPKEY" android:value="" />
+        <meta-data android:name="JPUSH_APPKEY" android:value="11e3053aa62e5af9a5a9b3e6" />
 
     </application>
 
