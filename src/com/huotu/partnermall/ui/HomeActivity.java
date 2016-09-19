@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,8 +36,6 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-//import com.handmark.pulltorefresh.library.PullToRefreshBase;
-//import com.handmark.pulltorefresh.library.PullToRefreshWebView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
@@ -52,6 +49,7 @@ import com.huotu.partnermall.model.CloseEvent;
 import com.huotu.partnermall.model.GoIndexEvent;
 import com.huotu.partnermall.model.LinkEvent;
 import com.huotu.partnermall.model.MenuBean;
+import com.huotu.partnermall.model.MenuLinkEvent;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.PhoneLoginModel;
 import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
@@ -66,8 +64,6 @@ import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.login.BindPhoneActivity;
 import com.huotu.partnermall.ui.login.PhoneLoginActivity;
-//import com.huotu.partnermall.ui.sis.GoodManageActivity;
-//import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.DensityUtils;
@@ -78,19 +74,16 @@ import com.huotu.partnermall.utils.SignUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
-import com.huotu.partnermall.utils.Util;
 import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import com.huotu.partnermall.widgets.TipAlertDialog;
+import com.huotu.partnermall.widgets.custom.FooterOneWidget;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.w3c.dom.Text;
-
 import java.lang.ref.WeakReference;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -122,7 +115,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     public static final int FILECHOOSER_RESULTCODE_5 = 5;
     public static final int BINDPHONE_REQUESTCODE = 1001;
     private AutnLogin autnLogin;
-
     //标题栏布局对象
     @Bind(R.id.titleLayout)
     RelativeLayout homeTitle;
@@ -139,8 +131,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     @Bind(R.id.main_webview)
     public WebView pageWeb;
     //单独加载菜单
-    @Bind(R.id.menuPage)
-    WebView menuView;
+    //@Bind(R.id.menuPage)
+    //WebView menuView;
     //侧滑登录
     @Bind(R.id.loginLayout)
     RelativeLayout loginLayout;
@@ -173,6 +165,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     FrameLayout ff1;
     @Bind(R.id.accountTypeList)
     LinearLayout accountTypeList;
+
+    @Bind(R.id.loadMenuView)
+    RelativeLayout loadMenuView;
 
     UrlFilterUtils urlFilterUtils;
 
@@ -207,7 +202,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 checkAppVersion();
             }
         },500);
-
 
     }
 
@@ -316,9 +310,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         if( pageWeb !=null ){
             pageWeb.setVisibility(View.GONE);
         }
-        if(menuView !=null){
-            menuView.setVisibility(View.GONE);
-        }
+
+//        if(menuView !=null){
+//            menuView.setVisibility(View.GONE);
+//        }
 
         UnRegister();
 
@@ -437,53 +432,58 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         PushProcess.process( this , bundle);
     }
 
-    private void loadMainMenu() {
-        menuView.getSettings().setJavaScriptEnabled(true);
-        menuView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        menuView.getSettings().setDomStorageEnabled(true);
-        menuView.getSettings().setAllowFileAccess(true);
-        menuView.getSettings().setAppCacheEnabled(true);
-        menuView.getSettings().setDatabaseEnabled(true);
+    private void loadMainMenu(){
+        loadMenuView.removeAllViews();
 
-        signHeader( menuView );
+        FooterOneWidget footerOneWidget=new FooterOneWidget(this);
+        int heightPx = DensityUtils.dip2px(this , 50);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
+        footerOneWidget.setLayoutParams(layoutParams);
+        loadMenuView.addView(footerOneWidget);
+    }
 
-        //首页默认为商户站点 + index
-        String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
-        menuView.loadUrl(menuUrl , SignUtil.signHeader() );
-
-        menuView.setWebViewClient(
-                new WebViewClient() {
-                    //重写此方法，浏览器内部跳转
-                    public boolean shouldOverrideUrlLoading( WebView view, String url ) {
-                        if( pageWeb ==null ) return true;
-                        titleRightImage.setVisibility(View.GONE);
-
-
-//                        url="http://olquan.huobanj.cn/Arvato/UserCenter/Index.aspx?customerid=4471";
-
-
-                        pageWeb.loadUrl(url , SignUtil.signHeader() );
-                        return true;
-                    }
-
-                    @Override
-                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                        super.onPageStarted(view, url, favicon);
-                    }
-
-                    @Override
-                    public void onPageFinished(WebView view, String url) {
-                        super.onPageFinished(view, url);
-                    }
-                }
-        );
+    private void loadMainMenu_old() {
+//        menuView.getSettings().setJavaScriptEnabled(true);
+//        menuView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+//        menuView.getSettings().setDomStorageEnabled(true);
+//        menuView.getSettings().setAllowFileAccess(true);
+//        menuView.getSettings().setAppCacheEnabled(true);
+//        menuView.getSettings().setDatabaseEnabled(true);
+//
+//        signHeader( menuView );
+//
+//        //首页默认为商户站点 + index
+//        String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
+//        menuView.loadUrl(menuUrl , SignUtil.signHeader() );
+//
+//        menuView.setWebViewClient(
+//                new WebViewClient() {
+//                    //重写此方法，浏览器内部跳转
+//                    public boolean shouldOverrideUrlLoading( WebView view, String url ) {
+//                        if( pageWeb ==null ) return true;
+//                        titleRightImage.setVisibility(View.GONE);
+//                        pageWeb.loadUrl(url , SignUtil.signHeader() );
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+//                        super.onPageStarted(view, url, favicon);
+//                    }
+//
+//                    @Override
+//                    public void onPageFinished(WebView view, String url) {
+//                        super.onPageFinished(view, url);
+//                    }
+//                }
+//        );
     }
 
     private void signHeader(){
         if( pageWeb==null) return;
         signHeader(pageWeb);
-        if(menuView==null) return;
-        signHeader(menuView);
+        //if(menuView==null) return;
+        //signHeader(menuView);
     }
 
     private void signHeader( WebView webView ){
@@ -981,7 +981,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         pageWeb.clearHistory();
         pageWeb.clearCache(true);
         signHeader(pageWeb);
-        signHeader(menuView);
+        //signHeader(menuView);
 
         //AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
         //String url = paramUtils.obtainUrl ();
@@ -998,88 +998,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         return;
     }
 
-//    private void openSis(){
-//        HomeActivity.this.startActivity(new Intent(HomeActivity.this, GoodManageActivity.class));
-//    }
-
-    private void refreshLeftMenu(){
-        String url = Constants.getINTERFACE_PREFIX() + "weixin/UpdateLeftInfo";
-        url +="?customerId="+ application.readMerchantId();
-        url +="&userId="+ (TextUtils.isEmpty( application.readMemberId())? "0": application.readMemberId());
-        url +="&clientUserType="+ application.readMemberType();
-        AuthParamUtils authParamUtils=new AuthParamUtils(application , System.currentTimeMillis() , url , HomeActivity.this);
-        url = authParamUtils.obtainUrlName();
-        GsonRequest<UpdateLeftInfoModel> request = new GsonRequest<UpdateLeftInfoModel>(
-                Request.Method.GET,
-                url,
-                UpdateLeftInfoModel.class,
-                null,
-                new MyRefreshMenuListener(HomeActivity.this),
-                new MyRefreshMenuErrorListener(HomeActivity.this));
-
-        VolleyUtil.getRequestQueue().add(request);
-    }
-
-    static class MyRefreshMenuListener implements Response.Listener<UpdateLeftInfoModel>{
-        WeakReference<HomeActivity> ref;
-        public MyRefreshMenuListener(HomeActivity aty){
-            ref= new WeakReference<>(aty);
-        }
-
-        @Override
-        public void onResponse(UpdateLeftInfoModel updateLeftInfoModel) {
-            if( ref.get() ==null) return;
-            if( updateLeftInfoModel==null ) return;
-
-            if( updateLeftInfoModel.getCode() != 200 ){
-                ToastUtils.showShortToast( ref.get().application , updateLeftInfoModel.getMsg());
-                return;
-            }
-
-            if( updateLeftInfoModel.getData()==null ) return;
-            if( updateLeftInfoModel.getData().getMenusCode()==0) return;
-
-            ref.get().application.writeMemberLevel(updateLeftInfoModel.getData().getLevelName());
-
-            if( BaseApplication.single.isLogin() ) {
-                //ref.get().userType.setText(ref.get().application.readMemberLevel());
-                ref.get().showAccountType( ref.get().application.readMemberLevel() );
-            }
-
-            //设置侧滑栏菜单
-            List<MenuBean > menus = new ArrayList< MenuBean >(  );
-            MenuBean menu = null;
-            List<UpdateLeftInfoModel.MenuModel > home_menus = updateLeftInfoModel.getData().getHome_menus ();
-            for(UpdateLeftInfoModel.MenuModel home_menu:home_menus)
-            {
-                menu = new MenuBean ();
-                menu.setMenuGroup ( String.valueOf ( home_menu.getMenu_group () ) );
-                menu.setMenuIcon ( home_menu.getMenu_icon ( ) );
-                menu.setMenuName ( home_menu.getMenu_name ( ) );
-                menu.setMenuUrl ( home_menu.getMenu_url ( ) );
-                menus.add ( menu );
-            }
-            if(null != menus && !menus.isEmpty ()) {
-                ref.get().application.writeMenus(menus);
-                //动态加载侧滑菜单
-                ref.get().mainMenuLayout.removeAllViews();
-                UIUtils ui = new UIUtils (  ref.get().application, ref.get() ,  ref.get().resources,  ref.get().mainMenuLayout,  ref.get().mHandler );
-                ui.loadMenus();
-            }
-        }
-    }
-
-    static class MyRefreshMenuErrorListener implements Response.ErrorListener{
-        WeakReference<HomeActivity> ref;
-        public MyRefreshMenuErrorListener(HomeActivity aty){
-            ref = new WeakReference<HomeActivity>(aty);
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            if( ref.get()==null) return;
-        }
-    }
     /*
      * 手机绑定微信
      */
@@ -1308,6 +1226,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if(titleRightImage==null) return;
                     titleRightImage.setVisibility(View.VISIBLE);
                 }
             });
@@ -1316,6 +1235,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if(titleRightImage==null) return;
                     titleRightImage.setVisibility(View.GONE);
                 }
             });
@@ -1329,9 +1249,77 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         if(TextUtils.isEmpty(link)) return;
 
 
-        Intent intent=new Intent(HomeActivity.this,WebViewActivity.class);
-        intent.putExtra(Constants.INTENT_URL, link);
+        //Intent intent=new Intent(HomeActivity.this,WebViewActivity.class);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( link ));
+        //intent.putExtra(Constants.INTENT_URL, link);
         HomeActivity.this.startActivity(intent);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMenuLink(MenuLinkEvent event){
+        if(event==null)return;
+        String link = event.getLinkUrl();
+        if(TextUtils.isEmpty(link)) return;
+
+        if(pageWeb==null) return;
+
+        titleRightImage.setVisibility(View.GONE);
+
+        link = dealUrl(link);
+
+        pageWeb.loadUrl(link ,  SignUtil.signHeader() );
+    }
+
+
+    /**
+     * 获得当前页面的 goodid参数值
+     * @return
+     */
+    private String getGoodIdFromUrl(){
+        if( pageWeb==null ) return "";
+        String url = pageWeb.getUrl();
+        if( TextUtils.isEmpty( url ) )return "";
+        String goodsidString ="goodsid";
+        Uri uri = Uri.parse( url );
+        String goodid = uri.getQueryParameter("goodsid");
+        if( TextUtils.isEmpty( goodid )) goodid="";
+        return  goodid;
+    }
+
+    /**
+     * 获得当前页面的 orderid 参数值
+     * @return
+     */
+    private String getOrderIdFromUrl(){
+        if( pageWeb==null ) return "";
+        String url = pageWeb.getUrl();
+        if( TextUtils.isEmpty( url ) )return "";
+        String orderidString ="orderid";
+        Uri uri = Uri.parse( url );
+        String orderid = uri.getQueryParameter("orderid");
+        if( TextUtils.isEmpty(orderid) ) orderid="";
+        return orderid;
+    }
+
+
+    protected String dealUrl(String url){
+
+        String useridString ="{userid}";
+        String userid = BaseApplication.single.readMemberId();
+        if( !TextUtils.isEmpty(url) && url.contains( useridString )){
+            url = url.replace( useridString , userid );
+        }
+        String goodidString = "{goodid}";
+        String goodid = getGoodIdFromUrl();
+        if( !TextUtils.isEmpty(url) && url.contains( goodidString )){
+            url = url.replace( goodidString , goodid );
+        }
+        String orderidString ="{orderid}";
+        String orderid = getOrderIdFromUrl();
+        if( !TextUtils.isEmpty(url) && url.contains( orderidString )){
+            url= url.replace( orderidString , orderid );
+        }
+        return url;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1473,16 +1461,15 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     public void onEventRefreshHttpHeader(RefreshHttpHeaderEvent event){
         if( pageWeb ==null) return;
         signHeader(pageWeb);
-        if(menuView==null) return;
-        signHeader(menuView);
-        String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
-        menuView.loadUrl(menuUrl , SignUtil.signHeader() );
+        //if(menuView==null) return;
+        //signHeader(menuView);
+        //String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
+        //menuView.loadUrl(menuUrl , SignUtil.signHeader() );
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventGoIndex(final GoIndexEvent event) {
         if (pageWeb == null) return;
-
 
         String url = application.obtainMerchantUrl().toLowerCase();
         if (!url.startsWith("http://")) {

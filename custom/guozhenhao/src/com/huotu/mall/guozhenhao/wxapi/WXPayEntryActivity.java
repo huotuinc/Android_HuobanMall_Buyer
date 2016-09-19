@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
@@ -25,92 +26,58 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
  */
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
-    //private       Handler handler    = new Handler ( this );
     private IWXAPI api;
-    private
-    BaseApplication application;
-
-//    @Override
-//    public boolean handleMessage ( Message msg ) {
-//
-//        switch ( msg.what){
-//            case DeliveryGoodAsyncTask.PAY_ERROR:
-//            {
-//                ToastUtils.showLongToast(this, msg.obj.toString());
-//                this.finish();
-//            }
-//            break;
-//            case DeliveryGoodAsyncTask.PAY_OK:
-//            {
-//                ToastUtils.showLongToast(this, msg.obj.toString());
-//                //MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_FLOW_ADD );
-//                //MyBroadcastReceiver.sendBroadcast(this,MyBroadcastReceiver.ACTION_WX_PAY_CALLBACK);
-//                this.finish();
-//            }
-//            break;
-//        }
-//        return false;
-//    }
+    private BaseApplication application;
 
     @Override
-    public
-    void onReq ( BaseReq baseReq ) {
+    public void onReq(BaseReq baseReq) {
     }
 
     @Override
-    protected
-    void onCreate ( Bundle savedInstanceState ) {
-        super.onCreate ( savedInstanceState );
-        setContentView ( R.layout.pay_result );
-        application = ( BaseApplication ) this.getApplication ();
-        api = WXAPIFactory.createWXAPI ( this, application.readWxpayAppId ( ) );
-        api.handleIntent ( getIntent ( ), this );
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.pay_result);
+        application = (BaseApplication) this.getApplication();
+        api = WXAPIFactory.createWXAPI(this, application.readWxpayAppId());
+        api.handleIntent(getIntent(), this);
     }
 
     @Override
-    public
-    void onResp ( BaseResp resp ) {
+    public void onResp(BaseResp resp) {
 
-        Log.i ( "onPayFinish, errCode = " + resp.errCode );
+        //Log.i ( "onPayFinish, errCode = " + resp.errCode );
 
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
             String msg = "";
-            if( resp.errCode== 0)
-            {
-                msg="支付成功";
-                MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_PAY_SUCCESS );
+            if (resp.errCode == 0) {
+                msg = "支付成功";
+                MyBroadcastReceiver.sendBroadcast(this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
                 this.finish();
-                ToastUtils.showLongToast ( WXPayEntryActivity.this, msg );
+                ToastUtils.showLongToast(WXPayEntryActivity.this, msg);
                 return;
-            }else if( resp.errCode== -1){
-                msg="支付失败";
+            } else if (resp.errCode == -1) {
+                msg = "支付失败";
                 this.finish();
-                ToastUtils.showLongToast ( WXPayEntryActivity.this, msg );
+                ToastUtils.showLongToast(WXPayEntryActivity.this, msg);
                 return;
-            }else if(resp.errCode ==-2){
-                msg="用户取消支付";
+            } else if (resp.errCode == -2) {
+                msg = "用户取消支付";
                 this.finish();
                 ToastUtils.showLongToast(WXPayEntryActivity.this, msg);
                 return;
             }
 
-            PayResp payResp = (PayResp)resp;
-            if(null==payResp){
-                Log.i("wxpay>>>payResp=null","");
-                msg="支付失败";
+            PayResp payResp = (PayResp) resp;
+            if (null == payResp) {
+                Log.i("wxpay>>>payResp=null", "");
+                msg = "支付失败";
                 ToastUtils.showLongToast(WXPayEntryActivity.this, msg);
                 this.finish();
                 return;
-            }else{
-                Log.i("wxpay>>>extData", payResp.extData==null? "": payResp.extData );
+            } else {
+                Log.i("wxpay>>>extData", payResp.extData == null ? "" : payResp.extData);
                 //Log.i("wxpay>>>prepayid",payResp.prepayId);
             }
-
-            /*PayGoodBean para=new PayGoodBean ();
-            JSONUtil<PayGoodBean> jsonUtil=new JSONUtil<PayGoodBean>();
-            para = jsonUtil.toBean( payResp.extData, para);
-
-            new DeliveryGoodAsyncTask ( WXPayEntryActivity.this , handler ,  para.getOrderNo(),para.getProductType(), para.getProductId() ).execute();*/
         }
     }
 
