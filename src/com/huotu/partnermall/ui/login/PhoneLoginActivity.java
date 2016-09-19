@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -76,8 +77,9 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
     @Bind(R.id.titleText) TextView tvTitle;
     @Bind(R.id.activity_phone_header) RelativeLayout rlHeader;
     @Bind(R.id.PhoneLoginActivity_phone_weixin) RelativeLayout rlPhoneWeixin;
-    @Bind(R.id.PhoneLoginActivity_weixin)  RelativeLayout rlWeixin;
-    @Bind(R.id.rlBottom) RelativeLayout rlBottom;
+    @Bind(R.id.PhoneLoginActivity_weixin)  LinearLayout rlWeixin;
+    @Bind(R.id.llSpace)
+    FrameLayout llSpace;//微信登录按钮隐藏 or线隐藏未写
     @Bind(R.id.tvNoCode) TextView tvNoCode;
 
     ProgressPopupWindow progressPopupWindow;
@@ -120,15 +122,18 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         int loginMethod = BaseApplication.single.readLoginMethod();
         if( loginMethod == 0 ){
             rlPhoneWeixin.setVisibility(View.VISIBLE);
-            rlBottom.setVisibility(View.VISIBLE);
+            llSpace.setVisibility(View.VISIBLE);
+            llWechat.setVisibility(View.VISIBLE);
             rlWeixin.setVisibility(View.GONE);
         }else if( loginMethod==1){
             rlPhoneWeixin.setVisibility(View.VISIBLE);
-            rlBottom.setVisibility(View.GONE);
+            llSpace.setVisibility(View.GONE);
+            llWechat.setVisibility(View.GONE);
             rlWeixin.setVisibility(View.GONE);
         }else if(loginMethod==2){
             rlPhoneWeixin.setVisibility(View.GONE);
-            rlBottom.setVisibility(View.GONE);
+            llSpace.setVisibility(View.GONE);
+            llWechat.setVisibility(View.GONE);
             rlWeixin.setVisibility(View.VISIBLE);
         }
 
@@ -139,7 +144,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         rlHeader.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()) );
         ivLeft.setBackgroundResource( R.drawable.main_title_left_back );
 
-        checkWechatClient();
+        //checkWechatClient();
 
        redirectUrl =  getIntent().getExtras() ==null? "" : getIntent().getExtras().getString("redirecturl");
     }
