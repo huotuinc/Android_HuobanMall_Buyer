@@ -78,8 +78,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
     @Bind(R.id.activity_phone_header) RelativeLayout rlHeader;
     @Bind(R.id.PhoneLoginActivity_phone_weixin) RelativeLayout rlPhoneWeixin;
     @Bind(R.id.PhoneLoginActivity_weixin)  LinearLayout rlWeixin;
-    @Bind(R.id.llSpace)
-    FrameLayout llSpace;//微信登录按钮隐藏 or线隐藏未写
+    @Bind(R.id.llSpace)  FrameLayout llSpace;
     @Bind(R.id.tvNoCode) TextView tvNoCode;
 
     ProgressPopupWindow progressPopupWindow;

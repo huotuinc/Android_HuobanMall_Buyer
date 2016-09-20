@@ -19,6 +19,7 @@
         android:layout_below="@id/activity_phone_header"
         android:id="@+id/PhoneLoginActivity_phone_weixin"
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="match_parent">
 
         <LinearLayout
@@ -170,7 +171,6 @@
                     android:layout_gravity="center"
                     android:layout_height="1dp"/>
                 <TextView
-                    android:background="#F2F2F2"
                     android:text="or"
                     android:paddingRight="4dp"
                     android:paddingLeft="4dp"
@@ -224,16 +224,23 @@
     <!-- 微信登录界面 -->
     <LinearLayout
         android:orientation="vertical"
-        android:visibility="gone"
-        android:background="@color/white"
+        android:visibility="visible"
+        android:background="#f5f5f5"
         android:id="@+id/PhoneLoginActivity_weixin"
         android:layout_below="@id/activity_phone_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:background="@drawable/white_bg"
+        android:layout_margin="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <ImageView
             android:background="@drawable/logo_wechat_big"
             android:layout_width="120dp"
-            android:layout_marginTop="50dp"
             android:layout_gravity="center_horizontal"
             android:id="@+id/PhoneLoginActivity_weixin_login_icon"
             android:layout_height="120dp"/>
@@ -245,14 +252,14 @@
             android:layout_gravity="center_horizontal"
             android:text="前往微信授权"
             android:textColor="@color/black"
-            android:textSize="30sp"/>
+            android:textSize="25sp"/>
         <TextView
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/gray"
             android:text="通过微信授权登录你的个人帐号您将在我们网站享受更多服务"/>
         <TextView
@@ -283,5 +290,5 @@
             android:background="@drawable/ic_safe"/>
 
     </LinearLayout>
-
+    </LinearLayout>
 </RelativeLayout>

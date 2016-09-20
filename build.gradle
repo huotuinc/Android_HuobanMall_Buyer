@@ -9,7 +9,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.2.0'
     }
 }
 
@@ -430,5 +430,6 @@ dependencies {
     compile 'com.huotu.android.library:libPush:1.2.1'
     compile 'com.huotu.android.library:libedittext:1.6'
     compile 'com.huotu.android.library:pulltorefresh:1.0.8'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
 }
 
