@@ -173,6 +173,13 @@ android {
             assets.srcDirs = ['custom/yueminghui/assets']
         }
 
+        cathigo{
+            manifest.srcFile 'custom/cathigo/AndroidManifest.xml'
+            java.srcDirs = ['custom/cathigo/src']
+            res.srcDirs = ['custom/cathigo/res']
+            assets.srcDirs = ['custom/cathigo/assets']
+        }
+
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
 
@@ -392,20 +399,6 @@ android {
 //        }
 
 
-//        youbi{//邮币大师
-//            applicationId 'com.huotu.mall.youbi'
-//            versionCode BUYER_VERSIONCODE.toInteger()
-//            versionName "${BUYER_VERSIONNAME}"
-//            buildConfigField 'String','INTERFACE_URL','"http://mallapi.huobanmall.com/"'
-//            buildConfigField 'String','APP_ID', '"huotu686ad1fe2bd8a02ok"'
-//            buildConfigField 'String','APP_SECRET', '\"0ad8abe201631aacf89c9231999c9f49"'
-//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
-//            buildConfigField 'String','Push_Url','"http://api.open.huobanplus.com/"'
-//            buildConfigField 'String', 'SMART_KEY', '"app"'
-//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//            signingConfig signingConfigs.youbi
-//        }
-
 //        huaanelectric{//桦桉灯饰
 //            applicationId 'com.huotu.mall.huaanelectric'
 //            versionCode BUYER_VERSIONCODE.toInteger()
@@ -448,21 +441,19 @@ android {
             signingConfig signingConfigs.yueminghui
         }
 
-
-//        huaanelectric{//桦桉电器
-//            applicationId 'com.huotu.mall.huaanelectric'
-//            versionCode BUYER_VERSIONCODE.toInteger()
-//            versionName "${BUYER_VERSIONNAME}"
-//            buildConfigField 'String','INTERFACE_URL','"http://mallapi.huobanmall.com/"'
-//            buildConfigField 'String','APP_ID', '"huotu686ad1fe2bd8a02ok"'
-//            buildConfigField 'String','APP_SECRET', '\"0ad8abe201631aacf89c9231999c9f49"'
-//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
-//            buildConfigField 'String','Push_Url','"http://api.open.huobanplus.com/"'
-//            buildConfigField 'String', 'SMART_KEY', '"app"'
-//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//            signingConfig signingConfigs.huaanelectric
-//        }
-
+        cathigo{//粉猫海购
+            applicationId 'com.huotu.mall.cathigo'
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','"http://mallapi.huobanmall.com/"'
+            buildConfigField 'String','APP_ID', '"huotu686ad1fe2bd8a02ok"'
+            buildConfigField 'String','APP_SECRET', '\"0ad8abe201631aacf89c9231999c9f49"'
+            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
+            buildConfigField 'String','Push_Url','"http://api.open.huobanplus.com/"'
+            buildConfigField 'String', 'SMART_KEY', '"app"'
+            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
+            signingConfig signingConfigs.cathigo
+        }
 
     }
 
