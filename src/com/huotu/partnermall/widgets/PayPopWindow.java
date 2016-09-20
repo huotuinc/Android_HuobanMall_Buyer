@@ -36,7 +36,7 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
     private Handler mHandler;
     private BaseApplication application;
     private PayModel payModel;
-    public ProgressPopupWindow progress;
+    //public ProgressPopupWindow progress;
 
 
     public PayPopWindow(final Activity aty, final Handler mHandler, final PayModel payModel) {
@@ -45,7 +45,7 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         this.mHandler = mHandler;
         this.application = BaseApplication.single;
         this.payModel = payModel;
-        progress = new ProgressPopupWindow(aty);
+        //progress = new ProgressPopupWindow(aty);
         LayoutInflater inflater = (LayoutInflater) aty.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         payView = inflater.inflate(R.layout.pop_pay_ui, null);
@@ -156,8 +156,8 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
             noticePop.showNotice();
             noticePop.showAtLocation(aty.findViewById(R.id.titleText), Gravity.CENTER, 0, 0);
         } else {
-            progress.showProgress("正在加载支付信息");
-            progress.showAtLocation( aty.findViewById(R.id.titleText), Gravity.CENTER, 0, 0 );
+            //progress.showProgress("正在加载支付信息");
+            //progress.showAtLocation( aty.findViewById(R.id.titleText), Gravity.CENTER, 0, 0 );
             payModel.setAttach(payModel.getCustomId() + "_0");
             //添加微信回调路径
             payModel.setNotifyurl(application.obtainMerchantUrl() + application.readWeixinNotify());
@@ -178,6 +178,7 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
             WeiXinPayInfo weiXinPayInfo = new WeiXinPayInfo( wxAppId , wxPartner , wxAppSecret , notifyUrl);
             WeiXinPayUtil weiXinPayUtil = new WeiXinPayUtil(aty , mHandler , weiXinPayInfo);
             weiXinPayUtil.pay(weiXinOrderInfo);
+            //progress.dismissView();
         }
     }
 

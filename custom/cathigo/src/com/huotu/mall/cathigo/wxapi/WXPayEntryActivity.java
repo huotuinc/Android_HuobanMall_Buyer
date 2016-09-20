@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+
 import com.huotu.partnermall.BaseApplication;
-import com.huotu.partnermall.async.DeliveryGoodAsyncTask;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.PayGoodBean;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.utils.JSONUtil;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
@@ -48,7 +48,7 @@ public class WXPayEntryActivity extends Activity implements  IWXAPIEventHandler 
     public
     void onResp ( BaseResp resp ) {
 
-        KJLoger.i ( "onPayFinish, errCode = " + resp.errCode );
+        Log.i ( "info","onPayFinish, errCode = " + resp.errCode );
 
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
             String msg = "";
@@ -73,13 +73,13 @@ public class WXPayEntryActivity extends Activity implements  IWXAPIEventHandler 
 
             PayResp payResp = (PayResp)resp;
             if(null==payResp){
-                KJLoger.i("wxpay>>>payResp=null","");
+                Log.i("wxpay>>>payResp=null","");
                 msg="支付失败";
                 ToastUtils.showLongToast(WXPayEntryActivity.this, msg);
                 this.finish();
                 return;
             }else{
-                KJLoger.i("wxpay>>>extData", payResp.extData==null? "": payResp.extData );
+                Log.i("wxpay>>>extData", payResp.extData==null? "": payResp.extData );
                 //Log.i("wxpay>>>prepayid",payResp.prepayId);
             }
 

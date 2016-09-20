@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
@@ -49,7 +50,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     public
     void onResp ( BaseResp resp ) {
 
-        Log.i ( "onPayFinish, errCode = " + resp.errCode );
+        Log.i ("info" , "onPayFinish, errCode = " + resp.errCode );
 
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
             String msg = "";
@@ -74,7 +75,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
             PayResp payResp = (PayResp)resp;
             if(null==payResp){
-                KJLoger.i("wxpay>>>payResp=null","");
+                Log.i("wxpay>>>payResp=null","");
                 msg="支付失败";
                 ToastUtils.showLongToast(WXPayEntryActivity.this, msg);
                 this.finish();
