@@ -140,8 +140,13 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         }
     }
 
-    protected void aliPay(){
-
+    protected void aliPay() {
+        Message msg = new Message();
+        msg.what = Constants.PAY_NET;
+        payModel.setPaymentType("1");
+        msg.obj = payModel;
+        mHandler.sendMessage(msg);
+        dismissView();
     }
 
     protected void wxPay(){
