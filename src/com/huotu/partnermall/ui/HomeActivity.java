@@ -1267,8 +1267,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         if(TextUtils.isEmpty(link)) return;
 
 
-        Intent intent=new Intent(HomeActivity.this,WebViewActivity.class);
-        intent.putExtra(Constants.INTENT_URL, link);
+        //Intent intent=new Intent(HomeActivity.this,WebViewActivity.class);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( link ));
+        //intent.putExtra(Constants.INTENT_URL, link);
         HomeActivity.this.startActivity(intent);
     }
 
