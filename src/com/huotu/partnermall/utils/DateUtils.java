@@ -1,5 +1,7 @@
 package com.huotu.partnermall.utils;
 
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,6 +10,7 @@ import java.util.Date;
 import com.huotu.partnermall.config.Constants;
 
 public class DateUtils {
+    protected static String  TAG = DateUtils.class.getName();
     /**
      * @throws
      * @方法描述：格式化获取的时间
@@ -24,7 +27,7 @@ public class DateUtils {
             return format.format(date);
         } catch (Exception e) {
             //发现异常时，返回当前时间
-            KJLoger.e(e.getMessage());
+            Log.e(TAG , e.getMessage());
             return format.format(new Date());
         }
     }
@@ -72,7 +75,7 @@ public class DateUtils {
             return format.format(date);
         } catch (Exception e) {
             //发现异常时，返回当前时间
-            KJLoger.e(e.getMessage());
+            Log.e(TAG , e.getMessage());
             return format.format(new Date());
         }
     }

@@ -499,33 +499,14 @@ public class HttpUtil{
                         }
                         else
                         {
-                            payModel.setAmount ( ( int ) ( 100 * format2Decimal ( order.getFinal_Amount ( ) ) ) );
+                            //payModel.setAmount ( ( int ) ( 100 * format2Decimal ( order.getFinal_Amount ( ) ) ) );
+                            payModel.setAmount( formatToDecimal( order.getFinal_Amount()) );
                             payModel.setDetail ( order.getToStr ( ) );
-
 
                             if ( null != order ) {
                                 payProgress.dismissView ( );
                                 PayPopWindow payPopWindow = new PayPopWindow ( aty,  mHandler, application, payModel );
                                 payPopWindow.showAtLocation ( aty.getWindow().getDecorView() , Gravity.BOTTOM, 0, 0 );
-                                //支付
-                        /*if("1".equals ( payModel.getPaymentType () ) || "7".equals ( payModel.getPaymentType () ))
-                        {
-                            //添加支付宝回调路径
-                            payModel.setNotifyurl ( application.obtainMerchantUrl () + application.readAlipayNotify ( ) );
-                            //alipay
-                            PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, payProgress );
-                            payFunc.aliPay ( );
-
-                        }
-                        else if("2".equals ( payModel.getPaymentType () ) || "9".equals ( payModel.getPaymentType () ))
-                        {
-                            payModel.setAttach ( payModel.getCustomId ()+"_0" );
-                            //添加微信回调路径
-                            payModel.setNotifyurl ( application.obtainMerchantUrl ( ) + application.readWeixinNotify() );
-                            PayFunc payFunc = new PayFunc ( context, payModel, application, mHandler, aty, payProgress );
-                            payFunc.wxPay ( );
-
-                        }*/
                             }
 
                         }
@@ -582,6 +563,16 @@ public class HttpUtil{
     {
         BigDecimal bg = new BigDecimal ( d );
         return bg.setScale ( 2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    private int formatToDecimal(String d){
+        try {
+            BigDecimal bg = new BigDecimal(d);
+            BigDecimal bg2 = bg.setScale(2, BigDecimal.ROUND_HALF_UP);
+            return bg2.multiply( new BigDecimal(100) ).intValue();
+        }catch (NumberFormatException ex){
+            throw  ex;
+        }
     }
 
 }

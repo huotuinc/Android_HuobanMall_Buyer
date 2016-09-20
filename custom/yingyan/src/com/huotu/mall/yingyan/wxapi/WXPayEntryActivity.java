@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
 import com.huotu.partnermall.BaseApplication;
-import com.huotu.partnermall.async.DeliveryGoodAsyncTask;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.PayGoodBean;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.utils.JSONUtil;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
@@ -25,17 +22,13 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 /**
  * 微信支付回调类
  */
-public
-class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEventHandler {
+public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
-    private       Handler handler    = new Handler ( this );
     private IWXAPI api;
-    private
-    BaseApplication application;
+    private BaseApplication application;
 
     @Override
-    public
-    boolean handleMessage ( Message msg ) {
+    public boolean handleMessage ( Message msg ) {
 
         switch ( msg.what){
             case DeliveryGoodAsyncTask.PAY_ERROR:
@@ -75,7 +68,7 @@ class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEve
     public
     void onResp ( BaseResp resp ) {
 
-        KJLoger.i ( "onPayFinish, errCode = " + resp.errCode );
+        Log.i ( "onPayFinish, errCode = " + resp.errCode );
 
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
             String msg = "";
@@ -100,13 +93,13 @@ class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEve
 
             PayResp payResp = (PayResp)resp;
             if(null==payResp){
-                KJLoger.i("wxpay>>>payResp=null","");
+                Log.i("wxpay>>>payResp=null","");
                 msg="支付失败";
                 ToastUtils.showLongToast(WXPayEntryActivity.this, msg);
                 this.finish();
                 return;
             }else{
-                KJLoger.i("wxpay>>>extData", payResp.extData==null? "": payResp.extData );
+                Log.i("wxpay>>>extData", payResp.extData==null? "": payResp.extData );
                 //Log.i("wxpay>>>prepayid",payResp.prepayId);
             }
 

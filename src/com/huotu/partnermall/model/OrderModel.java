@@ -3,54 +3,44 @@ package com.huotu.partnermall.model;
 /**
  * 订单详情
  */
-public
-class OrderModel {
-
+public class OrderModel {
     private int code;
     private String msg;
     private OrderData data;
 
-    public
-    int getCode ( ) {
+    public int getCode() {
         return code;
     }
 
-    public
-    void setCode ( int code ) {
+    public void setCode(int code) {
         this.code = code;
     }
 
-    public
-    String getMsg ( ) {
+    public String getMsg() {
         return msg;
     }
 
-    public
-    void setMsg ( String msg ) {
+    public void setMsg(String msg) {
         this.msg = msg;
     }
 
-    public
-    OrderData getData ( ) {
+    public OrderData getData() {
         return data;
     }
 
-    public
-    void setData ( OrderData data ) {
+    public void setData(OrderData data) {
         this.data = data;
     }
 
-    public class OrderData
-    {
-        private double Final_Amount;
+    public class OrderData {
+        private String Final_Amount;
         private String ToStr;
 
-        public
-        void setFinal_Amount ( double final_Amount ) {
+        public void setFinal_Amount(String final_Amount) {
             Final_Amount = final_Amount;
         }
-        public
-        double getFinal_Amount ( ) {
+
+        public String getFinal_Amount() {
             return Final_Amount;
         }
 

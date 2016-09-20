@@ -18,17 +18,12 @@ import android.widget.TextView;
 
 import com.huotu.partnermall.adapter.ViewPagerAdapter;
 import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.image.ImageUtil;
 import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.SystemTools;
-import com.huotu.partnermall.utils.ToastUtils;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

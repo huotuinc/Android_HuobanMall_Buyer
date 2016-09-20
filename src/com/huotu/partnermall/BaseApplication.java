@@ -15,6 +15,7 @@ import android.webkit.CookieManager;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
 import com.huotu.android.library.libpush.PushHelper;
 import com.huotu.partnermall.config.Constants;
@@ -100,6 +101,9 @@ public class BaseApplication extends Application {
 
         // 极光初始化
         PushHelper.init(this, BuildConfig.DEBUG, BuildConfig.Push_Url);
+
+        //初始化 fresco
+        Fresco.initialize(this);
     }
 
     @Override
@@ -382,9 +386,6 @@ public class BaseApplication extends Application {
 
         clearAllCookies();
 
-        //SisConstant.CATEGORY = null;
-        //SisConstant.SHOPINFO = null;
-
         EventBus.getDefault().post(new RefreshHttpHeaderEvent() );
     }
 
@@ -483,12 +484,6 @@ public class BaseApplication extends Application {
     public String obtainMainColor() {
         return PreferenceHelper.readString(getApplicationContext(), Constants.COLOR_INFO, Constants.COLOR_MAIN);
     }
-
-//    public String obtainSecondColor()
-//    {
-//        return PreferenceHelper.readString ( getApplicationContext (), Constants.COLOR_INFO, Constants.COLOR_SECOND );
-//    }
-
 
     //获取微信key
     public String readWeixinKey() {
@@ -675,7 +670,5 @@ public class BaseApplication extends Application {
     public void clearAllCookies(){
         CookieManager.getInstance().removeAllCookie();
     }
-
-
 
 }

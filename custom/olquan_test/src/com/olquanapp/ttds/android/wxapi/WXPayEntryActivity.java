@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import com.huotu.partnermall.BaseApplication;
-import com.huotu.partnermall.async.DeliveryGoodAsyncTask;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.PayGoodBean;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.utils.JSONUtil;
-import com.huotu.partnermall.utils.KJLoger;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
@@ -24,36 +22,10 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 /**
  * 微信支付回调类
  */
-public
-class WXPayEntryActivity extends Activity implements Handler.Callback, IWXAPIEventHandler {
+public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
-    private       Handler handler    = new Handler ( this );
     private IWXAPI api;
-    private
-    BaseApplication application;
-
-    @Override
-    public
-    boolean handleMessage ( Message msg ) {
-
-        switch ( msg.what){
-            case DeliveryGoodAsyncTask.PAY_ERROR:
-            {
-                ToastUtils.showLongToast(this, msg.obj.toString());
-                this.finish();
-            }
-            break;
-            case DeliveryGoodAsyncTask.PAY_OK:
-            {
-                ToastUtils.showLongToast(this, msg.obj.toString());
-                //MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_FLOW_ADD );
-                //MyBroadcastReceiver.sendBroadcast(this,MyBroadcastReceiver.ACTION_WX_PAY_CALLBACK);
-                this.finish();
-            }
-            break;
-        }
-        return false;
-    }
+    private  BaseApplication application;
 
     @Override
     public

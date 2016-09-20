@@ -1,5 +1,7 @@
 package com.huotu.partnermall.utils;
 
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -48,16 +50,16 @@ class FileZipUtil {
         while(zList.hasMoreElements()){
             ze=(ZipEntry)zList.nextElement();
             if(ze.isDirectory()){
-                KJLoger.i("upZipFile", "ze.getName() = "+ze.getName());
+                Log.i("upZipFile", "ze.getName() = "+ze.getName());
                 String dirstr = folderPath + File.separator + ze.getName();
                 //dirstr.trim();
                 dirstr = new String(dirstr.getBytes("8859_1"), "GB2312");
-                KJLoger.i("upZipFile", "str = "+dirstr);
+                Log.i("upZipFile", "str = "+dirstr);
                 File f=new File(dirstr);
                 f.mkdir();
                 continue;
             }
-            KJLoger.i ( "upZipFile", "ze.getName() = " + ze.getName ( ) );
+            Log.i ( "upZipFile", "ze.getName() = " + ze.getName ( ) );
             OutputStream os=new BufferedOutputStream (new FileOutputStream (getRealFileName(folderPath, ze.getName())));
             InputStream is=new BufferedInputStream (zfile.getInputStream(ze));
             int readLen=0;
@@ -68,7 +70,7 @@ class FileZipUtil {
             os.close();
         }
         zfile.close();
-        KJLoger.i ( "upZipFile", "finishssssssssssssssssssss" );
+        Log.i ( "upZipFile", "finishssssssssssssssssssss" );
         return 0;
     }
 
@@ -96,21 +98,21 @@ class FileZipUtil {
                 ret=new File(ret, substr);
 
             }
-            KJLoger.i ( "upZipFile", "1ret = " + ret );
+            Log.i ( "upZipFile", "1ret = " + ret );
             if(!ret.exists())
                 ret.mkdirs();
             substr = dirs[dirs.length-1];
             try {
                 //substr.trim();
                 substr = new String(substr.getBytes("8859_1"), "GB2312");
-                KJLoger.i ( "upZipFile", "substr = " + substr );
+                Log.i ( "upZipFile", "substr = " + substr );
             } catch (UnsupportedEncodingException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
             ret=new File(ret, substr);
-            KJLoger.i ( "upZipFile", "2ret = " + ret );
+            Log.i ( "upZipFile", "2ret = " + ret );
             return ret;
         }
         return ret;

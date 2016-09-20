@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -42,6 +43,7 @@ import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.PropertiesUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
+import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.utils.XMLParserUtils;
 import com.huotu.partnermall.widgets.MsgPopWindow;
 
@@ -81,7 +83,9 @@ public class SplashActivity extends BaseActivity {
         //initView();
 
         loadBackground();
+
     }
+
 
     protected void loadBackground(){
         new Thread(new Runnable() {
@@ -334,6 +338,9 @@ public class SplashActivity extends BaseActivity {
 
             VolleyUtil.getRequestQueue().add(request);
 
+        }else{
+            //未登录状态绑定设备
+            UIUtils.bindPushDevice();
         }
     }
 

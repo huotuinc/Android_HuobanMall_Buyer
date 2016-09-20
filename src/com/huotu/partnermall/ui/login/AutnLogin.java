@@ -17,7 +17,6 @@ import cn.sharesdk.framework.PlatformDb;
  */
 public class AutnLogin {
     private Handler mHandler;
-
     private String redrecturl;
 
     public AutnLogin ( Handler mHandler , String redirecturl ) {
@@ -111,7 +110,6 @@ public class AutnLogin {
         account.setRedirecturl( this.redrecturl );
 
         msg.obj = account;
-
 
         mHandler.sendMessage ( msg );
     }

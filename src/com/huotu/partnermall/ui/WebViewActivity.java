@@ -25,8 +25,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshWebView;
+//import com.handmark.pulltorefresh.library.PullToRefreshBase;
+//import com.handmark.pulltorefresh.library.PullToRefreshWebView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
@@ -59,6 +59,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 /**
  * 单张展示web页面
@@ -66,7 +70,8 @@ import cn.sharesdk.framework.PlatformActionListener;
 public class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadcastReceiver.BroadcastListener {
     private Resources  resources;
     private Handler  mHandler;
-    private WebView viewPage;
+    @Bind(R.id.main_webview)
+    WebView viewPage;
     private String url;
     private SharePopupWindow share;
     private MyBroadcastReceiver myBroadcastReceiver;
@@ -82,7 +87,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     @Bind(R.id.titleRightImage)
     ImageView titleRightImage;
     @Bind(R.id.viewPage)
-    PullToRefreshWebView refreshWebView;
+    PtrClassicFrameLayout ptrClassicFrameLayout;
+    //PullToRefreshWebView refreshWebView;
 
     ProgressPopupWindow progress;
 
@@ -128,14 +134,31 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         SystemTools.loadBackground(titleRightImage, rightDraw);
         titleRightImage.setVisibility(View.GONE);
 
-        viewPage = refreshWebView.getRefreshableView();
-        refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
+        //viewPage = refreshWebView.getRefreshableView();
+//        refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
+//            @Override
+//            public void onRefresh(PullToRefreshBase<WebView> pullToRefreshBase) {
+//                if (viewPage == null) return;
+//                viewPage.reload();
+//            }
+//        });
+
+        ptrClassicFrameLayout.disableWhenHorizontalMove(true);
+        ptrClassicFrameLayout.setLastUpdateTimeRelateObject(this);
+        ptrClassicFrameLayout.setPtrHandler(new PtrHandler() {
             @Override
-            public void onRefresh(PullToRefreshBase<WebView> pullToRefreshBase) {
-                if (viewPage == null) return;
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                //return false;
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame , viewPage,header);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
                 viewPage.reload();
             }
         });
+
+
         loadPage();
 
         share.showShareWindow();
@@ -241,8 +264,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                     @Override
                     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                         super.onReceivedError(view, errorCode, description, failingUrl);
-                        if (refreshWebView == null) return;
-                        refreshWebView.onRefreshComplete();
+                        if (ptrClassicFrameLayout == null) return;
+                        ptrClassicFrameLayout.refreshComplete();
 
                         if (pgBar == null) return;
                         pgBar.setVisibility(View.GONE);
@@ -270,9 +293,9 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if (refreshWebView == null || pgBar == null) return;
+                if (ptrClassicFrameLayout == null || pgBar == null) return;
                 if (100 == newProgress) {
-                    refreshWebView.onRefreshComplete();
+                    ptrClassicFrameLayout.refreshComplete();
                     pgBar.setVisibility(View.GONE);
                 } else {
                     if (pgBar.getVisibility() == View.GONE) pgBar.setVisibility(View.VISIBLE);
@@ -534,6 +557,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if(titleRightImage==null) return;
                     titleRightImage.setVisibility(View.VISIBLE);
                 }
             });
@@ -542,6 +566,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if(titleRightImage==null)return;
                     titleRightImage.setVisibility(View.GONE);
                 }
             });

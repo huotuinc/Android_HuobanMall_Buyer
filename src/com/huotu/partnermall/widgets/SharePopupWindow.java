@@ -3,6 +3,7 @@ package com.huotu.partnermall.widgets;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qzone.QZone;
+import cn.sharesdk.wechat.favorite.WechatFavorite;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
 
@@ -47,17 +49,21 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
         LinearLayout sharewechatmoments = (LinearLayout) view.findViewById(R.id.sharewechatmoments);
         LinearLayout shareqzone = (LinearLayout) view.findViewById(R.id.shareqzone);
         LinearLayout sharesinaweibo = (LinearLayout) view.findViewById(R.id.sharesinaweibo);
+        LinearLayout sharewechatfavorite = (LinearLayout)view.findViewById(R.id.sharewechatFavorite);
         sharewechat.setOnClickListener(this);
         sharewechatmoments.setOnClickListener(this);
         shareqzone.setOnClickListener(this);
         sharesinaweibo.setOnClickListener(this);
+        sharewechatfavorite.setOnClickListener(this);
+        btn_cancel.setOnClickListener(this);
+
         // 取消按钮
-        btn_cancel.setOnClickListener (
-                new View.OnClickListener ( ) {
-                    public void onClick ( View v ) {
-                        // 销毁弹出框
-                        dismiss ( );
-                    }});
+//        btn_cancel.setOnClickListener (
+//                new View.OnClickListener ( ) {
+//                    public void onClick ( View v ) {
+//                        // 销毁弹出框
+//                        dismiss ( );
+//                    }});
         //TextView shareTitle = ( TextView ) view.findViewById ( R.id.share_title );
 
         // 设置SelectPicPopupWindow的View
@@ -75,7 +81,7 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
         //ColorDrawable dw = new ColorDrawable(0xb0000000);
         // 设置SelectPicPopupWindow弹出窗体的背景
         //this.setBackgroundDrawable(dw);
-        this.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.share_window_bg));
+        this.setBackgroundDrawable(ContextCompat.getDrawable(context , R.drawable.share_window_bg));
     }
 
 //    private void initShareItems(LinearLayout shareItems) {
@@ -119,32 +125,23 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.sharewechat:
-                //微信好友
-                Platform plat1 = null;
-                plat1 = ShareSDK.getPlatform ( context, Wechat.NAME );
-                if (platformActionListener != null) {
-                    plat1.setPlatformActionListener ( platformActionListener );
-                }
-
-                plat1.share(shareParams);
+            case R.id.sharewechat://微信好友
+                wechatShare(Wechat.NAME);
                 break;
-            case R.id.sharewechatmoments:
-                Platform plat = null;
-                plat = ShareSDK.getPlatform ( context, WechatMoments.NAME );
-                if (platformActionListener != null) {
-                    plat.setPlatformActionListener ( platformActionListener );
-                }
-
-                plat.share(shareParams);
+            case R.id.sharewechatmoments://微信朋友圈
+                wechatShare(WechatMoments.NAME);
                 break;
-            case R.id.shareqzone:
-                //qq控件分享
+            case R.id.shareqzone://qq控件分享
                 qzone ( );
                 break;
-            case R.id.sharesinaweibo:
-                //sina
+            case R.id.sharesinaweibo://sina
                 sinaWeibo();
+                break;
+            case R.id.sharewechatFavorite://微信收藏
+                wechatShare(WechatFavorite.NAME);
+                break;
+            case R.id.btn_cancel://取消
+                dismiss();
                 break;
             default:
                 break;
@@ -152,45 +149,14 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
         this.dismiss();
     }
 
-//    /**
-//     * 分享
-//     *
-//     * @param position
-//     */
-//    public void share(int position) {
-//
-//       if(3 == position){
-//            //qq控件分享
-//            qzone ( );
-//        }
-//       else if(4 == position)
-//       {
-//           //sina
-//           sinaWeibo();
-//       }
-//       else if(2 == position)
-//       {
-//           //微信朋友圈
-//            Platform plat = null;
-//            plat = ShareSDK.getPlatform ( context, WechatMoments.NAME );
-//            if (platformActionListener != null) {
-//                plat.setPlatformActionListener ( platformActionListener );
-//            }
-//
-//            plat.share(shareParams);
-//        }
-//        else if(1 == position)
-//       {
-//           //微信好友
-//           Platform plat = null;
-//           plat = ShareSDK.getPlatform ( context, Wechat.NAME );
-//           if (platformActionListener != null) {
-//               plat.setPlatformActionListener ( platformActionListener );
-//           }
-//
-//           plat.share(shareParams);
-//       }
-//    }
+    void wechatShare(String platformName ){
+        Platform platform;
+        platform = ShareSDK.getPlatform ( context, platformName );
+        if (platformActionListener != null) {
+            platform.setPlatformActionListener ( platformActionListener );
+        }
+        platform.share(shareParams);
+    }
 
     /**
      * 初始化分享参数
@@ -219,23 +185,23 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
      * @param position
      * @return
      */
-    private String getPlatform(int position) {
-        String platform = "";
-        switch (position) {
-            case 0:
-                platform = Wechat.NAME;
-                break;
-            case 1:
-                platform = WechatMoments.NAME;
-                break;
-            case 2:
-                platform = QZone.NAME;
-                break;
-            default:
-                break;
-        }
-        return platform;
-    }
+//    private String getPlatform(int position) {
+//        String platform = "";
+//        switch (position) {
+//            case 0:
+//                platform = Wechat.NAME;
+//                break;
+//            case 1:
+//                platform = WechatMoments.NAME;
+//                break;
+//            case 2:
+//                platform = QZone.NAME;
+//                break;
+//            default:
+//                break;
+//        }
+//        return platform;
+//    }
 
     /**
      * 分享到QQ空间
@@ -271,42 +237,42 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
     /**
      * 分享单元实体
      */
-    public class ShareItem{
-        private String shareName;
-        private int shareIcon;
-        private int id;
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public ShareItem(int id, String shareName, int shareIcon)
-        {
-            this.id = id;
-            this.shareIcon = shareIcon;
-            this.shareName = shareName;
-        }
-
-        public String getShareName() {
-            return shareName;
-        }
-
-        public void setShareName(String shareName) {
-            this.shareName = shareName;
-        }
-
-        public int getShareIcon() {
-            return shareIcon;
-        }
-
-        public void setShareIcon(int shareIcon) {
-            this.shareIcon = shareIcon;
-        }
-    }
+//    public class ShareItem{
+//        private String shareName;
+//        private int shareIcon;
+//        private int id;
+//
+//        public int getId() {
+//            return id;
+//        }
+//
+//        public void setId(int id) {
+//            this.id = id;
+//        }
+//
+//        public ShareItem(int id, String shareName, int shareIcon)
+//        {
+//            this.id = id;
+//            this.shareIcon = shareIcon;
+//            this.shareName = shareName;
+//        }
+//
+//        public String getShareName() {
+//            return shareName;
+//        }
+//
+//        public void setShareName(String shareName) {
+//            this.shareName = shareName;
+//        }
+//
+//        public int getShareIcon() {
+//            return shareIcon;
+//        }
+//
+//        public void setShareIcon(int shareIcon) {
+//            this.shareIcon = shareIcon;
+//        }
+//    }
 
     /**
      * 判断微博客户端是否可用

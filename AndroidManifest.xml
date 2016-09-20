@@ -37,6 +37,7 @@
     <!-- <uses-permission android:name="android.permission.BLUETOOTH"/> -->
     <!-- <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/> -->
 
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -106,6 +107,7 @@
                 <action android:name="com.tencent.mm.plugin.openapi.Intent.ACTION_REFRESH_WXAPP" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name="com.huotu.partnermall.receiver.PushBusinessReceiver"
             android:enabled="true"
@@ -114,27 +116,6 @@
                 <action android:name="com.huotu.android.push.BUSSINESS_MESSSAGE" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name="com.huotu.partnermall.ui.sis.AddGoodsActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name="com.huotu.partnermall.ui.sis.GoodsDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
-        <activity
-            android:name="com.huotu.partnermall.ui.sis.SelectTempleteActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.huotu.partnermall.ui.sis.InfoActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name="com.huotu.partnermall.ui.sis.GoodManageActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
-        <activity
-            android:name="com.huotu.partnermall.ui.sis.EditSetActivity"
-            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.huotu.partnermall.ui.login.PhoneLoginActivity"
             android:screenOrientation="portrait"></activity>

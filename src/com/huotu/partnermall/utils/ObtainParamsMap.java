@@ -1,6 +1,8 @@
 package com.huotu.partnermall.utils;
 
 import android.content.Context;
+import android.nfc.Tag;
+import android.util.Log;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
@@ -20,6 +22,7 @@ import java.util.Map;
  * Created by Administrator on 2015/9/21.
  */
 public class ObtainParamsMap {
+    protected static String TAG = ObtainParamsMap.class.getName();
 
     private Context context;
 
@@ -180,8 +183,7 @@ public class ObtainParamsMap {
             return buffer.toString();
         } catch (UnsupportedEncodingException e)
         {
-            // TODO Auto-generated catch block
-            KJLoger.e ( e.getMessage ( ) );
+            Log.e (TAG , e.getMessage ( ) );
             return null;
         }
 
@@ -238,11 +240,11 @@ public class ObtainParamsMap {
          * try {
          */
         String values = this.doSort(map);
-        KJLoger.i("sign", values);
+        Log.i("sign", values);
         // values = URLEncoder.encode(values);
         //String signHex =DigestUtils.md5DigestAsHex(values.toString().getBytes("UTF-8")).toLowerCase();
         String signHex = EncryptUtil.getInstance().encryptMd532(values);
-        KJLoger.i("signHex", signHex);
+        Log.i("signHex", signHex);
         return signHex;
         /*
          * } catch (UnsupportedEncodingException e) { // TODO Auto-generated

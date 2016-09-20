@@ -8,7 +8,7 @@
     <!-- 主体背景颜色值 -->
     <item android:bottom="1dp">
         <shape>
-            <solid android:color="@color/theme_color" />
+            <solid android:color="@color/leftmenu_bg_color" />
         </shape>
     </item>
 

@@ -12,44 +12,40 @@ import com.huotu.partnermall.listener.MyLocationListener;
 /**
  * 基于百度的定位服务
  */
-public
-class LocationService extends Service {
+public class LocationService extends Service {
 
     //纬度值
-    public static String                            latitude        = null;
+    public static String latitude = null;
     //经度值
-    public static String                            Longitude       = null;
+    public static String Longitude = null;
     //地址
-    public static String                            address         = null;
+    public static String address = null;
     //当前城市
-    public static String                            city            = null;
+    public static String city = null;
     /**
      * 高精度模式
      */
-    private       LocationClientOption.LocationMode mode            = LocationClientOption
+    private LocationClientOption.LocationMode mode = LocationClientOption
             .LocationMode.Hight_Accuracy;
     /**
      * 定位客户端
      */
-    private       LocationClient                    mLocationClient = null;
+    private LocationClient mLocationClient = null;
 
     @Override
-    public
-    IBinder onBind ( Intent intent ) {
+    public IBinder onBind(Intent intent) {
         return null;
     }
 
     @Override
-    public
-    void onCreate ( ) {
-        super.onCreate ( );
+    public void onCreate() {
+        super.onCreate();
     }
 
     @Override
-    public
-    int onStartCommand ( Intent intent, int flags, int startId ) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
 
-        mLocationClient = ((BaseApplication)getApplication()).mLocationClient;
+        mLocationClient = ((BaseApplication) getApplication()).mLocationClient;
 
         //设置定位参数
         LocationClientOption option = new LocationClientOption();
@@ -64,19 +60,17 @@ class LocationService extends Service {
         //mLocationClient.registerLocationListener( new MyLocationListener());
 
         mLocationClient.start();
-        return super.onStartCommand ( intent, flags, startId );
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
-    public
-    void onDestroy ( ) {
-        super.onDestroy ( );
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
-    public
-    boolean onUnbind ( Intent intent ) {
-        return super.onUnbind ( intent );
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
     }
 
 }

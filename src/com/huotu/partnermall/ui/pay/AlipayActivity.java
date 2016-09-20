@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.alipay.sdk.app.PayTask;
 import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.utils.KJLoger;
+
 import com.huotu.partnermall.utils.ToastUtils;
 
 import java.io.UnsupportedEncodingException;

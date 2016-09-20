@@ -3,6 +3,7 @@ package com.huotu.partnermall.utils;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
@@ -189,7 +190,7 @@ class WXPayUtil {
         signParams.add(new BasicNameValuePair("prepayid", req.prepayId));
         signParams.add(new BasicNameValuePair("timestamp", req.timeStamp));
         req.sign = genSign(signParams);
-        KJLoger.i ( "调起支付的package串：" + req.packageValue );
+        Log.i (TAG , "调起支付的package串：" + req.packageValue );
         // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
         boolean isPay = api.sendReq(req);
     }
@@ -212,8 +213,8 @@ class WXPayUtil {
                                    accessToken);
         String entity = genProductArgs();
 
-        KJLoger.i ( " url = " + url );
-        KJLoger.i(" entity = " + entity);
+        Log.i (TAG , " url = " + url );
+        Log.i(TAG , " entity = " + entity);
 
         GetPrepayIdResult result = new GetPrepayIdResult();
 
@@ -227,7 +228,7 @@ class WXPayUtil {
         }
 
         String content = new String(buf);
-        KJLoger.i(" prePay content = " + content);
+        Log.i(TAG , " prePay content = " + content);
         result.parseFrom(content);
         return result;
     }
@@ -256,7 +257,7 @@ class WXPayUtil {
             String url = String.format(
                     "%s?grant_type=client_credential&appid=%s&secret=%s",
                     tokenUrl, Constants.WXPAY_ID, Constants.WXPAY_SECRT);
-            KJLoger.i("get access token, url = " + url);
+            Log.i( TAG , "get access token, url = " + url);
 
             byte[] buf = httpGet(url);
             if (buf == null || buf.length == 0) {
@@ -381,7 +382,7 @@ class WXPayUtil {
             json.put("sign_method", "sha1");
         } catch (Exception e)
         {
-            KJLoger.i ( "genProductArgs fail, ex = " + e.getMessage ( ) );
+            Log.i ( TAG , "genProductArgs fail, ex = " + e.getMessage ( ) );
             return null;
         }
 
@@ -409,8 +410,8 @@ class WXPayUtil {
         sb.append(params.get(i).getValue());
 
         String sha1 = new MD5().sha1(sb.toString());
-        KJLoger.i ( "sha1签名串：" + sb.toString ( ) );
-        KJLoger.i ( "genSign, sha1 = " + sha1 );
+        Log.i ( TAG , "sha1签名串：" + sb.toString ( ) );
+        Log.i ( TAG , "genSign, sha1 = " + sha1 );
         return sha1;
     }
 
@@ -442,7 +443,7 @@ class WXPayUtil {
 
         // 进行md5摘要前，params内容为原始内容，未经过url encode处理
         String packageSign = new MD5().getMessageDigest(sb.toString().getBytes()).toUpperCase();
-        KJLoger.i ( "package签名串：" + sb.toString ( ) );
+        Log.i ( TAG , "package签名串：" + sb.toString ( ) );
         return URLEncodedUtils.format ( params, "utf-8" ) + "&sign=" + packageSign;
     }
 
@@ -450,7 +451,7 @@ class WXPayUtil {
     {
         if (url == null || url.length() == 0)
         {
-            KJLoger.i ( "httpPost, url is null" );
+            Log.i ( TAG , "httpPost, url is null" );
             return null;
         }
 
@@ -467,7 +468,7 @@ class WXPayUtil {
             HttpResponse resp = httpClient.execute(httpPost);
             if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
             {
-                KJLoger.i( "httpGet fail, status code = "
+                Log.i(TAG , "httpGet fail, status code = "
                            + resp.getStatusLine().getStatusCode());
                 return null;
             }
@@ -475,7 +476,7 @@ class WXPayUtil {
             return EntityUtils.toByteArray ( resp.getEntity ( ) );
         } catch (Exception e)
         {
-            KJLoger.i( "httpPost exception, e = " + e.getMessage());
+            Log.i(TAG , "httpPost exception, e = " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -483,7 +484,7 @@ class WXPayUtil {
 
     public static byte[] httpGet(final String url) {
         if (url == null || url.length() == 0) {
-            KJLoger.i( "httpGet, url is null");
+            Log.i(TAG , "httpGet, url is null");
             return null;
         }
 
@@ -493,14 +494,14 @@ class WXPayUtil {
         try {
             HttpResponse resp = httpClient.execute(httpGet);
             if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                KJLoger.i( "httpGet fail, status code = " + resp.getStatusLine().getStatusCode());
+                Log.i( TAG , "httpGet fail, status code = " + resp.getStatusLine().getStatusCode());
                 return null;
             }
 
             return EntityUtils.toByteArray(resp.getEntity());
 
         } catch (Exception e) {
-            KJLoger.i( "httpGet exception, e = " + e.getMessage());
+            Log.i(TAG , "httpGet exception, e = " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -561,7 +562,7 @@ class WXPayUtil {
 
             if (content == null || content.length() <= 0)
             {
-                KJLoger.i( "parseFrom fail, content is null");
+                Log.i(TAG , "parseFrom fail, content is null");
                 localRetCode = LocalRetCode.ERR_JSON;
                 return;
             }
@@ -606,7 +607,7 @@ class WXPayUtil {
 
             if (content == null || content.length() <= 0)
             {
-                KJLoger.i( "parseFrom fail, content is null");
+                Log.i(TAG , "parseFrom fail, content is null");
                 localRetCode = LocalRetCode.ERR_JSON;
                 return;
             }

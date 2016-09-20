@@ -18,11 +18,9 @@
         <com.handmark.pulltorefresh.library.PullToRefreshWebView
             android:id="@+id/viewPage"
             android:layout_below="@id/main_pgbar"
-            pl:ptrAnimationStyle="flip"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:scrollbars="none"/>
+            android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
     </merge>

@@ -26,6 +26,7 @@ import java.util.TreeMap;
  * 授权参数构建类
  */
 public class AuthParamUtils {
+    protected static String TAG=AuthParamUtils.class.getName();
     private BaseApplication application;
     private String url;
     private long timestamp;
@@ -44,8 +45,6 @@ public class AuthParamUtils {
         this.timestamp = System.currentTimeMillis();
         this.url = url;
     }
-
-
 
     /***
      * 移除url中的特殊参数（unionid，sign，userid , timestamp）
@@ -172,8 +171,7 @@ public class AuthParamUtils {
         }
         catch ( UnsupportedEncodingException e)
             {
-                // TODO Auto-generated catch block
-                KJLoger.e ( e.getMessage ( ) );
+                Log.e ( TAG, e.getMessage ( ) );
                 return null;
             }
 
@@ -267,8 +265,7 @@ public class AuthParamUtils {
         }
         catch ( UnsupportedEncodingException e)
         {
-            // TODO Auto-generated catch block
-            KJLoger.e ( e.getMessage ( ) );
+            Log.e (TAG , e.getMessage ( ) );
             return null;
         }
 
@@ -317,8 +314,7 @@ public class AuthParamUtils {
         }
         catch ( UnsupportedEncodingException e)
         {
-            // TODO Auto-generated catch block
-            KJLoger.e ( e.getMessage ( ) );
+            Log.e (TAG, e.getMessage ( ) );
             return null;
         }
 
@@ -367,8 +363,7 @@ public class AuthParamUtils {
         }
         catch ( UnsupportedEncodingException e)
         {
-            // TODO Auto-generated catch block
-            KJLoger.e ( e.getMessage ( ) );
+            Log.e (TAG, e.getMessage ( ) );
             return null;
         }
     }
@@ -376,11 +371,11 @@ public class AuthParamUtils {
     private String getSign(Map map)
     {
         String values = this.doSort(map);
-        KJLoger.i ( "sign", values );
+        Log.i ( "sign", values );
         // values = URLEncoder.encode(values);
         //String signHex =DigestUtils.md5DigestAsHex(values.toString().getBytes("UTF-8")).toLowerCase();
         String signHex = EncryptUtil.getInstance().encryptMd532(values);
-        KJLoger.i("signHex", signHex);
+        Log.i("signHex", signHex);
         return signHex;
     }
 
@@ -487,7 +482,7 @@ public class AuthParamUtils {
                     builder.append("&" + key + "=" + valueEncode);
 
                 }catch (UnsupportedEncodingException ex){
-                    KJLoger.e(ex.getMessage());
+                    Log.e( TAG, ex.getMessage());
                 }
             }
 
@@ -495,8 +490,7 @@ public class AuthParamUtils {
         }
         catch ( UnsupportedEncodingException e)
         {
-            // TODO Auto-generated catch block
-            KJLoger.e ( e.getMessage ( ) );
+            Log.e (TAG , e.getMessage ( ) );
             return null;
         }
     }

@@ -19,6 +19,7 @@ allprojects {
             url="http://repo.51flashmall.com:8081/nexus/content/groups/public/"
         }
         jcenter()
+        mavenCentral()
     }
 }
 
@@ -36,6 +37,8 @@ android {
         targetSdkVersion TARGETSDKVERSION.toInteger()
         versionCode BUYER_VERSIONCODE.toInteger()
         versionName "${BUYER_VERSIONNAME}"
+
+        buildConfigField 'String', 'SMART_Url','"http://test.api.open.huobanplus.com:8081/"'
         //signingConfig signingConfigs.huotu
     }
 
@@ -121,12 +124,12 @@ android {
             assets.srcDirs = ['custom/btv/assets']
         }
 
-        huobanjia{
-            manifest.srcFile 'custom/huobanjia/AndroidManifest.xml'
-            java.srcDirs = ['custom/huobanjia/src']
-            res.srcDirs = ['custom/huobanjia/res']
-            assets.srcDirs = ['custom/huobanjia/assets']
-        }
+//        huobanjia{
+//            manifest.srcFile 'custom/huobanjia/AndroidManifest.xml'
+//            java.srcDirs = ['custom/huobanjia/src']
+//            res.srcDirs = ['custom/huobanjia/res']
+//            assets.srcDirs = ['custom/huobanjia/assets']
+//        }
 
         zhujunzhi{
             manifest.srcFile 'custom/zhujunzhi/AndroidManifest.xml'
@@ -135,12 +138,12 @@ android {
             assets.srcDirs = ['custom/zhujunzhi/assets']
         }
 
-        womeimall{
-            manifest.srcFile 'custom/womeimall/AndroidManifest.xml'
-            java.srcDirs = ['custom/womeimall/src']
-            res.srcDirs = ['custom/womeimall/res']
-            assets.srcDirs = ['custom/womeimall/assets']
-        }
+//        womeimall{
+//            manifest.srcFile 'custom/womeimall/AndroidManifest.xml'
+//            java.srcDirs = ['custom/womeimall/src']
+//            res.srcDirs = ['custom/womeimall/res']
+//            assets.srcDirs = ['custom/womeimall/assets']
+//        }
 
         youbi{
             manifest.srcFile 'custom/youbi/AndroidManifest.xml'
@@ -154,6 +157,20 @@ android {
             java.srcDirs = ['custom/huaanelectric/src']
             res.srcDirs = ['custom/huaanelectric/res']
             assets.srcDirs = ['custom/huaanelectric/assets']
+        }
+
+        xiaomeiban{//小美伴
+            manifest.srcFile 'custom/xiaomeiban/AndroidManifest.xml'
+            java.srcDirs = ['custom/xiaomeiban/src']
+            res.srcDirs = ['custom/xiaomeiban/res']
+            assets.srcDirs = ['custom/xiaomeiban/assets']
+        }
+
+        yueminghui{//
+            manifest.srcFile 'custom/yueminghui/AndroidManifest.xml'
+            java.srcDirs = ['custom/yueminghui/src']
+            res.srcDirs = ['custom/yueminghui/res']
+            assets.srcDirs = ['custom/yueminghui/assets']
         }
 
         // Move the tests to tests/java, tests/res, etc...
@@ -184,6 +201,7 @@ android {
             buildConfigField 'String','Push_Url','\"http://test.api.open.huobanplus.com:8081/\"'
             buildConfigField 'String', 'SMART_KEY', '\"huoban\"'
             buildConfigField 'String', 'SMART_SECURITY', '\"319ea9ad29ef4a50d6801c2f406dd208\"'
+            buildConfigField 'String', 'SMART_Url','"http://test.api.open.huobanplus.com:8081/"'
             signingConfig signingConfigs.fanmore
         }
 
@@ -242,6 +260,7 @@ android {
 //            buildConfigField 'String','Push_Url','\"http://api.open.olquan.cn/\"'
 //            buildConfigField 'String', 'SMART_KEY', '\"app\"'
 //            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+//            buildConfigField 'String', 'SMART_Url','"http://api.open.huobanplus.com/"'
 //            signingConfig signingConfigs.olquan
 //        }
 
@@ -301,7 +320,6 @@ android {
 //            signingConfig signingConfigs.xiangcunlai
 //        }
 
-//
 //        btv{//昆贝
 //            applicationId 'com.huotu.mall.btv'
 //            versionCode BUYER_VERSIONCODE.toInteger()
@@ -359,6 +377,21 @@ android {
 //            signingConfig signingConfigs.womeimall
 //        }
 
+//        womeimall{//我美名品
+//            applicationId 'com.huotu.mall.womeimall'
+//            versionCode BUYER_VERSIONCODE.toInteger()
+//            versionName "${BUYER_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','"http://mallapi.huobanmall.com/"'
+//            buildConfigField 'String','APP_ID', '"huotu686ad1fe2bd8a02ok"'
+//            buildConfigField 'String','APP_SECRET', '\"0ad8abe201631aacf89c9231999c9f49"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
+//            buildConfigField 'String','Push_Url','"http://api.open.huobanplus.com/"'
+//            buildConfigField 'String', 'SMART_KEY', '"app"'
+//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
+//            signingConfig signingConfigs.womeimall
+//        }
+
+
 //        youbi{//邮币大师
 //            applicationId 'com.huotu.mall.youbi'
 //            versionCode BUYER_VERSIONCODE.toInteger()
@@ -372,6 +405,49 @@ android {
 //            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
 //            signingConfig signingConfigs.youbi
 //        }
+
+//        huaanelectric{//桦桉灯饰
+//            applicationId 'com.huotu.mall.huaanelectric'
+//            versionCode BUYER_VERSIONCODE.toInteger()
+//            versionName "${BUYER_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','"http://mallapi.huobanmall.com/"'
+//            buildConfigField 'String','APP_ID', '"huotu686ad1fe2bd8a02ok"'
+//            buildConfigField 'String','APP_SECRET', '\"0ad8abe201631aacf89c9231999c9f49"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
+//            buildConfigField 'String','Push_Url','"http://api.open.huobanplus.com/"'
+//            buildConfigField 'String', 'SMART_KEY', '"app"'
+//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
+//            signingConfig signingConfigs.huaanelectric
+//        }
+
+//        xiaomeiban{//小美伴
+//            applicationId 'com.xem.xmbcustomerapp'
+//            versionCode XIAOMEIBAN_VERSIONCODE.toInteger()
+//            versionName "${XIAOMEIBAN_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','"http://mallapi.huobanmall.com/"'
+//            buildConfigField 'String','APP_ID', '"huotu686ad1fe2bd8a02ok"'
+//            buildConfigField 'String','APP_SECRET', '\"0ad8abe201631aacf89c9231999c9f49"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
+//            buildConfigField 'String','Push_Url','"http://api.open.huobanplus.com/"'
+//            buildConfigField 'String', 'SMART_KEY', '"app"'
+//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
+//            signingConfig signingConfigs.xiaomeiban
+//        }
+//
+//        yueminghui{//悦铭荟
+//            applicationId 'com.huotu.mall.yueminghui'
+//            versionCode YUEMINGHUI_VERSIONCODE.toInteger()
+//            versionName "${YUEMINGHUI_VERSIONNAME}"
+//            buildConfigField 'String','INTERFACE_URL','"http://mallapi.huobanmall.com/"'
+//            buildConfigField 'String','APP_ID', '"huotu686ad1fe2bd8a02ok"'
+//            buildConfigField 'String','APP_SECRET', '\"0ad8abe201631aacf89c9231999c9f49"'
+//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
+//            buildConfigField 'String','Push_Url','"http://api.open.huobanplus.com/"'
+//            buildConfigField 'String', 'SMART_KEY', '"app"'
+//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
+//            signingConfig signingConfigs.yueminghui
+//        }
+
 
 //        huaanelectric{//桦桉电器
 //            applicationId 'com.huotu.mall.huaanelectric'
@@ -387,11 +463,14 @@ android {
 //            signingConfig signingConfigs.huaanelectric
 //        }
 
+
     }
 
     buildTypes{
         debug{
+
             signingConfig signingConfigs.fanmore
+
             buildConfigField 'String' , 'Header_Secret', '\"'+"${HEADER_SECRET}"+'\"'
         }
 
@@ -418,18 +497,18 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.huotu.android.library:libcropper:1.0'
     compile 'com.android.support:support-v4:22.1.1'
-    //compile 'com.handmark.library:pulltorefresh:1.1'
-    compile('com.huotu.android.library:libCoverFlow:1.1') {
-        exclude module: 'support-v4'
-    }
-    compile 'com.github.mikephil.charting:MPAndroidChart:1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.umeng.analytics:analytics:5.6.1'
+    compile 'com.umeng.analytics:analytics:6.0.1'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
-    compile 'com.huotu.android.library:libPush:1.2.1'
+    compile 'com.huotu.android.library:libPush:1.2.3'
     compile 'com.huotu.android.library:libedittext:1.6'
     compile 'com.huotu.android.library:pulltorefresh:1.0.8'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
+    //compile 'com.huotu.android.library:pulltorefresh:1.0.8'
+    compile 'in.srain.cube:ultra-ptr:1.0.11'
+    compile 'com.facebook.fresco:fresco:0.13.0'
+    compile 'com.facebook.fresco:animated-gif:0.13.0'
+
 }
 

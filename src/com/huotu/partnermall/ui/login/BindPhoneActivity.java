@@ -60,7 +60,9 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
         ButterKnife.bind(this);
 
         tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        tvGetCode.setTextColor( getResources().getColor( R.color.title_text_color ));
         btnBind.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        btnBind.setTextColor(getResources().getColor(R.color.title_text_color));
         tvTitle.setText("绑定手机");
         rlHeader.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()) );
         ivLeft.setBackgroundResource( R.drawable.main_title_left_back );
