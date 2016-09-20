@@ -47,7 +47,6 @@ class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     public
     void onResp ( BaseResp resp ) {
-
         Log.i ( "info" , "onPayFinish, errCode = " + resp.errCode );
 
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
@@ -83,11 +82,6 @@ class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                 //Log.i("wxpay>>>prepayid",payResp.prepayId);
             }
 
-            /*PayGoodBean para=new PayGoodBean ();
-            JSONUtil<PayGoodBean> jsonUtil=new JSONUtil<PayGoodBean>();
-            para = jsonUtil.toBean( payResp.extData, para);
-
-            new DeliveryGoodAsyncTask ( WXPayEntryActivity.this , handler ,  para.getOrderNo(),para.getProductType(), para.getProductId() ).execute();*/
         }
     }
 

@@ -505,7 +505,7 @@ public class HttpUtil{
 
                             if ( null != order ) {
                                 payProgress.dismissView ( );
-                                PayPopWindow payPopWindow = new PayPopWindow ( aty,  mHandler, application, payModel );
+                                PayPopWindow payPopWindow = new PayPopWindow ( aty,  mHandler, payModel );
                                 payPopWindow.showAtLocation ( aty.getWindow().getDecorView() , Gravity.BOTTOM, 0, 0 );
                             }
 

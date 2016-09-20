@@ -25,8 +25,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 //import com.handmark.pulltorefresh.library.PullToRefreshBase;
 //import com.handmark.pulltorefresh.library.PullToRefreshWebView;
+import com.huotu.android.library.libpay.weixin.WeiXinPayResult;
+import com.huotu.android.library.libpay.weixin.WeiXinPayUtil;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
@@ -427,6 +430,14 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 //调用JS
                 viewPage.loadUrl("javascript:utils.Go2Payment(" + payModel.getCustomId() + "," + payModel.getTradeNo() + "," + payModel.getPaymentType() + ", "
                         + "false);\n");
+            }
+            break;
+            case WeiXinPayUtil.SDK_WX_PAY_FLAG :{
+                WeiXinPayResult result = (WeiXinPayResult) msg.obj;
+                if ( result !=null && result.getCode() == WeiXinPayUtil.FAIL) {
+                    Toast.makeText(getApplication(), result.getMessage(), Toast.LENGTH_LONG).show();
+                    return true;
+                }
             }
             break;
             default:
