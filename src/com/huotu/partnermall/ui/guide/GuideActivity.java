@@ -109,22 +109,23 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
 
     protected void showImages(List<Bitmap> bitmaps){
         try {
+            if(bitmaps.size()==0) {
+                go();
+                return;
+            }
+
             LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             pics = resources.getStringArray ( R.array.guide_icon );
 
             //初始化引导图片列表
             for(int i=0; i<bitmaps.size() ; i++) {
-                RelativeLayout iv = ( RelativeLayout ) LayoutInflater.from(GuideActivity.this).inflate ( R.layout.guid_item, null );
+                RelativeLayout iv = (RelativeLayout) LayoutInflater.from(GuideActivity.this).inflate(R.layout.guid_item, null);
                 TextView skipText = (TextView) iv.findViewById(R.id.skipText);
-                iv.setLayoutParams ( mParams );
+                iv.setLayoutParams(mParams);
                 iv.setOnClickListener(this);
-                //int iconId = resources.getIdentifier( pics[i] , "drawable" , this.getPackageName() );
 
-                //Drawable menuIconDraw = null;
-                //if( iconId >0) {
-                //    menuIconDraw = resources.getDrawable(iconId);
-                    SystemTools.loadBackground(iv, new BitmapDrawable(bitmaps.get(i)));
-                //}
+                SystemTools.loadBackground(iv, new BitmapDrawable(bitmaps.get(i)));
+
                 skipText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
