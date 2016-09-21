@@ -50,7 +50,7 @@
     <dimen name="info_arrow_width">8dp</dimen>
     <dimen name="info_arrow_height">13dp</dimen>
     <!-- 一般提示性字体 -->
-    <dimen name="normal_label">16sp</dimen>
+    <dimen name="normal_label">15sp</dimen>
     <!--侧滑菜单图标大小-->
     <dimen name="sideslip_menu_icon_width">20dp</dimen>
     <dimen name="sideslip_menu_icon_height">20dp</dimen>
