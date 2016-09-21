@@ -397,6 +397,7 @@ android {
 //            signingConfig signingConfigs.huaanelectric
 //        }
 
+
         xiaomeiban{//小美伴
             applicationId 'com.xem.xmbcustomerapp'
             versionCode XIAOMEIBAN_VERSIONCODE.toInteger()
@@ -467,20 +468,16 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.huotu.android.library:libcropper:1.0'
     compile 'com.android.support:support-v4:22.1.1'
-    //compile 'com.handmark.library:pulltorefresh:1.1'
-//    compile('com.huotu.android.library:libCoverFlow:1.1') {
-//        exclude module: 'support-v4'
-//    }
-    //compile 'com.github.mikephil.charting:MPAndroidChart:1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.umeng.analytics:analytics:6.0.1'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
     compile 'com.huotu.android.library:libPush:1.2.3'
     compile 'com.huotu.android.library:libedittext:1.6'
+    compile 'com.huotu.android.library:pulltorefresh:1.0.8'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
     //compile 'com.huotu.android.library:pulltorefresh:1.0.8'
     compile 'in.srain.cube:ultra-ptr:1.0.11'
-
     compile 'com.facebook.fresco:fresco:0.13.0'
     compile 'com.facebook.fresco:animated-gif:0.13.0'
 

@@ -7,6 +7,7 @@
     android:background="#F2F2F2"
     tools:context="com.huotu.partnermall.ui.login.PhoneLoginActivity">
 
+    <!-- 页头界面 -->
     <RelativeLayout
         android:id="@+id/activity_phone_header"
         android:layout_width="match_parent"
@@ -19,6 +20,7 @@
         android:layout_below="@id/activity_phone_header"
         android:id="@+id/PhoneLoginActivity_phone_weixin"
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="match_parent">
 
         <LinearLayout
@@ -28,7 +30,6 @@
             android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
 
             <!-- 手机号 -->
             <RelativeLayout
@@ -75,9 +76,7 @@
             </RelativeLayout>
             <!-- 手机号end -->
 
-
             <!-- 验证码 -->
-
             <RelativeLayout
                 android:id="@+id/layCode"
                 android:layout_width="match_parent"
@@ -131,32 +130,33 @@
             </RelativeLayout>
             <!-- 验证码end -->
 
-
             <TextView
                 android:layout_gravity="end"
                 android:id="@+id/tvNoCode"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:layout_margin="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
                 android:visibility="gone"
-                android:textColor="@color/theme_color"
+                android:textColor="@color/gray"
                 android:text="无法获得验证码？"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:text="登录"
-        android:textSize="20sp"
-        android:background="#FF3D00"
-        android:textColor="@color/theme_color"
-        android:gravity="center"
-        android:padding="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:text="登录"
+                android:textSize="20sp"
+                android:background="#FF3D00"
+                android:textColor="@color/theme_color"
+                android:gravity="center"
+                android:padding="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <FrameLayout
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="50dp"
@@ -171,15 +171,17 @@
                     android:layout_gravity="center"
                     android:layout_height="1dp"/>
                 <TextView
-                    android:background="#F2F2F2"
                     android:text="or"
                     android:paddingRight="4dp"
                     android:paddingLeft="4dp"
+                    android:textColor="@color/lightgray"
+                    android:background="@color/white"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
             </FrameLayout>
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:id="@+id/llWechat"
@@ -204,21 +206,9 @@
                     android:layout_height="wrap_content"
                     android:text="微信登录"/>
             </LinearLayout>
-    <!--<TextView-->
-        <!--android:id="@+id/tvAuthorise"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:layout_below="@id/btnLogin"-->
-        <!--android:textColor="#FF3D00"-->
-        <!--android:padding="5dp"-->
-        <!--android:textSize="16sp"-->
-        <!--android:layout_alignRight="@id/tvGetCode"-->
-        <!--android:text="重新授权"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"/>-->
+
 
     </LinearLayout>
-
-
 
     </RelativeLayout>
 
@@ -226,15 +216,22 @@
     <LinearLayout
         android:orientation="vertical"
         android:visibility="gone"
-        android:background="@color/white"
+        android:background="#f5f5f5"
         android:id="@+id/PhoneLoginActivity_weixin"
         android:layout_below="@id/activity_phone_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:background="@drawable/white_bg"
+        android:layout_margin="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <ImageView
             android:background="@drawable/logo_wechat_big"
             android:layout_width="120dp"
-            android:layout_marginTop="50dp"
             android:layout_gravity="center_horizontal"
             android:id="@+id/PhoneLoginActivity_weixin_login_icon"
             android:layout_height="120dp"/>
@@ -246,14 +243,14 @@
             android:layout_gravity="center_horizontal"
             android:text="前往微信授权"
             android:textColor="@color/black"
-            android:textSize="30sp"/>
+            android:textSize="25sp"/>
         <TextView
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/gray"
             android:text="通过微信授权登录你的个人帐号您将在我们网站享受更多服务"/>
         <TextView
@@ -284,5 +281,5 @@
             android:background="@drawable/ic_safe"/>
 
     </LinearLayout>
-
+    </LinearLayout>
 </RelativeLayout>

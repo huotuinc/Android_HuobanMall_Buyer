@@ -78,8 +78,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
     @Bind(R.id.activity_phone_header) RelativeLayout rlHeader;
     @Bind(R.id.PhoneLoginActivity_phone_weixin) RelativeLayout rlPhoneWeixin;
     @Bind(R.id.PhoneLoginActivity_weixin)  LinearLayout rlWeixin;
-    @Bind(R.id.llSpace)
-    FrameLayout llSpace;//微信登录按钮隐藏 or线隐藏未写
+    @Bind(R.id.llSpace)  FrameLayout llSpace;
     @Bind(R.id.tvNoCode) TextView tvNoCode;
 
     ProgressPopupWindow progressPopupWindow;
@@ -137,8 +136,10 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
             rlWeixin.setVisibility(View.VISIBLE);
         }
 
-        tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
-        btnLogin.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        //tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        SystemTools.setWindowsStyle(tvGetCode , 10f, SystemTools.obtainColor( BaseApplication.single.obtainMainColor() ));
+        //btnLogin.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        SystemTools.setWindowsStyle(btnLogin , 15f , SystemTools.obtainColor( BaseApplication.single.obtainMainColor() ));
         //tvAuthorise.setTextColor( SystemTools.obtainColor(application.obtainMainColor()));
         tvTitle.setText("登录");
         rlHeader.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()) );
@@ -387,7 +388,8 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         tvGetCode.setText("获取验证码");
 
         tvGetCode.setClickable(true);
-        tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        //tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        SystemTools.setWindowsStyle(tvGetCode, 10f , SystemTools.obtainColor(application.obtainMainColor()) );
 
         llWechat.setEnabled(true);
         rlPhoneWeixin.setEnabled(true);

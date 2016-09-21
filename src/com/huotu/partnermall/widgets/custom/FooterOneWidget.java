@@ -208,7 +208,7 @@ public class FooterOneWidget extends BaseLinearLayout
 
     @Override
     public void onErrorResponse(VolleyError volleyError) {
-        Log.e("error", volleyError.getMessage());
+        Log.e("error", volleyError.getMessage()==null? "error": volleyError.getMessage());
     }
     @Override
     public void onResponse(PageConfig pageConfig) {

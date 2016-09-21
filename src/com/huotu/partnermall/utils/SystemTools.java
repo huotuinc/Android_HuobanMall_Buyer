@@ -17,9 +17,15 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Environment;
+import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +37,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.huotu.partnermall.BaseApplication;
+
+import static com.huotu.partnermall.inner.R.id.btnCancel;
+import static com.huotu.partnermall.inner.R.id.btnSure;
+import static com.huotu.partnermall.inner.R.id.popTitle;
 
 public class SystemTools {
 
@@ -222,4 +232,44 @@ public class SystemTools {
         }
         return null;
     }
+
+    public static void setWindowsStyle( View view  , float radius  ,  int backgroundColor ){
+        //popTitle.setBackgroundColor(SystemTools.obtainColor( ((BaseApplication) context.getApplication()).obtainMainColor() ));
+        //popContext.setBackgroundColor( Color.WHITE );
+        //tipsMsg.setTextColor( Color.BLACK );
+
+        StateListDrawable stateListDrawable =new StateListDrawable();
+        float[] outR = { radius,radius,radius,radius,radius,radius,radius,radius };
+        RectF inRect = new RectF(1f,1f,1f,1f);
+        float[] inR = {8f,8f,8f,8f,8f,8f,8f,8f};
+//        RoundRectShape roundRectShape1 = new RoundRectShape(outR , inRect , inR);
+        RoundRectShape roundRectShape1 = new RoundRectShape(outR , null , null);
+        ShapeDrawable shapeDrawable1 = new ShapeDrawable(roundRectShape1);
+        shapeDrawable1.setPadding(8,8,8,8);
+        shapeDrawable1.getPaint().setColor( backgroundColor );
+        shapeDrawable1.getPaint().setAntiAlias(true);
+        shapeDrawable1.getPaint().setStyle(Paint.Style.FILL );
+
+//        RoundRectShape roundRectShape2 = new RoundRectShape(outR, inRect, inR);
+        RoundRectShape roundRectShape2 = new RoundRectShape(outR, null, null);
+        ShapeDrawable shapeDrawable2 = new ShapeDrawable(roundRectShape2);
+        shapeDrawable2.setPadding(8,8,8,8);
+        shapeDrawable2.getPaint().setColor( backgroundColor );
+        shapeDrawable2.getPaint().setAntiAlias(true);
+        shapeDrawable2.getPaint().setStyle(Paint.Style.FILL);
+        shapeDrawable2.setAlpha(50);
+
+        int[] normalState = new int[] {};
+        int[] pressState = new int[]{android.R.attr.state_pressed};
+        int[] selectedState = new int[]{android.R.attr.state_selected};
+        stateListDrawable.addState( normalState , shapeDrawable1 );
+        stateListDrawable.addState( pressState , shapeDrawable2 );
+        stateListDrawable.addState(selectedState, shapeDrawable1);
+
+        //view.setTextColor(Color.BLACK);
+        //.setTextColor(Color.BLACK);
+        SystemTools.loadBackground(view, stateListDrawable);
+        //SystemTools.loadBackground( btnCancel , stateListDrawable);
+    }
+
 }

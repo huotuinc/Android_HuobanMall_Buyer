@@ -104,6 +104,8 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
+import static android.R.attr.data;
+
 public class HomeActivity extends BaseActivity implements Handler.Callback {
     //获取资源文件对象
     private Resources resources;
@@ -278,14 +280,17 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
     protected void showAccountType(String dataArray ){
         if( dataArray ==null || dataArray.isEmpty() ) return;
-        String[] data= dataArray.split(","); //new String[]{"普通会员","小伙伴","大伙伴","dasdfs"};
+        //String temp ="普通会员&小伙伴&大伙伴&dasdfs";
+        String[] data= dataArray.split("&"); //new String[]{"普通会员","小伙伴","大伙伴","dasdfs"};
         accountTypeList.removeAllViews();
-        //int leftMargin = DensityUtils.dip2px(this,2);
+        int leftMargin = DensityUtils.dip2px(this,2);
         int leftPadding = DensityUtils.dip2px(this,2);
         int topPadding = DensityUtils.dip2px(this,2);
+        int i=0;
         for(String item : data ) {
             LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            //layoutParams.setMargins(leftMargin,0,0,0);
+            if(i>0){ layoutParams.setMargins(leftMargin,0,0,0);}
+            i++;
             TextView tv = new TextView(this);
             tv.setId(item.hashCode());
             tv.setSingleLine();
