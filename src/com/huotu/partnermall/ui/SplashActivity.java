@@ -163,7 +163,7 @@ public class SplashActivity extends BaseActivity {
                             }
                             //设置
                             //加载颜色配置信息
-                            if (!application.checkColorInfo()) {
+                            //if (!application.checkColorInfo()) {
                                 try {
                                     InputStream is = SplashActivity.this.getAssets().open("color.properties");
                                     ColorBean color = PropertiesUtil.getInstance().readProperties(is);
@@ -173,7 +173,7 @@ public class SplashActivity extends BaseActivity {
                                 } catch (IOException e) {
                                     Log.e(TAG,e.getMessage());
                                 }
-                            }
+                            //}
 
 
                             getLeftMenu();
