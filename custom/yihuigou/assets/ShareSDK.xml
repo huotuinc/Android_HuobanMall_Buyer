@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DevInfor>
-    <ShareSDK AppKey = "a45f0c4321a4"/>
+    <ShareSDK AppKey = "17523667bee32"/>
     
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <SinaWeibo
