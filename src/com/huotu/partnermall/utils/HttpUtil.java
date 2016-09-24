@@ -29,30 +29,20 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.AuthMallModel;
-import com.huotu.partnermall.model.MDataPackageModel;
 import com.huotu.partnermall.model.MSiteModel;
 import com.huotu.partnermall.model.MemberModel;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantInfoModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
+import com.huotu.partnermall.model.OrderInfoModel;
 import com.huotu.partnermall.model.OrderModel;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.ui.HomeActivity;
-import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.PayPopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
-import com.mob.tools.network.SSLSocketFactoryEx;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -64,6 +54,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
+
+import static android.R.attr.order;
+import static u.aly.au.O;
 
 public class HttpUtil{
 
@@ -83,70 +76,70 @@ public class HttpUtil{
      * @param application
      * @param url
      */
-    public void doVolleyPackage( final BaseApplication application, String url ) {
-        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
-
-
-            @Override
-            public void onResponse(JSONObject response) {
-                JSONUtil<MDataPackageModel > jsonUtil = new JSONUtil<MDataPackageModel>();
-                MDataPackageModel packageModel = new MDataPackageModel();
-                packageModel = jsonUtil.toBean(response.toString (), packageModel);
-                if(null != packageModel) {
-                    MDataPackageModel.MDataPackageData dataPackageData = packageModel.getData ();
-                    if ( 0 == dataPackageData.getUpdateData () ) {
-                        //没有更新，直接执行以下步骤
-                    }
-                    else
-                    {
-                        application.writePackageVersion ( dataPackageData.getVersion ( ) );
-                        //直接下载文件，并更新version
-                        //下载数据
-                        //new HttpDownloader().execute ( dataPackageData.getDownloadUrl () );
-                    }
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-
-
-        });
-        VolleyUtil.getRequestQueue().add(re);
-    }
+//    public void doVolleyPackage( final BaseApplication application, String url ) {
+//        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+//
+//
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                JSONUtil<MDataPackageModel > jsonUtil = new JSONUtil<MDataPackageModel>();
+//                MDataPackageModel packageModel = new MDataPackageModel();
+//                packageModel = jsonUtil.toBean(response.toString (), packageModel);
+//                if(null != packageModel) {
+//                    MDataPackageModel.MDataPackageData dataPackageData = packageModel.getData ();
+//                    if ( 0 == dataPackageData.getUpdateData () ) {
+//                        //没有更新，直接执行以下步骤
+//                    }
+//                    else
+//                    {
+//                        application.writePackageVersion ( dataPackageData.getVersion ( ) );
+//                        //直接下载文件，并更新version
+//                        //下载数据
+//                        //new HttpDownloader().execute ( dataPackageData.getDownloadUrl () );
+//                    }
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//
+//
+//        });
+//        VolleyUtil.getRequestQueue().add(re);
+//    }
 
     /**
      * 根据商户编号获取商户域名
      * @param application
      * @param url
      */
-    public void doVolleySite( final BaseApplication application, String url )
-    {
-        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
-
-
-            @Override
-            public void onResponse(JSONObject response) {
-                JSONUtil<MSiteModel > jsonUtil = new JSONUtil<MSiteModel>();
-                MSiteModel mSite = new MSiteModel();
-                mSite = jsonUtil.toBean(response.toString (), mSite);
-                if(null != mSite) {
-                    MSiteModel.MSiteData mSiteData = mSite.getData ();
-                    if ( null != mSiteData.getMsiteUrl () ) {
-                        String domain = mSiteData.getMsiteUrl ( );
-                        application.writeDomain ( domain );
-                    }
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }});
-        VolleyUtil.getRequestQueue().add(re);
-    }
+//    public void doVolleySite( final BaseApplication application, String url )
+//    {
+//        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+//
+//
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                JSONUtil<MSiteModel > jsonUtil = new JSONUtil<MSiteModel>();
+//                MSiteModel mSite = new MSiteModel();
+//                mSite = jsonUtil.toBean(response.toString (), mSite);
+//                if(null != mSite) {
+//                    MSiteModel.MSiteData mSiteData = mSite.getData ();
+//                    if ( null != mSiteData.getMsiteUrl () ) {
+//                        String domain = mSiteData.getMsiteUrl ( );
+//                        application.writeDomain ( domain );
+//                    }
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }});
+//        VolleyUtil.getRequestQueue().add(re);
+//    }
 
     /**
      * 获取商户logo
@@ -431,48 +424,48 @@ public class HttpUtil{
         VolleyUtil.getRequestQueue().add(re);
     }
 
-    public void doVolleyName( final BaseApplication application, String url, final TextView userType ){
-        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
-
-
-            @Override
-            public void onResponse(JSONObject response) {
-
-                if( userType ==null) return;
-
-                JSONUtil<MemberModel > jsonUtil = new JSONUtil<MemberModel>();
-                MemberModel memberIfo = new MemberModel();
-                memberIfo = jsonUtil.toBean(response.toString (), memberIfo);
-                if(null != memberIfo) {
-                    MemberModel.MemberInfo member = memberIfo.getData ();
-                    if ( null != member ) {
-                        //记录会员等级
-                        if( TextUtils.isEmpty ( member.getLevelName () ))
-                        {
-                            userType.setText ( "未设置会员等级" );
-                            application.writeMemberLevel ( "未设置会员等级" );
-                        }
-                        else
-                        {
-                            userType.setText ( member.getLevelName () );
-                            application.writeMemberLevel ( member.getLevelName () );
-                        }
-                    }
-                }
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                application.writeMemberLevel ( "普通会员" );
-            }
-
-
-        });
-        VolleyUtil.getRequestQueue().add( re);
-    }
+//    public void doVolleyName( final BaseApplication application, String url, final TextView userType ){
+//        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+//
+//
+//            @Override
+//            public void onResponse(JSONObject response) {
+//
+//                if( userType ==null) return;
+//
+//                JSONUtil<MemberModel > jsonUtil = new JSONUtil<MemberModel>();
+//                MemberModel memberIfo = new MemberModel();
+//                memberIfo = jsonUtil.toBean(response.toString (), memberIfo);
+//                if(null != memberIfo) {
+//                    MemberModel.MemberInfo member = memberIfo.getData ();
+//                    if ( null != member ) {
+//                        //记录会员等级
+//                        if( TextUtils.isEmpty ( member.getLevelName () ))
+//                        {
+//                            userType.setText ( "未设置会员等级" );
+//                            application.writeMemberLevel ( "未设置会员等级" );
+//                        }
+//                        else
+//                        {
+//                            userType.setText ( member.getLevelName () );
+//                            application.writeMemberLevel ( member.getLevelName () );
+//                        }
+//                    }
+//                }
+//
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//                application.writeMemberLevel ( "普通会员" );
+//            }
+//
+//
+//        });
+//        VolleyUtil.getRequestQueue().add( re);
+//    }
 
     public void doVolleyPay(final Activity aty, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress  ){
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
@@ -558,14 +551,14 @@ public class HttpUtil{
         return dataList;
     }
 
-    //保留2位小数
-    private double format2Decimal(double d)
-    {
-        BigDecimal bg = new BigDecimal ( d );
-        return bg.setScale ( 2,   BigDecimal.ROUND_HALF_UP).doubleValue();
-    }
+//    //保留2位小数
+//    private double format2Decimal(double d)
+//    {
+//        BigDecimal bg = new BigDecimal ( d );
+//        return bg.setScale ( 2,   BigDecimal.ROUND_HALF_UP).doubleValue();
+//    }
 
-    private int formatToDecimal(String d){
+    public static int formatToDecimal(String d){
         try {
             BigDecimal bg = new BigDecimal(d);
             BigDecimal bg2 = bg.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -575,4 +568,14 @@ public class HttpUtil{
         }
     }
 
+    public void getOrderInfo(String orderId , Response.Listener<OrderInfoModel> listener , Response.ErrorListener errorListener){
+        String url = Constants.getINTERFACE_PREFIX() + "order/getpayinfo?orderid="+ orderId;
+
+        AuthParamUtils param = new AuthParamUtils ( BaseApplication.single , System.currentTimeMillis (), url );
+        String orderUrl = param.obtainUrlOrder();
+
+        GsonRequest<OrderInfoModel> request = new GsonRequest<OrderInfoModel>(Request.Method.GET, orderUrl , OrderInfoModel.class, null,  listener , errorListener);
+
+        VolleyUtil.getRequestQueue().add(request);
+    }
 }

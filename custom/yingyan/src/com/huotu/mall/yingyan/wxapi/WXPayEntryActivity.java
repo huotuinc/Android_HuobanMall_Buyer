@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.PayGoodBean;
@@ -28,30 +30,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     private BaseApplication application;
 
     @Override
-    public boolean handleMessage ( Message msg ) {
-
-        switch ( msg.what){
-            case DeliveryGoodAsyncTask.PAY_ERROR:
-            {
-                ToastUtils.showLongToast(this, msg.obj.toString());
-                this.finish();
-            }
-            break;
-            case DeliveryGoodAsyncTask.PAY_OK:
-            {
-                ToastUtils.showLongToast(this, msg.obj.toString());
-                //MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_FLOW_ADD );
-                //MyBroadcastReceiver.sendBroadcast(this,MyBroadcastReceiver.ACTION_WX_PAY_CALLBACK);
-                this.finish();
-            }
-            break;
-        }
-        return false;
-    }
-
-    @Override
-    public
-    void onReq ( BaseReq baseReq ) {
+    public void onReq ( BaseReq baseReq ) {
     }
 
     @Override
@@ -68,7 +47,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     public
     void onResp ( BaseResp resp ) {
 
-        Log.i ( "onPayFinish, errCode = " + resp.errCode );
+        Log.i ( "info","onPayFinish, errCode = " + resp.errCode );
 
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
             String msg = "";

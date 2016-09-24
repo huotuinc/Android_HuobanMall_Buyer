@@ -132,13 +132,13 @@ public class UIUtils {
                                 }
                                 if ("/".equals(url)) {
                                     url = application.obtainMerchantUrl();
-                                    AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), url, context);
+                                    AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), url);
                                     url = paramUtils.obtainUrl();
                                     //加载具体的页面
                                     Message msg = mHandler.obtainMessage(Constants.LOAD_PAGE_MESSAGE_TAG, url);
                                     mHandler.sendMessage(msg);
                                 } else {
-                                    AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), url, context);
+                                    AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), url);
                                     url = paramUtils.obtainUrl();
                                     //加载具体的页面
                                     Message msg = mHandler.obtainMessage(Constants.LOAD_PAGE_MESSAGE_TAG, application.obtainMerchantUrl() + url);

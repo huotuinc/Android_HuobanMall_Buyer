@@ -139,7 +139,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
         map.put("mobile", phone);
         map.put("code", code);
         map.put("pwd",  "" );
-        AuthParamUtils authParamUtils = new AuthParamUtils(application,  System.currentTimeMillis() , url, this);
+        AuthParamUtils authParamUtils = new AuthParamUtils(application,  System.currentTimeMillis() , url);
         Map<String, String> params = authParamUtils.obtainParams(map);
         GsonRequest<DataBase> request = new GsonRequest<>(
                 Request.Method.POST,
@@ -225,7 +225,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
         map.put("customerid", application.readMerchantId());
         map.put("mobile", phone);
 
-        AuthParamUtils authParamUtils = new AuthParamUtils(application, System.currentTimeMillis(), url, this);
+        AuthParamUtils authParamUtils = new AuthParamUtils(application, System.currentTimeMillis(), url);
         Map<String, String> params = authParamUtils.obtainParams(map);
 
         GsonRequest<DataBase> request = new GsonRequest<DataBase>(

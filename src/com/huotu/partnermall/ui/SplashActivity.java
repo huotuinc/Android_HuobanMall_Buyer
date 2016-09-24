@@ -192,13 +192,13 @@ public class SplashActivity extends BaseActivity {
                             //获取商户logo信息
                             String logoUrl = Constants.getINTERFACE_PREFIX() + "mall/getConfig";
                             logoUrl += "?customerId=" + application.readMerchantId();
-                            AuthParamUtils paramLogo = new AuthParamUtils(application, System.currentTimeMillis(), logoUrl, SplashActivity.this);
+                            AuthParamUtils paramLogo = new AuthParamUtils(application, System.currentTimeMillis(), logoUrl);
                             final String logoUrls = paramLogo.obtainUrls();
                             HttpUtil.getInstance().doVolleyLogo(  application, logoUrls);
                             //获取商户支付信息
                             String targetUrl = Constants.getINTERFACE_PREFIX() + "PayConfig?customerid=";
                             targetUrl += application.readMerchantId();
-                            AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), targetUrl, SplashActivity.this);
+                            AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), targetUrl);
                             final String url = paramUtils.obtainUrls();
                             HttpUtil.getInstance().doVolley( application, url);
                             //当用户登录状态时，则重新获得用户信息。
@@ -294,7 +294,7 @@ public class SplashActivity extends BaseActivity {
         if( application.isLogin() ) {
             String url = Constants.getINTERFACE_PREFIX() + "Account/getAppUserInfo";
             url += "?userid="+ application.readMemberId()+"&customerid="+ application.readMerchantId();
-            AuthParamUtils authParamUtils = new AuthParamUtils(application,  System.currentTimeMillis() , url , this);
+            AuthParamUtils authParamUtils = new AuthParamUtils(application,  System.currentTimeMillis() , url );
             url = authParamUtils.obtainUrl();
 
             GsonRequest<AuthMallModel> request = new GsonRequest<>(
@@ -349,7 +349,7 @@ public class SplashActivity extends BaseActivity {
         url +="?customerId="+ application.readMerchantId();
         url +="&userId="+ (TextUtils.isEmpty( application.readMemberId())? "0": application.readMemberId());
         url +="&clientUserType="+ application.readMemberType();
-        AuthParamUtils authParamUtils=new AuthParamUtils(application , System.currentTimeMillis() , url , SplashActivity.this);
+        AuthParamUtils authParamUtils=new AuthParamUtils(application , System.currentTimeMillis() , url );
         url = authParamUtils.obtainUrlName();
         GsonRequest<UpdateLeftInfoModel> request = new GsonRequest<>(
                 Request.Method.GET,

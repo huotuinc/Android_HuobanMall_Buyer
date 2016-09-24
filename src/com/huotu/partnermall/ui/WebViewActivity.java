@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -28,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 //import com.handmark.pulltorefresh.library.PullToRefreshBase;
 //import com.handmark.pulltorefresh.library.PullToRefreshWebView;
+import com.huotu.android.library.libpay.BuildConfig;
 import com.huotu.android.library.libpay.weixin.WeiXinPayResult;
 import com.huotu.android.library.libpay.weixin.WeiXinPayUtil;
 import com.huotu.partnermall.BaseApplication;
@@ -49,6 +52,7 @@ import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WindowUtils;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
+import com.huotu.partnermall.widgets.TipAlertDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -62,6 +66,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.wechat.favorite.WechatFavorite;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -235,6 +240,10 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         viewPage.getSettings().setGeolocationEnabled(true);
         viewPage.addJavascriptInterface(this, "android");
 
+        if(BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ){
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+
         signHeader( viewPage );
 
         viewPage.loadUrl(url, SignUtil.signHeader());
@@ -330,6 +339,27 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 callback.invoke( origin , true ,false );
                 super.onGeolocationPermissionsShowPrompt(origin, callback);
             }
+
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
+                //return super.onJsConfirm(view, url, message, result);
+                final TipAlertDialog tipAlertDialog = new TipAlertDialog(view.getContext());
+                tipAlertDialog.show("询问", message, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        tipAlertDialog.dismiss();
+                        result.cancel();
+                    }
+                },new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        tipAlertDialog.dismiss();
+                        result.confirm();
+                    }
+                });
+
+                return true;
+            }
         });
     }
 
@@ -376,6 +406,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                     ToastUtils.showShortToast(WebViewActivity.this, "QQ空间分享成功");
                 } else if ("SinaWeibo".equals(platform.getName())) {
                     ToastUtils.showShortToast(WebViewActivity.this, "新浪微博分享成功");
+                }else if(WechatFavorite.NAME.equals(platform.getName())){
+                    ToastUtils.showShortToast("微信收藏成功");
                 }
             }
             break;
@@ -390,6 +422,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                     ToastUtils.showShortToast(WebViewActivity.this, "QQ空间分享失败");
                 } else if ("SinaWeibo".equals(platform.getName())) {
                     ToastUtils.showShortToast(WebViewActivity.this, "新浪微博分享失败");
+                }else if(WechatFavorite.NAME.equals(platform.getName())){
+                    ToastUtils.showShortToast("微信收藏失败");
                 }
             }
             break;
@@ -404,6 +438,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                     ToastUtils.showShortToast(WebViewActivity.this, "QQ空间分享取消");
                 } else if ("SinaWeibo".equals(platform.getName())) {
                     ToastUtils.showShortToast(WebViewActivity.this, "新浪微博分享取消");
+                }else if(WechatFavorite.NAME.equals(platform.getName())){
+                    ToastUtils.showShortToast("微信收藏取消");
                 }
             }
             break;

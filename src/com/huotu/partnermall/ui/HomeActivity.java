@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +23,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -98,6 +101,7 @@ import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.wechat.favorite.WechatFavorite;
 import cn.sharesdk.wechat.friends.Wechat;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -537,6 +541,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         pageWeb.getSettings().setGeolocationEnabled(true);
         pageWeb.addJavascriptInterface( HomeActivity.this ,"android");
 
+        if(com.huotu.partnermall.inner.BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ){
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+
         //设置app标志
         signHeader( pageWeb );
         //首页鉴权
@@ -564,7 +572,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
                         if( titleText ==null || pageWeb ==null ) return;
-                        titleText.setText(view.getTitle());
+                        //titleText.setText(view.getTitle());
 
                         if( UIUtils.isIndexPage( url ) || url.contains ( "&back" ) || url.contains ( "?back" )){
                             mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
@@ -603,12 +611,12 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if( ptrClassicFrameLayout ==null || pgBar ==null ) return;
+                if( ptrClassicFrameLayout ==null || pgBar ==null || titleText ==null ) return;
 
                 if(100 == newProgress) {
                     ptrClassicFrameLayout.refreshComplete();
-
                     pgBar.setVisibility(View.GONE);
+                    titleText.setText( view.getTitle() );
                 }else {
                     if (pgBar.getVisibility() == View.GONE) pgBar.setVisibility(View.VISIBLE);
                     pgBar.setProgress(newProgress);
@@ -659,6 +667,37 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
                 return  true;
                 //return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
+            }
+
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                return super.onJsAlert(view, url, message, result);
+            }
+
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
+                //return super.onJsConfirm(view, url, message, result);
+                final TipAlertDialog tipAlertDialog = new TipAlertDialog(view.getContext());
+                tipAlertDialog.show("询问", message, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        tipAlertDialog.dismiss();
+                        result.cancel();
+                    }
+                },new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        tipAlertDialog.dismiss();
+                        result.confirm();
+                    }
+                });
+
+                return true;
+            }
+
+            @Override
+            public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
+                return super.onJsPrompt(view, url, message, defaultValue, result);
             }
         });
     }
@@ -742,7 +781,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     void doSetting(){
         //切换用户
         String url = Constants.getINTERFACE_PREFIX() + "weixin/getuserlist?customerId="+application.readMerchantId ()+"&unionid="+application.readUserUnionId ();
-        AuthParamUtils paramUtil = new AuthParamUtils ( application, System.currentTimeMillis (), url, HomeActivity.this );
+        AuthParamUtils paramUtil = new AuthParamUtils ( application , System.currentTimeMillis (), url );
         final String rootUrls = paramUtil.obtainUrls ( );
         HttpUtil.getInstance().doVolleyObtainUser(
                 HomeActivity.this, application,
@@ -825,6 +864,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 else if( platform.getName ().equals(SinaWeibo.NAME))
                 {
                     ToastUtils.showShortToast ( HomeActivity.this, "新浪微博分享成功" );
+                }else if(platform.getName().equals(WechatFavorite.NAME)){
+                    ToastUtils.showShortToast("微信收藏成功");
                 }
             }
             break;
@@ -846,27 +887,24 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 else if(  platform.getName ().equals( SinaWeibo.NAME ))
                 {
                     ToastUtils.showShortToast ( HomeActivity.this, "新浪微博分享失败" );
+                }else if(platform.getName().equals(WechatFavorite.NAME)){
+                    ToastUtils.showShortToast("微信收藏失败");
                 }
             }
             break;
-            case Constants.SHARE_CANCEL:
-            {
+            case Constants.SHARE_CANCEL: {
                 //分享取消
-                Platform platform = ( Platform ) msg.obj;
-                if("WechatMoments".equals ( platform.getName () )) {
-                    ToastUtils.showShortToast ( HomeActivity.this, "微信朋友圈分享取消" );
-                }
-                else if("Wechat".equals ( platform.getName () ))
-                {
-                    ToastUtils.showShortToast ( HomeActivity.this, "微信分享取消" );
-                }
-                else if("QZone".equals ( platform.getName () ))
-                {
-                    ToastUtils.showShortToast ( HomeActivity.this, "QQ空间分享取消" );
-                }
-                else if("SinaWeibo".equals ( platform.getName () ))
-                {
-                    ToastUtils.showShortToast ( HomeActivity.this, "新浪微博分享取消" );
+                Platform platform = (Platform) msg.obj;
+                if ("WechatMoments".equals(platform.getName())) {
+                    ToastUtils.showShortToast(HomeActivity.this, "微信朋友圈分享取消");
+                } else if ("Wechat".equals(platform.getName())) {
+                    ToastUtils.showShortToast(HomeActivity.this, "微信分享取消");
+                } else if ("QZone".equals(platform.getName())) {
+                    ToastUtils.showShortToast(HomeActivity.this, "QQ空间分享取消");
+                } else if ("SinaWeibo".equals(platform.getName())) {
+                    ToastUtils.showShortToast(HomeActivity.this, "新浪微博分享取消");
+                } else if (WechatFavorite.NAME.equals(platform.getName())) {
+                    ToastUtils.showShortToast("微信收藏取消");
                 }
             }
             break;
@@ -1047,7 +1085,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         map.put("headimgurl",model.getAccountIcon());
         map.put("unionid",model.getAccountUnionId());
         map.put("refreshToken",model.getAccountToken());
-        AuthParamUtils authParamUtils =new AuthParamUtils(application, System.currentTimeMillis(), url , HomeActivity.this);
+        AuthParamUtils authParamUtils =new AuthParamUtils( application, System.currentTimeMillis(), url );
         Map<String,String> params = authParamUtils.obtainParams(map);
 
         GsonRequest<PhoneLoginModel> request =new GsonRequest<PhoneLoginModel>(Request.Method.POST,
@@ -1366,7 +1404,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         //map.put("userid", application.readMemberId() );
         //map.put("customerid",application.readMerchantId());
-        AuthParamUtils authParamUtils =new AuthParamUtils(application, System.currentTimeMillis(), url , HomeActivity.this);
+        AuthParamUtils authParamUtils =new AuthParamUtils(application, System.currentTimeMillis(), url );
         //Map<String,String> params = authParamUtils.obtainParams(map);
 
         url = authParamUtils.obtainUrl();

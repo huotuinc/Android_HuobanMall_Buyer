@@ -21,7 +21,6 @@ import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.PayModel;
-import com.huotu.partnermall.ui.pay.PayFunc;
 import com.huotu.partnermall.utils.WindowUtils;
 
 /**

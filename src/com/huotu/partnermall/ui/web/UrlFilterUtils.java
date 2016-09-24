@@ -9,9 +9,15 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.webkit.WebView;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.inner.BuildConfig;
 import com.huotu.partnermall.model.BindEvent;
+import com.huotu.partnermall.model.OrderInfoModel;
+import com.huotu.partnermall.model.OrderModel;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.SwitchUserByUserIDEvent;
 import com.huotu.partnermall.ui.HomeActivity;
@@ -21,14 +27,20 @@ import com.huotu.partnermall.ui.login.PhoneLoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.HttpUtil;
+import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.SignUtil;
+import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.widgets.NoticePopWindow;
+import com.huotu.partnermall.widgets.PayPopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.lang.ref.WeakReference;
+import java.util.Map;
+
+import static android.R.attr.order;
 
 /**
  * 拦截页面操作类
@@ -111,59 +123,62 @@ public class UrlFilterUtils {
             if(view.canGoBack())
                 view.goBack();
         }
-        else if(url.contains ( Constants.WEB_PAY ) )
-        {
-            //支付进度
-            payProgress.showProgress ( "正在加载支付信息" );
-            payProgress.showAtLocation ( ref.get().getWindow().getDecorView(),  Gravity.CENTER, 0, 0 );
-            //支付模块
-            //获取信息
-            //截取问号后面的
-            //订单号
-            String tradeNo = null;
-            String customerID = null;
-            String paymentType = null;
-            PayModel payModel = new PayModel ();
-            url = url.substring ( url.indexOf ( ".aspx?" )+6, url.length () );
-            String[] str = url.split ( "&" );
-            for(String map : str)
-            {
-                String[] values = map.split ( "=" );
-                if(2 == values.length)
-                {
-                    if("trade_no".equals ( values[0] ))
-                    {
-                        tradeNo = values[1];
-                        payModel.setTradeNo ( tradeNo );
-                    }
-                    else if("customerID".equals ( values[0] ))
-                    {
-                        customerID = values[1];
-                        payModel.setCustomId ( customerID );
-                    }
-                    else if("paymentType".equals ( values[0] ))
-                    {
-                        paymentType = values[1];
-                        payModel.setPaymentType ( paymentType );
-                    }
-                }
-                else
-                {
-                    Log.i( UrlFilterUtils.class.getName() ,"支付参数出错.");
-                }
-            }
-            //获取用户等级
-            StringBuilder builder = new StringBuilder (  );
-            builder.append ( Constants.getINTERFACE_PREFIX() + "order/GetOrderInfo" );
-            builder.append ( "?orderid="+tradeNo );
-            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString (), ref.get() );
-            String orderUrl = param.obtainUrlOrder ( );
-            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() ,  mHandler, application, orderUrl, payModel, payProgress );
+        else if(url.contains ( Constants.WEB_PAY ) ){
+//            //支付进度
+//            payProgress.showProgress ( "正在加载支付信息" );
+//            payProgress.showAtLocation ( ref.get().getWindow().getDecorView(),  Gravity.CENTER, 0, 0 );
+//            //支付模块
+//            //获取信息
+//            //截取问号后面的
+//            //订单号
+//            String tradeNo = null;
+//            String customerID = null;
+//            String paymentType = null;
+//            PayModel payModel = new PayModel ();
+//            url = url.substring ( url.indexOf ( ".aspx?" )+6, url.length () );
+//            String[] str = url.split ( "&" );
+//            for(String map : str)
+//            {
+//                String[] values = map.split ( "=" );
+//                if(2 == values.length)
+//                {
+//                    if("trade_no".equals ( values[0] ))
+//                    {
+//                        tradeNo = values[1];
+//                        payModel.setTradeNo ( tradeNo );
+//                    }
+//                    else if("customerID".equals ( values[0] ))
+//                    {
+//                        customerID = values[1];
+//                        payModel.setCustomId ( customerID );
+//                    }
+//                    else if("paymentType".equals ( values[0] ))
+//                    {
+//                        paymentType = values[1];
+//                        payModel.setPaymentType ( paymentType );
+//                    }
+//                }
+//                else
+//                {
+//                    Log.i( UrlFilterUtils.class.getName() ,"支付参数出错.");
+//                }
+//            }
+//            //获取用户等级
+//            StringBuilder builder = new StringBuilder (  );
+//            builder.append ( Constants.getINTERFACE_PREFIX() + "order/GetOrderInfo" );
+//            builder.append ( "?orderid="+tradeNo );
+//            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString () );
+//            String orderUrl = param.obtainUrlOrder ( );
+//            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() ,  mHandler, application, orderUrl, payModel, payProgress );
+
+
+
+            getPayInfo(url , ref.get() );
+
             return true;
 
         }
-        else if(url.contains ( Constants.AUTH_FAILURE ) || url.contains( Constants.AUTH_FAILURE_PHONE) )
-        {
+        else if(url.contains ( Constants.AUTH_FAILURE ) || url.contains( Constants.AUTH_FAILURE_PHONE) ){
             //鉴权失效
             //清除登录信息
             application.logout ();
@@ -223,12 +238,89 @@ public class UrlFilterUtils {
         }else if( url.toLowerCase().contains( Constants.URL_PERSON_INDEX ) ){//当用户点击商品详情的个人中心按钮时，需要处理判断
             ActivityUtils.getInstance().showActivity( ref.get() , HomeActivity.class ,"redirecturl", url);
             return true;
-        } else{
+        }
+//        else if( url.toLowerCase().contains("test.api.open.huobanplus.com:8081/cs/webchannelhtml.js")){ ///cest
+//            view.loadUrl("http://192.168.3.22:8080/cs/webChannelHtml.js?customerId=3447&goodsId=20626&userId=17867&orderId=&t=1.2");
+//            return true;
+//        }
+        else{
             //跳转到新界面
             view.loadUrl(url , SignUtil.signHeader());
             return true;
         }
         return false;
+    }
+
+
+    private void getPayInfo( String url , final Activity aty ){
+        if( aty ==null) return;
+
+        payProgress.showProgress ( "正在加载支付信息" );
+        payProgress.showAtLocation ( aty.getWindow().getDecorView(),  Gravity.CENTER, 0, 0 );
+
+        final PayModel payModel = new PayModel ();
+
+        Uri uri = Uri.parse(url);
+        final String orderId = uri.getQueryParameter("trade_no");
+        String customerId = uri.getQueryParameter("customerID");
+        String payType = uri.getQueryParameter("paymentType");
+        if( orderId ==null || orderId.isEmpty() ){
+            payProgress.dismissView();
+            ToastUtils.showLongToast("支付缺少订单信息");
+            return;
+        }
+
+        payModel.setCustomId(customerId);
+        payModel.setPaymentType(payType);
+        payModel.setTradeNo(orderId);
+
+        HttpUtil.getInstance().getOrderInfo( orderId , new Response.Listener<OrderInfoModel>() {
+            @Override
+            public void onResponse(OrderInfoModel orderInfoModel) {
+                if( payProgress!=null) payProgress.dismissView();
+                if( aty == null  ) return;
+
+                if(200 == orderInfoModel.getCode ()) {
+                    Map<String, String> data = orderInfoModel.getData();
+                    if (null == data) {
+                        //支付信息获取错误
+                        ToastUtils.showLongToast("获取订单信息失败。");
+                        return;
+                        //NoticePopWindow noticePop = new NoticePopWindow(aty, "获取订单信息失败。");
+                        //noticePop.showNotice();
+                        //noticePop.showAtLocation(aty.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+                    } else {
+                        String sign = data.get("sign");
+                        String orderId_2 = data.get("orderid");
+                        data.remove("sign");
+                        String sign_2 = new AuthParamUtils("").getSign(data , Constants.getAPP_SECRET() );
+                        if( sign == null || orderId_2 == null || !sign.equals(sign_2) || !orderId_2.equals(orderId) ){
+                            ToastUtils.showLongToast("订单信息验证失败！");
+                            return;
+                        }
+                        String name = data.get("name");
+
+                        payModel.setAmount(HttpUtil.formatToDecimal(data.get("finalamount")));
+                        payModel.setDetail( name );
+                        PayPopWindow payPopWindow = new PayPopWindow(aty, mHandler, payModel);
+                        payPopWindow.showAtLocation(aty.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+                    }
+                } else{
+                    //支付信息获取错误
+                    //NoticePopWindow noticePop = new NoticePopWindow (  aty,  "获取订单信息失败。");
+                    //noticePop.showNotice ( );
+                    //noticePop.showAtLocation ( aty.getWindow().getDecorView() , Gravity.CENTER, 0, 0 );
+                    ToastUtils.showLongToast("获取订单信息失败。");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if(payProgress==null)return;
+                payProgress.dismissView();
+            }
+        });
+
     }
 
 }

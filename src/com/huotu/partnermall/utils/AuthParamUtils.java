@@ -30,14 +30,14 @@ public class AuthParamUtils {
     private BaseApplication application;
     private String url;
     private long timestamp;
-    private Context context;
+    //private Context context;
 
-    public AuthParamUtils(BaseApplication application, long timestamp, String url, Context context )
+    public AuthParamUtils(BaseApplication application, long timestamp, String url )
     {
         this.application = application;
         this.timestamp = timestamp;
         this.url = url;
-        this.context = context;
+        //this.context = context;
     }
 
     public AuthParamUtils( String url ){
@@ -368,9 +368,13 @@ public class AuthParamUtils {
         }
     }
 
-    private String getSign(Map map)
+    public String getSign( Map map){
+        return getSign(map , Constants.getAPP_SECRET());
+    }
+
+    public String getSign(Map map , String secret )
     {
-        String values = this.doSort(map);
+        String values = this.doSort(map , secret );
         Log.i ( "sign", values );
         // values = URLEncoder.encode(values);
         //String signHex =DigestUtils.md5DigestAsHex(values.toString().getBytes("UTF-8")).toLowerCase();
@@ -389,7 +393,7 @@ public class AuthParamUtils {
      * @exception
      * @since
      */
-    private String doSort(Map<String, String> map)
+    private String doSort(Map<String, String> map , String secret )
     {
         //将MAP中的key转成小写
         Map<String, String> lowerMap = new HashMap< String, String > (  );
@@ -413,7 +417,7 @@ public class AuthParamUtils {
             buffer.append ( entry.getKey ()+"=" );
             buffer.append ( entry.getValue ()+"&" );
         }
-        String suffix = buffer.substring ( 0, buffer.length ()-1 )+Constants.getAPP_SECRET();
+        String suffix = buffer.substring ( 0, buffer.length ()-1 )+ secret;//Constants.getAPP_SECRET();
         return suffix;
     }
 

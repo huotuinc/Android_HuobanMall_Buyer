@@ -2,7 +2,9 @@ package com.huotu.partnermall.widgets;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -36,20 +38,55 @@ public class TipAlertDialog implements View.OnClickListener{
         btn_right = (Button) view.findViewById(R.id.btn_right);
         btn_left.setOnClickListener(this);
         btn_right.setOnClickListener(this);
+
+    }
+
+    public void dismiss(){
+        dialog.dismiss();
     }
 
     public void show(String title , String message , String url){
         show( title , message , url , R.color.black ,  true ,true );
     }
 
-    public void show(String title , String message , String url , int titleColor , boolean isShowLeft , boolean isShowRight){
+    public void show(String title , String message , View.OnClickListener cancelListener , View.OnClickListener confirmListener){
+        show(title,message, "", R.color.black , true , true , cancelListener,confirmListener);
+    }
+
+    public void show(String title , String message , String url , int titleColor ,
+                     boolean isShowLeft , boolean isShowRight , final View.OnClickListener cancelListener , View.OnClickListener confirmListener  ){
         titleText.setText(title);
         titleText.setTextColor( titleColor );
         messageText.setText(message);
         btn_right.setTag( url);
         btn_left.setVisibility(isShowLeft? View.VISIBLE: View.GONE);
         btn_right.setVisibility( isShowRight? View.VISIBLE:View.GONE );
+
+        if(cancelListener!=null){
+            btn_left.setOnClickListener(cancelListener);
+        }
+        if(confirmListener!=null){
+            btn_right.setOnClickListener(confirmListener);
+        }
+
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                //return false;
+                if( keyCode == KeyEvent.KEYCODE_BACK ) {
+                    btn_left.performClick();
+                }
+                return true;
+            }
+        });
+
+
         dialog.show();
+    }
+
+    public void show(String title , String message , String url , int titleColor , boolean isShowLeft , boolean isShowRight){
+
+        show(title,message,url,titleColor,isShowLeft,isShowRight, null,null);
     }
 
     @Override

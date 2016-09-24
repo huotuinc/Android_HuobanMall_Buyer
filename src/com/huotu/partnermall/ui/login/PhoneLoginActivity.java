@@ -205,7 +205,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         map.put("mobile", phone);
         map.put("code", code);
         map.put("secure",  String.valueOf( secure ));
-        AuthParamUtils authParamUtils = new AuthParamUtils(application,  secure , url , PhoneLoginActivity.this );
+        AuthParamUtils authParamUtils = new AuthParamUtils(application,  secure , url  );
         Map<String, String> params = authParamUtils.obtainParams(map);
 
         GsonRequest<PhoneLoginModel> request = new GsonRequest<>(
@@ -423,7 +423,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         String userType = String.valueOf( BaseApplication.single.readMemberType());
         url +="?customerId="+customerId+"&userId="+userId +"&userType="+userType;
 
-        AuthParamUtils authParamUtils = new AuthParamUtils(BaseApplication.single ,System.currentTimeMillis() , url , PhoneLoginActivity.this);
+        AuthParamUtils authParamUtils = new AuthParamUtils(BaseApplication.single ,System.currentTimeMillis() , url );
         url = authParamUtils.obtainUrl();
         GsonRequest<UpdateLeftInfoModel> request = new GsonRequest<UpdateLeftInfoModel>(Request.Method.GET
                 , url, UpdateLeftInfoModel.class, null, new Response.Listener<UpdateLeftInfoModel>() {

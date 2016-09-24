@@ -3,9 +3,7 @@ package com.huotu.partnermall.async;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
-
 import com.huotu.partnermall.BaseApplication;
-import com.huotu.partnermall.model.FMPrepareBuy;
 import com.huotu.partnermall.model.WXPayResult;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.WXPayUtilEx;
