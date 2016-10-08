@@ -10,6 +10,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.PayGoodBean;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.utils.JSONUtil;
+import android.util.Log;
 
 import com.huotu.partnermall.utils.ToastUtils;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
@@ -45,7 +46,7 @@ public class WXPayEntryActivity extends Activity implements  IWXAPIEventHandler 
     public
     void onResp ( BaseResp resp ) {
 
-        Log.i ( "onPayFinish, errCode = " + resp.errCode );
+        Log.i ("info", "onPayFinish, errCode = " + resp.errCode );
 
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
             String msg = "";
