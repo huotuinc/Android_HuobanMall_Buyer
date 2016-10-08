@@ -164,10 +164,11 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
 //            payFunc.wxPay();
 
             WeiXinOrderInfo weiXinOrderInfo = new WeiXinOrderInfo();
-            weiXinOrderInfo.setBody(payModel.getCustomId());
+            //weiXinOrderInfo.setBody(payModel.getCustomId());
             weiXinOrderInfo.setBody(payModel.getDetail());
             weiXinOrderInfo.setOrderNo(payModel.getTradeNo());
             weiXinOrderInfo.setTotal_fee(payModel.getAmount());
+            weiXinOrderInfo.setAttach(payModel.getAttach());
 
             String wxAppId = application.readWxpayAppId();
             String wxAppSecret = application.readWxpayAppKey();
