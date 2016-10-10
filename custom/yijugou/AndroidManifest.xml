@@ -55,7 +55,7 @@
 
     <!-- 极光推送 Required  . Enable it you can get statistics data with channel -->
     <meta-data android:name="JPUSH_CHANNEL" android:value="huotu_yijugou"/>
-    <meta-data android:name="JPUSH_APPKEY" android:value="" />
+    <meta-data android:name="JPUSH_APPKEY" android:value="0cfe4499f432409e7318fc6c" />
 
     </application>
 
