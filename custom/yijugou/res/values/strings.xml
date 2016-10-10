@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">易居购</string>
+
+    <!--引导界面图片-->
+    <string-array name="guide_icon">
+        <item>newfeature_1</item>
+        <item>newfeature_2</item>
+        <item>newfeature_3</item>
+    </string-array>
+</resources>
