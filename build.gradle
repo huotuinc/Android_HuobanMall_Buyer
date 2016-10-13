@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 apply from: 'E:/myjob/keystore/keystore.gradle'
 
-//apply from: 'E:/myjob/keystore/customer.gradle'
+apply from: 'E:/myjob/keystore/customer.gradle'
 
 buildscript {
     repositories {
@@ -61,13 +61,6 @@ android {
             assets.srcDirs = ['custom/morefan/assets']
         }
 
-        fanmore {
-            manifest.srcFile 'custom/morefan/AndroidManifest.xml'
-            java.srcDirs = ['custom/morefan/src']
-            res.srcDirs = ['custom/morefan/res']
-            assets.srcDirs = ['custom/morefan/assets']
-        }
-
         adtimetest_test{
             manifest.srcFile 'custom/adtimetest_test/AndroidManifest.xml'
             java.srcDirs = ['custom/adtimetest_test/src']
@@ -101,83 +94,6 @@ android {
             java.srcDirs = ['custom/olquan_test/src']
             res.srcDirs = ['custom/olquan_test/res']
             assets.srcDirs = ['custom/olquan_test/assets']
-        }
-
-//        guozhenhao{
-//            manifest.srcFile 'custom/guozhenhao/AndroidManifest.xml'
-//            java.srcDirs = ['custom/guozhenhao/src']
-//            res.srcDirs = ['custom/guozhenhao/res']
-//            assets.srcDirs = ['custom/guozhenhao/assets']
-//        }
-
-//        huangtaizhi{
-//            manifest.srcFile 'custom/huangtaizhi/AndroidManifest.xml'
-//            java.srcDirs = ['custom/huangtaizhi/src']
-//            res.srcDirs = ['custom/huangtaizhi/res']
-//            assets.srcDirs = ['custom/huangtaizhi/assets']
-//        }
-
-//        xiangcunlai{
-//            manifest.srcFile 'custom/xiangcunlai/AndroidManifest.xml'
-//            java.srcDirs = ['custom/xiangcunlai/src']
-//            res.srcDirs = ['custom/xiangcunlai/res']
-//            assets.srcDirs = ['custom/xiangcunlai/assets']
-//        }
-
-        btv{
-            manifest.srcFile 'custom/btv/AndroidManifest.xml'
-            java.srcDirs = ['custom/btv/src']
-            res.srcDirs = ['custom/btv/res']
-            assets.srcDirs = ['custom/btv/assets']
-        }
-
-//        huobanjia{
-//            manifest.srcFile 'custom/huobanjia/AndroidManifest.xml'
-//            java.srcDirs = ['custom/huobanjia/src']
-//            res.srcDirs = ['custom/huobanjia/res']
-//            assets.srcDirs = ['custom/huobanjia/assets']
-//        }
-
-//        zhujunzhi{
-//            manifest.srcFile 'custom/zhujunzhi/AndroidManifest.xml'
-//            java.srcDirs = ['custom/zhujunzhi/src']
-//            res.srcDirs = ['custom/zhujunzhi/res']
-//            assets.srcDirs = ['custom/zhujunzhi/assets']
-//        }
-
-//        womeimall{
-//            manifest.srcFile 'custom/womeimall/AndroidManifest.xml'
-//            java.srcDirs = ['custom/womeimall/src']
-//            res.srcDirs = ['custom/womeimall/res']
-//            assets.srcDirs = ['custom/womeimall/assets']
-//        }
-//
-//        youbi{
-//            manifest.srcFile 'custom/youbi/AndroidManifest.xml'
-//            java.srcDirs = ['custom/youbi/src']
-//            res.srcDirs = ['custom/youbi/res']
-//            assets.srcDirs = ['custom/youbi/assets']
-//        }
-
-//        huaanelectric{
-//            manifest.srcFile 'custom/huaanelectric/AndroidManifest.xml'
-//            java.srcDirs = ['custom/huaanelectric/src']
-//            res.srcDirs = ['custom/huaanelectric/res']
-//            assets.srcDirs = ['custom/huaanelectric/assets']
-//        }
-
-//        xiaomeiban{//小美伴
-//            manifest.srcFile 'custom/xiaomeiban/AndroidManifest.xml'
-//            java.srcDirs = ['custom/xiaomeiban/src']
-//            res.srcDirs = ['custom/xiaomeiban/res']
-//            assets.srcDirs = ['custom/xiaomeiban/assets']
-//        }
-
-        yueminghui{//悦铭荟
-            manifest.srcFile 'custom/yueminghui/AndroidManifest.xml'
-            java.srcDirs = ['custom/yueminghui/src']
-            res.srcDirs = ['custom/yueminghui/res']
-            assets.srcDirs = ['custom/yueminghui/assets']
         }
 
         cathigo{//粉猫海购
@@ -300,20 +216,6 @@ android {
 //            signingConfig signingConfigs.btv
 //        }
 
-//        yueminghui{//悦铭荟
-//            applicationId 'com.huotu.mall.yueminghui'
-//            versionCode YUEMINGHUI_VERSIONCODE.toInteger()
-//            versionName "${YUEMINGHUI_VERSIONNAME}"
-//            buildConfigField 'String','INTERFACE_URL','"http://mallapi.huobanmall.com/"'
-//            buildConfigField 'String','APP_ID', '"huotu686ad1fe2bd8a02ok"'
-//            buildConfigField 'String','APP_SECRET', '"0ad8abe201631aacf89c9231999c9f49"'
-//            buildConfigField 'String','Push_Url','"http://api.open.huobanplus.com/"'
-//            buildConfigField 'String', 'SMART_KEY', '"app"'
-//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//            buildConfigField 'String', 'SMART_Url','"http://api.open.huobanplus.com/"'
-//            signingConfig signingConfigs.yueminghui
-//        }
-
 //        cathigo{//粉猫海购
 //            applicationId 'com.huotu.mall.cathigo'
 //            versionCode BUYER_VERSIONCODE.toInteger()
@@ -325,20 +227,6 @@ android {
 //            buildConfigField 'String', 'SMART_KEY', '"app"'
 //            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
 //            signingConfig signingConfigs.cathigo
-//        }
-
-//        fanmore{//粉猫海购
-//            applicationId 'cy.com.morefan'
-//            versionCode BUYER_VERSIONCODE.toInteger()
-//            versionName "${BUYER_VERSIONNAME}"
-//            buildConfigField 'String','INTERFACE_URL','"http://mallapi.huobanmall.com/"'
-//            buildConfigField 'String','APP_ID', '"huotu686ad1fe2bd8a02ok"'
-//            buildConfigField 'String','APP_SECRET', '\"0ad8abe201631aacf89c9231999c9f49"'
-//            buildConfigField 'String',"SIS_INTERFACE_URL", '\"\"'
-//            buildConfigField 'String','Push_Url','"http://api.open.huobanplus.com/"'
-//            buildConfigField 'String', 'SMART_KEY', '"app"'
-//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//            signingConfig signingConfigs.fanmore
 //        }
 
 //        yihuigou{//易汇购
