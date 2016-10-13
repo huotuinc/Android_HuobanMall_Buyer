@@ -411,6 +411,8 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
             progressPopupWindow.dismissView();
             progressPopupWindow = null;
         }
+
+        handler.removeCallbacksAndMessages(null);
     }
 
     /***
@@ -675,6 +677,9 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
 
     @Override
     public boolean handleMessage(Message msg) {
+        if(llWechat==null || rlPhoneWeixin==null ) return false;
+
+
         if(progressPopupWindow !=null){
             progressPopupWindow.dismissView();
         }
