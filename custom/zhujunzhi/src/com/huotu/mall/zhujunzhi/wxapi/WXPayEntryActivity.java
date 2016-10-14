@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.model.PayGoodBean;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.ToastUtils;
@@ -80,12 +79,6 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                 Log.i("wxpay>>>extData", payResp.extData==null? "": payResp.extData );
                 //Log.i("wxpay>>>prepayid",payResp.prepayId);
             }
-
-            /*PayGoodBean para=new PayGoodBean ();
-            JSONUtil<PayGoodBean> jsonUtil=new JSONUtil<PayGoodBean>();
-            para = jsonUtil.toBean( payResp.extData, para);
-
-            new DeliveryGoodAsyncTask ( WXPayEntryActivity.this , handler ,  para.getOrderNo(),para.getProductType(), para.getProductId() ).execute();*/
         }
     }
 

@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
-import com.huotu.partnermall.model.PayGoodBean;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.ToastUtils;

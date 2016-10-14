@@ -1,4 +1,4 @@
-package com.huotu.mall.cathigo.wxapi;
+package com.huotu.mall.yihuigou.wxapi;
 
 import android.content.Intent;
 import com.huotu.partnermall.utils.ToastUtils;

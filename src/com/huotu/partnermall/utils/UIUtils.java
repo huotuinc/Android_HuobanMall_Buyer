@@ -233,5 +233,37 @@ public class UIUtils {
         }
     }
 
+    /**
+     * 判断当前页是否是客服页面
+     * @param url
+     * @return
+     */
+    public static boolean isKefuPage(String url){
+        try {
+            if (TextUtils.isEmpty(url)) return false;
+
+            String kefuUrl = BaseApplication.single.readMerchantWebChannel();
+            if(kefuUrl==null || kefuUrl.isEmpty()) return false;
+
+            Uri uri1 = Uri.parse(kefuUrl);
+            String path1 = uri1.getPath();
+            Uri uri2 = Uri.parse(url);
+            String path2 = uri2.getPath();
+
+            if(path2.toLowerCase().contains(path1.toLowerCase())){
+                return true;
+            }
+            String path3 = "easemob/im.html";
+            if(path2.toLowerCase().contains(path3)){
+                return true;
+            }
+
+            return false;
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
 
 }

@@ -108,6 +108,7 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
+import static android.R.attr.breadCrumbShortTitle;
 import static android.R.attr.data;
 
 public class HomeActivity extends BaseActivity implements Handler.Callback {
@@ -731,9 +732,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     public boolean dispatchKeyEvent(KeyEvent event){
         // 2秒以内按两次推出程序
         if (event.getKeyCode () == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if(pageWeb.canGoBack () && ! UIUtils.isIndexPage(pageWeb.getUrl())){
+            if(pageWeb.canGoBack () && !UIUtils.isIndexPage(pageWeb.getUrl()) && !UIUtils.isKefuPage(pageWeb.getUrl())){
                 titleRightImage.setVisibility(View.GONE);
-                pageWeb.goBack ( );
+                pageWeb.goBack();
             }
             else{
                 if ( ( System.currentTimeMillis ( ) - exitTime ) > 2000 ) {
@@ -1018,6 +1019,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 //调用JS
                 pageWeb.loadUrl("javascript:utils.Go2Payment(" + payModel.getCustomId() + "," + payModel.getTradeNo() + "," + payModel.getPaymentType() + ", " + "false);\n");
             }
+            break;
             case WeiXinPayUtil.SDK_WX_PAY_FLAG :{
                 WeiXinPayResult result = (WeiXinPayResult) msg.obj;
                 if ( result !=null && result.getCode() == WeiXinPayUtil.FAIL) {
@@ -1025,6 +1027,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     return true;
                 }
             }
+            break;
             default:
                 break;
         }

@@ -3,13 +3,13 @@
     <!--程序信息-->
     <appinfo>
         <app_version>1.0.0</app_version>
-        <app_name>粉猫海购</app_name>
+        <app_name>易汇购</app_name>
         <app_build>1</app_build>
     </appinfo>
     <!--商家信息-->
     <merchant>
         <!--504/乔基：3447/4493/5455/4886-->
-        <app_merchant_id>7945</app_merchant_id>
+        <app_merchant_id>7594</app_merchant_id>
     </merchant>
     <!--微信支付信息-->
     <weixinpay>
