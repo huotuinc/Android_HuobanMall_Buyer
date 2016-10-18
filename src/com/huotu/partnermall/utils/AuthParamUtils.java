@@ -56,8 +56,8 @@ public class AuthParamUtils {
 
         String params = uri.getQuery();
         String nparams = "";
-        String[] str = params.split("&");
-        if (str.length > 0) {
+        String[] str = params == null ? null : params.split("&");
+        if ( str != null && str.length > 0) {
             for (String map : str) {
                 //获取参数
                 String[] values = map.split("=");
@@ -85,7 +85,7 @@ public class AuthParamUtils {
         StringBuilder builder = new StringBuilder (  );
         try {
             Map< String, String > paramMap = new HashMap< String, String > ( );
-            if(!application.obtainMerchantUrl ().equals ( url ))
+            if(application.obtainMerchantUrl() !=null && !application.obtainMerchantUrl ().equals ( url ))
             {
 
                 url = removeUrlSpecialParameter(url);

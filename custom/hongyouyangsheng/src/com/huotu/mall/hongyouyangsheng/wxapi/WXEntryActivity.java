@@ -1,4 +1,4 @@
-package cy.com.morefan.wxapi;
+package com.huotu.mall.hongyouyangsheng.wxapi;
 
 import android.content.Intent;
 

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">艺福堂</string>
+    <!--引导界面图片-->
+    <string-array name="guide_icon">
+        <item>guide01</item>
+        <item>guide02</item>
+        <item>guide03</item>
+    </string-array>
+</resources>
