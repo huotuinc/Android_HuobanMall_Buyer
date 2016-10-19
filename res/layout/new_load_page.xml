@@ -6,7 +6,7 @@
                 android:fitsSystemWindows="true">
     <RelativeLayout
         android:id="@+id/newtitleLayout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
             <include layout="@layout/title_index" />
@@ -14,8 +14,8 @@
     <RelativeLayout
         android:background="#f8f8f8"
         android:id="@+id/webViewLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/newtitleLayout">
         <include layout="@layout/page_web_view" />
     </RelativeLayout>

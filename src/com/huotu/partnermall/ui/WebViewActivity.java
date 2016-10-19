@@ -239,6 +239,9 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         viewPage.getSettings().setGeolocationDatabasePath(dir);
         viewPage.getSettings().setGeolocationEnabled(true);
         viewPage.addJavascriptInterface(this, "android");
+        String appCacheDir= BaseApplication.single.getDir("cache",Context.MODE_PRIVATE).getPath();
+        viewPage.getSettings().setAppCachePath(appCacheDir);
+
 
         if(BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ){
             WebView.setWebContentsDebuggingEnabled(true);
