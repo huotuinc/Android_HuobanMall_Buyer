@@ -186,11 +186,7 @@ android {
             buildConfigField 'String','Push_Url','\"http://api.open.olquan.cn/\"'
             buildConfigField 'String', 'SMART_KEY', '\"app\"'
             buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-<<<<<<< HEAD
-            buildConfigField 'String', 'SMART_Url','"http://api.open.huobanplus.com/"'
-=======
             buildConfigField 'String', 'SMART_Url','"http://api.open.olquan.cn/"'
->>>>>>> sis
             signingConfig signingConfigs.olquan
         }
 
