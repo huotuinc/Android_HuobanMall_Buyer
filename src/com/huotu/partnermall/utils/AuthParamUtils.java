@@ -72,7 +72,7 @@ public class AuthParamUtils {
             }
         }
 
-        String ho = url.substring(0, url.indexOf("?"));
+        String ho = url.contains("?") ? url.substring(0, url.indexOf("?")) : url ;
         String nurl = ho + (TextUtils.isEmpty(nparams) ? "" : "?" + nparams);
         return nurl;
     }

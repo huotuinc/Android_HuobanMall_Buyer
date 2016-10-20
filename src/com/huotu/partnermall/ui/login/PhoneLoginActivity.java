@@ -312,6 +312,8 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
                 if (progressPopupWindow != null) {
                     progressPopupWindow.dismissView();
                 }
+                if(tvGetCode==null ) return;
+
                 if (dataBase == null || dataBase.getCode() != 200 ) {
 
                     if( dataBase!=null && !TextUtils.isEmpty(dataBase.getMsg()) ){
@@ -334,8 +336,9 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
                     ToastUtils.showLongToast("短信验证码已经发送成功");
                 }
 
-
-                edtCode.requestFocus();
+                if(edtCode!=null) {
+                    edtCode.requestFocus();
+                }
             }
         }, new Response.ErrorListener() {
             @Override

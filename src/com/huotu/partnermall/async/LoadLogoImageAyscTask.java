@@ -71,7 +71,7 @@ public class LoadLogoImageAyscTask extends AsyncTask<Void, Void, Bitmap> {
                 imgUrl = new URL ( url );
                 //获取链接
                 HttpURLConnection conn = (HttpURLConnection)imgUrl.openConnection ();
-                conn.setConnectTimeout ( 10000 );
+                conn.setConnectTimeout ( 15000 );
                 conn.setDoInput ( true );
                 conn.setUseCaches ( false );
                 is = conn.getInputStream ();
@@ -80,12 +80,12 @@ public class LoadLogoImageAyscTask extends AsyncTask<Void, Void, Bitmap> {
             catch ( MalformedURLException e ) {
 
                 bitmap = BitmapFactory.decodeResource ( resources, defaultImg );
-                Log.e( "LoadLogoImageAyscTask" , e.getMessage());
+                Log.e( "LoadLogoImageAyscTask" , e.getMessage()==null ? "error": e.getMessage());
             }
             catch ( IOException e )
             {
                 bitmap = BitmapFactory.decodeResource ( resources, defaultImg );
-                Log.e ("LoadLogoImageAyscTask", e.getMessage () );
+                Log.e ("LoadLogoImageAyscTask", e.getMessage () ==null ? "Load LogoImage error!" : e.getMessage() );
             }
             finally {
                 if(null != is)
@@ -95,7 +95,7 @@ public class LoadLogoImageAyscTask extends AsyncTask<Void, Void, Bitmap> {
                     }
                     catch ( IOException e ) {
                         bitmap = BitmapFactory.decodeResource ( resources, defaultImg );
-                        Log.e ( "LoadLogoImageAyscTask" , e.getMessage ( ) );
+                        Log.e ( "LoadLogoImageAyscTask" , e.getMessage ( ) ==null?"error" : e.getMessage() );
                     }
                 }
             }
