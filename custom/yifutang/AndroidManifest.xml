@@ -52,10 +52,10 @@
 
         <!-- 极光推送 Required  . Enable it you can get statistics data with channel -->
         <meta-data android:name="JPUSH_CHANNEL" android:value="huotu_yifutang"/>
-        <meta-data android:name="JPUSH_APPKEY" android:value="" />
+        <meta-data android:name="JPUSH_APPKEY" android:value="1840694058047390af5db623" />
 
         <!-- 友盟统计参数 -->
-        <meta-data android:name="UMENG_APPKEY" android:value="" />
+        <meta-data android:name="UMENG_APPKEY" android:value="58097022e88bad2aae0022e9" />
         <meta-data android:name="UMENG_CHANNEL" android:value="huotu_yifutang" />
 
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">艺福堂茶叶</string>
+    <string name="app_name">艺福堂茶商城</string>
     <!--引导界面图片-->
     <string-array name="guide_icon">
         <item>guide01</item>

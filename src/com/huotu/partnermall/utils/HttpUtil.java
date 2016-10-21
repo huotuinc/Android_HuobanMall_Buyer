@@ -211,15 +211,19 @@ public class HttpUtil{
     public void doVolley( final BaseApplication application, String url ){
         final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
 
-
             @Override
             public void onResponse(JSONObject response) {
                 JSONUtil<MerchantPayInfo > jsonUtil = new JSONUtil<MerchantPayInfo>();
                 MerchantPayInfo merchantPayInfo = new MerchantPayInfo();
                 merchantPayInfo = jsonUtil.toBean(response.toString (), merchantPayInfo);
                 if(null != merchantPayInfo) {
+                    if(merchantPayInfo.getCode() != 200 ){
+                        ToastUtils.showLongToast(merchantPayInfo.getMsg());
+                        return;
+                    }
+
                     List<MerchantPayInfo.MerchantPayModel> merchantPays = merchantPayInfo.getData ();
-                    if ( ! merchantPays.isEmpty ( ) ) {
+                    if ( merchantPays !=null && ! merchantPays.isEmpty ( ) ) {
                         for ( MerchantPayInfo.MerchantPayModel merchantPay : merchantPays) {
 
                             if(400 == merchantPay.getPayType ())
