@@ -16,6 +16,7 @@ import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -233,19 +234,19 @@ public class SystemTools {
         return null;
     }
 
-    public static void setWindowsStyle( View view  , float radius  ,  int backgroundColor ){
+    public static void setWindowsStyle( View view  , float radius , int inset ,  int backgroundColor ){
         //popTitle.setBackgroundColor(SystemTools.obtainColor( ((BaseApplication) context.getApplication()).obtainMainColor() ));
         //popContext.setBackgroundColor( Color.WHITE );
         //tipsMsg.setTextColor( Color.BLACK );
 
         StateListDrawable stateListDrawable =new StateListDrawable();
         float[] outR = { radius,radius,radius,radius,radius,radius,radius,radius };
-        RectF inRect = new RectF(1f,1f,1f,1f);
+        RectF inRect = new RectF(2f,2f,2f,2f);
         float[] inR = {8f,8f,8f,8f,8f,8f,8f,8f};
-//        RoundRectShape roundRectShape1 = new RoundRectShape(outR , inRect , inR);
+        //RoundRectShape roundRectShape1 = new RoundRectShape(outR , inRect , outR);
         RoundRectShape roundRectShape1 = new RoundRectShape(outR , null , null);
         ShapeDrawable shapeDrawable1 = new ShapeDrawable(roundRectShape1);
-        shapeDrawable1.setPadding(8,8,8,8);
+        shapeDrawable1.setPadding(inset,inset,inset,inset);
         shapeDrawable1.getPaint().setColor( backgroundColor );
         shapeDrawable1.getPaint().setAntiAlias(true);
         shapeDrawable1.getPaint().setStyle(Paint.Style.FILL );
@@ -253,7 +254,7 @@ public class SystemTools {
 //        RoundRectShape roundRectShape2 = new RoundRectShape(outR, inRect, inR);
         RoundRectShape roundRectShape2 = new RoundRectShape(outR, null, null);
         ShapeDrawable shapeDrawable2 = new ShapeDrawable(roundRectShape2);
-        shapeDrawable2.setPadding(8,8,8,8);
+        shapeDrawable2.setPadding(inset,inset,inset,inset);
         shapeDrawable2.getPaint().setColor( backgroundColor );
         shapeDrawable2.getPaint().setAntiAlias(true);
         shapeDrawable2.getPaint().setStyle(Paint.Style.FILL);

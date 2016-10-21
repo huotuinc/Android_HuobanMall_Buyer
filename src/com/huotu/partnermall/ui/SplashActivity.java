@@ -97,7 +97,7 @@ public class SplashActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(bitmap!=null) {
+                            if(rlSplashItem !=null && bitmap!=null) {
                                 rlSplashItem.setBackgroundDrawable(new BitmapDrawable(bitmap));
                             }
                             initView();

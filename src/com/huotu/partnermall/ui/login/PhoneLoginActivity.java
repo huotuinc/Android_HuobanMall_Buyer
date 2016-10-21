@@ -80,6 +80,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
     @Bind(R.id.PhoneLoginActivity_weixin)  LinearLayout rlWeixin;
     @Bind(R.id.llSpace)  FrameLayout llSpace;
     @Bind(R.id.tvNoCode) TextView tvNoCode;
+    @Bind(R.id.rlLogin) RelativeLayout rlLogin;
 
     ProgressPopupWindow progressPopupWindow;
     Long secure;
@@ -137,9 +138,10 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
         }
 
         //tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
-        SystemTools.setWindowsStyle(tvGetCode , 10f, SystemTools.obtainColor( BaseApplication.single.obtainMainColor() ));
+        SystemTools.setWindowsStyle(tvGetCode , 10f, 8 , SystemTools.obtainColor( BaseApplication.single.obtainMainColor() ));
         //btnLogin.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
-        SystemTools.setWindowsStyle(btnLogin , 15f , SystemTools.obtainColor( BaseApplication.single.obtainMainColor() ));
+        SystemTools.setWindowsStyle(rlLogin, 15f, 0 , getResources().getColor( R.color.lightgray));
+        SystemTools.setWindowsStyle(btnLogin , 15f , 8 , SystemTools.obtainColor( BaseApplication.single.obtainMainColor() ));
         //tvAuthorise.setTextColor( SystemTools.obtainColor(application.obtainMainColor()));
         tvTitle.setText("登录");
         rlHeader.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()) );
@@ -392,7 +394,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
 
         tvGetCode.setClickable(true);
         //tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
-        SystemTools.setWindowsStyle(tvGetCode, 10f , SystemTools.obtainColor(application.obtainMainColor()) );
+        SystemTools.setWindowsStyle(tvGetCode, 10f , 8 , SystemTools.obtainColor(application.obtainMainColor()) );
 
         llWechat.setEnabled(true);
         rlPhoneWeixin.setEnabled(true);

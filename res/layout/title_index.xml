@@ -23,7 +23,7 @@
             android:textColor="@color/title_text_color"
             android:textSize="@dimen/main_title_text_size"
             android:maxEms="10"
-            android:singleLine="true"
+            android:maxLines="1"
             android:ellipsize="end"/>
 
 
@@ -52,7 +52,7 @@
             android:layout_alignParentRight="true"
             android:textSize="@dimen/main_title_text_size"
             android:textColor="@color/title_text_color"
-            android:singleLine="true"
+            android:maxLines="1"
             android:layout_centerVertical="true"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"

@@ -49,6 +49,8 @@ public class ProgressPopupWindow extends PopupWindow {
     }
 
     public void dismissView(){
+        if(!this.isShowing()) return;
+
         setOnDismissListener ( new PoponDismissListener ( aty ) );
         dismiss ();
     }

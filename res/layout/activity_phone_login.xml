@@ -126,7 +126,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="获取验证码"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/title_text_color" />
             </RelativeLayout>
             <!-- 验证码end -->
 
@@ -143,19 +143,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <Button
-                android:id="@+id/btnLogin"
+            <RelativeLayout
+                android:id="@+id/rlLogin"
                 android:layout_marginTop="40dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
+                android:padding="1dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnLogin"
                 android:text="登录"
                 android:textSize="20sp"
                 android:background="#FF3D00"
                 android:textColor="@color/theme_color"
                 android:gravity="center"
-                android:padding="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+            </RelativeLayout>
 
             <FrameLayout
                 android:layout_marginTop="10dp"
