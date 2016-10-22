@@ -55,7 +55,7 @@ public class UrlFilterUtils {
         this.mHandler = mHandler;
         this.application = application;
         this.ref = new WeakReference<>(aty);
-        payProgress = new ProgressPopupWindow ( aty );
+        //payProgress = new ProgressPopupWindow ( aty );
     }
 
     /**
@@ -88,8 +88,7 @@ public class UrlFilterUtils {
                 }
             }
             return true;
-        }
-        else if(url.contains(Constants.WEB_TAG_USERINFO)){
+        }else if(url.contains(Constants.WEB_TAG_USERINFO)){
             //修改用户信息
             //判断修改信息的类型
             return true;
@@ -106,7 +105,6 @@ public class UrlFilterUtils {
                 redirectURL = Uri.decode( redirectURL );
             }
 
-
             if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.toLowerCase().startsWith("http://") ){
                 if( !redirectURL.startsWith("/") ) redirectURL = "/"+ redirectURL;
                 redirectURL = uri.getHost() + redirectURL;
@@ -122,67 +120,13 @@ public class UrlFilterUtils {
         }else if(url.contains(Constants.WEB_TAG_FINISH)){
             if(view.canGoBack())
                 view.goBack();
-        }
-        else if(url.contains ( Constants.WEB_PAY ) ){
-//            //支付进度
-//            payProgress.showProgress ( "正在加载支付信息" );
-//            payProgress.showAtLocation ( ref.get().getWindow().getDecorView(),  Gravity.CENTER, 0, 0 );
-//            //支付模块
-//            //获取信息
-//            //截取问号后面的
-//            //订单号
-//            String tradeNo = null;
-//            String customerID = null;
-//            String paymentType = null;
-//            PayModel payModel = new PayModel ();
-//            url = url.substring ( url.indexOf ( ".aspx?" )+6, url.length () );
-//            String[] str = url.split ( "&" );
-//            for(String map : str)
-//            {
-//                String[] values = map.split ( "=" );
-//                if(2 == values.length)
-//                {
-//                    if("trade_no".equals ( values[0] ))
-//                    {
-//                        tradeNo = values[1];
-//                        payModel.setTradeNo ( tradeNo );
-//                    }
-//                    else if("customerID".equals ( values[0] ))
-//                    {
-//                        customerID = values[1];
-//                        payModel.setCustomId ( customerID );
-//                    }
-//                    else if("paymentType".equals ( values[0] ))
-//                    {
-//                        paymentType = values[1];
-//                        payModel.setPaymentType ( paymentType );
-//                    }
-//                }
-//                else
-//                {
-//                    Log.i( UrlFilterUtils.class.getName() ,"支付参数出错.");
-//                }
-//            }
-//            //获取用户等级
-//            StringBuilder builder = new StringBuilder (  );
-//            builder.append ( Constants.getINTERFACE_PREFIX() + "order/GetOrderInfo" );
-//            builder.append ( "?orderid="+tradeNo );
-//            AuthParamUtils param = new AuthParamUtils ( application, System.currentTimeMillis (), builder.toString () );
-//            String orderUrl = param.obtainUrlOrder ( );
-//            HttpUtil.getInstance ( ).doVolleyPay ( ref.get() ,  mHandler, application, orderUrl, payModel, payProgress );
-
-
-
+        }else if(url.contains ( Constants.WEB_PAY ) ){
             getPayInfo(url , ref.get() );
-
             return true;
-
-        }
-        else if(url.contains ( Constants.AUTH_FAILURE ) || url.contains( Constants.AUTH_FAILURE_PHONE) ){
+        }else if(url.contains ( Constants.AUTH_FAILURE ) || url.contains( Constants.AUTH_FAILURE_PHONE) ){
             //鉴权失效
             //清除登录信息
             application.logout ();
-
 
             Uri uri = Uri.parse(url.toLowerCase());
             String redirectURL = uri.getQueryParameter("redirecturl");
@@ -227,8 +171,7 @@ public class UrlFilterUtils {
 
             EventBus.getDefault().post(new BindEvent(true , redirectURL ));
             return true;
-        }
-        else if(url.toLowerCase().contains(Constants.URL_APPACCOUNTSWITCHER.toLowerCase())){//切换帐号 url
+        }else if(url.toLowerCase().contains(Constants.URL_APPACCOUNTSWITCHER.toLowerCase())){//切换帐号 url
             String userId= Uri.parse(url).getQueryParameter("u");
             EventBus.getDefault().post(new SwitchUserByUserIDEvent(userId));
             return true;
@@ -238,12 +181,7 @@ public class UrlFilterUtils {
         }else if( url.toLowerCase().contains( Constants.URL_PERSON_INDEX ) ){//当用户点击商品详情的个人中心按钮时，需要处理判断
             ActivityUtils.getInstance().showActivity( ref.get() , HomeActivity.class ,"redirecturl", url);
             return true;
-        }
-//        else if( url.toLowerCase().contains("test.api.open.huobanplus.com:8081/cs/webchannelhtml.js")){ ///cest
-//            view.loadUrl("http://192.168.3.22:8080/cs/webChannelHtml.js?customerId=3447&goodsId=20626&userId=17867&orderId=&t=1.2");
-//            return true;
-//        }
-        else{
+        }else{
             //跳转到新界面
             view.loadUrl(url , SignUtil.signHeader());
             return true;
@@ -255,6 +193,9 @@ public class UrlFilterUtils {
     private void getPayInfo( String url , final Activity aty ){
         if( aty ==null) return;
 
+        if(payProgress==null){
+            payProgress = new ProgressPopupWindow(aty);
+        }
         payProgress.showProgress ( "正在加载支付信息" );
         payProgress.showAtLocation ( aty.getWindow().getDecorView(),  Gravity.CENTER, 0, 0 );
 
@@ -286,9 +227,6 @@ public class UrlFilterUtils {
                         //支付信息获取错误
                         ToastUtils.showLongToast("获取订单信息失败。");
                         return;
-                        //NoticePopWindow noticePop = new NoticePopWindow(aty, "获取订单信息失败。");
-                        //noticePop.showNotice();
-                        //noticePop.showAtLocation(aty.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
                     } else {
                         String sign = data.get("sign");
                         String orderId_2 = data.get("orderid");
@@ -306,21 +244,16 @@ public class UrlFilterUtils {
                         payPopWindow.showAtLocation(aty.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
                     }
                 } else{
-                    //支付信息获取错误
-                    //NoticePopWindow noticePop = new NoticePopWindow (  aty,  "获取订单信息失败。");
-                    //noticePop.showNotice ( );
-                    //noticePop.showAtLocation ( aty.getWindow().getDecorView() , Gravity.CENTER, 0, 0 );
                     ToastUtils.showLongToast("获取订单信息失败。");
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                if(payProgress==null)return;
+                if( ref.get() ==null) return;
+                if(payProgress==null) return;
                 payProgress.dismissView();
             }
         });
-
     }
-
 }
