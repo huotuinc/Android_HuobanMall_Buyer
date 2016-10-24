@@ -25,8 +25,13 @@ import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.SignUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static u.aly.au.I;
 
 /**
  * 底部导航组件
@@ -36,6 +41,7 @@ public class FooterOneWidget extends BaseLinearLayout
         implements Response.ErrorListener, Response.Listener<PageConfig>{
     private FooterOneConfig footerOneConfig;
     private MallInfoBean mallInfoBean;
+    private List<SimpleDraweeView> ivList;
     /**
      * 底部导航栏图标的宽度
      */
@@ -52,6 +58,7 @@ public class FooterOneWidget extends BaseLinearLayout
      * 资源根地址
      */
     public String resourceUrl;
+
 
     public FooterOneWidget(Context context ) {
         super(context);
@@ -85,6 +92,7 @@ public class FooterOneWidget extends BaseLinearLayout
         this.addView(llContainer);
 
         if( footerOneConfig.getRows()==null || footerOneConfig.getRows().size()<1 ) return;
+        ivList=new ArrayList<>();
         for(FooterImageBean item : footerOneConfig.getRows()){
             LinearLayout ll = new LinearLayout(getContext());
             ll.setId(item.hashCode());
@@ -103,6 +111,7 @@ public class FooterOneWidget extends BaseLinearLayout
             ll.addView(iv);
             String imageUrl = resourceUrl + item.getImageUrl();
             FrescoDraweeController.loadImage(iv, iconWidth , imageUrl);
+            iv.setTag(item);
 
             TextView tv = new TextView(getContext());
             layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -112,13 +121,37 @@ public class FooterOneWidget extends BaseLinearLayout
             tv.setTextColor(SystemTools.parseColor( footerOneConfig.getFontColor() ) );
             ll.addView(tv);
 
+            ivList.add(iv);
+
             llContainer.addView(ll);
         }
     }
 
-    private void changeButtonImage(){
+    private void changeButtonImage(View currentView ){
+        try {
+            if (ivList == null) return;
 
+            int iconWidth = DensityUtils.dip2px(getContext(), FOOTER_ICON_WIDTH);
+            for (SimpleDraweeView view : ivList) {
+                if (null == view.getTag()) continue;
+                FooterImageBean bean = (FooterImageBean) view.getTag();
+
+                if ( currentView.getId() == bean.hashCode() ) {
+                    if(bean.getHeightImageUrl()==null) continue;
+                    if(bean.getHeightImageUrl().isEmpty()) continue;
+                    String imageUrl = resourceUrl + bean.getHeightImageUrl();
+                    FrescoDraweeController.loadImage(view, iconWidth, imageUrl);
+                } else {
+                    String imageUrl = resourceUrl + bean.getImageUrl();
+                    FrescoDraweeController.loadImage(view, iconWidth, imageUrl);
+                }
+            }
+        }catch (Exception ex){
+            Log.e("error", "changeButtonImage()");
+        }
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -144,6 +177,8 @@ public class FooterOneWidget extends BaseLinearLayout
                 break;
             }
         }
+
+        changeButtonImage(v);
     }
 
     protected void link(String linkName , String relativeUrl , boolean isOpenInNewWindow ){
@@ -190,20 +225,6 @@ public class FooterOneWidget extends BaseLinearLayout
         VolleyUtil.getRequestQueue().add(request);
 
     }
-
-//    @Override
-//    public void onResponse(Call<BizBaseBean<MallInfoBean>> call, Response<BizBaseBean<MallInfoBean>> response) {
-//        if (response == null || response.code() != 200 || response.body() == null || response.body().getData() == null) {
-//            Logger.e(response.message());
-//            return;
-//        }
-//        mallInfoBean = response.body().getData();
-//    }
-
-//    @Override
-//    public void onFailure(Call<BizBaseBean<MallInfoBean>> call, Throwable t) {
-//        Log.e("error",t.getMessage());
-//    }
 
 
     @Override
