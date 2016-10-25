@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.widget.Button;
 
 //import com.huotu.partnermall.AppManager;
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -21,6 +23,8 @@ import com.umeng.analytics.MobclickAgent;
 import org.greenrobot.eventbus.EventBus;
 
 import cn.jpush.android.api.JPushInterface;
+
+import static com.huotu.partnermall.utils.SystemTools.obtainColor;
 
 public abstract class BaseActivity extends Activity {
 
@@ -38,6 +42,12 @@ public abstract class BaseActivity extends Activity {
 
     public void setImmerseLayout(View view){
         if (application.isKITKAT ()) {
+
+            int bgColor = SystemTools.obtainColor(application.obtainMainColor());
+            if( bgColor == Color.WHITE ){//当背景色为白色时，不启用沉浸模式
+                return;
+            }
+
             Window window = getWindow();
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //            int statusBarHeight = this.getStatusBarHeight ( this.getBaseContext ( ) );
