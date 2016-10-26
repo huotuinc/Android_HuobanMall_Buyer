@@ -176,19 +176,19 @@ android {
 //            signingConfig signingConfigs.fanmore
 //        }
 
-//        olquan{//OL圈
-//            applicationId 'com.olquanapp.ttds.android'
-//            versionCode OLQUAN_VERSIONCODE.toInteger()
-//            versionName "${OLQUAN_VERSIONNAME}"
-//            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.olquan.cn/\"'
-//            buildConfigField 'String','APP_ID', '\"'+"${OLQUAN_APP_ID}"+'\"'
-//            buildConfigField 'String','APP_SECRET', '\"'+"${OLQUAN_APP_SECRET}"+'\"'
-//            buildConfigField 'String','Push_Url','\"http://api.open.olquan.cn/\"'
-//            buildConfigField 'String', 'SMART_KEY', '\"app\"'
-//            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
-//            buildConfigField 'String', 'SMART_Url','"http://api.open.olquan.cn/"'
-//            signingConfig signingConfigs.olquan
-//        }
+        olquan{//OL圈
+            applicationId 'com.olquanapp.ttds.android'
+            versionCode OLQUAN_VERSIONCODE.toInteger()
+            versionName "${OLQUAN_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','\"http://mallapi.olquan.cn/\"'
+            buildConfigField 'String','APP_ID', '\"'+"${OLQUAN_APP_ID}"+'\"'
+            buildConfigField 'String','APP_SECRET', '\"'+"${OLQUAN_APP_SECRET}"+'\"'
+            buildConfigField 'String','Push_Url','\"http://api.open.olquan.cn/\"'
+            buildConfigField 'String', 'SMART_KEY', '\"app\"'
+            buildConfigField 'String', 'SMART_SECURITY', '\"21ff3104eb7a7bf3f2b663b8ab18eebe\"'
+            buildConfigField 'String', 'SMART_Url','"http://api.open.olquan.cn/"'
+            signingConfig signingConfigs.olquan
+        }
 
 //        olquan_test{//OL圈
 //            applicationId 'com.olquanapp.ttds.android'
