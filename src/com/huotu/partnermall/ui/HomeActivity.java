@@ -1017,7 +1017,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             {
                 PayModel payModel = ( PayModel ) msg.obj;
                 //调用JS
-                pageWeb.loadUrl("javascript:utils.Go2Payment(" + payModel.getCustomId() + "," + payModel.getTradeNo() + "," + payModel.getPaymentType() + ", " + "false);\n");
+                pageWeb.loadUrl("javascript:utils.Go2Payment(" + payModel.getCustomId() + ", '" + payModel.getTradeNo() + "' ," + payModel.getPaymentType() + ", " + "false);\n");
             }
             break;
             case WeiXinPayUtil.SDK_WX_PAY_FLAG :{
