@@ -28,7 +28,7 @@ import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
 //import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.utils.CrashHandler;
 import com.huotu.partnermall.utils.PreferenceHelper;
-import com.squareup.leakcanary.LeakCanary;
+//import com.squareup.leakcanary.LeakCanary;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -83,7 +83,7 @@ public class BaseApplication extends Application {
         crashHandler.init(getApplicationContext());
 
         if (BuildConfig.DEBUG) {
-            LeakCanary.install(this);//内存检测工具
+            //LeakCanary.install(this);//内存检测工具
         }
 
         mLocationClient = new LocationClient(this.getApplicationContext());

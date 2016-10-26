@@ -467,7 +467,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             case Constants.PAY_NET: {
                 PayModel payModel = (PayModel) msg.obj;
                 //调用JS
-                viewPage.loadUrl("javascript:utils.Go2Payment(" + payModel.getCustomId() + "," + payModel.getTradeNo() + "," + payModel.getPaymentType() + ", "
+                viewPage.loadUrl("javascript:utils.Go2Payment(" + payModel.getCustomId() + ", '" + payModel.getTradeNo() + "' ," + payModel.getPaymentType() + ", "
                         + "false);\n");
             }
             break;
