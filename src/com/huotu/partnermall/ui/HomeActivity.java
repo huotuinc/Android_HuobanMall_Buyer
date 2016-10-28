@@ -548,13 +548,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         //设置app标志
         signHeader( pageWeb );
-        //首页鉴权
-        //AuthParamUtils paramUtils = new AuthParamUtils ( application, System.currentTimeMillis (), application.obtainMerchantUrl ( ), HomeActivity.this );
-        //String url = paramUtils.obtainUrl ();
-        String url = application.obtainMerchantUrl();
-
-        //首页默认为商户站点 + index
-        pageWeb.loadUrl(url , SignUtil.signHeader() );
 
         pageWeb.setWebViewClient(
                 new WebViewClient() {
@@ -701,6 +694,13 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 return super.onJsPrompt(view, url, message, defaultValue, result);
             }
         });
+
+
+        String url = application.obtainMerchantUrl();
+        //首页默认为商户站点 + index
+        if( url !=null && !url.isEmpty()) {
+            pageWeb.loadUrl(url, SignUtil.signHeader());
+        }
     }
 
     @Override
@@ -1422,7 +1422,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Log.e("homeactivity", volleyError.getMessage());
+                        Log.e("homeactivity", volleyError.getMessage()==null? "error" :  volleyError.getMessage());
                     }
                 }
         );

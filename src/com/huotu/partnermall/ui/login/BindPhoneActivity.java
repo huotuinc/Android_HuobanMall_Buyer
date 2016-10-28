@@ -274,6 +274,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
         @Override
         public void onResponse(DataBase dataBase) {
             if( ref.get()==null)return;
+            if(ref.get().tvGetCode==null ) return;
 
             if( ref.get().progressDialog !=null){
                 ref.get().progressDialog.dismiss();
