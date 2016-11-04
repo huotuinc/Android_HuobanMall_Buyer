@@ -103,6 +103,13 @@ android {
             assets.srcDirs = ['custom/dmcn/assets']
         }
 
+        aite{//西安项目 , 仙喜
+            manifest.srcFile 'custom/aite/AndroidManifest.xml'
+            java.srcDirs = ['custom/aite/src']
+            res.srcDirs = ['custom/aite/res']
+            assets.srcDirs = ['custom/aite/assets']
+        }
+
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
 
@@ -215,6 +222,20 @@ android {
             buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
             buildConfigField 'String', 'SMART_Url','"http://api.open.huobanplus.com/"'
             signingConfig signingConfigs.dmcn
+        }
+
+        aite {//西安项目，仙喜
+            applicationId 'com.huotu.mall.aite'
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
+            buildConfigField 'String','INTERFACE_URL','"http://mallapi.aite-only4u.com/"'
+            buildConfigField 'String','APP_ID', '"73d29a4c9a6d389a0b7288ec27b4c4c4"'
+            buildConfigField 'String','APP_SECRET', '"9389e8a5c32eefa3134340640fb4ceaa"'
+            buildConfigField 'String','Push_Url','"http://api.open.aite-only4u.com/"'
+            buildConfigField 'String', 'SMART_KEY', '"huoban"'
+            buildConfigField 'String', 'SMART_SECURITY', '"1b38ce92a02e37ca2c9b0de1a201215a"'
+            buildConfigField 'String', 'SMART_Url','"http://api.open.aite-only4u.com/"'
+            signingConfig signingConfigs.aite
         }
 
     }

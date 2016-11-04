@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DevInfor>
-    <ShareSDK AppKey = "1874f3c721068"/>
+    <ShareSDK AppKey = ""/> <!-- 修改成你在sharesdk后台注册的应用的appkey"-->
     
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <!--<SinaWeibo-->
@@ -12,6 +12,7 @@
         <!--ShareByAppClient="true"-->
         <!--Enable="true" />-->
 
+    <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <!--<QZone-->
         <!--Id="4"-->
         <!--SortId="4 "-->
@@ -23,24 +24,24 @@
     <Wechat
         Id="2"
         SortId="2"
-        AppId="wx6a730d0bf8b389b3"
-        AppSecret="358a3a31260b53ab713905d5497ef252"
+        AppId=""
+        AppSecret=""
         BypassApproval="false"
         Enable="true" />
     
     <WechatMoments
         Id="3"
         SortId="3"
-        AppId="wx6a730d0bf8b389b3"
-        AppSecret="358a3a31260b53ab713905d5497ef252"
+        AppId=""
+        AppSecret=""
         BypassApproval="false"
         Enable="true" />
         
 	<WechatFavorite
         Id="6"
         SortId="6"
-        AppId="wx6a730d0bf8b389b3"
-        AppSecret="358a3a31260b53ab713905d5497ef252"
+        AppId=""
+        AppSecret=""
         Enable="true" />
     
 	<!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
