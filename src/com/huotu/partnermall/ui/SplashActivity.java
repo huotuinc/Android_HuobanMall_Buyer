@@ -272,6 +272,8 @@ public class SplashActivity extends BaseActivity {
                 intent.setAction("android.intent.action.VIEW");
             }
             SplashActivity.this.startActivity(intent);
+            if( popWindow!=null){ popWindow.dismiss(); popWindow=null;}
+            SplashActivity.this.finish();
         }
     }
 
