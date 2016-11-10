@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.huotu.android.library.libpush.PushMessage;
+import com.huotu.android.library.libpush.PushMessageActiveMessage;
 import com.huotu.android.library.libpush.PushMessageDownPaySuccess;
 import com.huotu.android.library.libpush.PushMessageDownRegisterSuccess;
 import com.huotu.android.library.libpush.PushMessageGetRedPackets;
@@ -71,6 +72,12 @@ public class PushProcess {
         }else if( type.equals( PushMessageType.WithdrawApply.getName() )){
             PushMessageWithdrawApply model = JSONUtil.getGson().fromJson(json, PushMessageWithdrawApply.class);
             process(context , title,content, model );
+        }else if( type.equals( PushMessageType.ActiveMessage.getName())) {
+            PushMessageActiveMessage model = JSONUtil.getGson().fromJson(json, PushMessageActiveMessage.class);
+            process(context, title, content, model);
+        }else{
+            PushMessage model = JSONUtil.getGson().fromJson(json, PushMessage.class);
+            process(context,title,content,model);
         }
     }
 
@@ -78,15 +85,15 @@ public class PushProcess {
         if(null==msg) return;
 
         if( !TextUtils.isEmpty( msg.getAlertUrl())){
-            TipAlertDialog tipAlertDialog = new TipAlertDialog(context);
+            TipAlertDialog tipAlertDialog = new TipAlertDialog(context,false);
             tipAlertDialog.show( title , content , msg.getAlertUrl() );
             return;
         }else if(!TextUtils.isEmpty(msg.getUrl())){
-            TipAlertDialog tipAlertDialog = new TipAlertDialog(context);
+            TipAlertDialog tipAlertDialog = new TipAlertDialog(context,false);
             tipAlertDialog.show( title , content , msg.getUrl() );
             return;
         }else {
-            TipAlertDialog tipAlertDialog = new TipAlertDialog(context);
+            TipAlertDialog tipAlertDialog = new TipAlertDialog(context,false);
             tipAlertDialog.show(title , content , "");
             return;
         }

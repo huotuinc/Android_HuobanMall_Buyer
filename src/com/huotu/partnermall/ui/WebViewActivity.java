@@ -346,7 +346,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             @Override
             public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
                 //return super.onJsConfirm(view, url, message, result);
-                final TipAlertDialog tipAlertDialog = new TipAlertDialog(view.getContext());
+                final TipAlertDialog tipAlertDialog = new TipAlertDialog(view.getContext() , false );
                 tipAlertDialog.show("询问", message, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

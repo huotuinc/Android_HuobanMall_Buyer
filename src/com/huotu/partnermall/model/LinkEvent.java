@@ -6,6 +6,10 @@ package com.huotu.partnermall.model;
 public class LinkEvent {
     private String linkUrl;
     private String linkName;
+    /***
+     * 标记是否通过外部浏览器打开链接，默认外部打开
+     */
+    private boolean openUrlByBrowser=true;
 
     public String getLinkUrl() {
         return linkUrl;
@@ -23,8 +27,17 @@ public class LinkEvent {
         this.linkName = linkName;
     }
 
-    public LinkEvent(String linkName , String linkUrl ){
+    public boolean isOpenUrlByBrowser() {
+        return openUrlByBrowser;
+    }
+
+    public void setOpenUrlByBrowser(boolean openUrlByBrowser) {
+        this.openUrlByBrowser = openUrlByBrowser;
+    }
+
+    public LinkEvent(String linkName , String linkUrl , boolean openUrlByBrowser){
         this.linkUrl = linkUrl;
         this.linkName = linkName;
+        this.openUrlByBrowser = openUrlByBrowser;
     }
 }

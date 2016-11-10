@@ -25,8 +25,9 @@ public class TipAlertDialog implements View.OnClickListener{
     TextView messageText;
     Button btn_left;
     Button btn_right;
+    boolean openByBrowser=true;
 
-    public TipAlertDialog(Context context){
+    public TipAlertDialog(Context context , boolean openByBrowser){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         dialog = builder.create();
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -38,7 +39,7 @@ public class TipAlertDialog implements View.OnClickListener{
         btn_right = (Button) view.findViewById(R.id.btn_right);
         btn_left.setOnClickListener(this);
         btn_right.setOnClickListener(this);
-
+        this.openByBrowser = openByBrowser;
     }
 
     public void dismiss(){
@@ -101,7 +102,7 @@ public class TipAlertDialog implements View.OnClickListener{
             //if(TextUtils.isEmpty(linkUrl)) return;
 
             String linkName =titleText.getText().toString();
-            LinkEvent event=new LinkEvent( linkName,linkUrl);
+            LinkEvent event=new LinkEvent( linkName,linkUrl, openByBrowser );
             EventBus.getDefault().post(event);
         }
     }

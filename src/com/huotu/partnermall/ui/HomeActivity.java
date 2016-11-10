@@ -225,11 +225,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         String appUrl = BaseApplication.readAppUlr();
         if( serverid > locaolId ){
             if( TextUtils.isEmpty(appUrl) ) {
-                TipAlertDialog tipAlertDialog = new TipAlertDialog(this);
+                TipAlertDialog tipAlertDialog = new TipAlertDialog(this,true);
                 tipAlertDialog.show("升级提示", "我们发布了新版本，您可以去应用市场下载", "", R.color.black , false , true );
                 return;
             }else{
-                TipAlertDialog tipAlertDialog = new TipAlertDialog(this);
+                TipAlertDialog tipAlertDialog = new TipAlertDialog(this , true );
                 tipAlertDialog.show("升级提示", "我们发布了新版本，是否去应用市场下载？", appUrl );
                 return;
             }
@@ -671,7 +671,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             @Override
             public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
                 //return super.onJsConfirm(view, url, message, result);
-                final TipAlertDialog tipAlertDialog = new TipAlertDialog(view.getContext());
+                final TipAlertDialog tipAlertDialog = new TipAlertDialog(view.getContext(),false);
                 tipAlertDialog.show("询问", message, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1305,11 +1305,16 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         String link = event.getLinkUrl();
         if(TextUtils.isEmpty(link)) return;
 
-
-        //Intent intent=new Intent(HomeActivity.this,WebViewActivity.class);
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( link ));
-        //intent.putExtra(Constants.INTENT_URL, link);
-        HomeActivity.this.startActivity(intent);
+        if( event.isOpenUrlByBrowser()) {
+            //Intent intent=new Intent(HomeActivity.this,WebViewActivity.class);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+            //intent.putExtra(Constants.INTENT_URL, link);
+            HomeActivity.this.startActivity(intent);
+        }else {
+            Intent intent=new Intent(HomeActivity.this,WebViewActivity.class);
+            intent.putExtra(Constants.INTENT_URL, link);
+            HomeActivity.this.startActivity(intent);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
