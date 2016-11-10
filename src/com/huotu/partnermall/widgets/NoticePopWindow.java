@@ -12,9 +12,8 @@ import android.widget.TextView;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
+import com.huotu.partnermall.utils.DensityUtils;
 import com.huotu.partnermall.utils.WindowUtils;
-
-import org.w3c.dom.Text;
 
 /**
  * 消息显示框
@@ -46,9 +45,9 @@ public class NoticePopWindow extends PopupWindow {
         // 设置SelectPicPopupWindow的View
         this.setContentView ( view);
         // 设置SelectPicPopupWindow弹出窗体的宽
-        this.setWidth ( (Constants.SCREEN_WIDTH / 4) * 3);
+        this.setWidth ( (DensityUtils.getScreenW(aty) / 4) * 3);
         // 设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight ( (Constants.SCREEN_WIDTH / 6) * 2);
+        this.setHeight ( (DensityUtils.getScreenW(aty) / 6) * 2);
         // 设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(false);
         WindowUtils.backgroundAlpha ( aty, 0.4f );

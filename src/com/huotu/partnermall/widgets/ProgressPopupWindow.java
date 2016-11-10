@@ -14,6 +14,7 @@ import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
+import com.huotu.partnermall.utils.DensityUtils;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.WindowUtils;
 
@@ -39,9 +40,9 @@ public class ProgressPopupWindow extends PopupWindow {
         // 设置SelectPicPopupWindow的View
         this.setContentView ( rootView );
         // 设置SelectPicPopupWindow弹出窗体的宽
-        this.setWidth ( (Constants.SCREEN_WIDTH/10) * 8 );
+        this.setWidth ( (DensityUtils.getScreenW(aty)/10) * 8 );
         // 设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight ( (Constants.SCREEN_WIDTH/10) * 2 );
+        this.setHeight ( (DensityUtils.getScreenW(aty)/10) * 2 );
         // 设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         this.setOutsideTouchable(true);

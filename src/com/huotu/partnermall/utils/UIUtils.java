@@ -62,9 +62,11 @@ public class UIUtils {
             //按分组排序
             menuSort(menuList);
             int size = menuList.size();
+            int leftWidth = DensityUtils.getScreenW(context) * 80 / 100;
+            int leftMenuHeight = DensityUtils.getScreenH(context) /15;
             for (int i = 0; i < size; i++) {
-                int leftWidth = Constants.SCREEN_WIDTH * 80 / 100;
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(leftWidth, (Constants.SCREEN_HEIGHT / 15));
+                //int leftWidth = Constants.SCREEN_WIDTH * 80 / 100;
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(leftWidth, leftMenuHeight );
                 //取出分组
                 String menuGroup = menuList.get(i).getMenuGroup();
 

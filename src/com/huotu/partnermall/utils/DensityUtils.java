@@ -76,8 +76,7 @@ public final class DensityUtils {
      * 获取屏幕宽度
      */
     public static int getScreenW(Context aty) {
-        DisplayMetrics dm = new DisplayMetrics();
-        dm = aty.getResources().getDisplayMetrics();
+        DisplayMetrics dm = aty.getResources().getDisplayMetrics();
         int w = dm.widthPixels;
         // int w = aty.getWindowManager().getDefaultDisplay().getWidth();
         return w;
@@ -87,8 +86,7 @@ public final class DensityUtils {
      * 获取屏幕高度
      */
     public static int getScreenH(Context aty) {
-        DisplayMetrics dm = new DisplayMetrics();
-        dm = aty.getResources().getDisplayMetrics();
+        DisplayMetrics dm = aty.getResources().getDisplayMetrics();
         int h = dm.heightPixels;
         // int h = aty.getWindowManager().getDefaultDisplay().getHeight();
         return h;
