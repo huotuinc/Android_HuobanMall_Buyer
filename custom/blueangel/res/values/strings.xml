@@ -1,8 +1,6 @@
 <resources>
-
-    <string name="app_name">爱上竹君纸</string>
+    <string name="app_name">菌零天下</string>
     <!--引导界面图片-->
     <string-array name="guide_icon">
-        <item>newfeature01</item>
     </string-array>
 </resources>

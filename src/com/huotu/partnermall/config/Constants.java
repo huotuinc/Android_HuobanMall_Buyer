@@ -208,6 +208,8 @@ public class Constants {
 	public static final String WEB_PAY      = "/Mall/AppAlipay.aspx";
 	//鉴权失效
 	public static final String AUTH_FAILURE = "/UserCenter/Login.aspx";
+	//鉴权失效2
+	public static final String AUTH_FAILURE2 ="/UserCenter/LoginForPC.aspx";
 
 	public static final String AUTH_FAILURE_PHONE = "/invite/MobileLogin.aspx";
 
