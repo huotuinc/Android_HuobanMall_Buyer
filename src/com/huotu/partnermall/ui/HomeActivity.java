@@ -379,6 +379,13 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
                 //return false;
+
+                String url = pageWeb.getUrl();
+                if(url!=null && !url.isEmpty() && url.toLowerCase().contains("easemob/im.html")){
+                    //解决客服页面滚动事件与下拉刷新冲突问题
+                    return false;
+                }
+
                 return PtrDefaultHandler.checkContentCanBePulledDown(frame , pageWeb,header);
             }
 

@@ -96,7 +96,6 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     ImageView titleRightImage;
     @Bind(R.id.viewPage)
     PtrClassicFrameLayout ptrClassicFrameLayout;
-    //PullToRefreshWebView refreshWebView;
 
     ProgressPopupWindow progress;
 
@@ -151,12 +150,20 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 //            }
 //        });
 
+
         ptrClassicFrameLayout.disableWhenHorizontalMove(true);
         ptrClassicFrameLayout.setLastUpdateTimeRelateObject(this);
         ptrClassicFrameLayout.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
                 //return false;
+
+                String url = viewPage.getUrl();
+                if(url!=null && !url.isEmpty() && url.toLowerCase().contains("easemob/im.html")){
+                    //解决客服页面滚动事件与下拉刷新冲突问题
+                    return false;
+                }
+
                 return PtrDefaultHandler.checkContentCanBePulledDown(frame , viewPage,header);
             }
 
@@ -165,6 +172,9 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 viewPage.reload();
             }
         });
+
+
+        //ptrClassicFrameLayout.setEnabled(false);
 
 
         loadPage();

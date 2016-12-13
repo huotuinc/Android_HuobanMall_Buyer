@@ -51,12 +51,9 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
         resources = this.getResources ();
         setContentView(R.layout.guide_ui);
         ButterKnife.bind(this);
-        //mHandler = new Handler ( this );
         views = new ArrayList<> ( );
 
-
         //initImage();
-
 
         //初始化Adapter
         vpAdapter = new ViewPagerAdapter ( views );

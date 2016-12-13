@@ -80,10 +80,7 @@ public class SplashActivity extends BaseActivity {
         Constants.SCREEN_WIDTH = metrics.widthPixels;
         mHandler = new Handler(getMainLooper());
 
-        //initView();
-
         loadBackground();
-
     }
 
 
