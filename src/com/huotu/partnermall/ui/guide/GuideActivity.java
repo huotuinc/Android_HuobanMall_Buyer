@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,13 +77,18 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
         new Thread(new Runnable() {
             @Override
             public void run() {
+                DisplayMetrics metrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                int screenWidth = metrics.widthPixels;
+                int screenHeight = metrics.heightPixels;
+
                 pics = resources.getStringArray ( R.array.guide_icon );
                 bitmapList = new ArrayList<>();
                 //初始化引导图片列表
                 for(int i=0; i<pics.length; i++) {
                     int iconId = resources.getIdentifier( pics[i] , "drawable" , packageName );
                     if( iconId >0) {
-                        Bitmap bmp = ImageUtils.decodeSampledBitmapFromResource( resources , iconId , Constants.SCREEN_WIDTH , Constants.SCREEN_HEIGHT);
+                        Bitmap bmp = ImageUtils.decodeSampledBitmapFromResource( resources , iconId , screenWidth , screenHeight );
                         bitmapList.add(bmp);
                     }
                 }

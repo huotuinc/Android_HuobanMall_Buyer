@@ -114,7 +114,7 @@ import static android.R.attr.data;
 public class HomeActivity extends BaseActivity implements Handler.Callback {
     //获取资源文件对象
     private Resources resources;
-    private long exitTime = 0l;
+    private long exitTime = 0;
     public Handler mHandler;
     private WindowManager wManager;
     private SharePopupWindow share;
@@ -148,8 +148,8 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     @Bind(R.id.loginLayout)
     RelativeLayout loginLayout;
     //侧滑设置按钮
-    @Bind(R.id.sideslip_setting)
-    ImageView loginSetting;
+    //@Bind(R.id.sideslip_setting)
+    //ImageView loginSetting;
     //主菜单容器
     @Bind(R.id.mainMenuLayout)
     LinearLayout mainMenuLayout;
@@ -167,7 +167,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     //TextView userType;
     @Bind(R.id.viewPage)
     PtrClassicFrameLayout ptrClassicFrameLayout;
-    //PullToRefreshWebView refreshWebView;
     @Bind(R.id.layDrag)
     DrawerLayout layDrag;
     @Bind(R.id.main_pgbar)
@@ -185,6 +184,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     @Override
     protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         resources = HomeActivity.this.getResources();
@@ -199,6 +199,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         //设置沉浸模式
         setImmerseLayout(homeTitle);
+
         initView();
 
         initPush(getIntent());
@@ -285,8 +286,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
     protected void showAccountType(String dataArray ){
         if( dataArray ==null || dataArray.isEmpty() ) return;
-        //String temp ="普通会员&小伙伴&大伙伴&dasdfs";
-        String[] data= dataArray.split("&"); //new String[]{"普通会员","小伙伴","大伙伴","dasdfs"};
+        String[] data= dataArray.split("&");
         accountTypeList.removeAllViews();
         int leftMargin = DensityUtils.dip2px(this,2);
         int leftPadding = DensityUtils.dip2px(this,2);
@@ -325,10 +325,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             pageWeb.setVisibility(View.GONE);
         }
 
-//        if(menuView !=null){
-//            menuView.setVisibility(View.GONE);
-//        }
-
         UnRegister();
 
         if(mHandler!=null){
@@ -354,24 +350,14 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         //设置侧滑界面
         loginLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         //设置设置图标
-        SystemTools.loadBackground(loginSetting, ContextCompat.getDrawable(this ,R.drawable.switch_white));
-        getAuthLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
-        loginSetting.setVisibility(View.GONE);
+        //SystemTools.loadBackground(loginSetting, ContextCompat.getDrawable(this ,R.drawable.switch_white));
+        //getAuthLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        //loginSetting.setVisibility(View.GONE);
         //设置登录界面
         getAuthLayout.setVisibility(View.VISIBLE);
         //动态加载侧滑菜单
         UIUtils ui = new UIUtils(application, HomeActivity.this, resources, mainMenuLayout, mHandler);
         ui.loadMenus();
-        //监听web控件
-//        pageWeb = refreshWebView.getRefreshableView();
-//        refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
-//            @Override
-//            public void onRefresh(PullToRefreshBase<WebView> pullToRefreshBase) {
-//                //刷新界面
-//                pageWeb.reload();
-//            }
-//        });
-
 
         ptrClassicFrameLayout.disableWhenHorizontalMove(true);
         ptrClassicFrameLayout.setLastUpdateTimeRelateObject(this);
@@ -463,43 +449,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         loadMenuView.addView(footerOneWidget);
     }
 
-    private void loadMainMenu_old() {
-//        menuView.getSettings().setJavaScriptEnabled(true);
-//        menuView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-//        menuView.getSettings().setDomStorageEnabled(true);
-//        menuView.getSettings().setAllowFileAccess(true);
-//        menuView.getSettings().setAppCacheEnabled(true);
-//        menuView.getSettings().setDatabaseEnabled(true);
-//
-//        signHeader( menuView );
-//
-//        //首页默认为商户站点 + index
-//        String menuUrl = application.obtainMerchantUrl () + "/bottom.aspx?customerid=" + application.readMerchantId ();
-//        menuView.loadUrl(menuUrl , SignUtil.signHeader() );
-//
-//        menuView.setWebViewClient(
-//                new WebViewClient() {
-//                    //重写此方法，浏览器内部跳转
-//                    public boolean shouldOverrideUrlLoading( WebView view, String url ) {
-//                        if( pageWeb ==null ) return true;
-//                        titleRightImage.setVisibility(View.GONE);
-//                        pageWeb.loadUrl(url , SignUtil.signHeader() );
-//                        return true;
-//                    }
-//
-//                    @Override
-//                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
-//                        super.onPageStarted(view, url, favicon);
-//                    }
-//
-//                    @Override
-//                    public void onPageFinished(WebView view, String url) {
-//                        super.onPageFinished(view, url);
-//                    }
-//                }
-//        );
-    }
-
     private void signHeader(){
         if( pageWeb==null) return;
         signHeader(pageWeb);
@@ -575,7 +524,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                         if( titleText ==null || pageWeb ==null ) return;
                         //titleText.setText(view.getTitle());
 
-                        if( UIUtils.isIndexPage( url ) || url.contains ( "&back" ) || url.contains ( "?back" )){
+                        if( UIUtils.isIndexPage( url ) || url.contains ( "&back" ) || url.contains ( "?back" ) || url.contains("easemob/im.html")){
                             mHandler.sendEmptyMessage ( Constants.LEFT_IMG_SIDE );
                         } else {
                             if ( pageWeb.canGoBack ( ) ) {
@@ -590,8 +539,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                     @Override
                     public void onReceivedError( WebView view, int errorCode, String description,String failingUrl ){
                         super.onReceivedError(view, errorCode, description, failingUrl);
-//                        if( refreshWebView ==null) return;
-//                        refreshWebView.onRefreshComplete();
                         if(ptrClassicFrameLayout==null)return;
                         ptrClassicFrameLayout.refreshComplete();
 
@@ -733,7 +680,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
             mUploadMessages=null;
         }
     }
-
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event){
@@ -1235,55 +1181,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         });
     }
 
-//    @JavascriptInterface
-//    public void sendSisShare(final String title, final String desc, final String link,final String img_url){
-//        if(  this==null ) return;
-//        if( this.share ==null ) return;
-//
-//        //ToastUtils.showShortToast( ref.get() , title+desc+link+img_url);
-//        mHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                if( HomeActivity.this ==null ) return;
-//
-//                if( HomeActivity.this.progress !=null ){
-//                    HomeActivity.this.progress.dismissView();
-//                }
-//
-//                String sTitle = title;
-//                if( TextUtils.isEmpty( sTitle ) ){
-//                    sTitle = application.obtainMerchantName ()+"分享";
-//                }
-//                String sDesc = desc;
-//                if( TextUtils.isEmpty( sDesc ) ){
-//                    sDesc = sTitle;
-//                }
-//                String imageUrl = img_url; //application.obtainMerchantLogo ();
-//                if(TextUtils.isEmpty ( imageUrl )) {
-//                    imageUrl = Constants.COMMON_SHARE_LOGO;
-//                }
-//
-//                String sLink = link;
-//                if( TextUtils.isEmpty( sLink ) ){
-//                    sLink = application.obtainMerchantUrl();
-//                }
-//                sLink = SystemTools.shareUrl(application, sLink);
-//                ShareModel msgModel = new ShareModel ();
-//                msgModel.setImageUrl(imageUrl);
-//                msgModel.setText(sDesc);
-//                msgModel.setTitle(sTitle);
-//                msgModel.setUrl(sLink);
-//                //msgModel.setImageData( BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ) );
-//                share.initShareParams(msgModel);
-//                //share.showShareWindow();
-//                WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f);
-//                share.showAtLocation( HomeActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-//
-//            }
-//        });
-//    }
-
     @JavascriptInterface
     public void enableShare( String state ){
         if(TextUtils.isEmpty( state ) || state.equals("1")) {
@@ -1338,7 +1235,6 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         pageWeb.loadUrl(link ,  SignUtil.signHeader() );
     }
-
 
     /**
      * 获得当前页面的 goodid参数值

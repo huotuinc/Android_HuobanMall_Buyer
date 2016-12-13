@@ -1,6 +1,7 @@
 package com.huotu.partnermall.ui;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.huotu.partnermall.inner.R;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AdActivity extends BaseActivity {
     @Bind(R.id.adBanner)
@@ -48,19 +50,25 @@ public class AdActivity extends BaseActivity {
         AdImageBean bean = new AdImageBean();
         bean.setImageUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
         bean.setLinkUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
-        list.add( bean );
+        list.add(bean);
         bean = new AdImageBean();
         bean.setImageUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
         bean.setLinkUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
-        list.add( bean );
+        list.add(bean);
         bean = new AdImageBean();
         bean.setImageUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
         bean.setLinkUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
-        list.add( bean );
+        list.add(bean);
 
         adBannerConfig.setImages(list);
 
         adBannerWidget.setAdBannerConfig(adBannerConfig);
+
+
+    }
+
+    @OnClick(R.id.tvSkip)
+    void skip(View view) {
 
     }
 }
