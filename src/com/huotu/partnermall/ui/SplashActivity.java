@@ -75,9 +75,9 @@ public class SplashActivity extends BaseActivity {
         ButterKnife.bind(this);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        Constants.SCREEN_DENSITY = metrics.density;
-        Constants.SCREEN_HEIGHT = metrics.heightPixels;
-        Constants.SCREEN_WIDTH = metrics.widthPixels;
+        //Constants.SCREEN_DENSITY = metrics.density;
+        //Constants.SCREEN_HEIGHT = metrics.heightPixels;
+        //Constants.SCREEN_WIDTH = metrics.widthPixels;
         mHandler = new Handler(getMainLooper());
 
         loadBackground();
@@ -89,7 +89,11 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void run() {
                 try {
-                    bitmap = ImageUtils.decodeSampledBitmapFromResource(getResources(), R.drawable.login_bg, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+                    DisplayMetrics metrics = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                    int screenWidth = metrics.widthPixels;
+                    int screenHeight = metrics.heightPixels;
+                    bitmap = ImageUtils.decodeSampledBitmapFromResource(getResources(), R.drawable.login_bg, screenWidth, screenHeight);
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -133,7 +137,7 @@ public class SplashActivity extends BaseActivity {
                     @Override
                     public void onAnimationStart(Animation animation) {
                         //检测网络
-                        isConnection = application.checkNet(SplashActivity.this);
+                        isConnection = BaseApplication.checkNet(SplashActivity.this);
                         if (!isConnection) {
                             application.isConn = false;
                             //无网络日志
@@ -172,19 +176,7 @@ public class SplashActivity extends BaseActivity {
                                 }
                             //}
 
-
                             getLeftMenu();
-                            //获取数据包更新信息
-//                            String packageUrl = Constants.getINTERFACE_PREFIX() + "mall/CheckDataPacket";
-//                            String packageVersion = application.readPackageVersion();
-//                            if (TextUtils.isEmpty(packageVersion)) {
-//                                packageVersion = "0.0.1";
-//                                application.writePackageVersion(packageVersion);
-//                            }
-//                            packageUrl += "?customerId=" + application.readMerchantId() + "&dataPacketVersion=" + packageVersion;
-//                            AuthParamUtils paramPackage = new AuthParamUtils(application, System.currentTimeMillis(), packageUrl, SplashActivity.this);
-//                            final String packageUrls = paramPackage.obtainUrls();
-//                            HttpUtil.getInstance().doVolleyPackage( application, packageUrls);
 
                             //获取商户logo信息
                             String logoUrl = Constants.getINTERFACE_PREFIX() + "mall/getConfig";

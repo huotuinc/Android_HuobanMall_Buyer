@@ -4,13 +4,13 @@ import com.huotu.partnermall.inner.BuildConfig;
 
 public class Constants {
 	// 屏幕高度
-	public static int SCREEN_HEIGHT = 800;
+	//public static int SCREEN_HEIGHT = 800;
 
 	// 屏幕宽度
-	public static int SCREEN_WIDTH = 480;
+	//public static int SCREEN_WIDTH = 480;
 
 	// 屏幕密度
-	public static float SCREEN_DENSITY = 1.5f;
+	//public static float SCREEN_DENSITY = 1.5f;
 
 	// 分享成功
 	public static final int SHARE_SUCCESS = 0X1000;
@@ -181,9 +181,9 @@ public class Constants {
 
 	//http请求参数
 	//获取具体页面的商品类别
-	public static final String HTTP_OBTAIN_CATATORY = "/goods/obtainCatagory?";
+	//public static final String HTTP_OBTAIN_CATATORY = "/goods/obtainCatagory?";
 	//获取商品信息
-	public static final String HTTP_OBTAIN_GOODS    = "/goods/obtainGoods?";
+	//public static final String HTTP_OBTAIN_GOODS    = "/goods/obtainGoods?";
 	//new view
 	public static final String WEB_TAG_NEWFRAME     = "__newframe";
 	//上传图片
@@ -238,11 +238,11 @@ public class Constants {
 
 	//handler code
 	//1、success
-	public static final int SUCCESS_CODE = 0;
-	//2、error code
-	public static final int ERROR_CODE   = 1;
-	//3、null code
-	public static final int NULL_CODE    = 2;
+//	public static final int SUCCESS_CODE = 0;
+//	//2、error code
+//	public static final int ERROR_CODE   = 1;
+//	//3、null code
+//	public static final int NULL_CODE    = 2;
 
 	//微信登录:用户存在
 	public static final int MSG_USERID_FOUND    = 1;

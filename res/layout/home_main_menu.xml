@@ -14,6 +14,7 @@
         <ImageView
             android:layout_width="@dimen/title_back_width"
             android:layout_height="@dimen/title_back_width"
+            android:visibility="gone"
             android:id="@+id/sideslip_setting"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
