@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 apply from: 'E:/myjob/keystore/keystore.gradle'
 
-//apply from: 'E:/myjob/keystore/customer.gradle'
+apply from: 'E:/myjob/keystore/customer.gradle'
 
 buildscript {
     repositories {
@@ -280,19 +280,19 @@ android {
 //            signingConfig signingConfigs.fycy
 //        }
 
-//        meiba {//美芭
-//            applicationId 'com.huotu.mall.meiba'
-//            versionCode MEIBA_VERSIONCODE.toInteger()
-//            versionName "${MEIBA_VERSIONNAME}"
-//            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.huobanmall.com/"'
-//            buildConfigField 'String', 'APP_ID', '"73d29a4c9a6d389a0b7288ec27b4c4c4"'
-//            buildConfigField 'String', 'APP_SECRET', '"9389e8a5c32eefa3134340640fb4ceaa"'
-//            buildConfigField 'String', 'Push_Url', '"http://api.open.huobanplus.com/"'
-//            buildConfigField 'String', 'SMART_KEY', '"app"'
-//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//            buildConfigField 'String', 'SMART_Url', '"http://api.open.huobanplus.com/"'
-//            signingConfig signingConfigs.meiba
-//        }
+        meiba {//美芭
+            applicationId 'com.huotu.mall.meiba'
+            versionCode MEIBA_VERSIONCODE.toInteger()
+            versionName "${MEIBA_VERSIONNAME}"
+            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.huobanmall.com/"'
+            buildConfigField 'String', 'APP_ID', '"73d29a4c9a6d389a0b7288ec27b4c4c4"'
+            buildConfigField 'String', 'APP_SECRET', '"9389e8a5c32eefa3134340640fb4ceaa"'
+            buildConfigField 'String', 'Push_Url', '"http://api.open.huobanplus.com/"'
+            buildConfigField 'String', 'SMART_KEY', '"app"'
+            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
+            buildConfigField 'String', 'SMART_Url', '"http://api.open.huobanplus.com/"'
+            signingConfig signingConfigs.meiba
+        }
 
 
 //        blueangel {//蓝色天使
