@@ -7,7 +7,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-            <include layout="@layout/title_index"></include>
+            <include layout="@layout/title_index"/>
         </RelativeLayout>
     <RelativeLayout
         android:id="@+id/layout"
@@ -19,7 +19,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_above="@+id/menuL">
-            <include layout="@layout/page_web_view"></include>
+            <include layout="@layout/page_web_view"/>
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/menuL"
@@ -27,8 +27,8 @@
             android:layout_height="@dimen/main_title_height"
             android:gravity="bottom"
             android:layout_alignParentBottom="true">
-            <include layout="@layout/load_menu_view"></include>
+            <include layout="@layout/load_menu_view"/>
         </RelativeLayout>
-        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

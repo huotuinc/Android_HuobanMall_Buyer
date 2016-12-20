@@ -13,7 +13,7 @@
         android:layout_marginBottom="@dimen/welcome_version_margin_bottom"
         android:gravity="center_horizontal"
         android:text="@string/splash_version_info"
-        android:textColor="@color/theme_color"
+        android:textColor="@color/appversion_color"
         android:textSize="@dimen/normal_label" />
 
 </RelativeLayout>

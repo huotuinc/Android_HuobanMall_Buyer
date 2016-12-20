@@ -16,15 +16,110 @@
 #   public *;
 #}
 
--dontoptimize
--dontpreverify
--dontwarn cn.sharesdk.**
--keep class cn.sharesdk.** { *;}
--dontwarn com.mob.**
--keep class com.mob.**{*;}
--dontwarn **.R$*
+#-----------------------------------买家版-----------------------------------
+
+-keep class com.huotu.partnermall.model.** {*;}
+
+#-----------------------------------------------------------------------
+
+
+#---------------------------------------------------shareSDK-------------------------------------
+-keep class cn.sharesdk.**{*;}
+-keep class com.sina.**{*;}
 -keep class **.R$* {*;}
 -keep class **.R{*;}
+-keep class com.mob.**{*;}
+-dontwarn com.mob.**
+-dontwarn cn.sharesdk.**
+-dontwarn **.R$*
+
+#---------------------------------------------------------------------------------------------------
+
+#-------------------------------------百度定位---------------------------------------------
+-keep class com.baidu.** {*;}
+-keep class vi.com.** {*;}
+-dontwarn com.baidu.**
+# ------------------------------------------------------------------------------------------
+
+
+#-------------------------------------fresco----------------------------------------------
+# Keep our interfaces so they can be used by other ProGuard rules.
+# See http://sourceforge.net/p/proguard/bugs/466/
+-keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
+
+# Do not strip any method/class that is annotated with @DoNotStrip
+-keep @com.facebook.common.internal.DoNotStrip class *
+-keepclassmembers class * {
+    @com.facebook.common.internal.DoNotStrip *;
+}
+
+# Keep native methods
+-keepclassmembers class * {
+    native <methods>;
+}
+
+-dontwarn okio.**
+-dontwarn com.squareup.okhttp.**
+-dontwarn okhttp3.**
+-dontwarn javax.annotation.**
+-dontwarn com.android.volley.toolbox.**
+# --------------------------------------------------------------------------------------------------
+
+
+#---------------------------------------友盟统计-----------------------------------------------------
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+
+-keep public class com.bameng.R$*{
+public static final int *;
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+#---------------------------------------------------------------------------------------------------
+
+#-------------------------------------------butterknife---------------------------------------------
+-keep class butterknife.*
+-keepclasseswithmembernames class * { @butterknife.* <methods>; }
+-keepclasseswithmembernames class * { @butterknife.* <fields>; }
+#---------------------------------------------------------------------------------------------------
+
+#---------------------------------------EventBus----------------------------------------------------
+
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+#---------------------------------------------------------------------------------------------------
+
+
+#------------------------------------------------jpush---------------------------------------------
+-dontoptimize
+-dontpreverify
+
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }
+
+#----------------------------------------------------------------------------------------------------
+
+#==================gson==========================
+-dontwarn com.google.**
+-keep class com.google.gson.** {*;}
+
+#==================protobuf======================
+-dontwarn com.google.**
+-keep class com.google.protobuf.** {*;}
+
 
 -dontwarn com.alipay.**
 -keep class com.alipay.** { *;}
@@ -35,9 +130,6 @@
 -dontwarn com.tencent.**
 -keep class com.tencent.**{*;}
 
-# jpush
--dontwarn cn.jpush.**
--keep class cn.jpush.** { *; }
 
 -keep class com.android.volley.** { *; }
 -keep interface com.android.volley.** { *; }
@@ -49,16 +141,6 @@
     public static ** valueOf(java.lang.String);
 }
 
-# butterknife
--dontwarn butterknife.internal.**
--keep class butterknife.** { *; }
--keep class **$$ViewBinder { *; }
--keepclasseswithmembernames class * {
-    @butterknife.* <fields>;
-}
--keepclasseswithmembernames class * {
-    @butterknife.* <methods>;
-}
 
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
@@ -70,19 +152,11 @@
 
 # Gson specific classes
 -keep class sun.misc.Unsafe { *; }
--keep class com.huotu.partnermall.model.** { *; }
 
--dontwarn com.google.**
--keep class com.google.gson.** {*;}
+
+
 
 # Application classes that will be serialized/deserialized over Gson
 
 ##---------------End: proguard configuration for Gson  ----------
 
-
-#----------eventbus--------------------
--keep class de.greenrobot.event.** {*;}
--keepclassmembers class ** {
-    public void onEvent*(**);
-    void onEvent*(**);
-}

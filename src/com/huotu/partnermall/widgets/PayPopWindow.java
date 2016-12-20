@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -44,6 +45,9 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         this.mHandler = mHandler;
         this.application = BaseApplication.single;
         this.payModel = payModel;
+
+        this.setOnDismissListener(new PoponDismissListener(aty));
+
         //progress = new ProgressPopupWindow(aty);
         LayoutInflater inflater = (LayoutInflater) aty.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -58,46 +62,6 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         alipayBtn.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
 
-//        wxPayBtn.setOnClickListener(
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (!application.scanWx()) {
-//                            //缺少支付信息
-//                            dismissView();
-//                            NoticePopWindow noticePop = new NoticePopWindow(aty, "缺少支付信息");
-//                            noticePop.showNotice();
-//                            noticePop.showAtLocation(aty.findViewById(R.id.titleText), Gravity.CENTER, 0, 0);
-//                        } else {
-//                            progress.showProgress("正在加载支付信息");
-//                            progress.showAtLocation( aty.findViewById(R.id.titleText), Gravity.CENTER, 0, 0 );
-//                            payModel.setAttach(payModel.getCustomId() + "_0");
-//                            //添加微信回调路径
-//                            payModel.setNotifyurl(application.obtainMerchantUrl() + application.readWeixinNotify());
-//                            PayFunc payFunc = new PayFunc(aty, payModel, application, mHandler, aty, progress);
-//                            payFunc.wxPay();
-//                            dismissView();
-//                        }
-//                    }
-//                });
-//        alipayBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Message msg = new Message();
-//                msg.what = Constants.PAY_NET;
-//                payModel.setPaymentType("1");
-//                msg.obj = payModel;
-//                mHandler.sendMessage(msg);
-//                dismissView();
-//            }
-//        });
-//        cancelBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dismissView();
-//            }
-//        });
-
         //设置SelectPicPopupWindow的View
         this.setContentView(payView);
         //设置SelectPicPopupWindow弹出窗体的宽
@@ -106,25 +70,30 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         this.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
+
+        this.setOutsideTouchable(true);
+
+        this.setBackgroundDrawable(ContextCompat.getDrawable(aty , R.drawable.share_window_bg));
+
         WindowUtils.backgroundAlpha(aty, 0.4f);
 
         //mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
 
-        payView.setOnTouchListener(
-                new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        int height = payView.findViewById(R.id.popLayout).getTop();
-                        int y = (int) event.getY();
-                        if (event.getAction() == MotionEvent.ACTION_UP) {
-                            if (y < height) {
-                                dismissView();
-                            }
-                        }
-                        return true;
-                    }
-                }
-        );
+//        payView.setOnTouchListener(
+//                new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        int height = payView.findViewById(R.id.popLayout).getTop();
+//                        int y = (int) event.getY();
+//                        if (event.getAction() == MotionEvent.ACTION_UP) {
+//                            if (y < height) {
+//                                dismissView();
+//                            }
+//                        }
+//                        return true;
+//                    }
+//                }
+//        );
     }
 
 
@@ -182,7 +151,7 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
     }
 
     public void dismissView() {
-        setOnDismissListener(new PoponDismissListener(aty));
+        //setOnDismissListener(new PoponDismissListener(aty));
         dismiss();
     }
 
