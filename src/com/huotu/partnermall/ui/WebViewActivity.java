@@ -163,6 +163,10 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                     //解决客服页面滚动事件与下拉刷新冲突问题
                     return false;
                 }
+                if(url!=null && !url.isEmpty() && url.toLowerCase().contains( Constants.URL_SubmitOrder.toLowerCase() )){
+                    //解决 提交订单页面中弹出添加地址框中的滚动事件与下拉刷新冲突的问题
+                    return false;
+                }
 
                 return PtrDefaultHandler.checkContentCanBePulledDown(frame , viewPage,header);
             }
@@ -374,7 +378,11 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 return true;
             }
         });
+
+
     }
+
+
 
     @OnClick(R.id.titleLeftImage)
     void doBack(){

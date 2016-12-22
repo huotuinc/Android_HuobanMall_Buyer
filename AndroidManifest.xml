@@ -75,7 +75,7 @@
             android:theme="@style/SplashTheme"/>
         <activity
             android:name="com.huotu.partnermall.ui.HomeActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="keyboardHidden|orientation|keyboard|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"

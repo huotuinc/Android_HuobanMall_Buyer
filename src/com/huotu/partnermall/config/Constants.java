@@ -224,6 +224,11 @@ public class Constants {
 	 */
 	public final static String URL_PERSON_INDEX="usercenter/index.aspx";
 
+	/***
+	 * 提交订单 页面
+	 */
+	public final static String URL_SubmitOrder ="/SubmitOrder.aspx";
+
 	//鉴权失效
 	public static final int LOGIN_AUTH_ERROR = 2131;
 

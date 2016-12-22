@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,6 +25,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
+import com.huotu.partnermall.utils.DensityUtils;
 import com.huotu.partnermall.utils.SystemTools;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +33,14 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static android.R.attr.id;
+import static com.huotu.partnermall.inner.R.id.skipText;
+
 /**
  * 引导界面
  */
-public class GuideActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, Handler.Callback {
+public class GuideActivity extends BaseActivity
+        implements View.OnClickListener, ViewPager.OnPageChangeListener, Handler.Callback , View.OnTouchListener{
     static String TAG = GuideActivity.class.getName();
     @Bind(R.id.vp_activity)
     ViewPager mVPActivity;
@@ -43,8 +49,8 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
     private Resources resources;
     //引导图片资源
     private String[] pics;
-
     private List<Bitmap> bitmapList;
+    int lastX=0;
 
     @Override
     protected void onCreate ( Bundle arg0 ) {
@@ -60,11 +66,10 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
         vpAdapter = new ViewPagerAdapter ( views );
         mVPActivity.setAdapter ( vpAdapter );
         //绑定回调
-        mVPActivity.setOnPageChangeListener ( this );
-
+        mVPActivity.addOnPageChangeListener ( this );
+        mVPActivity.setOnTouchListener(this);
 
         loadImages();
-
     }
 
     @Override
@@ -120,7 +125,7 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
                 RelativeLayout iv = (RelativeLayout) LayoutInflater.from(GuideActivity.this).inflate(R.layout.guid_item, null);
                 TextView skipText = (TextView) iv.findViewById(R.id.skipText);
                 iv.setLayoutParams(mParams);
-                iv.setOnClickListener(this);
+                //iv.setOnClickListener(this);
 
                 SystemTools.loadBackground(iv, new BitmapDrawable(bitmaps.get(i)));
 
@@ -158,12 +163,7 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
                     menuIconDraw = resources.getDrawable(iconId);
                     SystemTools.loadBackground(iv, menuIconDraw);
                 }
-                skipText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                               go();
-                    }
-                });
+                skipText.setOnClickListener(this);
                 views.add(iv);
             }
         } catch (Exception e) {
@@ -171,24 +171,17 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    protected void go(){
-        //判断是否登录
-//        if (application.isLogin()) {
-            ActivityUtils.getInstance().skipActivity(GuideActivity.this, HomeActivity.class);
-//        } else {
-//            ActivityUtils.getInstance().skipActivity( GuideActivity.this, LoginActivity.class);
-//        }
+    protected void go() {
+        ActivityUtils.getInstance().skipActivity(GuideActivity.this, HomeActivity.class);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
     }
 
     @Override
     public void onClick ( View v ) {
-       if(v.getId()== R.id.rl1){
+       if(v.getId()== R.id.skipText){
            if( mVPActivity.getCurrentItem() ==  (vpAdapter.getCount()-1) ){
                go();
            }
-       }else {
-//           int position = (Integer) v.getTag();
-//           setCurView(position);
        }
     }
 
@@ -220,5 +213,19 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener,
                 item.recycle();
             }
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if( event.getAction() == MotionEvent.ACTION_DOWN ){
+            lastX =(int) event.getX();
+        }else if( event.getAction() == MotionEvent.ACTION_UP ){
+            int tempX = (int)event.getX();
+            int sw = DensityUtils.getScreenW(this);
+            if( (lastX - tempX)>=( sw/4) && mVPActivity.getCurrentItem()== (vpAdapter.getCount()-1)){
+                go();
+            }
+        }
+        return false;
     }
 }

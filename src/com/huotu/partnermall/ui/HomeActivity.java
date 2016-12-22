@@ -20,6 +20,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
@@ -108,10 +109,14 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
+import static android.R.attr.bottom;
 import static android.R.attr.breadCrumbShortTitle;
 import static android.R.attr.data;
+import static com.huotu.partnermall.inner.R.id.pageLoadView;
+import static com.huotu.partnermall.inner.R.id.viewPage;
 
-public class HomeActivity extends BaseActivity implements Handler.Callback {
+public class HomeActivity extends BaseActivity
+        implements Handler.Callback {
     //获取资源文件对象
     private Resources resources;
     private long exitTime = 0;
@@ -165,7 +170,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     //用户类型
     //@Bind(R.id.accountType)
     //TextView userType;
-    @Bind(R.id.viewPage)
+    @Bind(viewPage)
     PtrClassicFrameLayout ptrClassicFrameLayout;
     @Bind(R.id.layDrag)
     DrawerLayout layDrag;
@@ -323,6 +328,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         }
         if( pageWeb !=null ){
             pageWeb.setVisibility(View.GONE);
+            //pageWeb.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         }
 
         UnRegister();
@@ -330,6 +336,9 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
         if(mHandler!=null){
             mHandler.removeCallbacksAndMessages(null);
         }
+
+
+
     }
 
     @Override
@@ -369,6 +378,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 String url = pageWeb.getUrl();
                 if(url!=null && !url.isEmpty() && url.toLowerCase().contains("easemob/im.html")){
                     //解决客服页面滚动事件与下拉刷新冲突问题
+                    return false;
+                }
+                if(url!=null && !url.isEmpty() && url.toLowerCase().contains( Constants.URL_SubmitOrder.toLowerCase() )){
+                    //解决 提交订单页面中弹出添加地址框中的滚动事件与下拉刷新冲突的问题
                     return false;
                 }
 
@@ -413,6 +426,11 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
 
         loadPage();
         loadMainMenu();
+
+        initSoftKeyboard();
+    }
+
+    protected void initSoftKeyboard(){
     }
 
     protected void judgeLoginStatus(){
@@ -478,6 +496,7 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
     private void loadPage(){
         pageWeb.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         pageWeb.setVerticalScrollBarEnabled(false);
+        pageWeb.setHorizontalScrollBarEnabled(false);
         pageWeb.setClickable(true);
         pageWeb.getSettings().setUseWideViewPort(true);
         //pageWeb.getSettings().setSupportZoom(true);
@@ -978,6 +997,10 @@ public class HomeActivity extends BaseActivity implements Handler.Callback {
                 if ( result !=null && result.getCode() == WeiXinPayUtil.FAIL) {
                     Toast.makeText(getApplication(), result.getMessage(), Toast.LENGTH_LONG).show();
                     return true;
+                }else{
+                    if(pageWeb!=null) {
+                        pageWeb.reload();
+                    }
                 }
             }
             break;

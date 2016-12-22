@@ -23,8 +23,8 @@
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/menuL"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/main_title_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="bottom"
             android:layout_alignParentBottom="true">
             <include layout="@layout/load_menu_view"/>
