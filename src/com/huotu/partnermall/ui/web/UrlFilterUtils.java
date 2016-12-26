@@ -50,8 +50,17 @@ public class UrlFilterUtils {
     private Handler mHandler;
     private BaseApplication application;
     public ProgressPopupWindow payProgress;
+    private boolean isOpenKeFuInNewPage=false;
 
-    public UrlFilterUtils ( Activity aty, Handler mHandler, BaseApplication application  ) {
+    public boolean isOpenKeFuInNewPage() {
+        return isOpenKeFuInNewPage;
+    }
+
+    public void setOpenKeFuInNewPage(boolean openKeFuInNewPage) {
+        isOpenKeFuInNewPage = openKeFuInNewPage;
+    }
+
+    public UrlFilterUtils (Activity aty, Handler mHandler, BaseApplication application  ) {
         this.mHandler = mHandler;
         this.application = application;
         this.ref = new WeakReference<>(aty);
@@ -180,7 +189,17 @@ public class UrlFilterUtils {
         }else if( url.toLowerCase().contains( Constants.URL_PERSON_INDEX ) ){//当用户点击商品详情的个人中心按钮时，需要处理判断
             ActivityUtils.getInstance().showActivity( ref.get() , HomeActivity.class ,"redirecturl", url);
             return true;
-        }else{
+        }else if( url.toLowerCase().contains( Constants.URL_KEFU_1.toLowerCase() ) ){//
+            if(isOpenKeFuInNewPage){
+                Bundle bundle = new Bundle ( );
+                bundle.putString ( Constants.INTENT_URL,  url );
+                ActivityUtils.getInstance ( ).showActivity ( ref.get() , WebViewActivity.class, bundle );
+                return true;
+            }else{
+                view.loadUrl(url , SignUtil.signHeader());
+            }
+        }
+        else{
             //跳转到新界面
             view.loadUrl(url , SignUtil.signHeader());
             return true;

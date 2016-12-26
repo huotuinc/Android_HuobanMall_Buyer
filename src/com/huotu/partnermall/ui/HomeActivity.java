@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -112,11 +114,12 @@ import in.srain.cube.views.ptr.PtrHandler;
 import static android.R.attr.bottom;
 import static android.R.attr.breadCrumbShortTitle;
 import static android.R.attr.data;
+import static com.huotu.partnermall.inner.R.id.menuL;
 import static com.huotu.partnermall.inner.R.id.pageLoadView;
 import static com.huotu.partnermall.inner.R.id.viewPage;
 
 public class HomeActivity extends BaseActivity
-        implements Handler.Callback {
+        implements Handler.Callback , ViewTreeObserver.OnGlobalLayoutListener{
     //获取资源文件对象
     private Resources resources;
     private long exitTime = 0;
@@ -328,7 +331,7 @@ public class HomeActivity extends BaseActivity
         }
         if( pageWeb !=null ){
             pageWeb.setVisibility(View.GONE);
-            //pageWeb.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            pageWeb.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         }
 
         UnRegister();
@@ -668,6 +671,7 @@ public class HomeActivity extends BaseActivity
             }
         });
 
+        pageWeb.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
         String url = application.obtainMerchantUrl();
         //首页默认为商户站点 + index
@@ -1487,5 +1491,24 @@ public class HomeActivity extends BaseActivity
         pageWeb.reload();
     }
 
+    @Override
+    public void onGlobalLayout() {
+        try {
+            final int softKeyboardHeight = 100;
+            Rect r = new Rect();
+            View rootView = pageWeb.getRootView();
+            rootView.getWindowVisibleDisplayFrame(r);
+            DisplayMetrics dm = rootView.getResources().getDisplayMetrics();
+            int heightDiff = rootView.getBottom() - r.bottom;
+            boolean isShow = heightDiff > softKeyboardHeight * dm.density;
+            if (isShow) {
+                loadMenuView.setVisibility(View.GONE);
+            } else {
+                loadMenuView.setVisibility(View.VISIBLE);
+            }
+        }catch (Exception ex){
+            loadMenuView.setVisibility(View.VISIBLE);
+        }
+    }
 }
 

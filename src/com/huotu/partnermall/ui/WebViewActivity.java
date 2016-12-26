@@ -122,6 +122,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         share = new SharePopupWindow ( WebViewActivity.this );
         myBroadcastReceiver = new MyBroadcastReceiver(WebViewActivity.this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
         urlFilterUtils = new UrlFilterUtils(WebViewActivity.this, mHandler, application);
+        urlFilterUtils.setOpenKeFuInNewPage(true);
 
         Bundle bundle = this.getIntent().getExtras();
         url = bundle.getString ( Constants.INTENT_URL );

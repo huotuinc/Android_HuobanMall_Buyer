@@ -229,6 +229,15 @@ public class Constants {
 	 */
 	public final static String URL_SubmitOrder ="/SubmitOrder.aspx";
 
+	/***
+	 *  环信 客户页面
+	 */
+	public final static String URL_KEFU_2="easemob/im.html";
+	/**
+	 * 环信 客户页面
+	 */
+	public final static String URL_KEFU_1 ="/cs/webChannelHtml";
+
 	//鉴权失效
 	public static final int LOGIN_AUTH_ERROR = 2131;
 

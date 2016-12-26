@@ -67,7 +67,8 @@ public class GuideActivity extends BaseActivity
         mVPActivity.setAdapter ( vpAdapter );
         //绑定回调
         mVPActivity.addOnPageChangeListener ( this );
-        mVPActivity.setOnTouchListener(this);
+
+        //mVPActivity.setOnTouchListener(this);
 
         loadImages();
     }
@@ -125,7 +126,7 @@ public class GuideActivity extends BaseActivity
                 RelativeLayout iv = (RelativeLayout) LayoutInflater.from(GuideActivity.this).inflate(R.layout.guid_item, null);
                 TextView skipText = (TextView) iv.findViewById(R.id.skipText);
                 iv.setLayoutParams(mParams);
-                //iv.setOnClickListener(this);
+                iv.setOnClickListener(this);
 
                 SystemTools.loadBackground(iv, new BitmapDrawable(bitmaps.get(i)));
 
@@ -178,7 +179,7 @@ public class GuideActivity extends BaseActivity
 
     @Override
     public void onClick ( View v ) {
-       if(v.getId()== R.id.skipText){
+       if(v.getId()== R.id.skipText || v.getId() == R.id.rl1 ){
            if( mVPActivity.getCurrentItem() ==  (vpAdapter.getCount()-1) ){
                go();
            }
