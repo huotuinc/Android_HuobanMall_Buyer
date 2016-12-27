@@ -14,6 +14,6 @@
         android:gravity="center_horizontal"
         android:text="@string/splash_version_info"
         android:textColor="@color/appversion_color"
-        android:textSize="@dimen/normal_label" />
+        android:textSize="@dimen/welcome_version_appVersion_textSize" />
 
 </RelativeLayout>

@@ -1,0 +1,6 @@
+<resources>
+    <!--欢迎页版本号上边距-->
+    <dimen name="welcome_version_margin_bottom">5dp</dimen>
+    <!-- 欢迎页版本号文字大小-->
+    <dimen name="welcome_version_appVersion_textSize">12sp</dimen>
+</resources>

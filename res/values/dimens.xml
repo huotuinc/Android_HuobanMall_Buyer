@@ -69,6 +69,9 @@
     <dimen name="welcome_progress_image_margin_top">50dp</dimen>
     <!--欢迎页版本号上边距-->
     <dimen name="welcome_version_margin_bottom">40dp</dimen>
+    <!-- 欢迎页版本号文字大小-->
+    <dimen name="welcome_version_appVersion_textSize">14sp</dimen>
+
     <dimen name="menu_item_padding">10dp</dimen>
     <dimen name="weixin_pay_margin">20dp</dimen>
     <dimen name="weixin_pay_height">220dp</dimen>
