@@ -22,6 +22,9 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.ImageUtils;
@@ -62,7 +65,10 @@ public class SplashActivity extends BaseActivity {
     RelativeLayout rlSplashItem;
     @Bind(R.id.splash_version)
     TextView tvVersion;
-    private Intent locationI = null;
+    @Bind(R.id.ivGif)
+    SimpleDraweeView ivGif;
+
+    //private Intent locationI = null;
     private boolean isConnection = false;
     private MsgPopWindow popWindow;
     //推送信息
@@ -73,16 +79,13 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        //Constants.SCREEN_DENSITY = metrics.density;
-        //Constants.SCREEN_HEIGHT = metrics.heightPixels;
-        //Constants.SCREEN_WIDTH = metrics.widthPixels;
+
         mHandler = new Handler(getMainLooper());
 
-        loadBackground();
-    }
+        //loadBackground();
 
+        initView();
+    }
 
     protected void loadBackground(){
         new Thread(new Runnable() {
@@ -122,12 +125,14 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void initView() {
         //获得推送信息
-        if(null!=getIntent() && getIntent().hasExtra( Constants.HUOTU_PUSH_KEY)){
+        if (null != getIntent() && getIntent().hasExtra(Constants.HUOTU_PUSH_KEY)) {
             bundlePush = getIntent().getBundleExtra(Constants.HUOTU_PUSH_KEY);
         }
 
-        String version = getString( R.string.app_name) + BaseApplication.getAppVersion();
-        tvVersion.setText( version );
+        String version = getString(R.string.app_name) + BaseApplication.getAppVersion();
+        tvVersion.setText(version);
+
+        initGif();
 
         AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
         anima.setDuration(Constants.ANIMATION_COUNT);// 设置动画显示时间
@@ -139,16 +144,16 @@ public class SplashActivity extends BaseActivity {
                         //检测网络
                         isConnection = BaseApplication.checkNet(SplashActivity.this);
                         if (!isConnection) {
-                            application.isConn = false;
+                            //application.isConn = false;
                             //无网络日志
                             popWindow = new MsgPopWindow(SplashActivity.this, new SettingNetwork(), new CancelNetwork(), "网络连接错误", "请打开你的网络连接！", false);
-                            popWindow.showAtLocation( rlSplashItem , Gravity.CENTER, 0, 0);
+                            popWindow.showAtLocation(rlSplashItem, Gravity.CENTER, 0, 0);
                             popWindow.setOnDismissListener(new PoponDismissListener(SplashActivity.this));
                         } else {
-                            application.isConn = true;
+                            //application.isConn = true;
                             //定位
-                            locationI = new Intent(SplashActivity.this, LocationService.class);
-                            SplashActivity.this.startService(locationI);
+                            //locationI = new Intent(SplashActivity.this, LocationService.class);
+                            //SplashActivity.this.startService(locationI);
                             //加载商家信息
                             //判断
                             if (!application.checkMerchantInfo()) {
@@ -159,22 +164,21 @@ public class SplashActivity extends BaseActivity {
                                 if (null != merchant) {
                                     application.writeMerchantInfo(merchant);
                                 } else {
-                                    Log.e(TAG,"载入商户信息失败。");
+                                    Log.e(TAG, "载入商户信息失败。");
                                 }
                             }
-                            //设置
+
                             //加载颜色配置信息
-                            //if (!application.checkColorInfo()) {
-                                try {
-                                    InputStream is = SplashActivity.this.getAssets().open("color.properties");
-                                    ColorBean color = PropertiesUtil.getInstance().readProperties(is);
-                                    application.writeColorInfo(color);
-                                    //记录颜色值
-                                    //Log.i(TAG,"记录颜色值.");
-                                } catch (IOException e) {
-                                    Log.e(TAG,e.getMessage());
-                                }
-                            //}
+                            try {
+                                InputStream is = SplashActivity.this.getAssets().open("color.properties");
+                                ColorBean color = PropertiesUtil.getInstance().readProperties(is);
+                                application.writeColorInfo(color);
+                                //记录颜色值
+                                //Log.i(TAG,"记录颜色值.");
+                            } catch (IOException e) {
+                                Log.e(TAG, e.getMessage());
+                            }
+
 
                             getLeftMenu();
 
@@ -183,13 +187,13 @@ public class SplashActivity extends BaseActivity {
                             logoUrl += "?customerId=" + application.readMerchantId();
                             AuthParamUtils paramLogo = new AuthParamUtils(application, System.currentTimeMillis(), logoUrl);
                             final String logoUrls = paramLogo.obtainUrls();
-                            HttpUtil.getInstance().doVolleyLogo(  application, logoUrls);
+                            HttpUtil.getInstance().doVolleyLogo(application, logoUrls);
                             //获取商户支付信息
                             String targetUrl = Constants.getINTERFACE_PREFIX() + "PayConfig?customerid=";
                             targetUrl += application.readMerchantId();
                             AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), targetUrl);
                             final String url = paramUtils.obtainUrls();
-                            HttpUtil.getInstance().doVolley( application, url);
+                            HttpUtil.getInstance().doVolley(application, url);
                             //当用户登录状态时，则重新获得用户信息。
                             initUserInfo();
                         }
@@ -202,44 +206,44 @@ public class SplashActivity extends BaseActivity {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        if (application.isConn) {
+                        if (isConnection) {
                             //是否首次安装
                             if (application.isFirst()) {
                                 ActivityUtils.getInstance().skipActivity(SplashActivity.this, GuideActivity.class);
                                 //写入初始化数据
                                 application.writeInitInfo("inited");
                             } else {
-                                //判断是否登录
-//                                if (application.isLogin()) {
-                                    Intent intent = new Intent();
-                                    intent.setClass( SplashActivity.this , HomeActivity.class);
-                                    if(null!= bundlePush) {
-                                        intent.putExtra( Constants.HUOTU_PUSH_KEY , bundlePush);
-                                    }
-                                    ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent );
-//                                } else {
-//                                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-//                                    if(null!= bundlePush) {
-//                                        intent.putExtra( Constants.HUOTU_PUSH_KEY , bundlePush);
-//                                    }
-//                                    ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
-//                                }
 
+                                Intent intent = new Intent();
+                                intent.setClass(SplashActivity.this, HomeActivity.class);
+                                if (null != bundlePush) {
+                                    intent.putExtra(Constants.HUOTU_PUSH_KEY, bundlePush);
+                                }
+                                ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
                             }
                         }
                     }
                 });
     }
 
+    void initGif(){
+        Uri uri = Uri.parse("res://" + this.getPackageName() + "/" + R.drawable.login_bg);
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                .build();
+        ivGif.setController(controller);
+    }
+
     @Override
     protected void onDestroy ( ) {
-        super.onDestroy ( );
+        super.onDestroy();
         ButterKnife.unbind(this);
-        if (null != locationI)
-        {
-            stopService(locationI);
-        }
-        if( bitmap !=null){
+//        if (null != locationI)
+//        {
+//            stopService(locationI);
+//        }
+        if (bitmap != null) {
             bitmap.recycle();
         }
     }
