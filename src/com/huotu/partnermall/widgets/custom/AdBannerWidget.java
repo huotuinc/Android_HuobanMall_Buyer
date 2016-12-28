@@ -33,7 +33,6 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
     public AdBannerWidget(Context context) {
         this(context, null);
 
-
     }
 
     public AdBannerWidget(Context context, AttributeSet attrs) {

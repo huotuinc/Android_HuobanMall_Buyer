@@ -410,6 +410,8 @@ public class Constants {
 
 	public final static String HUOTU_PUSH_KEY ="huotu_push_key";
 
+	public final static String HUOTU_AD_KEY= "huotu_ad_key";
+
 	/**
 	 * 接收短信等待时间（毫米）
 	 */

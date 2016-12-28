@@ -16,4 +16,6 @@
         android:textColor="@color/appversion_color"
         android:textSize="@dimen/welcome_version_appVersion_textSize" />
 
+
+
 </RelativeLayout>

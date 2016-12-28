@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.ImageUtils;
@@ -30,6 +31,7 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.ColorBean;
+import com.huotu.partnermall.model.DataBase;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.model.UpdateLeftInfoModel;
@@ -56,35 +58,32 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static android.R.attr.type;
+
 public class SplashActivity extends BaseActivity {
     public static final String TAG = SplashActivity.class.getSimpleName();
     @Bind(R.id.welcomeTips)
     RelativeLayout rlSplashItem;
     @Bind(R.id.splash_version)
     TextView tvVersion;
-    private Intent locationI = null;
+
+    //private Intent locationI = null;
     private boolean isConnection = false;
     private MsgPopWindow popWindow;
     //推送信息
     Bundle bundlePush;
     Bitmap bitmap;
 
-    protected void onCreate ( Bundle savedInstanceState ) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        //Constants.SCREEN_DENSITY = metrics.density;
-        //Constants.SCREEN_HEIGHT = metrics.heightPixels;
-        //Constants.SCREEN_WIDTH = metrics.widthPixels;
         mHandler = new Handler(getMainLooper());
 
         loadBackground();
     }
 
-
-    protected void loadBackground(){
+    protected void loadBackground() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -98,7 +97,7 @@ public class SplashActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(rlSplashItem !=null && bitmap!=null) {
+                            if (rlSplashItem != null && bitmap != null) {
                                 rlSplashItem.setBackgroundDrawable(new BitmapDrawable(bitmap));
                             }
                             initView();
@@ -110,7 +109,7 @@ public class SplashActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            rlSplashItem.setBackgroundColor(SystemTools.obtainColor( BaseApplication.single.obtainMainColor() ));
+                            rlSplashItem.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()));
                             initView();
                         }
                     });
@@ -122,12 +121,12 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void initView() {
         //获得推送信息
-        if(null!=getIntent() && getIntent().hasExtra( Constants.HUOTU_PUSH_KEY)){
+        if (null != getIntent() && getIntent().hasExtra(Constants.HUOTU_PUSH_KEY)) {
             bundlePush = getIntent().getBundleExtra(Constants.HUOTU_PUSH_KEY);
         }
 
-        String version = getString( R.string.app_name) + BaseApplication.getAppVersion();
-        tvVersion.setText( version );
+        String version = getString(R.string.app_name) + BaseApplication.getAppVersion();
+        tvVersion.setText(version);
 
         AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
         anima.setDuration(Constants.ANIMATION_COUNT);// 设置动画显示时间
@@ -142,13 +141,13 @@ public class SplashActivity extends BaseActivity {
                             application.isConn = false;
                             //无网络日志
                             popWindow = new MsgPopWindow(SplashActivity.this, new SettingNetwork(), new CancelNetwork(), "网络连接错误", "请打开你的网络连接！", false);
-                            popWindow.showAtLocation( rlSplashItem , Gravity.CENTER, 0, 0);
+                            popWindow.showAtLocation(rlSplashItem, Gravity.CENTER, 0, 0);
                             popWindow.setOnDismissListener(new PoponDismissListener(SplashActivity.this));
                         } else {
                             application.isConn = true;
                             //定位
-                            locationI = new Intent(SplashActivity.this, LocationService.class);
-                            SplashActivity.this.startService(locationI);
+                            //locationI = new Intent(SplashActivity.this, LocationService.class);
+                            //SplashActivity.this.startService(locationI);
                             //加载商家信息
                             //判断
                             if (!application.checkMerchantInfo()) {
@@ -159,22 +158,20 @@ public class SplashActivity extends BaseActivity {
                                 if (null != merchant) {
                                     application.writeMerchantInfo(merchant);
                                 } else {
-                                    Log.e(TAG,"载入商户信息失败。");
+                                    Log.e(TAG, "载入商户信息失败。");
                                 }
                             }
                             //设置
                             //加载颜色配置信息
-                            //if (!application.checkColorInfo()) {
-                                try {
-                                    InputStream is = SplashActivity.this.getAssets().open("color.properties");
-                                    ColorBean color = PropertiesUtil.getInstance().readProperties(is);
-                                    application.writeColorInfo(color);
-                                    //记录颜色值
-                                    //Log.i(TAG,"记录颜色值.");
-                                } catch (IOException e) {
-                                    Log.e(TAG,e.getMessage());
-                                }
-                            //}
+                            try {
+                                InputStream is = SplashActivity.this.getAssets().open("color.properties");
+                                ColorBean color = PropertiesUtil.getInstance().readProperties(is);
+                                application.writeColorInfo(color);
+                                //记录颜色值
+                                //Log.i(TAG,"记录颜色值.");
+                            } catch (IOException e) {
+                                Log.e(TAG, e.getMessage());
+                            }
 
                             getLeftMenu();
 
@@ -183,13 +180,13 @@ public class SplashActivity extends BaseActivity {
                             logoUrl += "?customerId=" + application.readMerchantId();
                             AuthParamUtils paramLogo = new AuthParamUtils(application, System.currentTimeMillis(), logoUrl);
                             final String logoUrls = paramLogo.obtainUrls();
-                            HttpUtil.getInstance().doVolleyLogo(  application, logoUrls);
+                            HttpUtil.getInstance().doVolleyLogo(application, logoUrls);
                             //获取商户支付信息
                             String targetUrl = Constants.getINTERFACE_PREFIX() + "PayConfig?customerid=";
                             targetUrl += application.readMerchantId();
                             AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), targetUrl);
                             final String url = paramUtils.obtainUrls();
-                            HttpUtil.getInstance().doVolley( application, url);
+                            HttpUtil.getInstance().doVolley(application, url);
                             //当用户登录状态时，则重新获得用户信息。
                             initUserInfo();
                         }
@@ -209,22 +206,12 @@ public class SplashActivity extends BaseActivity {
                                 //写入初始化数据
                                 application.writeInitInfo("inited");
                             } else {
-                                //判断是否登录
-//                                if (application.isLogin()) {
-                                    Intent intent = new Intent();
-                                    intent.setClass( SplashActivity.this , HomeActivity.class);
-                                    if(null!= bundlePush) {
-                                        intent.putExtra( Constants.HUOTU_PUSH_KEY , bundlePush);
-                                    }
-                                    ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent );
-//                                } else {
-//                                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-//                                    if(null!= bundlePush) {
-//                                        intent.putExtra( Constants.HUOTU_PUSH_KEY , bundlePush);
-//                                    }
-//                                    ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
-//                                }
-
+                                Intent intent = new Intent();
+                                intent.setClass(SplashActivity.this, HomeActivity.class);
+                                if (null != bundlePush) {
+                                    intent.putExtra(Constants.HUOTU_PUSH_KEY, bundlePush);
+                                }
+                                ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
                             }
                         }
                     }
@@ -232,14 +219,13 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy ( ) {
-        super.onDestroy ( );
+    protected void onDestroy() {
+        super.onDestroy();
         ButterKnife.unbind(this);
-        if (null != locationI)
-        {
-            stopService(locationI);
-        }
-        if( bitmap !=null){
+//        if (null != locationI) {
+//            stopService(locationI);
+//        }
+        if (bitmap != null) {
             bitmap.recycle();
         }
     }
@@ -261,17 +247,18 @@ public class SplashActivity extends BaseActivity {
                 intent.setAction("android.intent.action.VIEW");
             }
             SplashActivity.this.startActivity(intent);
-            if( popWindow!=null){ popWindow.dismiss(); popWindow=null;}
+            if (popWindow != null) {
+                popWindow.dismiss();
+                popWindow = null;
+            }
             SplashActivity.this.finish();
         }
     }
 
     //取消设置网络
     private class CancelNetwork implements View.OnClickListener {
-
         @Override
         public void onClick(View v) {
-
             popWindow.dismiss();
             // 未设置网络，关闭应用
             closeSelf(SplashActivity.this);
@@ -281,11 +268,11 @@ public class SplashActivity extends BaseActivity {
     /**
      * 如果已经登录状态，则重新获得用户信息
      */
-    protected void initUserInfo(){
-        if( application.isLogin() ) {
+    protected void initUserInfo() {
+        if (application.isLogin()) {
             String url = Constants.getINTERFACE_PREFIX() + "Account/getAppUserInfo";
-            url += "?userid="+ application.readMemberId()+"&customerid="+ application.readMerchantId();
-            AuthParamUtils authParamUtils = new AuthParamUtils(application,  System.currentTimeMillis() , url );
+            url += "?userid=" + application.readMemberId() + "&customerid=" + application.readMerchantId();
+            AuthParamUtils authParamUtils = new AuthParamUtils(application, System.currentTimeMillis(), url);
             url = authParamUtils.obtainUrl();
 
             GsonRequest<AuthMallModel> request = new GsonRequest<>(
@@ -298,21 +285,18 @@ public class SplashActivity extends BaseActivity {
                         @Override
                         public void onResponse(AuthMallModel authMallModel) {
 
-                            if( authMallModel ==null || authMallModel.getCode() !=200 || authMallModel.getData()==null ){
-
+                            if (authMallModel == null || authMallModel.getCode() != 200 || authMallModel.getData() == null) {
                                 Log.e(TAG, "请求出错。");
-
                                 BaseApplication.single.logout();
-
                                 return;
                             }
 
                             AuthMallModel.AuthMall mall = authMallModel.getData();
-                            BaseApplication.single.writeMemberId( String.valueOf( mall.getUserid() ));
-                            BaseApplication.single.writeUserName( mall.getNickName() );
-                            BaseApplication.single.writeUserIcon( mall.getHeadImgUrl() );
-                            BaseApplication.single.writeUserUnionId( mall.getUnionId() );
-                            BaseApplication.single.writeOpenId( mall.getOpenId());
+                            BaseApplication.single.writeMemberId(String.valueOf(mall.getUserid()));
+                            BaseApplication.single.writeUserName(mall.getNickName());
+                            BaseApplication.single.writeUserIcon(mall.getHeadImgUrl());
+                            BaseApplication.single.writeUserUnionId(mall.getUnionId());
+                            BaseApplication.single.writeOpenId(mall.getOpenId());
                             BaseApplication.single.writeMemberLevel(mall.getLevelName());
                             BaseApplication.single.writeMemberLevelId(mall.getLevelId());
                             //记录微信关联类型（0-手机帐号还未关联微信,1-微信帐号还未绑定手机,2-已经有关联帐号）
@@ -328,18 +312,18 @@ public class SplashActivity extends BaseActivity {
 
             VolleyUtil.getRequestQueue().add(request);
 
-        }else{
+        } else {
             //未登录状态绑定设备
             UIUtils.bindPushDevice();
         }
     }
 
-    private void getLeftMenu(){
+    private void getLeftMenu() {
         String url = Constants.getINTERFACE_PREFIX() + "weixin/UpdateLeftInfo";
-        url +="?customerId="+ application.readMerchantId();
-        url +="&userId="+ (TextUtils.isEmpty( application.readMemberId())? "0": application.readMemberId());
-        url +="&clientUserType="+ application.readMemberType();
-        AuthParamUtils authParamUtils=new AuthParamUtils(application , System.currentTimeMillis() , url );
+        url += "?customerId=" + application.readMerchantId();
+        url += "&userId=" + (TextUtils.isEmpty(application.readMemberId()) ? "0" : application.readMemberId());
+        url += "&clientUserType=" + application.readMemberType();
+        AuthParamUtils authParamUtils = new AuthParamUtils(application, System.currentTimeMillis(), url);
         url = authParamUtils.obtainUrlName();
         GsonRequest<UpdateLeftInfoModel> request = new GsonRequest<>(
                 Request.Method.GET,
@@ -352,55 +336,93 @@ public class SplashActivity extends BaseActivity {
         VolleyUtil.getRequestQueue().add(request);
     }
 
-    static class MyRefreshMenuListener implements Response.Listener<UpdateLeftInfoModel>{
+    static class MyRefreshMenuListener implements Response.Listener<UpdateLeftInfoModel> {
         WeakReference<SplashActivity> ref;
-        public MyRefreshMenuListener(SplashActivity aty){
-            ref= new WeakReference<>(aty);
+
+        public MyRefreshMenuListener(SplashActivity aty) {
+            ref = new WeakReference<>(aty);
         }
 
         @Override
         public void onResponse(UpdateLeftInfoModel updateLeftInfoModel) {
-            if( ref.get() ==null) return;
-            if( updateLeftInfoModel==null ) return;
+            if (ref.get() == null) return;
+            if (updateLeftInfoModel == null) return;
 
-            if( updateLeftInfoModel.getCode() != 200 ){
-                ToastUtils.showShortToast( ref.get().application , updateLeftInfoModel.getMsg());
+            if (updateLeftInfoModel.getCode() != 200) {
+                ToastUtils.showShortToast(ref.get().application, updateLeftInfoModel.getMsg());
                 return;
             }
 
-            if( updateLeftInfoModel.getData()==null ) return;
-            if( updateLeftInfoModel.getData().getMenusCode()==0) return;
+            if (updateLeftInfoModel.getData() == null) return;
+            if (updateLeftInfoModel.getData().getMenusCode() == 0) return;
 
             BaseApplication.single.writeMemberLevel(updateLeftInfoModel.getData().getLevelName());
 
             //设置侧滑栏菜单
-            List<MenuBean > menus = new ArrayList<>(  );
+            List<MenuBean> menus = new ArrayList<>();
             MenuBean menu;
-            List<UpdateLeftInfoModel.MenuModel > homeMenus = updateLeftInfoModel.getData().getHome_menus ();
-            for(UpdateLeftInfoModel.MenuModel home_menu:homeMenus){
-                menu = new MenuBean ();
-                menu.setMenuGroup ( String.valueOf ( home_menu.getMenu_group () ) );
-                menu.setMenuIcon ( home_menu.getMenu_icon ( ) );
-                menu.setMenuName ( home_menu.getMenu_name ( ) );
-                menu.setMenuUrl ( home_menu.getMenu_url ( ) );
-                menus.add ( menu );
+            List<UpdateLeftInfoModel.MenuModel> homeMenus = updateLeftInfoModel.getData().getHome_menus();
+            for (UpdateLeftInfoModel.MenuModel home_menu : homeMenus) {
+                menu = new MenuBean();
+                menu.setMenuGroup(String.valueOf(home_menu.getMenu_group()));
+                menu.setMenuIcon(home_menu.getMenu_icon());
+                menu.setMenuName(home_menu.getMenu_name());
+                menu.setMenuUrl(home_menu.getMenu_url());
+                menus.add(menu);
             }
-            if( !menus.isEmpty ()) {
+            if (!menus.isEmpty()) {
                 BaseApplication.single.writeMenus(menus);
             }
         }
     }
 
-    static class MyRefreshMenuErrorListener implements Response.ErrorListener{
+    static class MyRefreshMenuErrorListener implements Response.ErrorListener {
         WeakReference<SplashActivity> ref;
-        public MyRefreshMenuErrorListener(SplashActivity aty){
+
+        public MyRefreshMenuErrorListener(SplashActivity aty) {
             ref = new WeakReference<>(aty);
         }
 
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            if( ref.get()==null) return;
+            if (ref.get() == null) return;
         }
     }
+
+    /***
+     * 获得广告数据
+     */
+    void getAdData(){
+        String url = Constants.getINTERFACE_PREFIX() + "advert/get?customerId="+ application.readMerchantId()  +"&type=2&count=5";
+        AuthParamUtils authParamUtils = new AuthParamUtils(application, System.currentTimeMillis(), url);
+        url = authParamUtils.obtainUrl();
+        GsonRequest<DataBase> request = new GsonRequest<>(
+                Request.Method.GET,
+                url,
+                DataBase.class,
+                null,
+                null,
+                new Response.Listener<DataBase>() {
+                    @Override
+                    public void onResponse(DataBase dataBase) {
+
+                        if (dataBase == null || dataBase.getCode() != 200 ) {
+                            Log.e(TAG, "请求出错。");
+                            BaseApplication.single.logout();
+                            return;
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }
+        );
+
+        VolleyUtil.getRequestQueue().add(request);
+
+    }
+
 }
 
