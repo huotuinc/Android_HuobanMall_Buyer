@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     android:id="@+id/welcomeTips">
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/ivGif"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <TextView
         android:id="@+id/splash_version"
         android:layout_width="wrap_content"
@@ -12,10 +17,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/welcome_version_margin_bottom"
         android:gravity="center_horizontal"
-        android:text="@string/splash_version_info"
+        android:text=""
         android:textColor="@color/appversion_color"
         android:textSize="@dimen/welcome_version_appVersion_textSize" />
-
-
 
 </RelativeLayout>

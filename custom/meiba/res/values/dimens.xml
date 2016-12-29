@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--微信用户头像高度-->
+    <dimen name="account_icon_width">65dp</dimen>
+    <!--微信用户头像宽度度-->
+    <dimen name="account_icon_height">65dp</dimen>
+
 </resources>

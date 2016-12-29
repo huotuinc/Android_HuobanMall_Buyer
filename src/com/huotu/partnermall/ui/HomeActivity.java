@@ -296,8 +296,8 @@ public class HomeActivity extends BaseActivity
         if( dataArray ==null || dataArray.isEmpty() ) return;
         String[] data= dataArray.split("&");
         accountTypeList.removeAllViews();
-        int leftMargin = DensityUtils.dip2px(this,2);
-        int leftPadding = DensityUtils.dip2px(this,2);
+        int leftMargin = DensityUtils.dip2px(this,3);
+        int leftPadding = DensityUtils.dip2px(this,3);
         int topPadding = DensityUtils.dip2px(this,2);
         int i=0;
         for(String item : data ) {
@@ -360,7 +360,13 @@ public class HomeActivity extends BaseActivity
         SystemTools.loadBackground(titleRightImage, rightDraw);
         titleRightImage.setVisibility(View.GONE);
         //设置侧滑界面
-        loginLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        String leftMenuShowBgPicture = getString(R.string.left_menu_show_bg_picture);
+        boolean leftmenushowpicture = Boolean.parseBoolean(leftMenuShowBgPicture);
+        if(leftmenushowpicture){
+            loginLayout.setBackgroundResource(R.drawable.menu_bg);
+        }else {
+            loginLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        }
         //设置设置图标
         //SystemTools.loadBackground(loginSetting, ContextCompat.getDrawable(this ,R.drawable.switch_white));
         //getAuthLayout.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));

@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.partnermall.adapter.ViewPagerAdapter;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.ImageUtils;
@@ -34,7 +38,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static android.R.attr.id;
+import static android.R.attr.resizeable;
+import static com.huotu.partnermall.inner.R.id.image;
+import static com.huotu.partnermall.inner.R.id.ivGif;
 import static com.huotu.partnermall.inner.R.id.skipText;
+import static u.aly.au.L;
 
 /**
  * 引导界面
@@ -45,11 +53,12 @@ public class GuideActivity extends BaseActivity
     @Bind(R.id.vp_activity)
     ViewPager mVPActivity;
     private ViewPagerAdapter vpAdapter;
-    private List< View > views;
+    private List<View> views;
     private Resources resources;
     //引导图片资源
     private String[] pics;
-    private List<Bitmap> bitmapList;
+    //private List<Bitmap> bitmapList;
+    private List<Integer> imageList;
     int lastX=0;
 
     @Override
@@ -89,20 +98,22 @@ public class GuideActivity extends BaseActivity
                 int screenHeight = metrics.heightPixels;
 
                 pics = resources.getStringArray ( R.array.guide_icon );
-                bitmapList = new ArrayList<>();
+                //bitmapList = new ArrayList<>();
+                imageList = new ArrayList<>();
                 //初始化引导图片列表
                 for(int i=0; i<pics.length; i++) {
                     int iconId = resources.getIdentifier( pics[i] , "drawable" , packageName );
                     if( iconId >0) {
-                        Bitmap bmp = ImageUtils.decodeSampledBitmapFromResource( resources , iconId , screenWidth , screenHeight );
-                        bitmapList.add(bmp);
+                        //Bitmap bmp = ImageUtils.decodeSampledBitmapFromResource( resources , iconId , screenWidth , screenHeight );
+                        //bitmapList.add(bmp);
+                        imageList.add(iconId);
                     }
                 }
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showImages(bitmapList);
+                        showImages();
                     }
                 });
 
@@ -111,9 +122,9 @@ public class GuideActivity extends BaseActivity
     }
 
 
-    protected void showImages(List<Bitmap> bitmaps){
+    protected void showImages(){
         try {
-            if(bitmaps.size()==0) {
+            if(imageList.size()==0) {
                 go();
                 return;
             }
@@ -122,13 +133,16 @@ public class GuideActivity extends BaseActivity
             pics = resources.getStringArray ( R.array.guide_icon );
 
             //初始化引导图片列表
-            for(int i=0; i<bitmaps.size() ; i++) {
+            for(int i=0; i<imageList.size() ; i++) {
                 RelativeLayout iv = (RelativeLayout) LayoutInflater.from(GuideActivity.this).inflate(R.layout.guid_item, null);
                 TextView skipText = (TextView) iv.findViewById(R.id.skipText);
+                SimpleDraweeView ivGif= (SimpleDraweeView)iv.findViewById(R.id.guideGif);
                 iv.setLayoutParams(mParams);
-                iv.setOnClickListener(this);
+                //iv.setOnClickListener(this);
+                ivGif.setOnClickListener(this);
 
-                SystemTools.loadBackground(iv, new BitmapDrawable(bitmaps.get(i)));
+                //SystemTools.loadBackground(iv, new BitmapDrawable(bitmaps.get(i)));
+                setGif(ivGif , imageList.get(i));
 
                 skipText.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -146,31 +160,40 @@ public class GuideActivity extends BaseActivity
         }
     }
 
-    private void initImage ( ) {
-        try {
-            LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            pics = resources.getStringArray ( R.array.guide_icon );
-
-            //初始化引导图片列表
-            for(int i=0; i<pics.length; i++) {
-                RelativeLayout iv = ( RelativeLayout ) LayoutInflater.from(GuideActivity.this).inflate ( R.layout.guid_item, null );
-                TextView skipText = (TextView) iv.findViewById(R.id.skipText);
-                iv.setLayoutParams ( mParams );
-                iv.setOnClickListener(this);
-                int iconId = resources.getIdentifier( pics[i] , "drawable" , this.getPackageName() );
-
-                Drawable menuIconDraw = null;
-                if( iconId >0) {
-                    menuIconDraw = resources.getDrawable(iconId);
-                    SystemTools.loadBackground(iv, menuIconDraw);
-                }
-                skipText.setOnClickListener(this);
-                views.add(iv);
-            }
-        } catch (Exception e) {
-            Log.e( TAG , e.getMessage());
-        }
+    void setGif( SimpleDraweeView ivGif, int resId ){
+        Uri uri = Uri.parse("res://" + this.getPackageName() + "/" + resId );
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                .build();
+        ivGif.setController(controller);
     }
+
+//    private void initImage ( ) {
+//        try {
+//            LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+//            pics = resources.getStringArray ( R.array.guide_icon );
+//
+//            //初始化引导图片列表
+//            for(int i=0; i<pics.length; i++) {
+//                RelativeLayout iv = ( RelativeLayout ) LayoutInflater.from(GuideActivity.this).inflate ( R.layout.guid_item, null );
+//                TextView skipText = (TextView) iv.findViewById(R.id.skipText);
+//                iv.setLayoutParams ( mParams );
+//                iv.setOnClickListener(this);
+//                int iconId = resources.getIdentifier( pics[i] , "drawable" , this.getPackageName() );
+//
+//                Drawable menuIconDraw = null;
+//                if( iconId >0) {
+//                    menuIconDraw = resources.getDrawable(iconId);
+//                    SystemTools.loadBackground(iv, menuIconDraw);
+//                }
+//                skipText.setOnClickListener(this);
+//                views.add(iv);
+//            }
+//        } catch (Exception e) {
+//            Log.e( TAG , e.getMessage());
+//        }
+//    }
 
     protected void go() {
         ActivityUtils.getInstance().skipActivity(GuideActivity.this, HomeActivity.class);
@@ -179,7 +202,7 @@ public class GuideActivity extends BaseActivity
 
     @Override
     public void onClick ( View v ) {
-       if(v.getId()== R.id.skipText || v.getId() == R.id.rl1 ){
+       if(v.getId()== R.id.skipText || v.getId() == R.id.rl1  || v.getId()==R.id.guideGif){
            if( mVPActivity.getCurrentItem() ==  (vpAdapter.getCount()-1) ){
                go();
            }
@@ -209,11 +232,11 @@ public class GuideActivity extends BaseActivity
         super.onDestroy();
         ButterKnife.unbind(this);
 
-        if(bitmapList!=null){
-            for(Bitmap item : bitmapList){
-                item.recycle();
-            }
-        }
+//        if(bitmapList!=null){
+//            for(Bitmap item : bitmapList){
+//                item.recycle();
+//            }
+//        }
     }
 
     @Override

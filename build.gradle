@@ -134,19 +134,19 @@ android {
     //打包渠道
     productFlavors {
 
-        morefan_test {
-            applicationId 'cy.com.morefan'
-            versionCode BUYER_VERSIONCODE.toInteger()
-            versionName "${BUYER_VERSIONNAME}"
-            buildConfigField 'String', 'INTERFACE_URL', '\"http://mallapi.51flashmall.com/\"'
-            buildConfigField 'String', 'APP_ID', '\"huotu686ad1fe2bd8a02bb\"'
-            buildConfigField 'String', 'APP_SECRET', '\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
-            buildConfigField 'String', 'Push_Url', '\"http://test.api.open.huobanplus.com:8081/\"'
-            buildConfigField 'String', 'SMART_KEY', '\"huoban\"'
-            buildConfigField 'String', 'SMART_SECURITY', '\"319ea9ad29ef4a50d6801c2f406dd208\"'
-            buildConfigField 'String', 'SMART_Url', '"http://test.api.open.huobanplus.com:8081/"'
-            signingConfig signingConfigs.fanmore
-        }
+//        morefan_test {
+//            applicationId 'cy.com.morefan'
+//            versionCode BUYER_VERSIONCODE.toInteger()
+//            versionName "${BUYER_VERSIONNAME}"
+//            buildConfigField 'String', 'INTERFACE_URL', '\"http://mallapi.51flashmall.com/\"'
+//            buildConfigField 'String', 'APP_ID', '\"huotu686ad1fe2bd8a02bb\"'
+//            buildConfigField 'String', 'APP_SECRET', '\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
+//            buildConfigField 'String', 'Push_Url', '\"http://test.api.open.huobanplus.com:8081/\"'
+//            buildConfigField 'String', 'SMART_KEY', '\"huoban\"'
+//            buildConfigField 'String', 'SMART_SECURITY', '\"319ea9ad29ef4a50d6801c2f406dd208\"'
+//            buildConfigField 'String', 'SMART_Url', '"http://test.api.open.huobanplus.com:8081/"'
+//            signingConfig signingConfigs.fanmore
+//        }
 
 //        yingyan{//行装
 //            applicationId 'com.huotu.mall.yingyan'
@@ -296,8 +296,8 @@ dependencies {
     compile 'com.huotu.android.library:libPush:1.2.4'
     compile 'com.huotu.android.library:libedittext:1.6'
     compile 'in.srain.cube:ultra-ptr:1.0.11'
-    compile 'com.facebook.fresco:fresco:0.13.0'
-    compile 'com.facebook.fresco:animated-gif:0.13.0'
+    compile 'com.facebook.fresco:fresco:1.0.0'
+    compile 'com.facebook.fresco:animated-gif:1.0.0'
     compile 'com.huotu.android.library:libPay:1.0.0'
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.bigkoo:convenientbanner:2.0.5'

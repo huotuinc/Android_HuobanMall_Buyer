@@ -24,6 +24,8 @@ import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.SignUtil;
 import com.huotu.partnermall.utils.SystemTools;
+import com.huotu.partnermall.utils.UIUtils;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
@@ -124,6 +126,18 @@ public class FooterOneWidget extends BaseLinearLayout
             ivList.add(iv);
 
             llContainer.addView(ll);
+
+
+            String url = item.getLinkUrl();
+            String customerId = BaseApplication.single.readMerchantId();
+            url = url.replace( URL_PARAMETER_CUSTOMERID , customerId );
+
+            if( !url.startsWith("http://")){
+                url = BaseApplication.single.obtainMerchantUrl() + url;
+            }
+            if(UIUtils.isIndexPage( url )){
+                changeButtonImage(ll);
+            }
         }
     }
 

@@ -4,5 +4,8 @@
 
     <!--引导界面图片-->
     <string-array name="guide_icon">
+        <item>guide_1</item>
+        <item>guide_2</item>
+        <item>guide_3</item>
     </string-array>
 </resources>

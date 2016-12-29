@@ -3,6 +3,8 @@
     <string name="app_name">伙伴商城买家版</string>
     <string name="splash_version_info">伙伴商城买家版\n\n\nVersion 1.0.0</string>
     <string name="index_search_edit_hint">搜索商品</string>
+    <!-- 是否显示版本号-->
+    <string name="appVersion_show">true</string>
 
     <!-- 菜单 -->
     <string name="menu_setting">设置</string>
@@ -11,6 +13,8 @@
     <string name="menu_help">帮助</string>
     <string name="menu_about">关于</string>
     <string name="menu_exit">退出</string>
+    <!-- 左侧菜单背景是否使用背景图片 -->
+    <string name="left_menu_show_bg_picture">false</string>
     <!-- 菜单 -->
 
 

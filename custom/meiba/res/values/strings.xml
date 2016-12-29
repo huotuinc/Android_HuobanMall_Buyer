@@ -9,4 +9,9 @@
         <item>newfeature_03</item>
         <item>newfeature_04</item>
     </string-array>
+
+    <string name="appVersion_show">false</string>
+
+    <!-- 左侧菜单背景是否使用背景图片 -->
+    <string name="left_menu_show_bg_picture">true</string>
 </resources>

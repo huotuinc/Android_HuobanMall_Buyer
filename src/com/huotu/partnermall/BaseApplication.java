@@ -51,7 +51,7 @@ public class BaseApplication extends Application {
     //经度
     public double Longitude;
     //是否有网络连接
-    public boolean isConn = false;
+    //public boolean isConn = false;
     //城市
     public String city;
     public LocationClient mLocationClient;
@@ -180,13 +180,13 @@ public class BaseApplication extends Application {
         //商户ID
         String merchantId = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
         //商户支付宝key信息
-        String merchantAlipayKey = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY);
-        //商户微信支付KEY信息
-        String merchantWeixinKey = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_WEIXIN_KEY);
-        //商户菜单
-        String merchantMenus = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS);
-        //商户类别菜单
-        String merChantCatagory = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_CATAGORY);
+//        String merchantAlipayKey = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY);
+//        //商户微信支付KEY信息
+//        String merchantWeixinKey = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_WEIXIN_KEY);
+//        //商户菜单
+//        String merchantMenus = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS);
+//        //商户类别菜单
+//        String merChantCatagory = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_CATAGORY);
 
         if ((null == merchantId)  ) {
             //app端未设置商户信息

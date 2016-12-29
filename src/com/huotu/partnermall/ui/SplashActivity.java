@@ -18,10 +18,11 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
@@ -66,6 +67,8 @@ public class SplashActivity extends BaseActivity {
     RelativeLayout rlSplashItem;
     @Bind(R.id.splash_version)
     TextView tvVersion;
+    @Bind(R.id.ivGif)
+    SimpleDraweeView ivGif;
 
     //private Intent locationI = null;
     private boolean isConnection = false;
@@ -78,12 +81,14 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+
         mHandler = new Handler(getMainLooper());
 
-        loadBackground();
+        initView();
     }
 
-    protected void loadBackground() {
+    protected void loadBackground(){
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -125,8 +130,13 @@ public class SplashActivity extends BaseActivity {
             bundlePush = getIntent().getBundleExtra(Constants.HUOTU_PUSH_KEY);
         }
 
-        String version = getString(R.string.app_name) + BaseApplication.getAppVersion();
-        tvVersion.setText(version);
+        String appVersionShow =  getString(R.string.appVersion_show);
+        if( Boolean.parseBoolean(appVersionShow)) {
+            String version = getString(R.string.app_name) + BaseApplication.getAppVersion();
+            tvVersion.setText(version);
+        }
+
+        initGif();
 
         AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
         anima.setDuration(Constants.ANIMATION_COUNT);// 设置动画显示时间
@@ -138,13 +148,13 @@ public class SplashActivity extends BaseActivity {
                         //检测网络
                         isConnection = BaseApplication.checkNet(SplashActivity.this);
                         if (!isConnection) {
-                            application.isConn = false;
+                            //application.isConn = false;
                             //无网络日志
                             popWindow = new MsgPopWindow(SplashActivity.this, new SettingNetwork(), new CancelNetwork(), "网络连接错误", "请打开你的网络连接！", false);
                             popWindow.showAtLocation(rlSplashItem, Gravity.CENTER, 0, 0);
                             popWindow.setOnDismissListener(new PoponDismissListener(SplashActivity.this));
                         } else {
-                            application.isConn = true;
+                            //application.isConn = true;
                             //定位
                             //locationI = new Intent(SplashActivity.this, LocationService.class);
                             //SplashActivity.this.startService(locationI);
@@ -161,7 +171,7 @@ public class SplashActivity extends BaseActivity {
                                     Log.e(TAG, "载入商户信息失败。");
                                 }
                             }
-                            //设置
+
                             //加载颜色配置信息
                             try {
                                 InputStream is = SplashActivity.this.getAssets().open("color.properties");
@@ -199,13 +209,14 @@ public class SplashActivity extends BaseActivity {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        if (application.isConn) {
+                        if (isConnection) {
                             //是否首次安装
                             if (application.isFirst()) {
                                 ActivityUtils.getInstance().skipActivity(SplashActivity.this, GuideActivity.class);
                                 //写入初始化数据
                                 application.writeInitInfo("inited");
                             } else {
+
                                 Intent intent = new Intent();
                                 intent.setClass(SplashActivity.this, HomeActivity.class);
                                 if (null != bundlePush) {
@@ -218,11 +229,20 @@ public class SplashActivity extends BaseActivity {
                 });
     }
 
-    @Override
-    protected void onDestroy() {
+    void initGif(){
+        Uri uri = Uri.parse("res://" + this.getPackageName() + "/" + R.drawable.login_bg);
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                .build();
+        ivGif.setController(controller);
+    }
+
+    protected void onDestroy ( ) {
         super.onDestroy();
         ButterKnife.unbind(this);
-//        if (null != locationI) {
+//        if (null != locationI)
+//        {
 //            stopService(locationI);
 //        }
         if (bitmap != null) {

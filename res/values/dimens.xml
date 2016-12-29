@@ -8,7 +8,6 @@
     <dimen name="large_text_size">22sp</dimen>
     <!-- 四类字体大小 -->
 
-
     <!-- 首页Gallery高度 -->
     <dimen name="index_gallery_height">120dp</dimen>
     <!--侧滑界面间距-->
@@ -20,6 +19,9 @@
     <!--首页扫描图标-->
     <dimen name="title_back_width">25dp</dimen>
     <dimen name="title_back_height">25dp</dimen>
+    <!-- -->
+    <dimen name="toolbar_title_text_size">18sp</dimen>
+
     <!-- title字体大小 -->
     <dimen name="main_title_text_size">14sp</dimen>
     <!--底部菜单栏高度-->
