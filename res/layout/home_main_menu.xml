@@ -53,7 +53,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_alignTop="@+id/accountIcon"
                 android:textStyle="bold"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="5dp"
                 android:textColor="@color/theme_color"
                 android:textSize="@dimen/medium_text_size"/>
             <LinearLayout
