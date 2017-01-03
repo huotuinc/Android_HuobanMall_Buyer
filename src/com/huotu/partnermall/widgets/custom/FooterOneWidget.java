@@ -88,7 +88,7 @@ public class FooterOneWidget extends BaseLinearLayout
         layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         llContainer.setLayoutParams(layoutParams);
         llContainer.setBackgroundColor(SystemTools.parseColor(footerOneConfig.getBackgroundColor()));
-        int topMargion = DensityUtils.dip2px(getContext(), footerOneConfig.getTopMargion());
+        int topMargion = DensityUtils.dip2px(getContext(),  footerOneConfig.getTopMargion()==0? 1: footerOneConfig.getTopMargion());
         int bottomMargion = DensityUtils.dip2px(getContext(),footerOneConfig.getBottomMargion());
         llContainer.setPadding(0, topMargion, 0, bottomMargion);
         this.addView(llContainer);
