@@ -408,6 +408,14 @@ public class Constants {
 		return BuildConfig.SMART_SECURITY;
 	}
 
+	/***
+	 * 获得 DES 算法 加解密的秘钥
+	 * @return
+     */
+	public static String getDES_KEY(){
+		return "69a23e06215920c5fa8108cf218f3d6a";
+	}
+
 	public final static String HUOTU_PUSH_KEY ="huotu_push_key";
 
 	public final static String HUOTU_AD_KEY= "huotu_ad_key";

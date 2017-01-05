@@ -87,41 +87,41 @@ public class SplashActivity extends BaseActivity {
         initView();
     }
 
-    protected void loadBackground(){
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DisplayMetrics metrics = new DisplayMetrics();
-                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                    int screenWidth = metrics.widthPixels;
-                    int screenHeight = metrics.heightPixels;
-                    bitmap = ImageUtils.decodeSampledBitmapFromResource(getResources(), R.drawable.login_bg, screenWidth, screenHeight);
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (rlSplashItem != null && bitmap != null) {
-                                rlSplashItem.setBackgroundDrawable(new BitmapDrawable(bitmap));
-                            }
-                            initView();
-                        }
-                    });
-                } catch (Exception ex) {
-
-                    Log.e(TAG, ex.getMessage());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            rlSplashItem.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()));
-                            initView();
-                        }
-                    });
-                }
-            }
-        }).start();
-    }
+//    protected void loadBackground(){
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    DisplayMetrics metrics = new DisplayMetrics();
+//                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//                    int screenWidth = metrics.widthPixels;
+//                    int screenHeight = metrics.heightPixels;
+//                    bitmap = ImageUtils.decodeSampledBitmapFromResource(getResources(), R.drawable.login_bg, screenWidth, screenHeight);
+//
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (rlSplashItem != null && bitmap != null) {
+//                                rlSplashItem.setBackgroundDrawable(new BitmapDrawable(bitmap));
+//                            }
+//                            initView();
+//                        }
+//                    });
+//                } catch (Exception ex) {
+//
+//                    Log.e(TAG, ex.getMessage());
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            rlSplashItem.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()));
+//                            initView();
+//                        }
+//                    });
+//                }
+//            }
+//        }).start();
+//    }
 
     @Override
     protected void initView() {
@@ -192,7 +192,8 @@ public class SplashActivity extends BaseActivity {
                             final String logoUrls = paramLogo.obtainUrls();
                             HttpUtil.getInstance().doVolleyLogo(application, logoUrls);
                             //获取商户支付信息
-                            String targetUrl = Constants.getINTERFACE_PREFIX() + "PayConfig?customerid=";
+                            //String targetUrl = Constants.getINTERFACE_PREFIX() + "PayConfig?customerid=";
+                            String targetUrl = Constants.getINTERFACE_PREFIX() + "payconfig/IndexMall?customerid=";
                             targetUrl += application.readMerchantId();
                             AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), targetUrl);
                             final String url = paramUtils.obtainUrls();

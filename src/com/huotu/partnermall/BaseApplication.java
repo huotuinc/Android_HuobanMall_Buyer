@@ -209,6 +209,23 @@ public class BaseApplication extends Application {
         }
     }
 
+    /***
+     * 检测支付宝支付信息是否齐全
+     * @return
+     */
+    public boolean scanAliPay() {
+        String parentId = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
+        //String appid = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID);
+        String appKey = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY);
+        String notify = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_NOTIFY);
+
+        if (!TextUtils.isEmpty(parentId) && !TextUtils.isEmpty(appKey) && !TextUtils.isEmpty(notify)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * 写入商户信息到文件
      *
@@ -516,11 +533,14 @@ public class BaseApplication extends Application {
     }
 
     public void writeAlipay(String parentId, String appKey, String notify, boolean isWebPay) {
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY, appKey);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, parentId);
+        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY, appKey);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_NOTIFY, notify);
-        PreferenceHelper.writeBoolean(getApplicationContext(), Constants.MERCHANT_INFO,
-                Constants.IS_WEB_ALIPAY, isWebPay);
+        PreferenceHelper.writeBoolean(getApplicationContext(), Constants.MERCHANT_INFO, Constants.IS_WEB_ALIPAY, isWebPay);
+    }
+
+    public boolean readIsWebAliPay(){
+        return PreferenceHelper.readBoolean(getApplicationContext() , Constants.MERCHANT_INFO , Constants.IS_WEB_ALIPAY);
     }
 
     public String readAlipayAppKey() {

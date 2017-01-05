@@ -9,10 +9,17 @@ class PayModel extends BaseBean {
     private String customId;
     private String tradeNo;
     private String paymentType;
+    /***
+     * 微信支付金额
+     */
     private int amount;
     private String detail;
     private String notifyurl;
     private String attach;
+    /***
+     * 支付宝支付金额
+     */
+    private String aliAmount;
 
     public
     String getAttach ( ) {
@@ -82,5 +89,13 @@ class PayModel extends BaseBean {
     public
     void setCustomId ( String customId ) {
         this.customId = customId;
+    }
+
+    public String getAliAmount() {
+        return aliAmount;
+    }
+
+    public void setAliAmount(String aliAmount) {
+        this.aliAmount = aliAmount;
     }
 }

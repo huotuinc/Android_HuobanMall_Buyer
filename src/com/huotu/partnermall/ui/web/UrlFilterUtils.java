@@ -257,6 +257,7 @@ public class UrlFilterUtils {
                         String name = data.get("name");
 
                         payModel.setAmount(HttpUtil.formatToDecimal(data.get("finalamount")));
+                        payModel.setAliAmount( data.get("finalamount") );
                         payModel.setDetail( name );
                         PayPopWindow payPopWindow = new PayPopWindow(aty, mHandler, payModel);
                         payPopWindow.showAtLocation(aty.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
