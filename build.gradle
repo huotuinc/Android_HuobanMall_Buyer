@@ -124,6 +124,13 @@ android {
             assets.srcDirs = ['custom/xiaoyueer/assets']
         }
 
+        yunjianworld {//云健天下
+            manifest.srcFile 'custom/yunjianworld/AndroidManifest.xml'
+            java.srcDirs = ['custom/yunjianworld/src']
+            res.srcDirs = ['custom/yunjianworld/res']
+            assets.srcDirs = ['custom/yunjianworld/assets']
+        }
+
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
 
@@ -280,6 +287,19 @@ android {
             signingConfig signingConfigs.xiaoyueer
         }
 
+        yunjianworld{//云健天下
+                    applicationId 'com.huotu.mall.yunjianworld'
+                    versionCode BUYER_VERSIONCODE.toInteger()
+                    versionName "${BUYER_VERSIONNAME}"
+                    buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.huobanmall.com/"'
+                    buildConfigField 'String', 'APP_ID', '"73d29a4c9a6d389a0b7288ec27b4c4c4"'
+                    buildConfigField 'String', 'APP_SECRET', '"9389e8a5c32eefa3134340640fb4ceaa"'
+                    buildConfigField 'String', 'Push_Url', '"http://api.open.huobanplus.com/"'
+                    buildConfigField 'String', 'SMART_KEY', '"app"'
+                    buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
+                    buildConfigField 'String', 'SMART_Url', '"http://api.open.huobanplus.com/"'
+                    signingConfig signingConfigs.yunjianworld
+        }
     }
 
     buildTypes {
