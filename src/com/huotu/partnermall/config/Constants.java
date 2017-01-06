@@ -3,15 +3,6 @@ package com.huotu.partnermall.config;
 import com.huotu.partnermall.inner.BuildConfig;
 
 public class Constants {
-	// 屏幕高度
-	//public static int SCREEN_HEIGHT = 800;
-
-	// 屏幕宽度
-	//public static int SCREEN_WIDTH = 480;
-
-	// 屏幕密度
-	//public static float SCREEN_DENSITY = 1.5f;
-
 	// 分享成功
 	public static final int SHARE_SUCCESS = 0X1000;
 
@@ -230,13 +221,17 @@ public class Constants {
 	public final static String URL_SubmitOrder ="/SubmitOrder.aspx";
 
 	/***
-	 *  环信 客户页面
+	 *  环信 客户页面easemob/im.html
 	 */
 	public final static String URL_KEFU_2="easemob/im.html";
 	/**
 	 * 环信 客户页面
 	 */
 	public final static String URL_KEFU_1 ="/cs/webChannelHtml";
+	/**
+	 *  环信 客户页面
+	 */
+	public final static String URL_KEFU_3="webim/im.html";
 
 	//鉴权失效
 	public static final int LOGIN_AUTH_ERROR = 2131;

@@ -160,7 +160,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 //return false;
 
                 String url = viewPage.getUrl();
-                if(url!=null && !url.isEmpty() && url.toLowerCase().contains("easemob/im.html")){
+                if(url!=null && !url.isEmpty() && (url.toLowerCase().contains(Constants.URL_KEFU_2) || url.toLowerCase().contains(Constants.URL_KEFU_3) )){
                     //解决客服页面滚动事件与下拉刷新冲突问题
                     return false;
                 }
