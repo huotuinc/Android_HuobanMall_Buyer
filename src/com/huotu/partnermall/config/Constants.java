@@ -61,6 +61,8 @@ public class Constants {
 	public static final String MERCHANT_WEIXIN_ID = "merchant_weixin_id";
 	//商户微信支付KEY信息
 	public static final String WEIXIN_KEY         = "weixin_key";
+	//支付宝分配给开发者的应用ID
+	public static final String ALIPAY_APP_ID = "alipay_app_id";
 	//支付宝商家编号
 	public static final String ALIPAY_MERCHANT_ID = "alipay_merchant_id";
 	//商家支付宝编号

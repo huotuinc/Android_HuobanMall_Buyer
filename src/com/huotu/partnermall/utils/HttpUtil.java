@@ -228,13 +228,13 @@ public class HttpUtil{
                             //if (400 == merchantPay.getPayType()) {
                             if(1 == merchantPay.getPayType()){
                                 //支付宝网页支付信息
-                                application.writeAlipay(merchantPay.getPartnerId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay());
+                                application.writeAlipay( merchantPay.getAppId() , merchantPay.getPartnerId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay());
                             } else if (300 == merchantPay.getPayType()) {
                                 //微信支付
                                 application.writeWx(merchantPay.getPartnerId(), merchantPay.getAppId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay());
                             } else if( 11 == merchantPay.getPayType()){
                                 //支付宝原生支付信息
-                                application.writeAlipay(merchantPay.getPartnerId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay());
+                                application.writeAlipay( merchantPay.getAppId(), merchantPay.getPartnerId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay());
                             }
                         }
                     }

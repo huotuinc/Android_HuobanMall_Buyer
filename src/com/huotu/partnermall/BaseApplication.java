@@ -215,11 +215,11 @@ public class BaseApplication extends Application {
      */
     public boolean scanAliPay() {
         String parentId = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
-        //String appid = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID);
+        String appid = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_APP_ID);
         String appKey = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY);
         String notify = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_NOTIFY);
 
-        if (!TextUtils.isEmpty(parentId) && !TextUtils.isEmpty(appKey) && !TextUtils.isEmpty(notify)) {
+        if ( !TextUtils.isEmpty(appid) && !TextUtils.isEmpty(parentId) && !TextUtils.isEmpty(appKey) && !TextUtils.isEmpty(notify)) {
             return true;
         } else {
             return false;
@@ -532,7 +532,8 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID);
     }
 
-    public void writeAlipay(String parentId, String appKey, String notify, boolean isWebPay) {
+    public void writeAlipay( String appId , String parentId, String appKey, String notify, boolean isWebPay) {
+        PreferenceHelper.writeString(getApplicationContext() , Constants.MERCHANT_INFO, Constants.ALIPAY_APP_ID , appId );
         PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, parentId);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY, appKey);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_NOTIFY, notify);
@@ -541,6 +542,10 @@ public class BaseApplication extends Application {
 
     public boolean readIsWebAliPay(){
         return PreferenceHelper.readBoolean(getApplicationContext() , Constants.MERCHANT_INFO , Constants.IS_WEB_ALIPAY);
+    }
+
+    public String readAlipayAppId(){
+        return PreferenceHelper.readString(getApplicationContext() , Constants.MERCHANT_INFO , Constants.ALIPAY_APP_ID);
     }
 
     public String readAlipayAppKey() {

@@ -17,6 +17,8 @@ import android.widget.PopupWindow;
 import com.huotu.android.library.libpay.alipay.AliOrderInfo;
 import com.huotu.android.library.libpay.alipay.AliPayInfo;
 import com.huotu.android.library.libpay.alipay.AliPayUtil;
+import com.huotu.android.library.libpay.alipayV2.AliPayInfoV2;
+import com.huotu.android.library.libpay.alipayV2.AliPayUtilV2;
 import com.huotu.android.library.libpay.weixin.WeiXinOrderInfo;
 import com.huotu.android.library.libpay.weixin.WeiXinPayInfo;
 import com.huotu.android.library.libpay.weixin.WeiXinPayUtil;
@@ -29,6 +31,8 @@ import com.huotu.partnermall.utils.EncryptUtil;
 import com.huotu.partnermall.utils.WindowUtils;
 
 import java.math.BigDecimal;
+
+import static android.R.attr.key;
 
 /**
  * 支付弹出框
@@ -101,7 +105,7 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         }
     }
     /***
-     *  支付宝原始支付
+     *  支付宝原生支付V2
      */
     protected void aliMobilePay(){
         dismissView();
@@ -112,11 +116,11 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         }else{
             payModel.setAttach(payModel.getCustomId() + "_0");
             payModel.setNotifyurl(application.obtainMerchantUrl() + application.readAlipayNotify());
-            AliPayInfo aliPayInfo = new AliPayInfo();
-            aliPayInfo.setSellerId( application.readAlipayParentId() );
-            aliPayInfo.setPartner(application.readAlipayParentId());
-            aliPayInfo.setRsaPrivate(EncryptUtil.getInstance().decryptDES( application.readAlipayAppKey() , Constants.getDES_KEY() ));
-            aliPayInfo.setNotifyUrl( payModel.getNotifyurl() );
+            AliPayInfoV2 aliPayInfoV2 = new AliPayInfoV2();
+            aliPayInfoV2.setAppId( application.readAlipayAppId() );
+            aliPayInfoV2.setpId(application.readAlipayParentId());
+            aliPayInfoV2.setRsa_private(EncryptUtil.getInstance().decryptDES( application.readAlipayAppKey() , Constants.getDES_KEY() ));
+            aliPayInfoV2.setNotifyUrl( payModel.getNotifyurl() );
 
             AliOrderInfo aliOrderInfo = new AliOrderInfo();
             aliOrderInfo.setTotalfee( new BigDecimal( payModel.getAliAmount()));
@@ -124,8 +128,8 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
             aliOrderInfo.setOrderNo(payModel.getTradeNo());
             aliOrderInfo.setBody(payModel.getDetail());
 
-            AliPayUtil aliPayUtil = new AliPayUtil(aty , mHandler , aliPayInfo);
-            aliPayUtil.pay(aliOrderInfo);
+            AliPayUtilV2 aliPayUtilV2  = new AliPayUtilV2(aty , mHandler , aliPayInfoV2);
+            aliPayUtilV2.payV2(aliOrderInfo);
         }
     }
 
@@ -175,8 +179,8 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         dismiss();
     }
 
-
     protected void showPayType() {
+        String appid = application.readAlipayAppId();
         String key = application.readAlipayAppKey();
         String partnerid = application.readAlipayParentId();
         boolean isWebAliPay = application.readIsWebAliPay();
@@ -188,7 +192,7 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
             alipayMobileBtn.setVisibility(View.GONE);
         }else {
             alipayBtn.setVisibility(View.GONE);
-            if( TextUtils.isEmpty( key ) || TextUtils.isEmpty( partnerid ) ) {
+            if( TextUtils.isEmpty(appid) || TextUtils.isEmpty( key ) || TextUtils.isEmpty( partnerid ) ) {
                 alipayMobileBtn.setVisibility(View.GONE);
             }else{
                 alipayMobileBtn.setVisibility(View.VISIBLE);

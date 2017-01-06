@@ -34,6 +34,8 @@ import com.huotu.android.library.libpay.BuildConfig;
 import com.huotu.android.library.libpay.alipay.AliPayResult;
 import com.huotu.android.library.libpay.alipay.AliPayUtil;
 import com.huotu.android.library.libpay.alipay.PayResult;
+import com.huotu.android.library.libpay.alipayV2.AliPayResultV2;
+import com.huotu.android.library.libpay.alipayV2.AliPayUtilV2;
 import com.huotu.android.library.libpay.weixin.WeiXinPayResult;
 import com.huotu.android.library.libpay.weixin.WeiXinPayUtil;
 import com.huotu.partnermall.BaseApplication;
@@ -505,7 +507,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 }
             }
             break;
-            case AliPayUtil.SDK_Ali_PAY_FLAG:{
+            case AliPayUtilV2.SDK_Ali_PAY_V2_FLAG:{
                 dealAliPayResult(msg);
             }
             break;
@@ -676,14 +678,14 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
 
 
     void dealAliPayResult( Message msg ){
-        AliPayResult result = (AliPayResult) msg.obj;
+        AliPayResultV2 result = (AliPayResultV2) msg.obj;
         /**
          * 同步返回的结果必须放置到服务端进行验证（验证的规则请看https://doc.open.alipay.com/doc2/
          * detail.htm?spm=0.0.0.0.xdvAU6&treeId=59&articleId=103665&
          * docType=1) 建议商户依赖异步通知
          */
-        String resultInfo = result.getPayResult().getResult();// 同步返回需要验证的信息
-        String resultStatus = result.getPayResult().getResultStatus();
+        String resultInfo = result.getResult();// 同步返回需要验证的信息
+        String resultStatus = result.getResultStatus();
         // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
         if (TextUtils.equals(resultStatus, "9000")) {
             Toast.makeText(WebViewActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
