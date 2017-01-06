@@ -239,6 +239,14 @@ public class Constants {
 	 * 环信 客户页面
 	 */
 	public final static String URL_KEFU_1 ="/cs/webChannelHtml";
+	/**
+	 * 待支付订单列表 页面
+	 */
+	public final static String URL_WaitPayOrderList="%s/UserCenter/OrderV2/ListV2.aspx?customerid=%s&tab=1";
+	/**
+	 * 支付成功以后的跳转地址
+	 */
+	public final static String URL_PaySuccess="%s/Weixin/Pay/PayReturn.aspx?customerid=%s&orderid=%s";
 
 	//鉴权失效
 	public static final int LOGIN_AUTH_ERROR = 2131;
@@ -248,9 +256,17 @@ public class Constants {
 
 	//网页支付
 	public static final int PAY_NET = 2222;
+	/**
+	 * 跳转到待支付订单页面
+	 */
+	public static final int  Message_GotoOrderList= 2600;
+	/**
+	 * 支付成功以后的消息值
+	 */
+	//public static final int Message_PaySuccess = 2601;
 
 	//是否测试环境
-	public static final boolean IS_TEST = true;
+	//public static final boolean IS_TEST = true;
 
 	//handler code
 	//1、success

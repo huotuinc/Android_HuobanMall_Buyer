@@ -82,11 +82,10 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         //设置SelectPicPopupWindow弹出窗体的高
         this.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         //设置SelectPicPopupWindow弹出窗体可点击
-        this.setFocusable(true);
+        //this.setFocusable(true);
 
-        this.setOutsideTouchable(true);
-
-        this.setBackgroundDrawable(ContextCompat.getDrawable(aty , R.drawable.share_window_bg));
+        this.setOutsideTouchable(false);
+        //this.setBackgroundDrawable(ContextCompat.getDrawable(aty , R.drawable.share_window_bg));
 
         WindowUtils.backgroundAlpha(aty, 0.4f);
     }
@@ -101,8 +100,13 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         } else if (v.getId() == R.id.alipayMobileBtn) {
             aliMobilePay();
         } else if (v.getId() == R.id.cancelBtn) {
-            dismissView();
+            cancelPay();
         }
+    }
+    protected void cancelPay(){
+        dismissView();
+        Message msg = mHandler.obtainMessage(Constants.Message_GotoOrderList);
+        mHandler.sendMessage(msg);
     }
     /***
      *  支付宝原生支付V2
