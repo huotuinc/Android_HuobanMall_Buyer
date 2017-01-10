@@ -29,6 +29,15 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
         FrescoControllerListener.ImageCallback{
     private AdBannerConfig config;
     private List<WH> sizeList;
+    private AdOnClickListener adOnClickListener;
+
+    public interface AdOnClickListener{
+        void onAdClick(AdImageBean bean);
+    }
+
+    public void setAdOnClickListener(AdOnClickListener adOnClickListener) {
+        this.adOnClickListener = adOnClickListener;
+    }
 
     public AdBannerWidget(Context context) {
         this(context, null);
@@ -51,8 +60,6 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
         this.setLayoutParams(layoutParams);
 
         this.setOnPageChangeListener(this);
-
-
     }
 
     @Override
@@ -105,8 +112,13 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
 
     @Override
     public void onItemClick(int position) {
-        AdImageBean bean = config.getImages().get( position );
-        go(bean);
+        if(adOnClickListener!=null){
+            AdImageBean bean = config.getImages().get(position);
+            adOnClickListener.onAdClick( bean);
+        }else {
+            AdImageBean bean = config.getImages().get(position);
+            go(bean);
+        }
     }
 
     @Override
@@ -165,8 +177,9 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
         if(!config.isAutoPlay()) return;
         if(config.getImages().size()<=1) return;
 
-        int time = config.getImages().size()*1500;
-        this.startTurning( time );
+        //int time = config.getTotalSecond() <1 ? config.getImages().size()*1500: config.getTotalSecond()*1000;
+        int interval = config.getInterval()<=0? 2000:config.getInterval();
+        this.startTurning( interval );
     }
 
 

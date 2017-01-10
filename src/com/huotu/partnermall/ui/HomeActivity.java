@@ -79,6 +79,7 @@ import com.huotu.partnermall.ui.login.AutnLogin;
 import com.huotu.partnermall.ui.login.BindPhoneActivity;
 import com.huotu.partnermall.ui.login.PhoneLoginActivity;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
+import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.DensityUtils;
 import com.huotu.partnermall.utils.GsonRequest;
@@ -153,15 +154,9 @@ public class HomeActivity extends BaseActivity
     //web视图
     @Bind(R.id.main_webview)
     public WebView pageWeb;
-    //单独加载菜单
-    //@Bind(R.id.menuPage)
-    //WebView menuView;
     //侧滑登录
     @Bind(R.id.loginLayout)
     RelativeLayout loginLayout;
-    //侧滑设置按钮
-    //@Bind(R.id.sideslip_setting)
-    //ImageView loginSetting;
     //主菜单容器
     @Bind(R.id.mainMenuLayout)
     LinearLayout mainMenuLayout;
@@ -174,9 +169,6 @@ public class HomeActivity extends BaseActivity
     //用户名称
     @Bind(R.id.accountName)
     TextView userName;
-    //用户类型
-    //@Bind(R.id.accountType)
-    //TextView userType;
     @Bind(viewPage)
     PtrClassicFrameLayout ptrClassicFrameLayout;
     @Bind(R.id.layDrag)
@@ -215,6 +207,8 @@ public class HomeActivity extends BaseActivity
         initView();
 
         initPush(getIntent());
+
+        initAdLinkUrl(getIntent());
 
         initRedrectUrl(getIntent());
 
@@ -389,7 +383,7 @@ public class HomeActivity extends BaseActivity
                 //return false;
 
                 String url = pageWeb.getUrl();
-                if(url!=null && !url.isEmpty() && url.toLowerCase().contains("easemob/im.html")){
+                if(url!=null && !url.isEmpty() && ( url.toLowerCase().contains(Constants.URL_KEFU_2) || url.toLowerCase().contains( Constants.URL_KEFU_3 ) )){
                     //解决客服页面滚动事件与下拉刷新冲突问题
                     return false;
                 }
@@ -468,6 +462,21 @@ public class HomeActivity extends BaseActivity
         if( bundle==null) return;
 
         PushProcess.process( this , bundle);
+    }
+
+    /***
+     * 处理 广告页面
+     * @param intent
+     */
+    protected void initAdLinkUrl(Intent intent){
+        if (null == intent || ! intent.hasExtra( Constants.HUOTU_AD_URL_KEY )) return;
+        String adLinkUrl = intent.getStringExtra( Constants.HUOTU_AD_URL_KEY);
+        if( adLinkUrl==null || adLinkUrl.isEmpty() ) return;
+
+        String urlStr = adLinkUrl;
+        Bundle bundle = new Bundle();
+        bundle.putString ( Constants.INTENT_URL, urlStr );
+        ActivityUtils.getInstance ( ).showActivity ( this , WebViewActivity.class, bundle );
     }
 
     private void loadMainMenu(){

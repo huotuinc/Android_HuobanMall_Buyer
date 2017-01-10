@@ -1,6 +1,7 @@
 package com.huotu.partnermall.utils;
 
 
+import android.util.Base64;
 import android.util.Log;
 
 import com.facebook.common.util.Hex;
@@ -15,6 +16,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 
+import static android.R.attr.key;
 import static android.R.id.message;
 
 public class EncryptUtil {
@@ -53,8 +55,10 @@ public class EncryptUtil {
 
     public String decryptDES(String content , String keyString ){
         try {
-            byte[] bytesrc = convertHexString(content);
-            Cipher cipher = Cipher.getInstance("DES");
+            //byte[] bytesrc = convertHexString(content);
+            byte[] bytesrc = Base64.decode( content , Base64.DEFAULT);
+
+            Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding"); //cipher = Cipher.getInstance("DES");
 
             String key = keyString.length()>8? keyString.substring(0,8): keyString;
             DESKeySpec desKeySpec = new DESKeySpec(key.getBytes("UTF-8"));

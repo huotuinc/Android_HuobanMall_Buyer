@@ -5,14 +5,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.AdBannerConfig;
 import com.huotu.partnermall.model.AdImageBean;
+import com.huotu.partnermall.model.AdvertiseModel;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
+import com.huotu.partnermall.utils.DensityUtils;
 import com.huotu.partnermall.widgets.custom.AdBannerWidget;
 
 import java.util.ArrayList;
@@ -25,18 +28,20 @@ import butterknife.OnClick;
 /***
  * 广告页面
  */
-public class AdActivity extends BaseActivity implements Handler.Callback {
+public class AdActivity extends BaseActivity implements Handler.Callback ,AdBannerWidget.AdOnClickListener {
     @Bind(R.id.adBanner)
     AdBannerWidget adBannerWidget;
     @Bind(R.id.tvSkip)
     TextView tvSkip;
     AdBannerConfig adBannerConfig;
     //多少秒后跳过广告
-    int skipTime = 0;
+    int skipTimeSecond = 0;
     //推送信息
     Bundle bundlePush;
 
-    Object ad;
+    AdvertiseModel advertiseModel;
+
+    String adLinkUrl;
 
     Runnable skipRunnable = new Runnable() {
         @Override
@@ -74,35 +79,34 @@ public class AdActivity extends BaseActivity implements Handler.Callback {
             bundlePush = getIntent().getBundleExtra(Constants.HUOTU_PUSH_KEY);
         }
         if(null!= getIntent() && getIntent().hasExtra(Constants.HUOTU_AD_KEY)){
-            ad= getIntent().getBundleExtra(Constants.HUOTU_AD_KEY);
+            advertiseModel= (AdvertiseModel) getIntent().getSerializableExtra(Constants.HUOTU_AD_KEY);
         }
 
         adBannerConfig = new AdBannerConfig();
-        adBannerConfig.setAutoPlay(false);
+        adBannerConfig.setAutoPlay(true);
         adBannerConfig.setHeight(0);
         adBannerConfig.setWidth(0);
         List<AdImageBean> list = new ArrayList<>();
-        AdImageBean bean = new AdImageBean();
-        bean.setImageUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
-        bean.setLinkUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
-        list.add(bean);
-        bean = new AdImageBean();
-        bean.setImageUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
-        bean.setLinkUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
-        list.add(bean);
-        bean = new AdImageBean();
-        bean.setImageUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
-        bean.setLinkUrl("http://taskapi.fhsilk.com//resource/appimg/appad/pic20161119155147598268.jpg");
-        list.add(bean);
+
+        for(AdvertiseModel.Advertise item : advertiseModel.getData()){
+
+            AdImageBean bean = new AdImageBean();
+            bean.setImageUrl( item.getImages());
+            bean.setLinkUrl( item.getLinkUrl());
+            list.add(bean);
+        }
 
         adBannerConfig.setImages(list);
 
-        skipTime = adBannerConfig.getImages().size() * 2000;
+        adBannerConfig.setInterval(3000);
+        skipTimeSecond = adBannerConfig.getImages().size() * 3;
 
         adBannerWidget.setAdBannerConfig(adBannerConfig);
+        adBannerWidget.setAdOnClickListener(this);
 
         setSkipText();
-        mHandler.postDelayed(skipRunnable, 1000);
+
+        mHandler.post(skipRunnable);
     }
 
     @OnClick(R.id.tvSkip)
@@ -116,14 +120,18 @@ public class AdActivity extends BaseActivity implements Handler.Callback {
         if (null != bundlePush) {
             intent.putExtra(Constants.HUOTU_PUSH_KEY, bundlePush);
         }
+        if(null!= adLinkUrl){
+            intent.putExtra(Constants.HUOTU_AD_URL_KEY, adLinkUrl);
+        }
+
         ActivityUtils.getInstance().skipActivity(this, intent);
     }
 
     @Override
     public boolean handleMessage(Message msg) {
         if (msg.what == 1) {
-            skipTime--;
-            if (skipTime == 0) {
+            int second = skipTimeSecond--;
+            if (second <=0) {
                 startHome();
                 return true;
             }
@@ -134,7 +142,16 @@ public class AdActivity extends BaseActivity implements Handler.Callback {
     }
 
     void setSkipText() {
-        String desc = String.valueOf(skipTime) + "秒后跳过";
+        String desc = String.valueOf(skipTimeSecond) + "秒后跳过";
         tvSkip.setText(desc);
+    }
+
+    @Override
+    public void onAdClick(AdImageBean bean) {
+        if( bean==null) return;
+        if( bean.getLinkUrl()==null || bean.getLinkUrl().isEmpty())return;
+
+        adLinkUrl = bean.getLinkUrl();
+        startHome();
     }
 }

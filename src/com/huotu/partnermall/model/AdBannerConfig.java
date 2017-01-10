@@ -14,6 +14,8 @@ public class AdBannerConfig {
     private boolean autoPlay=false;
     private int width;
     private int height;
+    private int interval = 1500;
+    //private int totalSecond = 0;
 
     public List<AdImageBean> getImages() {
         return images;
@@ -45,5 +47,21 @@ public class AdBannerConfig {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+//    public int getTotalSecond() {
+//        return totalSecond;
+//    }
+//
+//    public void setTotalSecond(int totalSecond) {
+//        this.totalSecond = totalSecond;
+//    }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
     }
 }

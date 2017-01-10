@@ -30,6 +30,7 @@ import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
+import com.huotu.partnermall.model.AdvertiseModel;
 import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.ColorBean;
 import com.huotu.partnermall.model.DataBase;
@@ -52,6 +53,7 @@ import com.huotu.partnermall.widgets.MsgPopWindow;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +72,6 @@ public class SplashActivity extends BaseActivity {
     @Bind(R.id.ivGif)
     SimpleDraweeView ivGif;
 
-    //private Intent locationI = null;
     private boolean isConnection = false;
     private MsgPopWindow popWindow;
     //推送信息
@@ -81,47 +82,9 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-
         mHandler = new Handler(getMainLooper());
-
         initView();
     }
-
-//    protected void loadBackground(){
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    DisplayMetrics metrics = new DisplayMetrics();
-//                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//                    int screenWidth = metrics.widthPixels;
-//                    int screenHeight = metrics.heightPixels;
-//                    bitmap = ImageUtils.decodeSampledBitmapFromResource(getResources(), R.drawable.login_bg, screenWidth, screenHeight);
-//
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if (rlSplashItem != null && bitmap != null) {
-//                                rlSplashItem.setBackgroundDrawable(new BitmapDrawable(bitmap));
-//                            }
-//                            initView();
-//                        }
-//                    });
-//                } catch (Exception ex) {
-//
-//                    Log.e(TAG, ex.getMessage());
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            rlSplashItem.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()));
-//                            initView();
-//                        }
-//                    });
-//                }
-//            }
-//        }).start();
-//    }
 
     @Override
     protected void initView() {
@@ -148,16 +111,11 @@ public class SplashActivity extends BaseActivity {
                         //检测网络
                         isConnection = BaseApplication.checkNet(SplashActivity.this);
                         if (!isConnection) {
-                            //application.isConn = false;
                             //无网络日志
                             popWindow = new MsgPopWindow(SplashActivity.this, new SettingNetwork(), new CancelNetwork(), "网络连接错误", "请打开你的网络连接！", false);
                             popWindow.showAtLocation(rlSplashItem, Gravity.CENTER, 0, 0);
                             popWindow.setOnDismissListener(new PoponDismissListener(SplashActivity.this));
                         } else {
-                            //application.isConn = true;
-                            //定位
-                            //locationI = new Intent(SplashActivity.this, LocationService.class);
-                            //SplashActivity.this.startService(locationI);
                             //加载商家信息
                             //判断
                             if (!application.checkMerchantInfo()) {
@@ -200,6 +158,7 @@ public class SplashActivity extends BaseActivity {
                             HttpUtil.getInstance().doVolley(application, url);
                             //当用户登录状态时，则重新获得用户信息。
                             initUserInfo();
+
                         }
                     }
 
@@ -218,12 +177,8 @@ public class SplashActivity extends BaseActivity {
                                 application.writeInitInfo("inited");
                             } else {
 
-                                Intent intent = new Intent();
-                                intent.setClass(SplashActivity.this, HomeActivity.class);
-                                if (null != bundlePush) {
-                                    intent.putExtra(Constants.HUOTU_PUSH_KEY, bundlePush);
-                                }
-                                ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
+                                getAdData();
+
                             }
                         }
                     }
@@ -242,10 +197,6 @@ public class SplashActivity extends BaseActivity {
     protected void onDestroy ( ) {
         super.onDestroy();
         ButterKnife.unbind(this);
-//        if (null != locationI)
-//        {
-//            stopService(locationI);
-//        }
         if (bitmap != null) {
             bitmap.recycle();
         }
@@ -417,33 +368,53 @@ public class SplashActivity extends BaseActivity {
         String url = Constants.getINTERFACE_PREFIX() + "advert/get?customerId="+ application.readMerchantId()  +"&type=2&count=5";
         AuthParamUtils authParamUtils = new AuthParamUtils(application, System.currentTimeMillis(), url);
         url = authParamUtils.obtainUrl();
-        GsonRequest<DataBase> request = new GsonRequest<>(
+        GsonRequest<AdvertiseModel> request = new GsonRequest<>(
                 Request.Method.GET,
                 url,
-                DataBase.class,
+                AdvertiseModel.class,
                 null,
                 null,
-                new Response.Listener<DataBase>() {
+                new Response.Listener<AdvertiseModel>() {
                     @Override
-                    public void onResponse(DataBase dataBase) {
+                    public void onResponse(AdvertiseModel advertiseModel) {
 
-                        if (dataBase == null || dataBase.getCode() != 200 ) {
+                        if (advertiseModel == null || advertiseModel.getCode() != 200  || advertiseModel.getData()==null || advertiseModel.getData().size()<1 ) {
                             Log.e(TAG, "请求出错。");
-                            BaseApplication.single.logout();
+                            gotoHome();
                             return;
                         }
+
+                        gotoAdvertise(advertiseModel);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        gotoHome();
                     }
                 }
         );
 
         VolleyUtil.getRequestQueue().add(request);
-
     }
 
+    void gotoAdvertise( AdvertiseModel model ){
+        Intent intent = new Intent();
+        intent.setClass(SplashActivity.this, AdActivity.class);
+        if (null != bundlePush) {
+            intent.putExtra(Constants.HUOTU_PUSH_KEY, bundlePush);
+        }
+        intent.putExtra( Constants.HUOTU_AD_KEY , (Serializable) model);
+        ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
+    }
+
+    void gotoHome(){
+        Intent intent = new Intent();
+        intent.setClass(SplashActivity.this, HomeActivity.class);
+        if (null != bundlePush) {
+            intent.putExtra(Constants.HUOTU_PUSH_KEY, bundlePush);
+        }
+        ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
+    }
 }
 

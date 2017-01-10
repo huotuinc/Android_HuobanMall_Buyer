@@ -1,9 +1,11 @@
 package com.huotu.partnermall.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2015/12/9.
  */
-public class DataBase {
+public class DataBase implements Serializable{
     private int code;
     private String msg;
 
