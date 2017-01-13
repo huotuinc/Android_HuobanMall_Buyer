@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 apply from: 'E:/myjob/keystore/keystore.gradle'
 
-//apply from: 'E:/myjob/keystore/customer.gradle'
+apply from: 'E:/myjob/keystore/customer.gradle'
 
 buildscript {
     repositories {
@@ -103,34 +103,6 @@ android {
             assets.srcDirs = ['custom/dmcn/assets']
         }
 
-        mituofu {//蜜托福
-            manifest.srcFile 'custom/mituofu/AndroidManifest.xml'
-            java.srcDirs = ['custom/mituofu/src']
-            res.srcDirs = ['custom/mituofu/res']
-            assets.srcDirs = ['custom/mituofu/assets']
-        }
-
-        germanbuildlife {//德造优质生活
-            manifest.srcFile 'custom/germanbuildlife/AndroidManifest.xml'
-            java.srcDirs = ['custom/germanbuildlife/src']
-            res.srcDirs = ['custom/germanbuildlife/res']
-            assets.srcDirs = ['custom/germanbuildlife/assets']
-        }
-
-        xiaoyueer {//小月儿商城
-            manifest.srcFile 'custom/xiaoyueer/AndroidManifest.xml'
-            java.srcDirs = ['custom/xiaoyueer/src']
-            res.srcDirs = ['custom/xiaoyueer/res']
-            assets.srcDirs = ['custom/xiaoyueer/assets']
-        }
-
-        yunjianworld {//云健天下
-            manifest.srcFile 'custom/yunjianworld/AndroidManifest.xml'
-            java.srcDirs = ['custom/yunjianworld/src']
-            res.srcDirs = ['custom/yunjianworld/res']
-            assets.srcDirs = ['custom/yunjianworld/assets']
-        }
-
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
 
@@ -150,8 +122,8 @@ android {
 
         morefan_test {
             applicationId 'cy.com.morefan'
-            versionCode BUYER_VERSIONCODE.toInteger()
-            versionName "${BUYER_VERSIONNAME}"
+            versionCode MOREFAN_VERSIONCODE.toInteger()
+            versionName "${MOREFAN_VERSIONNAME}"
             buildConfigField 'String', 'INTERFACE_URL', '\"http://mallapi.51flashmall.com/\"'
             buildConfigField 'String', 'APP_ID', '\"huotu686ad1fe2bd8a02bb\"'
             buildConfigField 'String', 'APP_SECRET', '\"483686ad1fe2bd8a02bbdca24e109953a4a96c\"'
@@ -217,19 +189,19 @@ android {
 //            signingConfig signingConfigs.olquan
 //        }
 
-//        yifutang {//艺福堂
-//            applicationId 'com.huotu.mall.yifutang'
-//            versionCode YIFUTANG_VERSIONCODE.toInteger()
-//            versionName "${YIFUTANG_VERSIONNAME}"
-//            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.efuton.com/"'
-//            buildConfigField 'String', 'APP_ID', '"73d29a4c9a6d389a0b7288ec27b4c4c4"'
-//            buildConfigField 'String', 'APP_SECRET', '"9389e8a5c32eefa3134340640fb4ceaa"'
-//            buildConfigField 'String', 'Push_Url', '"http://api.open.efuton.com/"'
-//            buildConfigField 'String', 'SMART_KEY', '"app"'
-//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//            buildConfigField 'String', 'SMART_Url', '"http://api.open.efuton.com/"'
-//            signingConfig signingConfigs.yifutang
-//        }
+        yifutang {//艺福堂
+            applicationId 'com.huotu.mall.yifutang'
+            versionCode YIFUTANG_VERSIONCODE.toInteger()
+            versionName "${YIFUTANG_VERSIONNAME}"
+            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.efuton.com/"'
+            buildConfigField 'String', 'APP_ID', '"73d29a4c9a6d389a0b7288ec27b4c4c4"'
+            buildConfigField 'String', 'APP_SECRET', '"9389e8a5c32eefa3134340640fb4ceaa"'
+            buildConfigField 'String', 'Push_Url', '"http://api.open.efuton.com/"'
+            buildConfigField 'String', 'SMART_KEY', '"app"'
+            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
+            buildConfigField 'String', 'SMART_Url', '"http://api.open.efuton.com/"'
+            signingConfig signingConfigs.yifutang
+        }
 
 //        dmcn {//dmcn德国生活馆
 //            applicationId 'com.huotu.mall.dmcn'
@@ -245,61 +217,6 @@ android {
 //            signingConfig signingConfigs.dmcn
 //        }
 
-//        mituofu {//蜜托福
-//            applicationId 'com.huotu.mall.mituofu'
-//            versionCode BUYER_VERSIONCODE.toInteger()
-//            versionName "${BUYER_VERSIONNAME}"
-//            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.huobanmall.com/"'
-//            buildConfigField 'String', 'APP_ID', '"73d29a4c9a6d389a0b7288ec27b4c4c4"'
-//            buildConfigField 'String', 'APP_SECRET', '"9389e8a5c32eefa3134340640fb4ceaa"'
-//            buildConfigField 'String', 'Push_Url', '"http://api.open.huobanplus.com/"'
-//            buildConfigField 'String', 'SMART_KEY', '"app"'
-//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//            buildConfigField 'String', 'SMART_Url', '"http://api.open.huobanplus.com/"'
-//            signingConfig signingConfigs.mituofu
-//        }
-
-//        germanbuildlife{//德造优质生活
-//            applicationId 'com.huotu.mall.germanbuildlife'
-//            versionCode BUYER_VERSIONCODE.toInteger()
-//            versionName "${BUYER_VERSIONNAME}"
-//            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.huobanmall.com/"'
-//            buildConfigField 'String', 'APP_ID', '"73d29a4c9a6d389a0b7288ec27b4c4c4"'
-//            buildConfigField 'String', 'APP_SECRET', '"9389e8a5c32eefa3134340640fb4ceaa"'
-//            buildConfigField 'String', 'Push_Url', '"http://api.open.huobanplus.com/"'
-//            buildConfigField 'String', 'SMART_KEY', '"app"'
-//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//            buildConfigField 'String', 'SMART_Url', '"http://api.open.huobanplus.com/"'
-//            signingConfig signingConfigs.germanbuildlife
-//        }
-
-//        xiaoyueer{//小月儿商城
-//          applicationId 'com.huotu.mall.xiaoyueer'
-//            versionCode BUYER_VERSIONCODE.toInteger()
-//            versionName "${BUYER_VERSIONNAME}"
-//            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.huobanmall.com/"'
-//            buildConfigField 'String', 'APP_ID', '"73d29a4c9a6d389a0b7288ec27b4c4c4"'
-//            buildConfigField 'String', 'APP_SECRET', '"9389e8a5c32eefa3134340640fb4ceaa"'
-//            buildConfigField 'String', 'Push_Url', '"http://api.open.huobanplus.com/"'
-//            buildConfigField 'String', 'SMART_KEY', '"app"'
-//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//            buildConfigField 'String', 'SMART_Url', '"http://api.open.huobanplus.com/"'
-//            signingConfig signingConfigs.xiaoyueer
-//        }
-
-//        yunjianworld{//云健天下
-//                    applicationId 'com.huotu.mall.yunjianworld'
-//                    versionCode BUYER_VERSIONCODE.toInteger()
-//                    versionName "${BUYER_VERSIONNAME}"
-//                    buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.huobanmall.com/"'
-//                    buildConfigField 'String', 'APP_ID', '"73d29a4c9a6d389a0b7288ec27b4c4c4"'
-//                    buildConfigField 'String', 'APP_SECRET', '"9389e8a5c32eefa3134340640fb4ceaa"'
-//                    buildConfigField 'String', 'Push_Url', '"http://api.open.huobanplus.com/"'
-//                    buildConfigField 'String', 'SMART_KEY', '"app"'
-//                    buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//                    buildConfigField 'String', 'SMART_Url', '"http://api.open.huobanplus.com/"'
-//                    signingConfig signingConfigs.yunjianworld
-//        }
     }
 
     buildTypes {

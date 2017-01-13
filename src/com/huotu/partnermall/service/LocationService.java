@@ -3,11 +3,9 @@ package com.huotu.partnermall.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.huotu.partnermall.BaseApplication;
-import com.huotu.partnermall.listener.MyLocationListener;
 
 /**
  * 基于百度的定位服务

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="pay_ali_textcolor">#ffffffff</color>
+    <color name="pay_wechat_textcolor">#ffffffff</color>
+
     <color name="appversion_color">#ffffff</color>
 
     <color name="leftmenu_bg_color">#ffffff</color>

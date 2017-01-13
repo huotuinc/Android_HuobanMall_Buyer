@@ -44,14 +44,12 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.huotu.android.library.libpay.alipay.AliPayResult;
-import com.huotu.android.library.libpay.alipay.AliPayUtil;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.android.library.libpay.alipayV2.AliPayResultV2;
 import com.huotu.android.library.libpay.alipayV2.AliPayUtilV2;
 import com.huotu.android.library.libpay.weixin.WeiXinPayResult;
 import com.huotu.android.library.libpay.weixin.WeiXinPayUtil;
 import com.huotu.partnermall.BaseApplication;
-import com.huotu.partnermall.async.LoadLogoImageAyscTask;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
@@ -62,17 +60,18 @@ import com.huotu.partnermall.model.BindEvent;
 import com.huotu.partnermall.model.CloseEvent;
 import com.huotu.partnermall.model.GoIndexEvent;
 import com.huotu.partnermall.model.LinkEvent;
-import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MenuLinkEvent;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.PhoneLoginModel;
 import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
 import com.huotu.partnermall.model.RefreshMenuEvent;
+import com.huotu.partnermall.model.RefreshMessageEvent;
 import com.huotu.partnermall.model.RefreshPageEvent;
 import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.SwitchUserByUserIDEvent;
 import com.huotu.partnermall.model.SwitchUserModel;
-import com.huotu.partnermall.model.UpdateLeftInfoModel;
+import com.huotu.partnermall.model.WxPaySuccessCallbackModel;
+import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.receiver.PushProcess;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
@@ -99,9 +98,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -116,15 +113,10 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
-import static android.R.attr.bottom;
-import static android.R.attr.breadCrumbShortTitle;
-import static android.R.attr.data;
-import static com.huotu.partnermall.inner.R.id.menuL;
-import static com.huotu.partnermall.inner.R.id.pageLoadView;
 import static com.huotu.partnermall.inner.R.id.viewPage;
 
 public class HomeActivity extends BaseActivity
-        implements Handler.Callback , ViewTreeObserver.OnGlobalLayoutListener{
+        implements Handler.Callback , ViewTreeObserver.OnGlobalLayoutListener , MyBroadcastReceiver.BroadcastListener {
     //获取资源文件对象
     private Resources resources;
     private long exitTime = 0;
@@ -139,6 +131,7 @@ public class HomeActivity extends BaseActivity
     public static final int FILECHOOSER_RESULTCODE_5 = 5;
     public static final int BINDPHONE_REQUESTCODE = 1001;
     private AutnLogin autnLogin;
+    private MyBroadcastReceiver myBroadcastReceiver;
     //标题栏布局对象
     @Bind(R.id.titleLayout)
     RelativeLayout homeTitle;
@@ -165,7 +158,7 @@ public class HomeActivity extends BaseActivity
     RelativeLayout getAuthLayout;
     //用户头像
     @Bind(R.id.accountIcon)
-    ImageView userLogo;
+    SimpleDraweeView userLogo;
     //用户名称
     @Bind(R.id.accountName)
     TextView userName;
@@ -179,11 +172,40 @@ public class HomeActivity extends BaseActivity
     FrameLayout ff1;
     @Bind(R.id.accountTypeList)
     LinearLayout accountTypeList;
-
     @Bind(R.id.loadMenuView)
     RelativeLayout loadMenuView;
 
     UrlFilterUtils urlFilterUtils;
+    //未读消息数量
+    //int unReadMessageCount=0;
+    //底部导航栏控件
+    FooterOneWidget footerOneWidget;
+
+    Runnable getMessageRunnable=new Runnable() {
+        @Override
+        public void run() {
+            if(pageWeb==null) return;
+            pageWeb.loadUrl("javascript:"+
+                    "try{"+
+                    "if(window.android){"+
+                        //"var count = easemobMessage.getMessageNum();"+
+                        "window.android.setUnReadMessageCount( easemobMessage.getMessageNum() );" +
+                    "}}catch(err){window.android.setJavascriptError(err);}");
+
+            if(footerOneWidget!=null){
+                footerOneWidget.showCircleView(  application.unReadMessageCount>0 );
+            }
+
+            mHandler.postDelayed(this,1000);
+        }
+    };
+
+    /***
+     *
+     */
+//    void getMessageRun(){
+//        mHandler.postDelayed( getMessageRunnable ,1000);
+//    }
 
     @Override
     protected void onCreate ( Bundle savedInstanceState ) {
@@ -198,6 +220,8 @@ public class HomeActivity extends BaseActivity
         am = this.getAssets();
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+
+        myBroadcastReceiver = new MyBroadcastReceiver(this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
 
         Register();
 
@@ -220,6 +244,9 @@ public class HomeActivity extends BaseActivity
                 checkAppVersion();
             }
         },500);
+
+        //定时获取未读消息
+        mHandler.postDelayed(getMessageRunnable,500);
 
     }
 
@@ -279,7 +306,9 @@ public class HomeActivity extends BaseActivity
     }
 
     protected void initUserInfo(){
-        new LoadLogoImageAyscTask ( resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username ).execute();
+        //new LoadLogoImageAyscTask ( resources, userLogo, application.getUserLogo ( ), R.drawable.ic_login_username ).execute();
+        userLogo.setImageURI( Uri.parse( application.getUserLogo() ));
+
         //渲染用户名
         userName.setText(application.getUserName());
         userName.setTextColor(resources.getColor(R.color.theme_color));
@@ -332,21 +361,21 @@ public class HomeActivity extends BaseActivity
             pageWeb.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         }
 
+        if( null != myBroadcastReceiver){
+            myBroadcastReceiver.unregisterReceiver();
+        }
+
         UnRegister();
 
         if(mHandler!=null){
             mHandler.removeCallbacksAndMessages(null);
         }
 
-
-
     }
 
     @Override
     protected void initView ( ) {
-
         urlFilterUtils = new UrlFilterUtils( this, mHandler, application  );
-
         //设置title背景
         homeTitle.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         ff1.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
@@ -448,7 +477,8 @@ public class HomeActivity extends BaseActivity
             //userType.setText("点击登录");
             showAccountType("点击登录");
 
-            userLogo.setImageResource( R.drawable.ic_login_username);
+            //userLogo.setImageResource( R.drawable.ic_login_username);
+            userLogo.setImageURI( "res:///"+ R.drawable.ic_login_username);
         }else{
         }
     }
@@ -482,7 +512,7 @@ public class HomeActivity extends BaseActivity
     private void loadMainMenu(){
         loadMenuView.removeAllViews();
 
-        FooterOneWidget footerOneWidget=new FooterOneWidget(this);
+        footerOneWidget=new FooterOneWidget(this);
         int heightPx = DensityUtils.dip2px(this , 50);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
         footerOneWidget.setLayoutParams(layoutParams);
@@ -805,7 +835,6 @@ public class HomeActivity extends BaseActivity
         getShareContentByJS();
     }
 
-
     @Override
     public boolean handleMessage ( Message msg ) {
         if( layDrag !=null && layDrag.isShown()){
@@ -939,19 +968,13 @@ public class HomeActivity extends BaseActivity
                 //userType.setText(user.getLevelName());
                 showAccountType( user.getLevelName() );
 
-                new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute ( );
-
-                //切换用户，需要清空 店中店的 缓存数据
-                //SisConstant.SHOPINFO = null;
-                //SisConstant.CATEGORY = null;
-
+                //new LoadLogoImageAyscTask ( resources, userLogo, user.getWxHeadImg ( ), R.drawable.ic_login_username ).execute ( );
+                userLogo.setImageURI(  user.getWxHeadImg()==null ? "res:///"+R.drawable.ic_login_username : user.getWxHeadImg()  );
 
                 mainMenuLayout.removeAllViews();
                 //动态加载侧滑菜单
                 UIUtils ui = new UIUtils ( application, HomeActivity.this, resources, mainMenuLayout, mHandler );
                 ui.loadMenus();
-
-
 
                 dealUserid();
             }
@@ -1016,15 +1039,6 @@ public class HomeActivity extends BaseActivity
             }
             break;
             case WeiXinPayUtil.SDK_WX_PAY_FLAG :{
-//                WeiXinPayResult result = (WeiXinPayResult) msg.obj;
-//                if ( result !=null && result.getCode() == WeiXinPayUtil.FAIL) {
-//                    Toast.makeText(getApplication(), result.getMessage(), Toast.LENGTH_LONG).show();
-//                    return true;
-//                }else{
-//                    if(pageWeb!=null) {
-//                        pageWeb.reload();
-//                    }
-//                }
                 dealWeiXinPayResult(msg);
             }
             break;
@@ -1450,7 +1464,8 @@ public class HomeActivity extends BaseActivity
 
             String logoUrl = authMallModel.getData().getHeadImgUrl();
 
-            new LoadLogoImageAyscTask ( ref.get().resources , ref.get().userLogo  , authMallModel.getData().getHeadImgUrl(), R.drawable.ic_login_username ).execute();
+            //new LoadLogoImageAyscTask ( ref.get().resources , ref.get().userLogo  , authMallModel.getData().getHeadImgUrl(), R.drawable.ic_login_username ).execute();
+            ref.get().userLogo.setImageURI( authMallModel.getData().getHeadImgUrl() );
 
             //动态加载侧滑菜单
             //UIUtils ui = new UIUtils ( BaseApplication.single , ref.get() , ref.get().resources , ref.get().mainMenuLayout , ref.get().mHandler );
@@ -1522,6 +1537,18 @@ public class HomeActivity extends BaseActivity
         pageWeb.reload();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRefresMessage(final RefreshMessageEvent event){
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(footerOneWidget==null)return;
+                BaseApplication.single.unReadMessageCount= event.isHasMessage()?1:0;
+                footerOneWidget.showCircleView(event.isHasMessage());
+            }
+        },1500);
+    }
+
     @Override
     public void onGlobalLayout() {
         try {
@@ -1576,13 +1603,45 @@ public class HomeActivity extends BaseActivity
             Toast.makeText(getApplication(), result.getMessage(), Toast.LENGTH_LONG).show();
             return;
         }else if( result !=null ){
-            if(pageWeb !=null) {
-                String orderNo = result.getOrderInfo().getOrderNo();
+//            if(pageWeb !=null) {
+//                String orderNo = result.getOrderInfo().getOrderNo();
+//                String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );
+//                pageWeb.loadUrl(urlString);
+//            }
+        }
+    }
+
+    /***
+     * js调用android的方法，设置未读消息数量
+     * @param msgCount
+     */
+    @JavascriptInterface
+    public void setUnReadMessageCount(int msgCount){
+        BaseApplication.single.unReadMessageCount=msgCount;
+    }
+
+    @JavascriptInterface
+    public void setJavascriptError(String error){
+        Log.e("HomeActivity", error);
+        //ToastUtils.showLongToast(error);
+    }
+
+
+    @Override
+    public void onFinishReceiver(MyBroadcastReceiver.ReceiverType type, Object msg) {
+        if(type == MyBroadcastReceiver.ReceiverType.wxPaySuccess){
+            //viewPage.goBack();
+            if( msg ==null) return;
+            Bundle bundle = (Bundle) msg;
+            if( bundle ==null) return;
+            WxPaySuccessCallbackModel data = (WxPaySuccessCallbackModel) bundle.getSerializable( Constants.HUOTU_PAY_CALLBACK_KEY);
+            if( data ==null)  return;
+            String orderNo = data.getOrderNo();
+            if( pageWeb !=null) {
                 String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );
                 pageWeb.loadUrl(urlString);
             }
         }
     }
-
 }
 

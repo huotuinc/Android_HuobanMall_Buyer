@@ -18,7 +18,7 @@ import com.tencent.mm.sdk.modelpay.PayResp;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-
+import com.huotu.partnermall.utils.BuyerPayUtil;
 /**
  * 微信支付回调类
  */
@@ -50,8 +50,10 @@ public class WXPayEntryActivity extends Activity implements  IWXAPIEventHandler 
             String msg = "";
             if( resp.errCode== 0)
             {
+                BuyerPayUtil.paySuccessCallback( this , resp);
+
                 msg="支付成功";
-                MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_PAY_SUCCESS );
+                //MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_PAY_SUCCESS );
                 this.finish();
                 ToastUtils.showLongToast ( WXPayEntryActivity.this, msg );
                 return;

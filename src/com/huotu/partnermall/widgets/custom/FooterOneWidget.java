@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.volley.Request;
@@ -18,7 +19,9 @@ import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.BuildConfig;
+import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.MenuLinkEvent;
+import com.huotu.partnermall.model.RefreshMessageEvent;
 import com.huotu.partnermall.utils.DensityUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.JSONUtil;
@@ -60,6 +63,10 @@ public class FooterOneWidget extends BaseLinearLayout
      * 资源根地址
      */
     public String resourceUrl;
+    /***
+     * 红点控件
+     */
+    private View circleView;
 
 
     public FooterOneWidget(Context context ) {
@@ -105,12 +112,39 @@ public class FooterOneWidget extends BaseLinearLayout
             ll.setPadding(padpx,padpx,padpx,padpx);
             ll.setOnClickListener(this);
 
+            LinearLayout linearLayout = new LinearLayout(getContext());
+            linearLayout.setOrientation(HORIZONTAL);
+            linearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
             SimpleDraweeView iv = new SimpleDraweeView(getContext());
             int iconWidth = DensityUtils.dip2px(getContext(), FOOTER_ICON_WIDTH);
-            layoutParams = new LayoutParams( iconWidth , iconWidth );
-            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-            iv.setLayoutParams(layoutParams);
-            ll.addView(iv);
+            //layoutParams = new LayoutParams( iconWidth , iconWidth );
+            //layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+            LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(iconWidth,iconWidth);
+            layoutParams1.gravity = Gravity.CENTER_HORIZONTAL;
+
+            //iv.setLayoutParams(layoutParams);
+            iv.setLayoutParams(layoutParams1);
+            linearLayout.addView(iv);
+
+            String urlLink = item.getLinkUrl();
+            if( urlLink.contains( URL_PARAMETER_QQ ) ) {
+                String kefuUrl = BaseApplication.single.readMerchantWebChannel();
+                if (!TextUtils.isEmpty(kefuUrl)) {
+                    View circle = new View(getContext());
+                    int circleWidth = DensityUtils.dip2px(getContext(), 8);
+                    int circleHeight = circleWidth;
+                    circle.setVisibility(GONE);
+                    circle.setBackgroundResource(R.drawable.circle_red);
+                    layoutParams1 = new LinearLayout.LayoutParams(circleWidth, circleHeight);
+                    layoutParams1.gravity = Gravity.TOP;
+                    circle.setLayoutParams(layoutParams1);
+                    linearLayout.addView(circle);
+                    circleView = circle;
+                }
+            }
+
+            ll.addView(linearLayout);
+
             String imageUrl = resourceUrl + item.getImageUrl();
             FrescoDraweeController.loadImage(iv, iconWidth , imageUrl);
             iv.setTag(item);
@@ -181,6 +215,8 @@ public class FooterOneWidget extends BaseLinearLayout
                 String kefuUrl = BaseApplication.single.readMerchantWebChannel();
                 if(!TextUtils.isEmpty( kefuUrl)){
                     url = url.replace( URL_PARAMETER_QQ , kefuUrl );
+                    EventBus.getDefault().post(new RefreshMessageEvent(false));
+                    showCircleView(false);
                 }else {
                     String qq = mallInfoBean != null ? mallInfoBean.getClientQQ() : "";
                     url = url.replace(URL_PARAMETER_QQ, "http://wpa.qq.com/msgrd?v=3&uin=" + qq + "&site=qq&menu=yes");
@@ -308,5 +344,10 @@ public class FooterOneWidget extends BaseLinearLayout
         }catch ( Exception ex ){
             return null;
         }
+    }
+
+    public void showCircleView(boolean show){
+        if(circleView==null)return;
+        circleView.setVisibility(show?VISIBLE:GONE);
     }
 }

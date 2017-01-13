@@ -1,5 +1,7 @@
 package com.huotu.partnermall.model;
 
+import java.util.List;
+
 /**
  * 商户信息
  */
@@ -15,6 +17,8 @@ public class MerchantInfoModel {
     private int accountmodel;
     //客服地址
     private String webchannel;
+    //广告列表
+    private List<Advertise> appad;
 
     public String getMall_description() {
         return mall_description;
@@ -86,5 +90,21 @@ public class MerchantInfoModel {
 
     public void setWebchannel(String webchannel) {
         this.webchannel = webchannel;
+    }
+
+    public int getAccountmodel() {
+        return accountmodel;
+    }
+
+    public void setAccountmodel(int accountmodel) {
+        this.accountmodel = accountmodel;
+    }
+
+    public List<Advertise> getAppad() {
+        return appad;
+    }
+
+    public void setAppad(List<Advertise> appad) {
+        this.appad = appad;
     }
 }

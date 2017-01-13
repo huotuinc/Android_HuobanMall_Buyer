@@ -83,9 +83,19 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         this.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         //设置SelectPicPopupWindow弹出窗体可点击
         //this.setFocusable(true);
+//        this.setTouchInterceptor(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+////                if( event.getAction() == MotionEvent.ACTION_OUTSIDE){
+////                    return true;
+////                }
+//
+//                return true;
+//            }
+//        });
 
         this.setOutsideTouchable(false);
-        //this.setBackgroundDrawable(ContextCompat.getDrawable(aty , R.drawable.share_window_bg));
+        this.setBackgroundDrawable(ContextCompat.getDrawable(aty , R.drawable.share_window_bg));
 
         WindowUtils.backgroundAlpha(aty, 0.4f);
     }

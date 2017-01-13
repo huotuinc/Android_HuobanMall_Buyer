@@ -5,46 +5,37 @@ import java.util.List;
 /**
  * 切换用户模型
  */
-public
-class SwitchUserModel {
+public class SwitchUserModel {
 
     private String msg;
     private int code;
-    private
-    List<SwitchUser> data;
+    private List<SwitchUser> data;
 
-    public
-    String getMsg ( ) {
+    public String getMsg() {
         return msg;
     }
 
-    public
-    void setMsg ( String msg ) {
+    public void setMsg(String msg) {
         this.msg = msg;
     }
 
-    public
-    int getCode ( ) {
+    public int getCode() {
         return code;
     }
 
-    public
-    void setCode ( int code ) {
+    public void setCode(int code) {
         this.code = code;
     }
 
-    public
-    List< SwitchUser > getData ( ) {
+    public List<SwitchUser> getData() {
         return data;
     }
 
-    public
-    void setData ( List< SwitchUser > data ) {
+    public void setData(List<SwitchUser> data) {
         this.data = data;
     }
 
-    public class SwitchUser
-    {
+    public class SwitchUser {
         private int coerceloseefficacy;
         private int belongOne;
         private int IsDelete;
@@ -61,141 +52,115 @@ class SwitchUserModel {
         private String levelName;
         private int relatedType;
 
-        public  int getCoerceloseefficacy ( ) {
+        public int getCoerceloseefficacy() {
             return coerceloseefficacy;
         }
 
-        public void setCoerceloseefficacy ( int coerceloseefficacy ) {
+        public void setCoerceloseefficacy(int coerceloseefficacy) {
             this.coerceloseefficacy = coerceloseefficacy;
         }
 
-        public
-        int getBelongOne ( ) {
+        public int getBelongOne() {
             return belongOne;
         }
 
-        public
-        void setBelongOne ( int belongOne ) {
+        public void setBelongOne(int belongOne) {
             this.belongOne = belongOne;
         }
 
-        public
-        int getIsDelete ( ) {
+        public int getIsDelete() {
             return IsDelete;
         }
 
-        public
-        void setIsDelete ( int isDelete ) {
+        public void setIsDelete(int isDelete) {
             IsDelete = isDelete;
         }
 
-        public
-        int getLevelID ( ) {
+        public int getLevelID() {
             return levelID;
         }
 
-        public
-        void setLevelID ( int levelID ) {
+        public void setLevelID(int levelID) {
             this.levelID = levelID;
         }
 
-        public
-        String getWxUnionId ( ) {
+        public String getWxUnionId() {
             return wxUnionId;
         }
 
-        public
-        void setWxUnionId ( String wxUnionId ) {
+        public void setWxUnionId(String wxUnionId) {
             this.wxUnionId = wxUnionId;
         }
 
-        public
-        int getUserid ( ) {
+        public int getUserid() {
             return userid;
         }
 
-        public
-        void setUserid ( int userid ) {
+        public void setUserid(int userid) {
             this.userid = userid;
         }
 
-        public
-        String getPassword ( ) {
+        public String getPassword() {
             return password;
         }
 
-        public
-        void setPassword ( String password ) {
+        public void setPassword(String password) {
             this.password = password;
         }
 
-        public
-        int getUserType ( ) {
+        public int getUserType() {
             return userType;
         }
 
-        public
-        void setUserType ( int userType ) {
+        public void setUserType(int userType) {
             this.userType = userType;
         }
 
-        public
-        String getWxNickName ( ) {
+        public String getWxNickName() {
             return wxNickName;
         }
 
-        public
-        void setWxNickName ( String wxNickName ) {
+        public void setWxNickName(String wxNickName) {
             this.wxNickName = wxNickName;
         }
 
-        public
-        String getWxHeadImg ( ) {
+        public String getWxHeadImg() {
             return wxHeadImg;
         }
 
-        public
-        void setWxHeadImg ( String wxHeadImg ) {
+        public void setWxHeadImg(String wxHeadImg) {
             this.wxHeadImg = wxHeadImg;
         }
 
-        public
-        String getUsername ( ) {
+        public String getUsername() {
             return username;
         }
 
-        public
-        void setUsername ( String username ) {
+        public void setUsername(String username) {
             this.username = username;
         }
 
-        public
-        String getWxOpenId ( ) {
+        public String getWxOpenId() {
             return wxOpenId;
         }
 
-        public
-        void setWxOpenId ( String wxOpenId ) {
+        public void setWxOpenId(String wxOpenId) {
             this.wxOpenId = wxOpenId;
         }
 
-        public
-        int getCustomerid ( ) {
+        public int getCustomerid() {
             return customerid;
         }
 
-        public
-        void setCustomerid ( int customerid ) {
+        public void setCustomerid(int customerid) {
             this.customerid = customerid;
         }
 
-        public
-        String getLevelName ( ) {
+        public String getLevelName() {
             return levelName;
         }
 
-        public
-        void setLevelName ( String levelName ) {
+        public void setLevelName(String levelName) {
             this.levelName = levelName;
         }
 
@@ -207,4 +172,5 @@ class SwitchUserModel {
             this.relatedType = relatedType;
         }
     }
+
 }

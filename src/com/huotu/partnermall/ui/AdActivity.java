@@ -12,6 +12,7 @@ import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.AdBannerConfig;
 import com.huotu.partnermall.model.AdImageBean;
+import com.huotu.partnermall.model.Advertise;
 import com.huotu.partnermall.model.AdvertiseModel;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
@@ -39,7 +40,7 @@ public class AdActivity extends BaseActivity implements Handler.Callback ,AdBann
     //推送信息
     Bundle bundlePush;
 
-    AdvertiseModel advertiseModel;
+    List<Advertise> advertiseList;
 
     String adLinkUrl;
 
@@ -79,7 +80,7 @@ public class AdActivity extends BaseActivity implements Handler.Callback ,AdBann
             bundlePush = getIntent().getBundleExtra(Constants.HUOTU_PUSH_KEY);
         }
         if(null!= getIntent() && getIntent().hasExtra(Constants.HUOTU_AD_KEY)){
-            advertiseModel= (AdvertiseModel) getIntent().getSerializableExtra(Constants.HUOTU_AD_KEY);
+            advertiseList= (List<Advertise>) getIntent().getSerializableExtra(Constants.HUOTU_AD_KEY);
         }
 
         adBannerConfig = new AdBannerConfig();
@@ -88,7 +89,7 @@ public class AdActivity extends BaseActivity implements Handler.Callback ,AdBann
         adBannerConfig.setWidth(0);
         List<AdImageBean> list = new ArrayList<>();
 
-        for(AdvertiseModel.Advertise item : advertiseModel.getData()){
+        for(Advertise item : advertiseList ){
 
             AdImageBean bean = new AdImageBean();
             bean.setImageUrl( item.getImages());
@@ -102,6 +103,7 @@ public class AdActivity extends BaseActivity implements Handler.Callback ,AdBann
         skipTimeSecond = adBannerConfig.getImages().size() * 3;
 
         adBannerWidget.setAdBannerConfig(adBannerConfig);
+        adBannerWidget.setPointViewVisible(false);
         adBannerWidget.setAdOnClickListener(this);
 
         setSkipText();
@@ -142,6 +144,7 @@ public class AdActivity extends BaseActivity implements Handler.Callback ,AdBann
     }
 
     void setSkipText() {
+        if(tvSkip==null)return;
         String desc = String.valueOf(skipTimeSecond) + "秒后跳过";
         tvSkip.setText(desc);
     }

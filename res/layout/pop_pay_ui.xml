@@ -14,7 +14,7 @@
                 android:layout_marginLeft="@dimen/weixin_pay_margin"
                 android:layout_marginRight="@dimen/weixin_pay_margin"
                 android:text="微信支付"
-                android:textColor="@color/theme_color"
+                android:textColor="@color/pay_wechat_textcolor"
                 android:background="@drawable/wx_pay"/>
             <Button
                 android:layout_width="match_parent"
@@ -25,7 +25,7 @@
                 android:layout_marginLeft="@dimen/weixin_pay_margin"
                 android:layout_marginRight="@dimen/weixin_pay_margin"
                 android:text="支付宝网页支付"
-                android:textColor="@color/theme_color"
+                android:textColor="@color/pay_ali_textcolor"
                 android:background="@drawable/ali_pay"/>
         <Button
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:layout_marginLeft="@dimen/weixin_pay_margin"
             android:layout_marginRight="@dimen/weixin_pay_margin"
             android:text="支付宝移动支付"
-            android:textColor="@color/theme_color"
+            android:textColor="@color/pay_ali_textcolor"
             android:background="@drawable/ali_pay"/>
 
             <Button

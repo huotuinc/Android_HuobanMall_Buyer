@@ -287,7 +287,7 @@ public class Constants {
 	/**
 	 * 修改密码
 	 */
-	public static final String MODIFY_PSW = "modifyPsw";
+	//public static final String MODIFY_PSW = "modifyPsw";
 
 	/**
 	 * 侧滑菜单加载页面
@@ -317,22 +317,22 @@ public class Constants {
 	/**
 	 * 首页Url
 	 */
-	public static final String HOME_PAGE_URL = "http://www.baidu.com";
+	//public static final String HOME_PAGE_URL = "http://www.baidu.com";
 
 	/**
 	 * 基本信息
 	 */
-	public static final String BASE_INFO   = "base_ifo";
+	//public static final String BASE_INFO   = "base_ifo";
 	/**
 	 * 当前加载的页面
 	 */
-	public static final String CURRENT_URL = "current_url";
+	//public static final String CURRENT_URL = "current_url";
 
 	//页面的类型
 	/**
 	 * 设置界面
 	 */
-	public static final String PAGE_TYPE_SETTING = "setting";
+	//public static final String PAGE_TYPE_SETTING = "setting";
 
 	/**
 	 * 微信支付appID
@@ -435,6 +435,8 @@ public class Constants {
 	public final static String HUOTU_AD_KEY= "huotu_ad_key";
 
 	public final static String HUOTU_AD_URL_KEY="huotu_ad_url_key";
+
+	public final static String HUOTU_PAY_CALLBACK_KEY = "huotu_pay_callback_key";
 
 	/**
 	 * 接收短信等待时间（毫米）

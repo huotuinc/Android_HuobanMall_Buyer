@@ -10,6 +10,7 @@ import android.util.Log;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
+import com.huotu.partnermall.utils.BuyerPayUtil;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
@@ -53,8 +54,10 @@ class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
             String msg = "";
             if( resp.errCode== 0)
             {
+                BuyerPayUtil.paySuccessCallback( this , resp);
+
                 msg="支付成功";
-                MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_PAY_SUCCESS );
+                //MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_PAY_SUCCESS );
                 this.finish();
                 ToastUtils.showLongToast ( WXPayEntryActivity.this, msg );
                 return;

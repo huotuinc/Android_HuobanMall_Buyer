@@ -66,6 +66,9 @@ public class BaseApplication extends Application {
 
     public static BaseApplication single;
 
+    //未读客服消息数量
+    public int unReadMessageCount=0;
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -409,7 +412,7 @@ public class BaseApplication extends Application {
 
     //获取用户图片
     public String getUserLogo() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ICON);
+        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ICON,"");
     }
 
     //获取用户名称

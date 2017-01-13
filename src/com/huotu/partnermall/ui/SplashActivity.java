@@ -26,18 +26,17 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
+import com.huotu.partnermall.model.Advertise;
 import com.huotu.partnermall.model.AdvertiseModel;
 import com.huotu.partnermall.model.AuthMallModel;
 import com.huotu.partnermall.model.ColorBean;
-import com.huotu.partnermall.model.DataBase;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
+import com.huotu.partnermall.model.MerchantInfoModel;
 import com.huotu.partnermall.model.UpdateLeftInfoModel;
-import com.huotu.partnermall.service.LocationService;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.guide.GuideActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
@@ -45,7 +44,6 @@ import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.PropertiesUtil;
-import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.utils.XMLParserUtils;
@@ -55,13 +53,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
-import static android.R.attr.type;
 
 public class SplashActivity extends BaseActivity {
     public static final String TAG = SplashActivity.class.getSimpleName();
@@ -144,11 +140,11 @@ public class SplashActivity extends BaseActivity {
                             getLeftMenu();
 
                             //获取商户logo信息
-                            String logoUrl = Constants.getINTERFACE_PREFIX() + "mall/getConfig";
-                            logoUrl += "?customerId=" + application.readMerchantId();
-                            AuthParamUtils paramLogo = new AuthParamUtils(application, System.currentTimeMillis(), logoUrl);
-                            final String logoUrls = paramLogo.obtainUrls();
-                            HttpUtil.getInstance().doVolleyLogo(application, logoUrls);
+//                            String logoUrl = Constants.getINTERFACE_PREFIX() + "mall/getConfig";
+//                            logoUrl += "?customerId=" + application.readMerchantId();
+//                            AuthParamUtils paramLogo = new AuthParamUtils(application, System.currentTimeMillis(), logoUrl);
+//                            final String logoUrls = paramLogo.obtainUrls();
+//                            HttpUtil.getInstance().doVolleyLogo(application, logoUrls);
                             //获取商户支付信息
                             //String targetUrl = Constants.getINTERFACE_PREFIX() + "PayConfig?customerid=";
                             String targetUrl = Constants.getINTERFACE_PREFIX() + "payconfig/IndexMall?customerid=";
@@ -158,7 +154,6 @@ public class SplashActivity extends BaseActivity {
                             HttpUtil.getInstance().doVolley(application, url);
                             //当用户登录状态时，则重新获得用户信息。
                             initUserInfo();
-
                         }
                     }
 
@@ -171,15 +166,15 @@ public class SplashActivity extends BaseActivity {
                     public void onAnimationEnd(Animation animation) {
                         if (isConnection) {
                             //是否首次安装
-                            if (application.isFirst()) {
-                                ActivityUtils.getInstance().skipActivity(SplashActivity.this, GuideActivity.class);
-                                //写入初始化数据
-                                application.writeInitInfo("inited");
-                            } else {
+//                            if (application.isFirst()) {
+//                                ActivityUtils.getInstance().skipActivity(SplashActivity.this, GuideActivity.class);
+//                                //写入初始化数据
+//                                application.writeInitInfo("inited");
+//                            } else {
 
-                                getAdData();
+                                getConfigData();
 
-                            }
+//                            }
                         }
                     }
                 });
@@ -384,7 +379,7 @@ public class SplashActivity extends BaseActivity {
                             return;
                         }
 
-                        gotoAdvertise(advertiseModel);
+                        gotoAdvertise(advertiseModel.getData());
                     }
                 },
                 new Response.ErrorListener() {
@@ -398,7 +393,7 @@ public class SplashActivity extends BaseActivity {
         VolleyUtil.getRequestQueue().add(request);
     }
 
-    void gotoAdvertise( AdvertiseModel model ){
+    void gotoAdvertise( List<Advertise> model ){
         Intent intent = new Intent();
         intent.setClass(SplashActivity.this, AdActivity.class);
         if (null != bundlePush) {
@@ -409,12 +404,92 @@ public class SplashActivity extends BaseActivity {
     }
 
     void gotoHome(){
-        Intent intent = new Intent();
-        intent.setClass(SplashActivity.this, HomeActivity.class);
-        if (null != bundlePush) {
-            intent.putExtra(Constants.HUOTU_PUSH_KEY, bundlePush);
+        //是否首次安装
+        if (application.isFirst()) {
+            ActivityUtils.getInstance().skipActivity(SplashActivity.this, GuideActivity.class);
+            //写入初始化数据
+            application.writeInitInfo("inited");
+        } else {
+            Intent intent = new Intent();
+            intent.setClass(SplashActivity.this, HomeActivity.class);
+            if (null != bundlePush) {
+                intent.putExtra(Constants.HUOTU_PUSH_KEY, bundlePush);
+            }
+            ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
         }
-        ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
     }
+
+    void getConfigData(){
+        String logoUrl = Constants.getINTERFACE_PREFIX() + "mall/getConfig";
+        logoUrl += "?customerId=" + application.readMerchantId();
+        AuthParamUtils paramLogo = new AuthParamUtils(application, System.currentTimeMillis(), logoUrl);
+        final String logoUrls = paramLogo.obtainUrls();
+        GsonRequest<MerchantInfoModel> request = new GsonRequest<>(
+                Request.Method.GET,
+                logoUrls,
+                MerchantInfoModel.class,
+                null,
+                null,
+                new Response.Listener<MerchantInfoModel>() {
+                    @Override
+                    public void onResponse(MerchantInfoModel merchantInfoModel) {
+
+                        if (merchantInfoModel == null) {
+                            Log.e(TAG, "请求出错。");
+                            gotoHome();
+                            return;
+                        }
+
+                        String site = merchantInfoModel.getMall_site();
+                        application.writeDomain(site);
+                        String logo = null;
+                        if (null != merchantInfoModel.getMall_logo() && null != merchantInfoModel.getMall_name()) {
+                            if (!TextUtils.isEmpty(application.obtainMerchantUrl())) {
+                                logo = application.obtainMerchantUrl() + merchantInfoModel.getMall_logo();
+                            } else {
+                                logo = merchantInfoModel.getMall_logo();
+                            }
+
+                            String name = merchantInfoModel.getMall_name();
+                            application.writeMerchantLogo(logo);
+                            application.writeMerchantName(name);
+
+                            //记录登录配置方式
+                            application.writeLoginMethod(merchantInfoModel.getAccountModel());
+                            //记录服务器app最新版本信息
+                            BaseApplication.writeNewVersion(merchantInfoModel.getVersionnumber());
+                            BaseApplication.writeAppUrl(merchantInfoModel.getApplinkurl());
+
+                            //记录客服地址
+                            String webChannel = merchantInfoModel.getWebchannel();
+                            String webChannelStr = "";
+                            if (!TextUtils.isEmpty(webChannel)) {
+                                try {
+                                    webChannelStr = URLDecoder.decode(webChannel);
+                                } catch (Exception ex) {
+                                    Log.e("getconfig", ex.getMessage());
+                                }
+                            }
+                            application.writeMerchanntWebChannel(webChannelStr);
+                        }
+
+                        if (merchantInfoModel.getAppad() == null || merchantInfoModel.getAppad().size() < 1) {
+                            gotoHome();
+                            return;
+                        }
+                        gotoAdvertise(merchantInfoModel.getAppad());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        gotoHome();
+                    }
+                }
+        );
+
+        VolleyUtil.getRequestQueue().add(request);
+    }
+
 }
 

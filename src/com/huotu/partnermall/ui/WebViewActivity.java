@@ -47,6 +47,7 @@ import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
 import com.huotu.partnermall.model.RefreshPageEvent;
 import com.huotu.partnermall.model.ShareModel;
+import com.huotu.partnermall.model.WxPaySuccessCallbackModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
@@ -147,22 +148,11 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         SystemTools.loadBackground(titleRightImage, rightDraw);
         titleRightImage.setVisibility(View.GONE);
 
-        //viewPage = refreshWebView.getRefreshableView();
-//        refreshWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
-//            @Override
-//            public void onRefresh(PullToRefreshBase<WebView> pullToRefreshBase) {
-//                if (viewPage == null) return;
-//                viewPage.reload();
-//            }
-//        });
-
-
         ptrClassicFrameLayout.disableWhenHorizontalMove(true);
         ptrClassicFrameLayout.setLastUpdateTimeRelateObject(this);
         ptrClassicFrameLayout.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                //return false;
 
                 String url = viewPage.getUrl();
                 if(url!=null && !url.isEmpty() && (url.toLowerCase().contains(Constants.URL_KEFU_2) || url.toLowerCase().contains(Constants.URL_KEFU_3) )){
@@ -240,6 +230,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     private void loadPage(){
         viewPage.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         viewPage.setVerticalScrollBarEnabled(false);
+        viewPage.setHorizontalScrollBarEnabled(false);
         viewPage.setClickable(true);
         viewPage.getSettings().setUseWideViewPort(true);
         //是否需要避免页面放大缩小操作
@@ -250,7 +241,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         viewPage.getSettings().setSaveFormData(true);
         viewPage.getSettings().setAllowFileAccess(true);
         viewPage.getSettings().setLoadWithOverviewMode(false);
-        viewPage.getSettings().setSavePassword(true);
+        //viewPage.getSettings().setSavePassword(true);
         viewPage.getSettings().setLoadsImagesAutomatically(true);
         viewPage.getSettings().setDomStorageEnabled(true);
         viewPage.getSettings().setAppCacheEnabled(true);
@@ -261,7 +252,6 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         viewPage.addJavascriptInterface(this, "android");
         String appCacheDir= BaseApplication.single.getDir("cache",Context.MODE_PRIVATE).getPath();
         viewPage.getSettings().setAppCachePath(appCacheDir);
-
 
         if(BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ){
             WebView.setWebContentsDebuggingEnabled(true);
@@ -536,7 +526,18 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
     @Override
     public void onFinishReceiver ( MyBroadcastReceiver.ReceiverType type, Object msg ) {
         if(type == MyBroadcastReceiver.ReceiverType.wxPaySuccess){
-            viewPage.goBack();
+            //viewPage.goBack();
+            if( msg ==null) return;
+            Bundle bundle = (Bundle) msg;
+            if( bundle ==null) return;
+            WxPaySuccessCallbackModel data = (WxPaySuccessCallbackModel) bundle.getSerializable( Constants.HUOTU_PAY_CALLBACK_KEY);
+            if( data ==null)  return;
+            String orderNo = data.getOrderNo();
+
+            if(viewPage !=null) {
+                String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );
+                viewPage.loadUrl(urlString);
+            }
         }
     }
 
@@ -710,11 +711,11 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             Toast.makeText(getApplication(), result.getMessage(), Toast.LENGTH_LONG).show();
             return;
         }else if( result !=null ){
-            if(viewPage!=null) {
-                String orderNo = result.getOrderInfo().getOrderNo();
-                String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );
-                viewPage.loadUrl(urlString);
-            }
+//            if(viewPage!=null) {
+//                String orderNo = result.getOrderInfo().getOrderNo();
+//                String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );
+//                viewPage.loadUrl(urlString);
+//            }
         }
     }
 }

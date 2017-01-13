@@ -1,9 +1,6 @@
 package com.huotu.partnermall.ui.guide;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,35 +11,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.huotu.partnermall.adapter.ViewPagerAdapter;
-import com.huotu.partnermall.config.Constants;
-import com.huotu.partnermall.image.ImageUtils;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.DensityUtils;
-import com.huotu.partnermall.utils.SystemTools;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
-import static android.R.attr.id;
-import static android.R.attr.resizeable;
-import static com.huotu.partnermall.inner.R.id.image;
-import static com.huotu.partnermall.inner.R.id.ivGif;
-import static com.huotu.partnermall.inner.R.id.skipText;
-import static u.aly.au.L;
 
 /**
  * 引导界面

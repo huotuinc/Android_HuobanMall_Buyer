@@ -52,8 +52,18 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
             String msg = "";
             if( resp.errCode== 0)
             {
+                BuyerPayUtil.paySuccessCallback( this , resp);
+
                 msg="支付成功";
-                MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_PAY_SUCCESS );
+
+//                PayResp payResp = (PayResp)resp;
+//                Bundle bundle = new Bundle();
+//                if( payResp!=null && payResp.extData !=null) {
+//                    WxPaySuccessCallbackModel extData = JSONUtil.getGson().fromJson(payResp.extData, WxPaySuccessCallbackModel.class);
+//                    bundle.putSerializable(Constants.HUOTU_PAY_CALLBACK_KEY, extData);
+//                }
+//                MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_PAY_SUCCESS , bundle);
+
                 this.finish();
                 ToastUtils.showLongToast ( WXPayEntryActivity.this, msg );
                 return;

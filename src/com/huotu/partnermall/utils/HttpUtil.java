@@ -72,137 +72,67 @@ public class HttpUtil{
     }
 
     /**
-     * 获取数据包版本信息
-     * @param application
-     * @param url
-     */
-//    public void doVolleyPackage( final BaseApplication application, String url ) {
-//        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
-//
-//
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                JSONUtil<MDataPackageModel > jsonUtil = new JSONUtil<MDataPackageModel>();
-//                MDataPackageModel packageModel = new MDataPackageModel();
-//                packageModel = jsonUtil.toBean(response.toString (), packageModel);
-//                if(null != packageModel) {
-//                    MDataPackageModel.MDataPackageData dataPackageData = packageModel.getData ();
-//                    if ( 0 == dataPackageData.getUpdateData () ) {
-//                        //没有更新，直接执行以下步骤
-//                    }
-//                    else
-//                    {
-//                        application.writePackageVersion ( dataPackageData.getVersion ( ) );
-//                        //直接下载文件，并更新version
-//                        //下载数据
-//                        //new HttpDownloader().execute ( dataPackageData.getDownloadUrl () );
-//                    }
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//            }
-//
-//
-//        });
-//        VolleyUtil.getRequestQueue().add(re);
-//    }
-
-    /**
-     * 根据商户编号获取商户域名
-     * @param application
-     * @param url
-     */
-//    public void doVolleySite( final BaseApplication application, String url )
-//    {
-//        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
-//
-//
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                JSONUtil<MSiteModel > jsonUtil = new JSONUtil<MSiteModel>();
-//                MSiteModel mSite = new MSiteModel();
-//                mSite = jsonUtil.toBean(response.toString (), mSite);
-//                if(null != mSite) {
-//                    MSiteModel.MSiteData mSiteData = mSite.getData ();
-//                    if ( null != mSiteData.getMsiteUrl () ) {
-//                        String domain = mSiteData.getMsiteUrl ( );
-//                        application.writeDomain ( domain );
-//                    }
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//            }});
-//        VolleyUtil.getRequestQueue().add(re);
-//    }
-
-    /**
      * 获取商户logo
      * @param application
      * @param url
      */
-    public void doVolleyLogo( final BaseApplication application, String url)
-    {
-        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
-
-            @Override
-            public void onResponse(JSONObject response) {
-
-                JSONUtil<MerchantInfoModel > jsonUtil = new JSONUtil<MerchantInfoModel>();
-                MerchantInfoModel merchantInfo = new MerchantInfoModel();
-                merchantInfo = jsonUtil.toBean(response.toString (), merchantInfo);
-                if(null != merchantInfo) {
-                    String site = merchantInfo.getMall_site();
-                    application.writeDomain(site);
-                    String logo = null;
-                    if ( null != merchantInfo.getMall_logo ( ) && null != merchantInfo.getMall_name () ) {
-                        if(!TextUtils.isEmpty ( application.obtainMerchantUrl () ))
-                        {
-                            logo =  application.obtainMerchantUrl () + merchantInfo.getMall_logo ( );
-                        }
-                        else
-                        {
-                            logo = merchantInfo.getMall_logo ( );
-                        }
-
-                        String name = merchantInfo.getMall_name ( );
-                        application.writeMerchantLogo ( logo );
-                        application.writeMerchantName ( name );
-
-                        //记录登录配置方式
-                        application.writeLoginMethod( merchantInfo.getAccountModel() );
-                        //记录服务器app最新版本信息
-                        application.writeNewVersion( merchantInfo.getVersionnumber() );
-                        application.writeAppUrl( merchantInfo.getApplinkurl() );
-
-                        //记录客服地址
-                        String webChannel = merchantInfo.getWebchannel();
-                        String webChannelStr="";
-                        if(!TextUtils.isEmpty( webChannel)) {
-                            try {
-                                webChannelStr = URLDecoder.decode(webChannel);
-                            }catch ( Exception ex){
-                                Log.e( "httpUtil" , ex.getMessage() );
-                            }
-                        }
-                        application.writeMerchanntWebChannel( webChannelStr );
-
-                    }
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        VolleyUtil.getRequestQueue().add( re);
-    }
+//    public void doVolleyLogo( final BaseApplication application, String url)
+//    {
+//        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
+//
+//            @Override
+//            public void onResponse(JSONObject response) {
+//
+//                JSONUtil<MerchantInfoModel > jsonUtil = new JSONUtil<MerchantInfoModel>();
+//                MerchantInfoModel merchantInfo = new MerchantInfoModel();
+//                merchantInfo = jsonUtil.toBean(response.toString (), merchantInfo);
+//                if(null != merchantInfo) {
+//                    String site = merchantInfo.getMall_site();
+//                    application.writeDomain(site);
+//                    String logo = null;
+//                    if ( null != merchantInfo.getMall_logo ( ) && null != merchantInfo.getMall_name () ) {
+//                        if(!TextUtils.isEmpty ( application.obtainMerchantUrl () ))
+//                        {
+//                            logo =  application.obtainMerchantUrl () + merchantInfo.getMall_logo ( );
+//                        }
+//                        else
+//                        {
+//                            logo = merchantInfo.getMall_logo ( );
+//                        }
+//
+//                        String name = merchantInfo.getMall_name ( );
+//                        application.writeMerchantLogo ( logo );
+//                        application.writeMerchantName ( name );
+//
+//                        //记录登录配置方式
+//                        application.writeLoginMethod( merchantInfo.getAccountModel() );
+//                        //记录服务器app最新版本信息
+//                        application.writeNewVersion( merchantInfo.getVersionnumber() );
+//                        application.writeAppUrl( merchantInfo.getApplinkurl() );
+//
+//                        //记录客服地址
+//                        String webChannel = merchantInfo.getWebchannel();
+//                        String webChannelStr="";
+//                        if(!TextUtils.isEmpty( webChannel)) {
+//                            try {
+//                                webChannelStr = URLDecoder.decode(webChannel);
+//                            }catch ( Exception ex){
+//                                Log.e( "httpUtil" , ex.getMessage() );
+//                            }
+//                        }
+//                        application.writeMerchanntWebChannel( webChannelStr );
+//
+//                    }
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        });
+//        VolleyUtil.getRequestQueue().add( re);
+//    }
     /**
      * 获取支付信息
      * @param application
@@ -427,113 +357,6 @@ public class HttpUtil{
         });
         VolleyUtil.getRequestQueue().add(re);
     }
-
-//    public void doVolleyName( final BaseApplication application, String url, final TextView userType ){
-//        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
-//
-//
-//            @Override
-//            public void onResponse(JSONObject response) {
-//
-//                if( userType ==null) return;
-//
-//                JSONUtil<MemberModel > jsonUtil = new JSONUtil<MemberModel>();
-//                MemberModel memberIfo = new MemberModel();
-//                memberIfo = jsonUtil.toBean(response.toString (), memberIfo);
-//                if(null != memberIfo) {
-//                    MemberModel.MemberInfo member = memberIfo.getData ();
-//                    if ( null != member ) {
-//                        //记录会员等级
-//                        if( TextUtils.isEmpty ( member.getLevelName () ))
-//                        {
-//                            userType.setText ( "未设置会员等级" );
-//                            application.writeMemberLevel ( "未设置会员等级" );
-//                        }
-//                        else
-//                        {
-//                            userType.setText ( member.getLevelName () );
-//                            application.writeMemberLevel ( member.getLevelName () );
-//                        }
-//                    }
-//                }
-//
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//                application.writeMemberLevel ( "普通会员" );
-//            }
-//
-//
-//        });
-//        VolleyUtil.getRequestQueue().add( re);
-//    }
-
-//    public void doVolleyPay(final Activity aty, final Handler mHandler, final BaseApplication application, String url, final PayModel payModel, final ProgressPopupWindow payProgress  ){
-//        final KJJsonObjectRequest re = new KJJsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject >(){
-//
-//
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                if( aty ==null  ) return;
-//
-//                JSONUtil<OrderModel > jsonUtil = new JSONUtil<OrderModel>();
-//                OrderModel orderInfo = new OrderModel();
-//                orderInfo = jsonUtil.toBean(response.toString (), orderInfo);
-//                if(200 == orderInfo.getCode ()) {
-//                    if ( null != orderInfo ) {
-//                        OrderModel.OrderData order = orderInfo.getData ( );
-//                        if ( null == order)
-//                        {
-//                            //支付信息获取错误
-//                            payProgress.dismissView ( );
-//                            NoticePopWindow noticePop = new NoticePopWindow ( aty, "获取订单信息失败。");
-//                            noticePop.showNotice ( );
-//                            noticePop.showAtLocation (  aty.getWindow().getDecorView() ,  Gravity.CENTER, 0, 0
-//                            );
-//                        }
-//                        else
-//                        {
-//                            //payModel.setAmount ( ( int ) ( 100 * format2Decimal ( order.getFinal_Amount ( ) ) ) );
-//                            payModel.setAmount( formatToDecimal( order.getFinal_Amount()) );
-//                            payModel.setDetail ( order.getToStr ( ) );
-//
-//                            if ( null != order ) {
-//                                payProgress.dismissView ( );
-//                                PayPopWindow payPopWindow = new PayPopWindow ( aty,  mHandler, payModel );
-//                                payPopWindow.showAtLocation ( aty.getWindow().getDecorView() , Gravity.BOTTOM, 0, 0 );
-//                            }
-//
-//                        }
-//                    }
-//                    else
-//                    {
-//                        payProgress.dismissView ( );
-//                        NoticePopWindow noticePop = new NoticePopWindow ( aty,  "获取订单信息失败。");
-//                        noticePop.showNotice ();
-//                        noticePop.showAtLocation ( aty.getWindow().getDecorView() , Gravity.CENTER, 0, 0 );
-//                    }
-//                }
-//                else
-//                {
-//                    //支付信息获取错误
-//                    payProgress.dismissView ( );
-//                    NoticePopWindow noticePop = new NoticePopWindow (  aty,  "获取订单信息失败。");
-//                    noticePop.showNotice ( );
-//                    noticePop.showAtLocation ( aty.getWindow().getDecorView() , Gravity.CENTER, 0, 0 );
-//                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                payProgress.dismissView ( );
-//            }
-//        });
-//        VolleyUtil.getRequestQueue ().add( re);
-//    }
 
     /**
      * 清楚重复数据
