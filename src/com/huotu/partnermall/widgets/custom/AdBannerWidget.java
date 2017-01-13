@@ -127,6 +127,7 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( width , height );
         this.setLayoutParams(layoutParams);
+        this.requestLayout();
     }
 
     protected void go(AdImageBean bean){

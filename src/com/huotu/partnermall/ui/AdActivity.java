@@ -99,12 +99,14 @@ public class AdActivity extends BaseActivity implements Handler.Callback ,AdBann
 
         adBannerConfig.setImages(list);
 
-        adBannerConfig.setInterval(3000);
-        skipTimeSecond = adBannerConfig.getImages().size() * 3;
+        adBannerConfig.setInterval(9000);
+        skipTimeSecond = adBannerConfig.getImages().size() * 9;
 
+        adBannerWidget.setCanLoop(false);
         adBannerWidget.setAdBannerConfig(adBannerConfig);
         adBannerWidget.setPointViewVisible(false);
         adBannerWidget.setAdOnClickListener(this);
+
 
         setSkipText();
 
