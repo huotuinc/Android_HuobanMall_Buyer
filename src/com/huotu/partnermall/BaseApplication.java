@@ -37,6 +37,10 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 
+import static com.huotu.partnermall.config.Constants.MERCHANT_INFO;
+import static com.huotu.partnermall.config.Constants.MERCHANT_WEIXIN_ID;
+import static com.huotu.partnermall.config.Constants.WEIXIN_KEY;
+
 /**
  * 系统级别的变量、方法
  * Application
@@ -181,7 +185,7 @@ public class BaseApplication extends Application {
      */
     public boolean checkMerchantInfo() {
         //商户ID
-        String merchantId = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
+        String merchantId = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
         //商户支付宝key信息
 //        String merchantAlipayKey = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY);
 //        //商户微信支付KEY信息
@@ -200,10 +204,10 @@ public class BaseApplication extends Application {
     }
 
     public boolean scanWx() {
-        String parentId = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
-        String appid = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID);
-        String appKey = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.WEIXIN_KEY);
-        String notify = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.WEIXIN_NOTIFY);
+        String parentId = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
+        String appid = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, MERCHANT_WEIXIN_ID);
+        String appKey = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, WEIXIN_KEY);
+        String notify = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_NOTIFY);
 
         if (!TextUtils.isEmpty(parentId) && !TextUtils.isEmpty(appid) && !TextUtils.isEmpty(appKey) && !TextUtils.isEmpty(notify)) {
             return true;
@@ -217,10 +221,10 @@ public class BaseApplication extends Application {
      * @return
      */
     public boolean scanAliPay() {
-        String parentId = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
-        String appid = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_APP_ID);
-        String appKey = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY);
-        String notify = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_NOTIFY);
+        String parentId = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
+        String appid = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_APP_ID);
+        String appKey = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_KEY);
+        String notify = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_NOTIFY);
 
         if ( !TextUtils.isEmpty(appid) && !TextUtils.isEmpty(parentId) && !TextUtils.isEmpty(appKey) && !TextUtils.isEmpty(notify)) {
             return true;
@@ -236,25 +240,25 @@ public class BaseApplication extends Application {
      */
     public void writeMerchantInfo(MerchantBean merchant) {
         //商户ID
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID, merchant.getMerchantId());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_ID, merchant.getMerchantId());
         //版本号
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.APP_VERSION, merchant.getAppVersion());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.APP_VERSION, merchant.getAppVersion());
         //APP名称
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.APP_NAME, merchant.getAppName());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID, merchant.getMerchantAlipayId());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.LOCATION_KEY, merchant.getLocationKey());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.U_MENG_KEY, merchant.getUmengAppkey());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.U_MENG_CHANNEL, merchant.getUmengChannel());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.U_MENG_SECRET, merchant.getUmengMessageSecret());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.SHARE_KEY, merchant.getShareSDKKey());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.TENCENT_KEY, merchant.getTencentKey());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.TENCENT_SECRET, merchant.getTencentSecret());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.SINA_KEY, merchant.getSinaKey());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.SINA_SECRET, merchant.getSinaSecret());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.SINA_REDIRECT_URI, merchant.getSinaRedirectUri());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.WEIXIN_SHARE_key, merchant.getWeixinShareKey());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.WEIXIN_SHARE_SECRET, merchant.getWeixinShareSecret());
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.PUSH_KEY, merchant.getPushKey());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.APP_NAME, merchant.getAppName());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID, merchant.getMerchantAlipayId());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.LOCATION_KEY, merchant.getLocationKey());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.U_MENG_KEY, merchant.getUmengAppkey());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.U_MENG_CHANNEL, merchant.getUmengChannel());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.U_MENG_SECRET, merchant.getUmengMessageSecret());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.SHARE_KEY, merchant.getShareSDKKey());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.TENCENT_KEY, merchant.getTencentKey());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.TENCENT_SECRET, merchant.getTencentSecret());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.SINA_KEY, merchant.getSinaKey());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.SINA_SECRET, merchant.getSinaSecret());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.SINA_REDIRECT_URI, merchant.getSinaRedirectUri());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_SHARE_key, merchant.getWeixinShareKey());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_SHARE_SECRET, merchant.getWeixinShareSecret());
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.PUSH_KEY, merchant.getPushKey());
 
     }
 
@@ -264,13 +268,13 @@ public class BaseApplication extends Application {
      * @param domain
      */
     public void writeDomain(String domain) {
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.PREFIX, domain);
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.PREFIX, domain);
     }
 
     public void writeMenus(List<MenuBean> menus) {
         Gson gson = new Gson();
         String menuStr = gson.toJson(menus);
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS, menuStr);
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS, menuStr);
     }
 
     public void writeMemberInfo(String userName, String userId, String userIcon, String userToken, String unionid , String openid ) {
@@ -311,7 +315,7 @@ public class BaseApplication extends Application {
 
     //获取商户ID
     public String readMerchantId() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
     }
 
     public void writeMemberLevelId(int levelid) {
@@ -333,7 +337,7 @@ public class BaseApplication extends Application {
      * @return
      */
     public String readMenus() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS);
     }
 
     /**
@@ -427,27 +431,27 @@ public class BaseApplication extends Application {
 
     //获取商家的访问渠道
     public String obtainMerchantUrl() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.PREFIX);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.PREFIX);
     }
 
     //获取商家的访问渠道
     public String obtainMerchantLogo() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_LOGO);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_LOGO);
     }
 
     //获取商家的访问渠道
     public void writeMerchantLogo(String logo) {
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_LOGO, logo);
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_LOGO, logo);
     }
 
     //获取商家的访问渠道
     public String obtainMerchantName() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_NAME);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_NAME);
     }
 
     //获取商家的访问渠道
     public void writeMerchantName(String name) {
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_NAME, name);
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_NAME, name);
     }
 
     /**
@@ -506,99 +510,90 @@ public class BaseApplication extends Application {
 
     //获取微信key
     public String readWeixinKey() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.WEIXIN_SHARE_key);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_SHARE_key);
     }
 
     //获取微信安全码
     public String readWeixinSecret() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO,
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO,
                 Constants.WEIXIN_SHARE_SECRET);
     }
 
     //获取商户信息
     public String readWxParent() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
     }
 
     //获取微信支付的APPID
     public String readWxAppId() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, MERCHANT_WEIXIN_ID);
     }
 
     //获取支付宝商户号
     public String readAliMerchant() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
     }
 
     //获取支付宝收款方ID
     public String readMerchantAli() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID);
     }
 
     public void writeAlipay( String appId , String parentId, String appKey, String notify, boolean isWebPay) {
-        PreferenceHelper.writeString(getApplicationContext() , Constants.MERCHANT_INFO, Constants.ALIPAY_APP_ID , appId );
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, parentId);
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_KEY, appKey);
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_NOTIFY, notify);
-        PreferenceHelper.writeBoolean(getApplicationContext(), Constants.MERCHANT_INFO, Constants.IS_WEB_ALIPAY, isWebPay);
+        PreferenceHelper.writeString(getApplicationContext() , MERCHANT_INFO, Constants.ALIPAY_APP_ID , appId );
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, parentId);
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_KEY, appKey);
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_NOTIFY, notify);
+        PreferenceHelper.writeBoolean(getApplicationContext(), MERCHANT_INFO, Constants.IS_WEB_ALIPAY, isWebPay);
     }
 
     public boolean readIsWebAliPay(){
-        return PreferenceHelper.readBoolean(getApplicationContext() , Constants.MERCHANT_INFO , Constants.IS_WEB_ALIPAY);
+        return PreferenceHelper.readBoolean(getApplicationContext() , MERCHANT_INFO , Constants.IS_WEB_ALIPAY);
     }
 
     public String readAlipayAppId(){
-        return PreferenceHelper.readString(getApplicationContext() , Constants.MERCHANT_INFO , Constants.ALIPAY_APP_ID);
+        return PreferenceHelper.readString(getApplicationContext() , MERCHANT_INFO , Constants.ALIPAY_APP_ID);
     }
 
     public String readAlipayAppKey() {
         return PreferenceHelper.readString(
-                getApplicationContext(), Constants.MERCHANT_INFO,
+                getApplicationContext(), MERCHANT_INFO,
                 Constants.ALIPAY_KEY
         );
     }
 
     public String readAlipayParentId() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
     }
 
     public void writeWx(String parentId, String appId, String appKey, String notify, boolean isWebPay) {
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID, parentId);
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID, appId);
-        PreferenceHelper.writeString(
-                getApplicationContext(), Constants.MERCHANT_INFO,
-                Constants.WEIXIN_KEY, appKey
-        );
-        PreferenceHelper.writeString(
-                getApplicationContext(), Constants.MERCHANT_INFO,
-                Constants.WEIXIN_NOTIFY, notify
-        );
-        PreferenceHelper.writeBoolean(
-                getApplicationContext(), Constants.MERCHANT_INFO,
-                Constants.IS_WEB_WEIXINPAY, isWebPay
-        );
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID, parentId);
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, MERCHANT_WEIXIN_ID, appId);
+        PreferenceHelper.writeString( getApplicationContext(), MERCHANT_INFO, WEIXIN_KEY, appKey );
+        PreferenceHelper.writeString( getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_NOTIFY, notify );
+        PreferenceHelper.writeBoolean( getApplicationContext(), MERCHANT_INFO, Constants.IS_WEB_WEIXINPAY, isWebPay );
     }
 
     public String readAlipayNotify() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.ALIPAY_NOTIFY);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_NOTIFY);
     }
 
     public String readWeixinNotify() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.WEIXIN_NOTIFY);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_NOTIFY);
     }
 
     //
     public String readWxpayParentId() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
     }
 
     public String readWxpayAppId() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_WEIXIN_ID);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, MERCHANT_WEIXIN_ID);
     }
 
     public String readWxpayAppKey() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO,
-                Constants.WEIXIN_KEY);
+        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO,
+                WEIXIN_KEY);
     }
 
     //写入数据包版本号
@@ -652,34 +647,34 @@ public class BaseApplication extends Application {
     }
 
     public void writeLoginMethod(int loginMethod){
-        PreferenceHelper.writeInt( getApplicationContext() , Constants.MERCHANT_INFO , Constants.MERCHANT_INFO_LOGINMETHOD , loginMethod );
+        PreferenceHelper.writeInt( getApplicationContext() , MERCHANT_INFO , Constants.MERCHANT_INFO_LOGINMETHOD , loginMethod );
     }
     public int readLoginMethod(){
-        return  PreferenceHelper.readInt( getApplicationContext(),Constants.MERCHANT_INFO,Constants.MERCHANT_INFO_LOGINMETHOD , 0 );
+        return  PreferenceHelper.readInt( getApplicationContext(), MERCHANT_INFO,Constants.MERCHANT_INFO_LOGINMETHOD , 0 );
     }
 
 
     public static void writeNewVersion(int versionid){
-        PreferenceHelper.writeInt( single , Constants.MERCHANT_INFO , Constants.NEW_APP_VERSION , versionid );
+        PreferenceHelper.writeInt( single , MERCHANT_INFO , Constants.NEW_APP_VERSION , versionid );
     }
 
     public static int readNewAppVersion(){
-        return  PreferenceHelper.readInt( single , Constants.MERCHANT_INFO , Constants.NEW_APP_VERSION , 0 );
+        return  PreferenceHelper.readInt( single , MERCHANT_INFO , Constants.NEW_APP_VERSION , 0 );
     }
 
     public static void writeAppUrl(String appurl){
-        PreferenceHelper.writeString( single , Constants.MERCHANT_INFO , Constants.APP_UPDATE_URL , appurl);
+        PreferenceHelper.writeString( single , MERCHANT_INFO , Constants.APP_UPDATE_URL , appurl);
     }
     public static String readAppUlr(){
-        return PreferenceHelper.readString( single , Constants.MERCHANT_INFO , Constants.APP_UPDATE_URL, "");
+        return PreferenceHelper.readString( single , MERCHANT_INFO , Constants.APP_UPDATE_URL, "");
     }
 
     public void writeMerchanntWebChannel(String url){
-        PreferenceHelper.writeString( getApplicationContext() ,Constants.MERCHANT_INFO , Constants.MERCHANT_WEBCHANNEL , url  );
+        PreferenceHelper.writeString( getApplicationContext() , MERCHANT_INFO , Constants.MERCHANT_WEBCHANNEL , url  );
     }
 
     public String readMerchantWebChannel(){
-        return PreferenceHelper.readString( getApplicationContext(), Constants.MERCHANT_INFO,Constants.MERCHANT_WEBCHANNEL );
+        return PreferenceHelper.readString( getApplicationContext(), MERCHANT_INFO,Constants.MERCHANT_WEBCHANNEL );
     }
 
 
@@ -697,5 +692,23 @@ public class BaseApplication extends Application {
     public void clearAllCookies(){
         CookieManager.getInstance().removeAllCookie();
     }
+
+    public static void cleanAliPayInfo(){
+        PreferenceHelper.remove( single ,  Constants.MERCHANT_INFO , Constants.ALIPAY_APP_ID);
+        PreferenceHelper.remove( single , Constants.MERCHANT_INFO , Constants.ALIPAY_KEY );
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO , Constants.ALIPAY_NOTIFY);
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.ALIPAY_MERCHANT_ID);
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.IS_WEB_ALIPAY);
+
+    }
+
+    public static void cleanWeixinPayInfo(){
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.WEIXIN_MERCHANT_ID);
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.MERCHANT_WEIXIN_ID);
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.WEIXIN_KEY);
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.WEIXIN_NOTIFY);
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.IS_WEB_WEIXINPAY);
+    }
+
 
 }

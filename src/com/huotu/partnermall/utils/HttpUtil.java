@@ -143,14 +143,19 @@ public class HttpUtil{
 
             @Override
             public void onResponse(JSONObject response) {
-                JSONUtil<MerchantPayInfo> jsonUtil = new JSONUtil<MerchantPayInfo>();
+                JSONUtil<MerchantPayInfo> jsonUtil = new JSONUtil<>();
                 MerchantPayInfo merchantPayInfo = new MerchantPayInfo();
                 merchantPayInfo = jsonUtil.toBean(response.toString(), merchantPayInfo);
                 if (null != merchantPayInfo) {
                     if (merchantPayInfo.getCode() != 200) {
+                        BaseApplication.cleanAliPayInfo();
+                        BaseApplication.cleanWeixinPayInfo();
                         ToastUtils.showLongToast(merchantPayInfo.getMsg());
                         return;
                     }
+
+                    BaseApplication.cleanAliPayInfo();
+                    BaseApplication.cleanWeixinPayInfo();
 
                     List<MerchantPayInfo.MerchantPayModel> merchantPays = merchantPayInfo.getData();
                     if (merchantPays != null && !merchantPays.isEmpty()) {
@@ -173,7 +178,8 @@ public class HttpUtil{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+//                BaseApplication.cleanAliPayInfo();
+//                BaseApplication.cleanWeixinPayInfo();
             }
 
 
