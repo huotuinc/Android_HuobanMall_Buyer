@@ -134,6 +134,7 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
             aliPayInfoV2.setAppId( application.readAlipayAppId() );
             aliPayInfoV2.setpId(application.readAlipayParentId());
             aliPayInfoV2.setRsa_private(EncryptUtil.getInstance().decryptDES( application.readAlipayAppKey() , Constants.getDES_KEY() ));
+            //aliPayInfoV2.setRsa2_private( EncryptUtil.getInstance().decryptDES(application.readAlipayAppKey(), Constants.getDES_KEY()) );
             aliPayInfoV2.setNotifyUrl( payModel.getNotifyurl() );
 
             AliOrderInfo aliOrderInfo = new AliOrderInfo();

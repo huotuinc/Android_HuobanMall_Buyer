@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.CookieManager;
 
+import com.android.volley.Response;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -27,11 +28,16 @@ import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.model.RefreshHttpHeaderEvent;
 //import com.huotu.partnermall.ui.sis.SisConstant;
 import com.huotu.partnermall.utils.CrashHandler;
+import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.PreferenceHelper;
+import com.huotu.partnermall.widgets.custom.FooterOneConfig;
+import com.huotu.partnermall.widgets.custom.PageConfig;
+import com.huotu.partnermall.widgets.custom.WidgetConfig;
 //import com.squareup.leakcanary.LeakCanary;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -40,6 +46,8 @@ import cn.sharesdk.wechat.friends.Wechat;
 import static com.huotu.partnermall.config.Constants.MERCHANT_INFO;
 import static com.huotu.partnermall.config.Constants.MERCHANT_WEIXIN_ID;
 import static com.huotu.partnermall.config.Constants.WEIXIN_KEY;
+import static com.huotu.partnermall.utils.PreferenceHelper.readString;
+import static u.aly.au.W;
 
 /**
  * 系统级别的变量、方法
@@ -149,7 +157,7 @@ public class BaseApplication extends Application {
     }
 
     public String readMemberId() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID,"0");
+        return readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID,"0");
     }
 
     public void writeMemberId(String userId) {
@@ -185,7 +193,7 @@ public class BaseApplication extends Application {
      */
     public boolean checkMerchantInfo() {
         //商户ID
-        String merchantId = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
+        String merchantId = readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
         //商户支付宝key信息
 //        String merchantAlipayKey = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY);
 //        //商户微信支付KEY信息
@@ -204,10 +212,10 @@ public class BaseApplication extends Application {
     }
 
     public boolean scanWx() {
-        String parentId = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
-        String appid = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, MERCHANT_WEIXIN_ID);
-        String appKey = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, WEIXIN_KEY);
-        String notify = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_NOTIFY);
+        String parentId = readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
+        String appid = readString(getApplicationContext(), MERCHANT_INFO, MERCHANT_WEIXIN_ID);
+        String appKey = readString(getApplicationContext(), MERCHANT_INFO, WEIXIN_KEY);
+        String notify = readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_NOTIFY);
 
         if (!TextUtils.isEmpty(parentId) && !TextUtils.isEmpty(appid) && !TextUtils.isEmpty(appKey) && !TextUtils.isEmpty(notify)) {
             return true;
@@ -221,10 +229,10 @@ public class BaseApplication extends Application {
      * @return
      */
     public boolean scanAliPay() {
-        String parentId = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
-        String appid = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_APP_ID);
-        String appKey = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_KEY);
-        String notify = PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_NOTIFY);
+        String parentId = readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
+        String appid = readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_APP_ID);
+        String appKey = readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_KEY);
+        String notify = readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_NOTIFY);
 
         if ( !TextUtils.isEmpty(appid) && !TextUtils.isEmpty(parentId) && !TextUtils.isEmpty(appKey) && !TextUtils.isEmpty(notify)) {
             return true;
@@ -305,17 +313,17 @@ public class BaseApplication extends Application {
 
     //获取用户unionId
     public String readUserUnionId() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID,"");
+        return readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID,"");
     }
 
     //获取用户编号
     public String readUserId() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID,"");
+        return readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ID,"");
     }
 
     //获取商户ID
     public String readMerchantId() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
     }
 
     public void writeMemberLevelId(int levelid) {
@@ -324,7 +332,7 @@ public class BaseApplication extends Application {
 
     //读取 Openid
     public String readOpenId(){
-        return PreferenceHelper.readString( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_OPENID , "");
+        return readString( getApplicationContext() , Constants.MEMBER_INFO , Constants.MEMBER_OPENID , "");
     }
 
     public void writeOpenId(String openid){
@@ -337,7 +345,7 @@ public class BaseApplication extends Application {
      * @return
      */
     public String readMenus() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_MENUS);
     }
 
     /**
@@ -385,7 +393,7 @@ public class BaseApplication extends Application {
 
     //判断是否登录
     public boolean isLogin() {
-        String token = PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN);
+        String token = readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN);
         if (null != token && !"".equals(token)) {
             return true;
         } else {
@@ -416,12 +424,12 @@ public class BaseApplication extends Application {
 
     //获取用户图片
     public String getUserLogo() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ICON,"");
+        return readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_ICON,"");
     }
 
     //获取用户名称
     public String getUserName() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_NAME);
+        return readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_NAME);
     }
 
     //判断是否为4.4版本。可设置沉浸模式
@@ -431,12 +439,12 @@ public class BaseApplication extends Application {
 
     //获取商家的访问渠道
     public String obtainMerchantUrl() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.PREFIX);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.PREFIX);
     }
 
     //获取商家的访问渠道
     public String obtainMerchantLogo() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_LOGO);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_LOGO);
     }
 
     //获取商家的访问渠道
@@ -446,7 +454,7 @@ public class BaseApplication extends Application {
 
     //获取商家的访问渠道
     public String obtainMerchantName() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_NAME);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_NAME);
     }
 
     //获取商家的访问渠道
@@ -460,7 +468,7 @@ public class BaseApplication extends Application {
      * @return
      */
     public boolean checkColorInfo() {
-        String mainColor = PreferenceHelper.readString(getApplicationContext(), Constants.COLOR_INFO, Constants.COLOR_MAIN);
+        String mainColor = readString(getApplicationContext(), Constants.COLOR_INFO, Constants.COLOR_MAIN);
         if (TextUtils.isEmpty(mainColor)) {
             return false;
         } else {
@@ -478,11 +486,11 @@ public class BaseApplication extends Application {
     }
 
     public String readMemberLevel() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_level);
+        return readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_level);
     }
 
     public boolean isFirst() {
-        String initInfo = PreferenceHelper.readString(getApplicationContext(), Constants.SYS_INFO, Constants.FIRST_OPEN);
+        String initInfo = readString(getApplicationContext(), Constants.SYS_INFO, Constants.FIRST_OPEN);
         if (TextUtils.isEmpty(initInfo)) {
             return true;
         } else {
@@ -505,38 +513,38 @@ public class BaseApplication extends Application {
     }
 
     public String obtainMainColor() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.COLOR_INFO, Constants.COLOR_MAIN);
+        return readString(getApplicationContext(), Constants.COLOR_INFO, Constants.COLOR_MAIN);
     }
 
     //获取微信key
     public String readWeixinKey() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_SHARE_key);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_SHARE_key);
     }
 
     //获取微信安全码
     public String readWeixinSecret() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO,
+        return readString(getApplicationContext(), MERCHANT_INFO,
                 Constants.WEIXIN_SHARE_SECRET);
     }
 
     //获取商户信息
     public String readWxParent() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
     }
 
     //获取微信支付的APPID
     public String readWxAppId() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, MERCHANT_WEIXIN_ID);
+        return readString(getApplicationContext(), MERCHANT_INFO, MERCHANT_WEIXIN_ID);
     }
 
     //获取支付宝商户号
     public String readAliMerchant() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
     }
 
     //获取支付宝收款方ID
     public String readMerchantAli() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID);
     }
 
     public void writeAlipay( String appId , String parentId, String appKey, String notify, boolean isWebPay) {
@@ -552,18 +560,18 @@ public class BaseApplication extends Application {
     }
 
     public String readAlipayAppId(){
-        return PreferenceHelper.readString(getApplicationContext() , MERCHANT_INFO , Constants.ALIPAY_APP_ID);
+        return readString(getApplicationContext() , MERCHANT_INFO , Constants.ALIPAY_APP_ID);
     }
 
     public String readAlipayAppKey() {
-        return PreferenceHelper.readString(
+        return readString(
                 getApplicationContext(), MERCHANT_INFO,
                 Constants.ALIPAY_KEY
         );
     }
 
     public String readAlipayParentId() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
     }
 
     public void writeWx(String parentId, String appId, String appKey, String notify, boolean isWebPay) {
@@ -575,24 +583,24 @@ public class BaseApplication extends Application {
     }
 
     public String readAlipayNotify() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_NOTIFY);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_NOTIFY);
     }
 
     public String readWeixinNotify() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_NOTIFY);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_NOTIFY);
     }
 
     //
     public String readWxpayParentId() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
+        return readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID);
     }
 
     public String readWxpayAppId() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO, MERCHANT_WEIXIN_ID);
+        return readString(getApplicationContext(), MERCHANT_INFO, MERCHANT_WEIXIN_ID);
     }
 
     public String readWxpayAppKey() {
-        return PreferenceHelper.readString(getApplicationContext(), MERCHANT_INFO,
+        return readString(getApplicationContext(), MERCHANT_INFO,
                 WEIXIN_KEY);
     }
 
@@ -603,7 +611,7 @@ public class BaseApplication extends Application {
 
     //读取数据包版本号
     public String readPackageVersion() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.DATA_INIT, Constants.PACKAGE_VERSION);
+        return readString(getApplicationContext(), Constants.DATA_INIT, Constants.PACKAGE_VERSION);
     }
 
     public void writeMemberType(int usertype) {
@@ -633,7 +641,7 @@ public class BaseApplication extends Application {
 
     //读取 手机登录 的安全码
     public String readMemberSecure() {
-        return PreferenceHelper.readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_SECURE, "");
+        return readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_SECURE, "");
     }
 
     //写入 用户登录类型 （1：微信授权登录，2:手机登录）
@@ -666,7 +674,7 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString( single , MERCHANT_INFO , Constants.APP_UPDATE_URL , appurl);
     }
     public static String readAppUlr(){
-        return PreferenceHelper.readString( single , MERCHANT_INFO , Constants.APP_UPDATE_URL, "");
+        return readString( single , MERCHANT_INFO , Constants.APP_UPDATE_URL, "");
     }
 
     public void writeMerchanntWebChannel(String url){
@@ -674,7 +682,7 @@ public class BaseApplication extends Application {
     }
 
     public String readMerchantWebChannel(){
-        return PreferenceHelper.readString( getApplicationContext(), MERCHANT_INFO,Constants.MERCHANT_WEBCHANNEL );
+        return readString( getApplicationContext(), MERCHANT_INFO,Constants.MERCHANT_WEBCHANNEL );
     }
 
 
@@ -709,6 +717,23 @@ public class BaseApplication extends Application {
         PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.WEIXIN_NOTIFY);
         PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.IS_WEB_WEIXINPAY);
     }
+
+    public static void writeBottomMenuConfig(String pageConfig ){
+        PreferenceHelper.writeString(single,Constants.BottonConfig_Info , Constants.BottonConfig , pageConfig );
+    }
+
+    public static PageConfig readBottomMenuConfig() {
+        try {
+            String text = PreferenceHelper.readString(single, Constants.BottonConfig_Info, Constants.BottonConfig);
+            if (text == null || text.isEmpty()) return null;
+            PageConfig pageConfig = JSONUtil.getGson().fromJson(text, PageConfig.class);
+            return pageConfig;
+        } catch (Exception ex) {
+            Log.e(BaseApplication.class.getName(), "readBottomMeneConfig error!");
+            return null;
+        }
+    }
+
 
 
 }

@@ -25,6 +25,7 @@ import com.huotu.partnermall.model.RefreshMessageEvent;
 import com.huotu.partnermall.utils.DensityUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.JSONUtil;
+import com.huotu.partnermall.utils.PreferenceHelper;
 import com.huotu.partnermall.utils.SignUtil;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.UIUtils;
@@ -74,13 +75,17 @@ public class FooterOneWidget extends BaseLinearLayout
 
         asyncGetMallInfo();
 
-        getFooterConfig();
+        checkConfig();
+        //getFooterConfig();
     }
 
-    protected void init( FooterOneConfig footerOneConfig ){
-        this.footerOneConfig= footerOneConfig;
-        //LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //this.setLayoutParams(layoutParams);
+    protected void init( PageConfig pageConfig  ){
+        if(pageConfig ==null) return;
+        if( pageConfig.getWidgets()==null || pageConfig.getWidgets().size()<1 ) return;
+
+        this.resourceUrl = pageConfig.getMallResourceURL();
+        this.footerOneConfig  = new FooterOneConfig();
+        this.footerOneConfig = convertMap( footerOneConfig , pageConfig.getWidgets().get(0).getProperties());
 
         this.setOrientation(VERTICAL);
         TextView tvLine = new TextView(getContext());
@@ -200,7 +205,6 @@ public class FooterOneWidget extends BaseLinearLayout
     }
 
 
-
     @Override
     public void onClick(View v) {
         for( FooterImageBean item : footerOneConfig.getRows()) {
@@ -286,10 +290,18 @@ public class FooterOneWidget extends BaseLinearLayout
         if(pageConfig ==null) return;
         if( pageConfig.getWidgets()==null || pageConfig.getWidgets().size()<1 ) return;
 
-        FooterOneConfig footerOneConfig = new FooterOneConfig();
-        footerOneConfig = convertMap( footerOneConfig , pageConfig.getWidgets().get(0).getProperties());
-        resourceUrl = pageConfig.getMallResourceURL();
-        init( footerOneConfig );
+        BaseApplication.writeBottomMenuConfig( JSONUtil.getGson().toJson( pageConfig ) );
+
+        init( pageConfig  );
+    }
+
+    protected void checkConfig(){
+        PageConfig pageConfig = BaseApplication.readBottomMenuConfig();
+        if(pageConfig==null){
+            getFooterConfig();
+        }else{
+            init( pageConfig );
+        }
     }
 
     protected void getFooterConfig() {

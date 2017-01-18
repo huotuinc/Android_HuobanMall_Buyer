@@ -447,4 +447,8 @@ public class Constants {
 	 * 发送语音验证码等待时间（毫秒）
 	 */
 	public static int SMS_SEND_VOICE_TIME = 8000;
+
+	public static String BottonConfig_Info="bottonConfigInfo";
+	public static String BottonConfig="bottonCofig";
+
 }

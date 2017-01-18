@@ -78,6 +78,8 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
+import static u.aly.au.M;
+
 /**
  * 单张展示web页面
  */
@@ -126,7 +128,8 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
         mHandler = new Handler ( this );
         progress = new ProgressPopupWindow ( WebViewActivity.this );
         share = new SharePopupWindow ( WebViewActivity.this );
-        myBroadcastReceiver = new MyBroadcastReceiver(WebViewActivity.this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
+        myBroadcastReceiver = new MyBroadcastReceiver(WebViewActivity.this,this,
+                MyBroadcastReceiver.ACTION_PAY_SUCCESS  , MyBroadcastReceiver.ACTION_WX_PAY_CANCEL_CALLBACK , MyBroadcastReceiver.ACTION_WX_PAY_ERROR_CALLBACK);
         urlFilterUtils = new UrlFilterUtils(WebViewActivity.this, mHandler, application);
         urlFilterUtils.setOpenKeFuInNewPage(true);
 
@@ -494,16 +497,20 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             }
             break;
             case Constants.Message_GotoOrderList:{//跳转到待支付订单列表页面
-                if(viewPage!=null){
-                    String urlstr = String.format( Constants.URL_WaitPayOrderList, application.obtainMerchantUrl(), application.readMerchantId());
-                    viewPage.loadUrl( urlstr );
-                }
+                gotoOrderList();
             }
             break;
             default:
                 break;
         }
         return false;
+    }
+
+    protected void gotoOrderList(){
+        if(viewPage!=null){
+            String urlstr = String.format( Constants.URL_WaitPayOrderList, application.obtainMerchantUrl(), application.readMerchantId());
+            viewPage.loadUrl( urlstr );
+        }
     }
 
     @Override
@@ -538,6 +545,10 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );
                 viewPage.loadUrl(urlString);
             }
+        }else if( type == MyBroadcastReceiver.ReceiverType.wxPayCancel || type == MyBroadcastReceiver.ReceiverType.wxPayError){
+            if(mHandler==null)return;
+            Message uiMessage = mHandler.obtainMessage(Constants.Message_GotoOrderList);
+            mHandler.sendMessage(uiMessage);
         }
     }
 
@@ -697,9 +708,11 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
             // "8000"代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，最终交易是否成功以服务端异步通知为准（小概率状态）
             if (TextUtils.equals(resultStatus, "8000")) {
                 Toast.makeText(WebViewActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
+                gotoOrderList();
             } else {
                 // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                 Toast.makeText(WebViewActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                gotoOrderList();
             }
         }
     }

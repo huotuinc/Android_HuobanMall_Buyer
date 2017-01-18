@@ -56,17 +56,21 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                 msg="支付成功";
                 //MyBroadcastReceiver.sendBroadcast ( this, MyBroadcastReceiver.ACTION_PAY_SUCCESS );
                 this.finish();
-                ToastUtils.showLongToast ( WXPayEntryActivity.this, msg );
+                ToastUtils.showLongToast (  msg );
                 return;
             }else if( resp.errCode== -1){
+                BuyerPayUtil.wxPayErrorCallback(resp);
+
                 msg="支付失败";
                 this.finish();
-                ToastUtils.showLongToast ( WXPayEntryActivity.this, msg );
+                ToastUtils.showLongToast (  msg );
                 return;
             }else if(resp.errCode ==-2){
+                BuyerPayUtil.wxPayCancelCallback(resp);
+
                 msg="用户取消支付";
+                ToastUtils.showLongToast( msg);
                 this.finish();
-                ToastUtils.showLongToast(WXPayEntryActivity.this, msg);
                 return;
             }
 
@@ -74,7 +78,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
             if(null==payResp){
                 Log.i("wxpay>>>payResp=null","");
                 msg="支付失败";
-                ToastUtils.showLongToast(WXPayEntryActivity.this, msg);
+                ToastUtils.showLongToast( msg);
                 this.finish();
                 return;
             }else{

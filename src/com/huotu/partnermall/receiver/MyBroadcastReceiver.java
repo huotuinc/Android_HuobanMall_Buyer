@@ -11,7 +11,7 @@ import android.os.Bundle;
  */
 public class MyBroadcastReceiver extends BroadcastReceiver {
 
-    public static String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+    //public static String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
     public static String ACTION_BACKGROUD_BACK_TO_UPDATE = "cy.com.morefan.BACKGROUD_BACK_TO_UPDATE";//后台返回
     public static String ACTION_USER_MAINDATA_UPDATE = "cy.com.morefan.MAINDATA_UPDATE";
     public static String ACTION_USER_LOGIN = "cy.com.morefan.LOGIN";
@@ -23,7 +23,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
     public static String ACTION_ALARM_UP = "cy.com.morefan.ACTION_ALARM_UP";
     public static String ACTION_FLOW_ADD = "cy.com.morefan.ACTION_FLOW_ADD";
     public static String ACTION_PAY_SUCCESS = "com.huotu.partner.ACTION_PAY_SUCCESS";
-    public static String REFRESH_TASK_STATUS = "cy.com.morefan.pre.status";
+    //public static String REFRESH_TASK_STATUS = "cy.com.morefan.pre.status";
 
     public static String GET_VOICE_REGISTER = "cy.com.morefan.voice.register";
 
@@ -35,10 +35,13 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
     public static String ACTION_WX_NOT_BACK = "cy.com.morefan.ACTION_WX_NOT_BACK";
     public static String ACTION_WX_PAY_CALLBACK = "cy.com.morefan.ACTION_WX_PAY_CALLBACK";
 
+    public static String ACTION_WX_PAY_CANCEL_CALLBACK="com.huotu.partner.ACTION_WX_PAY_CANCEL_CALLBACK";
+    public static String ACTION_WX_PAY_ERROR_CALLBACK ="com.huotu.partner.ACTION_WX_PAY_ERROR_CALLBACK";
+
     public enum ReceiverType {
         WXNotBack, AlarmUp, RefreshTaskList, UserMainDataUpdate, Sms, Login, Logout, ShareToWeixinSuccess,
         ShareToSinaSuccess, ShareToQzoneSuccess, BackgroundBackToUpdate, FlowAdd, Register, RefreshTaskDetail,
-        WX_Pay_Callback, requestFlow, sendFlow, wxPaySuccess
+        WX_Pay_Callback, requestFlow, sendFlow, wxPaySuccess,wxPayCancel,wxPayError
     }
 
     public interface BroadcastListener {
@@ -135,6 +138,10 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             listener.onFinishReceiver(ReceiverType.sendFlow, null);
         } else if (intent.getAction().equals(ACTION_PAY_SUCCESS)) {
             listener.onFinishReceiver(ReceiverType.wxPaySuccess, intent.getExtras());
+        }else if(intent.getAction().equals(ACTION_WX_PAY_CANCEL_CALLBACK)){
+            listener.onFinishReceiver(ReceiverType.wxPayCancel , intent.getExtras());
+        }else if(intent.getAction().equals(ACTION_WX_PAY_ERROR_CALLBACK)){
+            listener.onFinishReceiver(ReceiverType.wxPayError,intent.getExtras());
         }
     }
 }

@@ -221,7 +221,8 @@ public class HomeActivity extends BaseActivity
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
-        myBroadcastReceiver = new MyBroadcastReceiver(this,this, MyBroadcastReceiver.ACTION_PAY_SUCCESS);
+        myBroadcastReceiver = new MyBroadcastReceiver(this,this,
+                MyBroadcastReceiver.ACTION_PAY_SUCCESS , MyBroadcastReceiver.ACTION_WX_PAY_CANCEL_CALLBACK , MyBroadcastReceiver.ACTION_WX_PAY_ERROR_CALLBACK);
 
         Register();
 
@@ -1047,16 +1048,20 @@ public class HomeActivity extends BaseActivity
             }
             break;
             case Constants.Message_GotoOrderList:{//跳转到待支付订单列表页面
-                if(pageWeb!=null){
-                    String urlstr = String.format( Constants.URL_WaitPayOrderList, application.obtainMerchantUrl(), application.readMerchantId());
-                    pageWeb.loadUrl( urlstr );
-                }
+                gotoOrderList();
             }
             break;
             default:
                 break;
         }
         return false;
+    }
+
+    protected void gotoOrderList(){
+        if(pageWeb!=null){
+            String urlstr = String.format( Constants.URL_WaitPayOrderList, application.obtainMerchantUrl(), application.readMerchantId());
+            pageWeb.loadUrl( urlstr );
+        }
     }
 
     protected void dealUserid(){
@@ -1590,9 +1595,11 @@ public class HomeActivity extends BaseActivity
             // "8000"代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，最终交易是否成功以服务端异步通知为准（小概率状态）
             if (TextUtils.equals(resultStatus, "8000")) {
                 Toast.makeText(HomeActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
+                gotoOrderList();
             } else {
                 // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                 Toast.makeText(HomeActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                gotoOrderList();
             }
         }
     }
@@ -1641,6 +1648,10 @@ public class HomeActivity extends BaseActivity
                 String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );
                 pageWeb.loadUrl(urlString);
             }
+        }else if( type == MyBroadcastReceiver.ReceiverType.wxPayCancel || type == MyBroadcastReceiver.ReceiverType.wxPayError ){
+            if(mHandler==null)return;
+            Message uiMessage = mHandler.obtainMessage(Constants.Message_GotoOrderList);
+            mHandler.sendMessage(uiMessage);
         }
     }
 }

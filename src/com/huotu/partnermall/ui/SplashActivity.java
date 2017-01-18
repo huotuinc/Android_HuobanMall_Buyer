@@ -4,12 +4,10 @@ package com.huotu.partnermall.ui;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -37,17 +35,21 @@ import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantBean;
 import com.huotu.partnermall.model.MerchantInfoModel;
 import com.huotu.partnermall.model.UpdateLeftInfoModel;
+import com.huotu.partnermall.service.BussinessBiz;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.guide.GuideActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.HttpUtil;
+import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.PropertiesUtil;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.utils.XMLParserUtils;
 import com.huotu.partnermall.widgets.MsgPopWindow;
+import com.huotu.partnermall.widgets.custom.FooterOneConfig;
+import com.huotu.partnermall.widgets.custom.PageConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +60,8 @@ import java.util.ArrayList;
 import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static com.huotu.partnermall.widgets.custom.FooterOneWidget.convertMap;
 
 public class SplashActivity extends BaseActivity {
     public static final String TAG = SplashActivity.class.getSimpleName();
@@ -89,13 +93,15 @@ public class SplashActivity extends BaseActivity {
             bundlePush = getIntent().getBundleExtra(Constants.HUOTU_PUSH_KEY);
         }
 
-        String appVersionShow =  getString(R.string.appVersion_show);
-        if( Boolean.parseBoolean(appVersionShow)) {
+        String appVersionShow = getString(R.string.appVersion_show);
+        if (Boolean.parseBoolean(appVersionShow)) {
             String version = getString(R.string.app_name) + BaseApplication.getAppVersion();
             tvVersion.setText(version);
         }
 
         initGif();
+
+        getFooterConfig();//获得底部导航栏配置信息
 
         AlphaAnimation anima = new AlphaAnimation(0.0f, 1.0f);
         anima.setDuration(Constants.ANIMATION_COUNT);// 设置动画显示时间
@@ -165,22 +171,13 @@ public class SplashActivity extends BaseActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         if (isConnection) {
-                            //是否首次安装
-//                            if (application.isFirst()) {
-//                                ActivityUtils.getInstance().skipActivity(SplashActivity.this, GuideActivity.class);
-//                                //写入初始化数据
-//                                application.writeInitInfo("inited");
-//                            } else {
-
-                                getConfigData();
-
-//                            }
+                            getConfigData();
                         }
                     }
                 });
     }
 
-    void initGif(){
+    void initGif() {
         Uri uri = Uri.parse("res://" + this.getPackageName() + "/" + R.drawable.login_bg);
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(uri)
@@ -189,7 +186,7 @@ public class SplashActivity extends BaseActivity {
         ivGif.setController(controller);
     }
 
-    protected void onDestroy ( ) {
+    protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
         if (bitmap != null) {
@@ -359,8 +356,8 @@ public class SplashActivity extends BaseActivity {
     /***
      * 获得广告数据
      */
-    void getAdData(){
-        String url = Constants.getINTERFACE_PREFIX() + "advert/get?customerId="+ application.readMerchantId()  +"&type=2&count=5";
+    void getAdData() {
+        String url = Constants.getINTERFACE_PREFIX() + "advert/get?customerId=" + application.readMerchantId() + "&type=2&count=5";
         AuthParamUtils authParamUtils = new AuthParamUtils(application, System.currentTimeMillis(), url);
         url = authParamUtils.obtainUrl();
         GsonRequest<AdvertiseModel> request = new GsonRequest<>(
@@ -373,7 +370,7 @@ public class SplashActivity extends BaseActivity {
                     @Override
                     public void onResponse(AdvertiseModel advertiseModel) {
 
-                        if (advertiseModel == null || advertiseModel.getCode() != 200  || advertiseModel.getData()==null || advertiseModel.getData().size()<1 ) {
+                        if (advertiseModel == null || advertiseModel.getCode() != 200 || advertiseModel.getData() == null || advertiseModel.getData().size() < 1) {
                             Log.e(TAG, "请求出错。");
                             gotoHome();
                             return;
@@ -393,17 +390,17 @@ public class SplashActivity extends BaseActivity {
         VolleyUtil.getRequestQueue().add(request);
     }
 
-    void gotoAdvertise( List<Advertise> model ){
+    void gotoAdvertise(List<Advertise> model) {
         Intent intent = new Intent();
         intent.setClass(SplashActivity.this, AdActivity.class);
         if (null != bundlePush) {
             intent.putExtra(Constants.HUOTU_PUSH_KEY, bundlePush);
         }
-        intent.putExtra( Constants.HUOTU_AD_KEY , (Serializable) model);
+        intent.putExtra(Constants.HUOTU_AD_KEY, (Serializable) model);
         ActivityUtils.getInstance().skipActivity(SplashActivity.this, intent);
     }
 
-    void gotoHome(){
+    void gotoHome() {
         //是否首次安装
         if (application.isFirst()) {
             ActivityUtils.getInstance().skipActivity(SplashActivity.this, GuideActivity.class);
@@ -419,7 +416,7 @@ public class SplashActivity extends BaseActivity {
         }
     }
 
-    void getConfigData(){
+    void getConfigData() {
         String logoUrl = Constants.getINTERFACE_PREFIX() + "mall/getConfig";
         logoUrl += "?customerId=" + application.readMerchantId();
         AuthParamUtils paramLogo = new AuthParamUtils(application, System.currentTimeMillis(), logoUrl);
@@ -491,5 +488,33 @@ public class SplashActivity extends BaseActivity {
         VolleyUtil.getRequestQueue().add(request);
     }
 
+    /***
+     * 获得底部导航栏配置信息
+     */
+    void getFooterConfig() {
+        try {
+            BussinessBiz bussinessBiz = new BussinessBiz();
+            MyGetFooterConfigListener myGetFooterConfigListener = new MyGetFooterConfigListener();
+            MyGetFooterConfigErrorListener myGetFooterConfigErrorListener = new MyGetFooterConfigErrorListener();
+            bussinessBiz.getFooterConfig(myGetFooterConfigListener, myGetFooterConfigErrorListener);
+        }catch (Exception ex){
+            Log.e(SplashActivity.TAG , "getFooterConfig Error!");
+        }
+    }
+
+    public static class MyGetFooterConfigListener implements Response.Listener<PageConfig> {
+        @Override
+        public void onResponse(PageConfig pageConfig) {
+            String text = JSONUtil.getGson().toJson(pageConfig);
+            BaseApplication.single.writeBottomMenuConfig(text);
+        }
+    }
+
+    public static class MyGetFooterConfigErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
+            Log.e(SplashActivity.TAG, volleyError.getMessage() == null ? "MyGetFooterConfig Error" : volleyError.getMessage());
+        }
+    }
 }
 
