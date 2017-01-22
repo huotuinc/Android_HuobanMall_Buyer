@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -62,11 +63,11 @@ public class UIUtils {
             //按分组排序
             menuSort(menuList);
             int size = menuList.size();
-            int leftWidth = DensityUtils.getScreenW(context) * 80 / 100;
+            //int leftWidth = DensityUtils.getScreenW(context) * 80 / 100;
             int leftMenuHeight = DensityUtils.getScreenH(context) /15;
             for (int i = 0; i < size; i++) {
-                //int leftWidth = Constants.SCREEN_WIDTH * 80 / 100;
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(leftWidth, leftMenuHeight );
+                //LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(leftWidth, leftMenuHeight );
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT , leftMenuHeight );
                 //取出分组
                 String menuGroup = menuList.get(i).getMenuGroup();
 

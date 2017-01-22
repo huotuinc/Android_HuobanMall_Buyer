@@ -104,7 +104,7 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/menuLayout"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_below="@+id/loginLayout"
         android:background="@color/sideslip_menu_bg">
