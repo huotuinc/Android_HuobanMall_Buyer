@@ -75,7 +75,7 @@ import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.receiver.PushProcess;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.ui.login.AutnLogin;
-import com.huotu.partnermall.ui.login.BindPhoneActivity;
+//import com.huotu.partnermall.ui.login.BindPhoneActivity;
 import com.huotu.partnermall.ui.login.PhoneLoginActivity;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.ActivityUtils;
@@ -855,7 +855,7 @@ public class HomeActivity extends BaseActivity
                 }
                 else if( url.toLowerCase().trim().contains("http://www.bindphone.com") ){
                     //绑定手机
-                    callPhone();
+                    //callPhone();
                 }
                 else if( url.toLowerCase().contains("http://www.dzd.com") ){
                     //openSis();
@@ -1099,10 +1099,10 @@ public class HomeActivity extends BaseActivity
     /*
      *微信绑定手机
      */
-    private void callPhone(){
-        Intent intent =new Intent(HomeActivity.this , BindPhoneActivity.class);
-        HomeActivity.this.startActivityForResult( intent , BINDPHONE_REQUESTCODE);
-    }
+//    private void callPhone(){
+//        Intent intent =new Intent(HomeActivity.this , BindPhoneActivity.class);
+//        HomeActivity.this.startActivityForResult( intent , BINDPHONE_REQUESTCODE);
+//    }
 
     private  void bindWeiXin(AccountModel model ){
         String url = Constants.getINTERFACE_PREFIX() + "Account/bindWeixin";
@@ -1530,7 +1530,7 @@ public class HomeActivity extends BaseActivity
         if( event.isBindWeiXin()){
             callWeixin( event.getRedirectUrl() );
         }else {
-            callPhone();
+            //callPhone();
         }
     }
 

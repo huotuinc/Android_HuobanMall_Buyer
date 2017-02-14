@@ -163,13 +163,13 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    public void setAdBannerConfig( AdBannerConfig config){
+    public void setAdBannerConfig(AdBannerConfig config , final int defaultImageId ){
         this.config = config;
         final int iwidth = DensityUtils.getScreenW(getContext());
         this.setPages(new CBViewHolderCreator() {
             @Override
             public Object createHolder() {
-                return new FrescoHolderView( iwidth , AdBannerWidget.this );
+                return new FrescoHolderView( iwidth , AdBannerWidget.this , defaultImageId );
             }
         }, config.getImages())
                 .setPageIndicator(new int[]{R.drawable.ic_page_indicator, R.drawable.ic_page_indicator_focused})

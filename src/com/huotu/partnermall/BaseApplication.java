@@ -11,6 +11,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 import com.android.volley.Response;
 import com.baidu.location.BDLocation;
@@ -605,14 +606,14 @@ public class BaseApplication extends Application {
     }
 
     //写入数据包版本号
-    public void writePackageVersion(String packageVersion) {
-        PreferenceHelper.writeString(getApplicationContext(), Constants.DATA_INIT, Constants.PACKAGE_VERSION, packageVersion);
-    }
+//    public void writePackageVersion(String packageVersion) {
+//        PreferenceHelper.writeString(getApplicationContext(), Constants.DATA_INIT, Constants.PACKAGE_VERSION, packageVersion);
+//    }
 
     //读取数据包版本号
-    public String readPackageVersion() {
-        return readString(getApplicationContext(), Constants.DATA_INIT, Constants.PACKAGE_VERSION);
-    }
+//    public String readPackageVersion() {
+//        return readString(getApplicationContext(), Constants.DATA_INIT, Constants.PACKAGE_VERSION);
+//    }
 
     public void writeMemberType(int usertype) {
         PreferenceHelper.writeInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_USERTYPE, usertype);
@@ -635,9 +636,9 @@ public class BaseApplication extends Application {
     }
 
     //读取 手机登录用户的关联类型
-    public int readMemberRelatedType() {
-        return PreferenceHelper.readInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_RELATEDTYPE, -1);
-    }
+//    public int readMemberRelatedType() {
+//        return PreferenceHelper.readInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_RELATEDTYPE, -1);
+//    }
 
     //读取 手机登录 的安全码
     public String readMemberSecure() {
@@ -650,9 +651,9 @@ public class BaseApplication extends Application {
     }
 
     //读取 用户登录类型 （1：微信授权登录，2:手机登录）
-    public int readMemberLoginType() {
-        return PreferenceHelper.readInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_LOGINTYPE, 1);
-    }
+//    public int readMemberLoginType() {
+//        return PreferenceHelper.readInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_LOGINTYPE, 1);
+//    }
 
     public void writeLoginMethod(int loginMethod){
         PreferenceHelper.writeInt( getApplicationContext() , MERCHANT_INFO , Constants.MERCHANT_INFO_LOGINMETHOD , loginMethod );
@@ -699,6 +700,8 @@ public class BaseApplication extends Application {
 
     public void clearAllCookies(){
         CookieManager.getInstance().removeAllCookie();
+
+        //CookieSyncManager.getInstance().sync();
     }
 
     public static void cleanAliPayInfo(){

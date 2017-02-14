@@ -1,6 +1,7 @@
 package com.huotu.partnermall.ui.login;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -49,9 +50,13 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
     @Bind(R.id.titleRightText) TextView titleRightText;
     @Bind(R.id.titleRightImage) ImageView titleRightImage;
     @Bind(R.id.titleRightLeftImage) ImageView titleRightLeftImage;
+    @Bind(R.id.rlroot) RelativeLayout rlRoot;
 
     ProgressDialog progressDialog;
     CountDownTimerButton countDownBtn;
+    boolean forceBindPhone = false;
+    boolean callBind=true;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,17 +64,34 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
         setContentView(R.layout.activity_bind_phone);
         ButterKnife.bind(this);
 
+        if( getIntent() !=null && getIntent().hasExtra("ForceBindPhone")){
+            forceBindPhone = getIntent().getBooleanExtra("ForceBindPhone",false);
+        }
+        if(getIntent()!=null && getIntent().hasExtra("callBind")){
+            callBind = getIntent().getBooleanExtra("callBind",true);
+        }
+        if(getIntent()!=null && getIntent().hasExtra("userid")){
+            userId = getIntent().getStringExtra("userid");
+        }
+
         tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         tvGetCode.setTextColor( getResources().getColor( R.color.title_text_color ));
         btnBind.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         btnBind.setTextColor(getResources().getColor(R.color.title_text_color));
         tvTitle.setText("绑定手机");
         rlHeader.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()) );
+
+        rlRoot.setBackgroundColor(SystemTools.obtainColor(BaseApplication.single.obtainMainColor()));
+
         ivLeft.setBackgroundResource( R.drawable.main_title_left_back );
 
         titleRightImage.setVisibility(View.GONE);
         titleRightLeftImage.setVisibility(View.GONE);
+
+        titleRightText.setVisibility( forceBindPhone? View.GONE:View.VISIBLE );
         titleRightText.setText("跳过");
+
+        this.setImmerseLayout(rlHeader);
     }
 
     @Override
@@ -106,7 +128,11 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
             return;
         }
 
-        bindPhone(phone, code);
+        if( !callBind ){
+            loginByMobileWithOauth(phone,code);
+        }else {
+            bindPhone( userId , phone, code);
+        }
     }
 
     @OnClick(R.id.tvNoCode)
@@ -131,10 +157,10 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
         getCode(true , phone);
     }
 
-    protected void bindPhone(String phone ,String code ){
+    protected void bindPhone(String userid ,  String phone ,String code ){
         String url = Constants.getINTERFACE_PREFIX() + "Account/bindMobile";
         Map<String, String> map = new HashMap<>();
-        map.put("userid", application.readMemberId());
+        map.put("userid", userid );
         map.put("customerid", application.readMerchantId());
         map.put("mobile", phone);
         map.put("code", code);
@@ -180,6 +206,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
             return;
         }
 
+        tvGetCode.setClickable(false);
         getCode(false , phone);
     }
 
@@ -190,6 +217,8 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
         tvGetCode.setText("获取验证码");
         tvGetCode.setClickable(true);
         tvGetCode.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+
+
     }
 
     @Override
@@ -281,10 +310,12 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
             }
 
             if( dataBase ==null ){
+                ref.get().tvGetCode.setClickable(true);
                 ToastUtils.showShortToast( "获取验证码失败。");
                 return;
             }
             if( dataBase.getCode() != 200) {
+                ref.get().tvGetCode.setClickable(true);
                 if( !TextUtils.isEmpty( dataBase.getMsg()) ){
                     ToastUtils.showShortToast( dataBase.getMsg() );
                 }else {
@@ -317,6 +348,10 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
 
             if(ref.get().progressDialog !=null ){
                 ref.get().progressDialog.dismiss();
+            }
+
+            if(ref.get().tvGetCode!=null){
+                ref.get().tvGetCode.setClickable(true);
             }
 
             ToastUtils.showShortToast("请求服务失败");
@@ -355,7 +390,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
             //ref.get().application.writePhoneLogin(model.getLoginName(), model.getRealName(), model.getRelatedType(), model.getAuthorizeCode(), String.valueOf(ref.get().secure));
 
             ToastUtils.showShortToast( "绑定手机成功" );
-            ref.get().setResult( RESULT_OK );
+            ref.get().setResult( RESULT_OK , ref.get().getIntent() );
             ref.get().finish();
         }
     }
@@ -375,5 +410,18 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
 
             ToastUtils.showShortToast("绑定手机失败");
         }
+    }
+
+    /***
+     *  登录
+     * @param phone
+     * @param code
+     */
+    void loginByMobileWithOauth(String phone ,String code){
+        Intent intent = getIntent();
+        intent.putExtra("phone", phone);
+        intent.putExtra("code", code);
+        this.setResult( RESULT_OK , intent );
+        this.finish();
     }
 }

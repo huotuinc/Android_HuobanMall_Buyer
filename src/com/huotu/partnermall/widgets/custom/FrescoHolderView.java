@@ -15,16 +15,28 @@ public class FrescoHolderView implements Holder<AdImageBean> {
     private SimpleDraweeView iv;
     private int width;
     private FrescoControllerListener.ImageCallback imageCallback;
+    private int defaultImageId;
 
     public FrescoHolderView(int w , FrescoControllerListener.ImageCallback imageCallback){
         this.width = w;
         this.imageCallback = imageCallback;
     }
+
+    public FrescoHolderView(int w , FrescoControllerListener.ImageCallback imageCallback , int defaultImageId){
+        this.width = w;
+        this.imageCallback = imageCallback;
+        this.defaultImageId = defaultImageId;
+    }
+
     @Override
     public View createView(Context context ) {
         iv = new SimpleDraweeView(context);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.WRAP_CONTENT);
         iv.setLayoutParams(layoutParams);
+        if( defaultImageId >0 ) {
+            iv.getHierarchy().setPlaceholderImage(defaultImageId);
+        }
+
         return iv;
     }
     @Override

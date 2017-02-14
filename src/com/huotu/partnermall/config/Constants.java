@@ -188,11 +188,11 @@ public class Constants {
 	//关闭当前页
 	public static final String WEB_TAG_FINISH       = "partnermall520://closepage";
 	//share
-	public static final String WEB_TAG_SHARE        = "partnermall520://shareweb";
+	//public static final String WEB_TAG_SHARE        = "partnermall520://shareweb";
 	//弹出框
-	public static final String WEB_TAG_ALERT        = "partnermall520://alert";
+	//public static final String WEB_TAG_ALERT        = "partnermall520://alert";
 	//支付
-	public static final String WEB_TAG_PAYMENT      = "partnermall520://payment";
+	//public static final String WEB_TAG_PAYMENT      = "partnermall520://payment";
 	//用户信息修改
 	public static final String WEB_TAG_USERINFO     = "partnermall520://userinfo?";
 	//联系客服
@@ -203,6 +203,8 @@ public class Constants {
 	public static final String AUTH_FAILURE = "/UserCenter/Login.aspx";
 	//鉴权失效2
 	public static final String AUTH_FAILURE2 ="/UserCenter/LoginForPC.aspx";
+	//鉴权失效3
+	public static final String AUTH_FAILURE3 = "/UserCenter/VerifyMobile.aspx";
 
 	public static final String AUTH_FAILURE_PHONE = "/invite/MobileLogin.aspx";
 

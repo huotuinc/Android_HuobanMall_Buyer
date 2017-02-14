@@ -1,8 +1,9 @@
 package com.huotu.partnermall.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class AuthMallModel {
+public class AuthMallModel  implements Serializable{
 
     private int code;
     private String msg;
@@ -32,7 +33,7 @@ public class AuthMallModel {
         this.data = data;
     }
 
-    public class AuthMall {
+    public class AuthMall implements Serializable{
         private int userid;
         private int levelId;
         private String levelName;
@@ -171,7 +172,7 @@ public class AuthMallModel {
         }
     }
 
-    public class MenuModel {
+    public class MenuModel implements Serializable{
         private int menu_group;
         private String menu_name;
         private String menu_url;

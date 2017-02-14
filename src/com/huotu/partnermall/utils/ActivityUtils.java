@@ -10,8 +10,6 @@ import com.huotu.partnermall.BaseApplication;
 
 public class ActivityUtils {
 
-    //public BaseApplication application;
-
     private static class Holder {
         private static final ActivityUtils instance = new ActivityUtils();
     }

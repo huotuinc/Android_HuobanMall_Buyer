@@ -13,7 +13,7 @@ public class MerchantInfoModel {
     private int mall_defaultlevelid;
     private int versionnumber;
     private String applinkurl;
-    //0:手机+微信 1：手机 2：微信
+    //0:手机+微信 1：手机 2：微信 3:  手机为主授权为辅
     private int accountmodel;
     //客服地址
     private String webchannel;
@@ -92,13 +92,13 @@ public class MerchantInfoModel {
         this.webchannel = webchannel;
     }
 
-    public int getAccountmodel() {
-        return accountmodel;
-    }
+//    public int getAccountmodel() {
+//        return accountmodel;
+//    }
 
-    public void setAccountmodel(int accountmodel) {
-        this.accountmodel = accountmodel;
-    }
+//    public void setAccountmodel(int accountmodel) {
+//        this.accountmodel = accountmodel;
+//    }
 
     public List<Advertise> getAppad() {
         return appad;

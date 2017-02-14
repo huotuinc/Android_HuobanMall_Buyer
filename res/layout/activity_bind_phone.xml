@@ -5,6 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F2F2"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:id="@+id/rlroot"
     tools:context="com.huotu.partnermall.ui.login.BindPhoneActivity">
 
     <RelativeLayout
@@ -14,8 +17,13 @@
         <include layout="@layout/title_index"/>
     </RelativeLayout>
 
-    <com.huotu.android.library.libedittext.EditText
+    <RelativeLayout
         android:layout_below="@id/bindPhoneActivity_header"
+        android:background="#f5f5f5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.huotu.android.library.libedittext.EditText
         android:layout_marginTop="25dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -31,6 +39,7 @@
         android:layout_below="@id/edtPhone"
         android:id="@+id/edtCode"
         android:hint="请输入验证码"
+        android:inputType="number"
         android:layout_alignLeft="@id/edtPhone"
         android:layout_toLeftOf="@+id/tvGetCode"
         android:layout_width="match_parent"
@@ -92,5 +101,7 @@
         android:text="绑定手机后，可以快速找回支付密码，接受账户异常变动提醒"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

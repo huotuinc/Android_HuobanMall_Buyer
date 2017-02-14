@@ -5,6 +5,9 @@
     android:layout_height="match_parent"
     xmlns:cy="http://schemas.android.com/apk/res-auto"
     android:background="#F2F2F2"
+                android:clipToPadding="true"
+                android:fitsSystemWindows="true"
+                android:id="@+id/rl_phone_login_root"
     tools:context="com.huotu.partnermall.ui.login.PhoneLoginActivity">
 
     <!-- 页头界面 -->
