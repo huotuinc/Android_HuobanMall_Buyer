@@ -6,6 +6,11 @@
     <dimen name="small_text_size">14sp</dimen>
     <dimen name="medium_text_size">18sp</dimen>
     <dimen name="large_text_size">22sp</dimen>
+
+    <dimen name="guide_margin_bottom">30dp</dimen>
+    <dimen name="guide_tryuse_text_size">16sp</dimen>
+    <dimen name="guide_tryuse_padding_right">20dp</dimen>
+
     <!-- 四类字体大小 -->
 
     <!-- 首页Gallery高度 -->

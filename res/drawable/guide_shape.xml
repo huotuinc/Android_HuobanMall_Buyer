@@ -3,12 +3,10 @@
        android:shape="rectangle" >
 
     <!-- 圆角 -->
-    <corners android:radius="5dp" /> <!-- 设置圆角半径 -->
-
+    <corners android:radius="8dp" /> <!-- 设置圆角半径 -->
 
     <!-- 填充 -->
     <solid android:color="@color/translucent" /> <!-- 填充的颜色 -->
-
 
     <!-- 描边 -->
     <!--

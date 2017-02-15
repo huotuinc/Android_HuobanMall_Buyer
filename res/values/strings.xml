@@ -5,6 +5,8 @@
     <string name="index_search_edit_hint">搜索商品</string>
     <!-- 是否显示版本号-->
     <string name="appVersion_show">true</string>
+    <string name="tryUse">立即体验</string>
+    <string name="skipText">跳过</string>
 
     <!-- 菜单 -->
     <string name="menu_setting">设置</string>

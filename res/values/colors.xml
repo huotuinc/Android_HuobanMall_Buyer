@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="guide_tryuse_bg_color">#ffffffff</color>
+    <color name="guide_tryuse_bg_color_pressed">#dddddd</color>
+    <color name="guide_tryuse_text_color">#000000</color>
+
     <color name="pay_ali_textcolor">#ffffffff</color>
     <color name="pay_wechat_textcolor">#ffffffff</color>
 

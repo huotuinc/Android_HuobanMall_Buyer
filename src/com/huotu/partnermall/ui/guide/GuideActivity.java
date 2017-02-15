@@ -23,10 +23,15 @@ import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.DensityUtils;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static com.huotu.partnermall.inner.R.id.ivGif;
 
 /**
  * 引导界面
@@ -44,6 +49,7 @@ public class GuideActivity extends BaseActivity
     //private List<Bitmap> bitmapList;
     private List<Integer> imageList;
     int lastX=0;
+
 
     @Override
     protected void onCreate ( Bundle arg0 ) {
@@ -120,6 +126,13 @@ public class GuideActivity extends BaseActivity
             for(int i=0; i<imageList.size() ; i++) {
                 RelativeLayout iv = (RelativeLayout) LayoutInflater.from(GuideActivity.this).inflate(R.layout.guid_item, null);
                 TextView skipText = (TextView) iv.findViewById(R.id.skipText);
+
+                if( i == imageList.size()-1){
+                    skipText.setVisibility( View.GONE );
+                    TextView tvTry = (TextView)iv.findViewById(R.id.tryUse);
+                    tvTry.setVisibility(View.VISIBLE);
+                }
+
                 SimpleDraweeView ivGif= (SimpleDraweeView)iv.findViewById(R.id.guideGif);
                 iv.setLayoutParams(mParams);
                 //iv.setOnClickListener(this);
@@ -186,7 +199,7 @@ public class GuideActivity extends BaseActivity
 
     @Override
     public void onClick ( View v ) {
-       if(v.getId()== R.id.skipText || v.getId() == R.id.rl1  || v.getId()==R.id.guideGif){
+       if(v.getId()== R.id.skipText || v.getId() == R.id.rl1  || v.getId()==R.id.guideGif || v.getId() == R.id.tryUse ){
            if( mVPActivity.getCurrentItem() ==  (vpAdapter.getCount()-1) ){
                go();
            }
@@ -200,6 +213,19 @@ public class GuideActivity extends BaseActivity
 
     @Override
     public void onPageSelected ( int arg0 ) {
+        try {
+            if (arg0 == vpAdapter.getCount() - 1) {
+                ((TextView) views.get(arg0).findViewById(R.id.tryUse)).setVisibility(View.VISIBLE);
+                ((TextView)views.get(arg0).findViewById(R.id.skipText)).setVisibility(View.GONE);
+
+            } else {
+                ((TextView) views.get(arg0).findViewById(R.id.skipText)).setText(getString(R.string.skipText));
+                ((TextView)views.get(arg0).findViewById(R.id.skipText)).setVisibility(View.VISIBLE);
+                ((TextView)views.get(arg0).findViewById(R.id.tryUse)).setVisibility(View.GONE);
+            }
+        }catch (Exception ex){
+            Log.e(GuideActivity.TAG,  "onPageSelected Error");
+        }
     }
 
     @Override

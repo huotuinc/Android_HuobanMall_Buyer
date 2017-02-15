@@ -13,16 +13,35 @@
         android:id="@+id/skipText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="跳过>>>"
+        android:text="跳过"
         android:textColor="@color/white"
         android:textSize="@dimen/main_title_text_size"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="30dp"
         android:background="@drawable/guide_shape"/>
+
+    <TextView
+        android:id="@+id/tryUse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tryUse"
+        android:clickable="true"
+        android:textColor="@color/guide_tryuse_text_color"
+        android:textSize="@dimen/guide_tryuse_text_size"
+        android:visibility="gone"
+        android:paddingBottom="6dp"
+        android:paddingTop="6dp"
+        android:paddingLeft="@dimen/guide_tryuse_padding_right"
+        android:paddingRight="@dimen/guide_tryuse_padding_right"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/guide_margin_bottom"
+        android:background="@drawable/guide_btn"/>
+
 </RelativeLayout>
