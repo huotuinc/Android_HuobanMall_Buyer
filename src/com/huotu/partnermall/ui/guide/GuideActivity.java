@@ -126,10 +126,11 @@ public class GuideActivity extends BaseActivity
             for(int i=0; i<imageList.size() ; i++) {
                 RelativeLayout iv = (RelativeLayout) LayoutInflater.from(GuideActivity.this).inflate(R.layout.guid_item, null);
                 TextView skipText = (TextView) iv.findViewById(R.id.skipText);
+                TextView tvTry = (TextView)iv.findViewById(R.id.tryUse);
+                tvTry.setOnClickListener(this);
 
                 if( i == imageList.size()-1){
                     skipText.setVisibility( View.GONE );
-                    TextView tvTry = (TextView)iv.findViewById(R.id.tryUse);
                     tvTry.setVisibility(View.VISIBLE);
                 }
 
