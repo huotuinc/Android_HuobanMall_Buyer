@@ -58,6 +58,10 @@
         <meta-data android:name="JPUSH_APPKEY" android:value="1ebf16f80452534fcb72b058" />
         <!--  </>值来自开发者平台取得的AppKey-->
 
+        <!-- 友盟统计参数 -->
+        <meta-data android:name="UMENG_APPKEY" android:value="57a2dba867e58e84e2000177" />
+        <meta-data android:name="UMENG_CHANNEL" android:value="huotu_yingyan" />
+
 
     </application>
 
