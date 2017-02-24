@@ -10,6 +10,8 @@
     <merchant>
         <!--504/3447/4493/5455/正式版行装：4886-->
         <app_merchant_id>5020</app_merchant_id>
+        <!-- 伙伴家app 特殊的商户id-->
+        <app_merchant_subid>7944</app_merchant_subid>
     </merchant>
     <!--微信支付信息-->
     <weixinpay>

@@ -54,6 +54,8 @@ public class XMLParserUtils {
                         merchant.setAppBuild(xmlResourceParser.nextText());
                     } else if (name.equals(Constants.MERCHANT_ID)) {
                         merchant.setMerchantId(xmlResourceParser.nextText());
+                    } else if(name.equals(Constants.MERCHANT_SUBID)){
+                        merchant.setMerchantSubId( xmlResourceParser.nextText() );
                     } else if (name.equals(Constants.WEIXIN_MERCHANT_ID)) {
                         merchant.setWeixinMerchantId(xmlResourceParser.nextText());
                     } else if (name.equals(Constants.MERCHANT_WEIXIN_ID)) {

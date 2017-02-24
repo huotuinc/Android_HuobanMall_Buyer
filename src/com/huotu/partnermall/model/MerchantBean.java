@@ -6,6 +6,8 @@ package com.huotu.partnermall.model;
 public class MerchantBean extends BaseBean {
     //商家ID
     private String merchantId;
+    //商户子ID
+    private String merchantSubId;
     //商家名称
     private String merchantName;
     //商户私钥(pkcs8)，支付宝商户版获取
@@ -226,4 +228,11 @@ public class MerchantBean extends BaseBean {
         this.weixinKey = weixinKey;
     }
 
+    public String getMerchantSubId() {
+        return merchantSubId;
+    }
+
+    public void setMerchantSubId(String merchantSubId) {
+        this.merchantSubId = merchantSubId;
+    }
 }

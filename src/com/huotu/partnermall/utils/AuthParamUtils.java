@@ -21,13 +21,11 @@ public class AuthParamUtils {
     private BaseApplication application;
     private String url;
     private long timestamp;
-    //private Context context;
 
     public AuthParamUtils(BaseApplication application, long timestamp, String url) {
         this.application = application;
         this.timestamp = timestamp;
         this.url = url;
-        //this.context = context;
     }
 
     public AuthParamUtils(String url) {
@@ -220,7 +218,7 @@ public class AuthParamUtils {
             }
 
             //添加额外固定参数
-            paramMap.put("version", application.getAppVersion());
+            paramMap.put("version", BaseApplication.getAppVersion());
             paramMap.put("operation", Constants.OPERATION_CODE);
             //1、timestamp
             paramMap.put("timestamp", URLEncoder.encode(String.valueOf(timestamp), "UTF-8"));
@@ -233,7 +231,7 @@ public class AuthParamUtils {
             builder.append("&timestamp=" + paramMap.get("timestamp"));
             builder.append("&appid=" + paramMap.get("appid"));
             builder.append("&sign=" + paramMap.get("sign"));
-            builder.append("&version=" + application.getAppVersion());
+            builder.append("&version=" + BaseApplication.getAppVersion());
             builder.append("&operation=" + Constants.OPERATION_CODE);
 
             return builder.toString();

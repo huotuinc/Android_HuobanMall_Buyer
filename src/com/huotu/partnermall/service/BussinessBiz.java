@@ -4,6 +4,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.mall.config.UrlConfig;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.BuildConfig;
 import com.huotu.partnermall.utils.GsonRequest;
@@ -13,6 +14,9 @@ import com.huotu.partnermall.widgets.custom.PageConfig;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.R.attr.id;
+import static android.R.attr.key;
+
 /**
  * Created by Administrator on 2017/1/17.
  */
@@ -21,8 +25,13 @@ public class BussinessBiz {
 
 
     public void getFooterConfig( Response.Listener listener , Response.ErrorListener errorListener  ) {
-        String url = BuildConfig.SMART_Url;
-        url += "merchantWidgetSettings/search/findByMerchantIdAndScopeDependsScopeOrDefault/nativeCode/" + BaseApplication.single.readMerchantId() + "/global";
+        //String id = BaseApplication.single.readMerchantId();
+        //if( id==null || id.isEmpty() ) return;
+
+        //String url = BuildConfig.SMART_Url;
+        //url += "merchantWidgetSettings/search/findByMerchantIdAndScopeDependsScopeOrDefault/nativeCode/" + id + "/global";
+
+        String url = UrlConfig.getFooterConfigUrl();
 
         String key = Constants.getSMART_KEY();
         String random = String.valueOf(System.currentTimeMillis());
