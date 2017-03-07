@@ -43,6 +43,8 @@ public class Constants {
 //	public static final String MERCHANT    = "MERCHANT";
 	//商户ID
 	public static final String MERCHANT_ID = "app_merchant_id";
+	//商户子id
+	public static final String MERCHANT_SUBID = "app_merchant_subid";
 
 	//微信支付信息
 //	public static final String WEIXIN_PAY         = "weixinpay";
@@ -147,6 +149,8 @@ public class Constants {
 
 	//商户ID
 	public static final String MERCHANT_INFO_ID         = "merchant_id";
+	//商户子id
+	public static final String MERCHANT_INFO_SUBID ="merchant_subid";
 	//商户支付宝key信息
 	public static final String MERCHANT_INFO_ALIPAY_KEY = "merchant_alipay_key";
 	//商户微信支付KEY信息

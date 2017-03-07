@@ -10,6 +10,8 @@
     <merchant>
         <!--504/乔基：3447/4493/5455/4886/7945-->
         <app_merchant_id>3447</app_merchant_id>
+        <!-- 子商户id-->
+        <app_merchant_subid>17413</app_merchant_subid>
     </merchant>
     <!--微信支付信息-->
     <weixinpay>

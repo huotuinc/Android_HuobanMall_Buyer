@@ -2,16 +2,14 @@
 <resources>
     <!--程序信息-->
     <appinfo>
-        <app_version>1.0.3</app_version>
-        <app_name></app_name>
+        <app_version>1.0.0</app_version>
+        <app_name>桂宝宝商城</app_name>
         <app_build>3</app_build>
     </appinfo>
     <!--商家信息-->
     <merchant>
         <!--504/3447/4493/5455/正式版行装：4886-->
-        <app_merchant_id>5020</app_merchant_id>
-        <!-- 伙伴家app 特殊的商户id-->
-        <app_merchant_subid>7944</app_merchant_subid>
+        <app_merchant_id>8069</app_merchant_id>
     </merchant>
     <!--微信支付信息-->
     <weixinpay>

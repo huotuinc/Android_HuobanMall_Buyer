@@ -22,6 +22,8 @@ import com.huotu.partnermall.inner.BuildConfig;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.MenuLinkEvent;
 import com.huotu.partnermall.model.RefreshMessageEvent;
+import com.huotu.partnermall.service.BussinessBiz;
+import com.huotu.partnermall.ui.SplashActivity;
 import com.huotu.partnermall.utils.DensityUtils;
 import com.huotu.partnermall.utils.GsonRequest;
 import com.huotu.partnermall.utils.JSONUtil;
@@ -305,21 +307,29 @@ public class FooterOneWidget extends BaseLinearLayout
     }
 
     protected void getFooterConfig() {
-        String url = BuildConfig.SMART_Url;
-        url += "merchantWidgetSettings/search/findByMerchantIdAndScopeDependsScopeOrDefault/nativeCode/" + BaseApplication.single.readMerchantId() + "/global";
+//        String url = BuildConfig.SMART_Url;
+//        url += "merchantWidgetSettings/search/findByMerchantIdAndScopeDependsScopeOrDefault/nativeCode/" + BaseApplication.single.readMerchantId() + "/global";
+//
+//        String key = Constants.getSMART_KEY();
+//        String random = String.valueOf(System.currentTimeMillis());
+//        String secure = SignUtil.getSecure(key, Constants.getSMART_SECURITY() , random);
+//        Map<String,String> header = new HashMap<>();
+//        header.put("_user_key",key);
+//        header.put("_user_random",random);
+//        header.put("_user_secure",secure);
+//
+//        GsonRequest<PageConfig> request = new GsonRequest<>(Request.Method.GET,
+//                url, PageConfig.class, header, this, this
+//        );
+//        VolleyUtil.getRequestQueue().add(request);
 
-        String key = Constants.getSMART_KEY();
-        String random = String.valueOf(System.currentTimeMillis());
-        String secure = SignUtil.getSecure(key, Constants.getSMART_SECURITY() , random);
-        Map<String,String> header = new HashMap<>();
-        header.put("_user_key",key);
-        header.put("_user_random",random);
-        header.put("_user_secure",secure);
+        try {
+            BussinessBiz bussinessBiz = new BussinessBiz();
+            bussinessBiz.getFooterConfig( this , this );
+        }catch (Exception ex){
+            Log.e(SplashActivity.TAG , "FooterOneWidget.getFooterConfig Error!");
+        }
 
-        GsonRequest<PageConfig> request = new GsonRequest<>(Request.Method.GET,
-                url, PageConfig.class, header, this, this
-        );
-        VolleyUtil.getRequestQueue().add(request);
     }
 
     /**

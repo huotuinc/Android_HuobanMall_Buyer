@@ -120,7 +120,7 @@ public class SplashActivity extends BaseActivity {
                         } else {
                             //加载商家信息
                             //判断
-                            if (!application.checkMerchantInfo()) {
+                            //if (!application.checkMerchantInfo()) {
                                 //设置商户信息
                                 MerchantBean merchant = XMLParserUtils.getInstance().readMerchantInfo(SplashActivity.this);
                                 //Log.i( TAG , "商户信息获取成功。");
@@ -130,7 +130,7 @@ public class SplashActivity extends BaseActivity {
                                 } else {
                                     Log.e(TAG, "载入商户信息失败。");
                                 }
-                            }
+                            //}
 
                             //加载颜色配置信息
                             try {
@@ -145,12 +145,6 @@ public class SplashActivity extends BaseActivity {
 
                             getLeftMenu();
 
-                            //获取商户logo信息
-//                            String logoUrl = Constants.getINTERFACE_PREFIX() + "mall/getConfig";
-//                            logoUrl += "?customerId=" + application.readMerchantId();
-//                            AuthParamUtils paramLogo = new AuthParamUtils(application, System.currentTimeMillis(), logoUrl);
-//                            final String logoUrls = paramLogo.obtainUrls();
-//                            HttpUtil.getInstance().doVolleyLogo(application, logoUrls);
                             //获取商户支付信息
                             //String targetUrl = Constants.getINTERFACE_PREFIX() + "PayConfig?customerid=";
                             String targetUrl = Constants.getINTERFACE_PREFIX() + "payconfig/IndexMall?customerid=";
@@ -418,7 +412,7 @@ public class SplashActivity extends BaseActivity {
 
     void getConfigData() {
         String logoUrl = Constants.getINTERFACE_PREFIX() + "mall/getConfig";
-        logoUrl += "?customerId=" + application.readMerchantId();
+        logoUrl += "?customerId=" + application.readMerchantId()+"&merchantId="+ application.readMerchantSubId();
         AuthParamUtils paramLogo = new AuthParamUtils(application, System.currentTimeMillis(), logoUrl);
         final String logoUrls = paramLogo.obtainUrls();
         GsonRequest<MerchantInfoModel> request = new GsonRequest<>(

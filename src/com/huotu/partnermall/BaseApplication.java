@@ -195,6 +195,7 @@ public class BaseApplication extends Application {
     public boolean checkMerchantInfo() {
         //商户ID
         String merchantId = readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
+        String merchantSubId = readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_SUBID);
         //商户支付宝key信息
 //        String merchantAlipayKey = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_ALIPAY_KEY);
 //        //商户微信支付KEY信息
@@ -204,7 +205,7 @@ public class BaseApplication extends Application {
 //        //商户类别菜单
 //        String merChantCatagory = PreferenceHelper.readString(getApplicationContext(), Constants.MERCHANT_INFO, Constants.MERCHANT_INFO_CATAGORY);
 
-        if ((null == merchantId)  ) {
+        if ((null == merchantId && null == merchantSubId )  ) {
             //app端未设置商户信息
             return false;
         } else {
@@ -250,6 +251,8 @@ public class BaseApplication extends Application {
     public void writeMerchantInfo(MerchantBean merchant) {
         //商户ID
         PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_ID, merchant.getMerchantId());
+        //商户subid
+        PreferenceHelper.writeString(getApplicationContext(),MERCHANT_INFO,Constants.MERCHANT_SUBID,merchant.getMerchantSubId());
         //版本号
         PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.APP_VERSION, merchant.getAppVersion());
         //APP名称
@@ -325,6 +328,10 @@ public class BaseApplication extends Application {
     //获取商户ID
     public String readMerchantId() {
         return readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_INFO_ID);
+    }
+    //获取商户的subid
+    public String readMerchantSubId(){
+        return readString(getApplicationContext(),MERCHANT_INFO,Constants.MERCHANT_SUBID,"");
     }
 
     public void writeMemberLevelId(int levelid) {
