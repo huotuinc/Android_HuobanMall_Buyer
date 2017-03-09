@@ -102,7 +102,7 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
         this.dismiss();
     }
 
-    void wechatShare(String platformName ){
+    public void wechatShare(String platformName ){
         Platform platform;
         platform = ShareSDK.getPlatform ( context, platformName );
         if (platformActionListener != null) {

@@ -457,4 +457,8 @@ public class Constants {
 	public static String BottonConfig_Info="bottonConfigInfo";
 	public static String BottonConfig="bottonCofig";
 
+	//下载图片成功消息
+	public static final int MESSAGE_DOWNLOADIMAGE_SUCCESS= 30312;
+	//下载图片失败消息
+	public static final int MESSAGE_DOWNLOADIMAGE_FAIL=30313;
 }

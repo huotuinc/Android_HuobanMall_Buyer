@@ -210,7 +210,7 @@ android {
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.fanmore
+            signingConfig signingConfigs.yifutang
             buildConfigField 'String', 'Header_Secret', '\"' + "${HEADER_SECRET}" + '\"'
         }
 

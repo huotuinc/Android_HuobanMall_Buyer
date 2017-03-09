@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
@@ -33,9 +34,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,6 +55,8 @@ import com.huotu.android.library.libpay.weixin.WeiXinPayResult;
 import com.huotu.android.library.libpay.weixin.WeiXinPayUtil;
 import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.config.Constants;
+import com.huotu.partnermall.image.FrescoUtils;
+import com.huotu.partnermall.image.IDownloadResult;
 import com.huotu.partnermall.image.VolleyUtil;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
@@ -89,6 +95,7 @@ import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.ToastUtils;
 import com.huotu.partnermall.utils.UIUtils;
 import com.huotu.partnermall.utils.WindowUtils;
+import com.huotu.partnermall.widgets.CustomDialog;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
 import com.huotu.partnermall.widgets.SharePopupWindow;
 import com.huotu.partnermall.widgets.TipAlertDialog;
@@ -97,6 +104,8 @@ import com.huotu.partnermall.widgets.custom.FooterOneWidget;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.FileNotFoundException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
@@ -105,6 +114,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.wechat.favorite.WechatFavorite;
 import cn.sharesdk.wechat.friends.Wechat;
@@ -113,10 +123,12 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
+import static com.huotu.partnermall.inner.R.id.homeAsUp;
 import static com.huotu.partnermall.inner.R.id.viewPage;
 
 public class HomeActivity extends BaseActivity
-        implements Handler.Callback , ViewTreeObserver.OnGlobalLayoutListener , MyBroadcastReceiver.BroadcastListener {
+        implements Handler.Callback , ViewTreeObserver.OnGlobalLayoutListener ,
+        MyBroadcastReceiver.BroadcastListener , View.OnLongClickListener{
     //获取资源文件对象
     private Resources resources;
     private long exitTime = 0;
@@ -180,6 +192,34 @@ public class HomeActivity extends BaseActivity
     //int unReadMessageCount=0;
     //底部导航栏控件
     FooterOneWidget footerOneWidget;
+
+
+    CustomDialog customDialog;
+    PlatformActionListener platformActionListener= new PlatformActionListener() {
+        @Override
+        public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+            Message msg = Message.obtain();
+            msg.what = Constants.SHARE_SUCCESS;
+            msg.obj = platform;
+            mHandler.sendMessage(msg);
+        }
+
+        @Override
+        public void onError(Platform platform, int i, Throwable throwable) {
+            Message msg = Message.obtain();
+            msg.what = Constants.SHARE_ERROR;
+            msg.obj = platform;
+            mHandler.sendMessage(msg);
+        }
+
+        @Override
+        public void onCancel(Platform platform, int i) {
+            Message msg = Message.obtain();
+            msg.what = Constants.SHARE_CANCEL;
+            msg.obj = platform;
+            mHandler.sendMessage(msg);
+        }
+    };
 
     Runnable getMessageRunnable=new Runnable() {
         @Override
@@ -431,32 +471,32 @@ public class HomeActivity extends BaseActivity
             }
         });
 
-        share.setPlatformActionListener(
-                new PlatformActionListener() {
-                    @Override
-                    public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-                        Message msg = Message.obtain();
-                        msg.what = Constants.SHARE_SUCCESS;
-                        msg.obj = platform;
-                        mHandler.sendMessage(msg);
-                    }
-
-                    @Override
-                    public void onError(Platform platform, int i, Throwable throwable) {
-                        Message msg = Message.obtain();
-                        msg.what = Constants.SHARE_ERROR;
-                        msg.obj = platform;
-                        mHandler.sendMessage(msg);
-                    }
-
-                    @Override
-                    public void onCancel(Platform platform, int i) {
-                        Message msg = Message.obtain();
-                        msg.what = Constants.SHARE_CANCEL;
-                        msg.obj = platform;
-                        mHandler.sendMessage(msg);
-                    }
-                }
+        share.setPlatformActionListener(platformActionListener
+//                new PlatformActionListener() {
+//                    @Override
+//                    public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+//                        Message msg = Message.obtain();
+//                        msg.what = Constants.SHARE_SUCCESS;
+//                        msg.obj = platform;
+//                        mHandler.sendMessage(msg);
+//                    }
+//
+//                    @Override
+//                    public void onError(Platform platform, int i, Throwable throwable) {
+//                        Message msg = Message.obtain();
+//                        msg.what = Constants.SHARE_ERROR;
+//                        msg.obj = platform;
+//                        mHandler.sendMessage(msg);
+//                    }
+//
+//                    @Override
+//                    public void onCancel(Platform platform, int i) {
+//                        Message msg = Message.obtain();
+//                        msg.what = Constants.SHARE_CANCEL;
+//                        msg.obj = platform;
+//                        mHandler.sendMessage(msg);
+//                    }
+//                }
         );
         share.showShareWindow();
         share.setOnDismissListener(new PoponDismissListener(this));
@@ -569,6 +609,8 @@ public class HomeActivity extends BaseActivity
         pageWeb.getSettings().setGeolocationDatabasePath(dir);
         pageWeb.getSettings().setGeolocationEnabled(true);
         pageWeb.addJavascriptInterface( HomeActivity.this ,"android");
+
+        pageWeb.setOnLongClickListener(this);
 
         if(com.huotu.partnermall.inner.BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ){
             WebView.setWebContentsDebuggingEnabled(true);
@@ -1051,6 +1093,16 @@ public class HomeActivity extends BaseActivity
                 gotoOrderList();
             }
             break;
+            case Constants.MESSAGE_DOWNLOADIMAGE_SUCCESS:{//下载图片完成消息
+                String path = msg.obj.toString();
+                saveImageToGallery(path);
+                ToastUtils.showLongToast(path);
+                break;
+            }
+            case Constants.MESSAGE_DOWNLOADIMAGE_FAIL:{//
+                ToastUtils.showLongToast("下载图片失败");
+                break;
+            }
             default:
                 break;
         }
@@ -1654,5 +1706,103 @@ public class HomeActivity extends BaseActivity
             mHandler.sendMessage(uiMessage);
         }
     }
+
+
+    @Override
+    public boolean onLongClick(View v) {
+
+        final WebView.HitTestResult htr = pageWeb.getHitTestResult();//获取所点击的内容
+        if( htr==null) return false;
+        if (htr.getType() == WebView.HitTestResult.IMAGE_TYPE || htr.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE ) {//判断被点击的类型为图片
+            String url = htr.getExtra();
+            showDialog(url);
+        }
+
+        return false;
+    }
+
+
+    /**
+     * 显示Dialog
+     * param v
+     */
+    private void  showDialog(final String url) {
+
+        final ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.custom_item_dialog);
+        //adapter.add("发送给朋友");
+        adapter.add("保存到手机");
+
+        if(customDialog==null) {
+            customDialog = new CustomDialog(this) {
+                @Override
+                public void initViews() {
+                    // 初始CustomDialog化控件
+                    ListView mListView = (ListView) findViewById(R.id.lv_dialog);
+                    mListView.setAdapter(adapter);
+                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            // 点击事件
+                            switch (position) {
+                                case 0:
+                                    downloadImage( HomeActivity.this, url);
+                                    closeDialog();
+                                    //sendToFriends( HomeActivity.this , url );//把图片发送给好友
+                                    //closeDialog();
+                                    break;
+                                //case 1:
+                                    //saveImageToGallery(MainActivity.this);
+
+                                    //break;
+//                            case 2:
+//                                Toast.makeText(MainActivity.this, "已收藏", Toast.LENGTH_LONG).show();
+//                                closeDialog();
+//                                break;
+//                            case 3:
+//                                goIntent();
+//                                closeDialog();
+//                                break;
+                            }
+
+                        }
+                    });
+                }
+            };
+        }
+        customDialog.show();
+    }
+
+    protected void downloadImage( Context context , String url){
+            FrescoUtils.downloadImage( context ,  url , new IDownloadResult(context ){
+                @Override
+                public void onResult(String filePath) {
+                    if( filePath==null ){
+                        Message msg = mHandler.obtainMessage(Constants.MESSAGE_DOWNLOADIMAGE_FAIL);
+                        mHandler.sendMessage(msg);
+                    }else {
+                        Message msg = mHandler.obtainMessage(Constants.MESSAGE_DOWNLOADIMAGE_SUCCESS);
+                        msg.obj = filePath;
+                        mHandler.sendMessage(msg);
+                    }
+                }
+            } );
+    }
+
+        /**
+         * 先保存到本地再广播到图库
+         * */
+        public  void saveImageToGallery(String imagePath ) {
+            // 其次把文件插入到系统图库
+            try {
+                MediaStore.Images.Media.insertImage(BaseApplication.single.getContentResolver(), imagePath  , "code", null);
+                // 最后通知图库更新
+                BaseApplication.single.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + imagePath)));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+
 }
 
