@@ -1732,29 +1732,29 @@ public class HomeActivity extends BaseActivity
         //adapter.add("发送给朋友");
         adapter.add("保存到手机");
 
-        if(customDialog==null) {
-            customDialog = new CustomDialog(this) {
-                @Override
-                public void initViews() {
-                    // 初始CustomDialog化控件
-                    ListView mListView = (ListView) findViewById(R.id.lv_dialog);
-                    mListView.setAdapter(adapter);
-                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            // 点击事件
-                            switch (position) {
-                                case 0:
-                                    downloadImage( HomeActivity.this, url);
-                                    closeDialog();
-                                    //sendToFriends( HomeActivity.this , url );//把图片发送给好友
-                                    //closeDialog();
-                                    break;
-                                //case 1:
-                                    //saveImageToGallery(MainActivity.this);
+        customDialog = new CustomDialog(this) {
+            @Override
+            public void initViews() {
+                // 初始CustomDialog化控件
+                ListView mListView = (ListView) findViewById(R.id.lv_dialog);
+                mListView.setAdapter(adapter);
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                                    //break;
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        // 点击事件
+                        switch (position) {
+                            case 0:
+                                downloadImage(HomeActivity.this, url);
+                                closeDialog();
+                                //sendToFriends( HomeActivity.this , url );//把图片发送给好友
+                                //closeDialog();
+                                break;
+                            //case 1:
+                            //saveImageToGallery(MainActivity.this);
+
+                            //break;
 //                            case 2:
 //                                Toast.makeText(MainActivity.this, "已收藏", Toast.LENGTH_LONG).show();
 //                                closeDialog();
@@ -1763,13 +1763,13 @@ public class HomeActivity extends BaseActivity
 //                                goIntent();
 //                                closeDialog();
 //                                break;
-                            }
-
                         }
-                    });
-                }
-            };
-        }
+
+                    }
+                });
+            }
+        };
+
         customDialog.show();
     }
 
