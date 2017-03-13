@@ -287,8 +287,12 @@ public class HomeActivity extends BaseActivity
         },500);
 
         //定时获取未读消息
-        mHandler.postDelayed(getMessageRunnable,500);
 
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //当android系统版本>=4.4时，才开启定时读取未读消息js代码
+            //低版本有bug，暂时不启用
+            mHandler.postDelayed(getMessageRunnable, 500);
+        }
     }
 
     /***
