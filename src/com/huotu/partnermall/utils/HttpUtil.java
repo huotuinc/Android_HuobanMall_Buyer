@@ -150,7 +150,7 @@ public class HttpUtil{
                     if (merchantPayInfo.getCode() != 200) {
                         BaseApplication.cleanAliPayInfo();
                         BaseApplication.cleanWeixinPayInfo();
-                        ToastUtils.showLongToast(merchantPayInfo.getMsg());
+                        //ToastUtils.showLongToast(merchantPayInfo.getMsg());
                         return;
                     }
 
