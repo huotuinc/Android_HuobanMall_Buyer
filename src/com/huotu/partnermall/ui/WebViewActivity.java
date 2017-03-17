@@ -50,6 +50,7 @@ import com.huotu.partnermall.model.ShareModel;
 import com.huotu.partnermall.model.WxPaySuccessCallbackModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.ui.base.BaseActivity;
+import com.huotu.partnermall.ui.base.SwipeBackActivity;
 import com.huotu.partnermall.ui.web.UrlFilterUtils;
 import com.huotu.partnermall.utils.ObtainParamsMap;
 import com.huotu.partnermall.utils.SignUtil;
@@ -78,12 +79,11 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
-import static u.aly.au.M;
-
 /**
  * 单张展示web页面
  */
-public class WebViewActivity extends BaseActivity implements Handler.Callback, MyBroadcastReceiver.BroadcastListener {
+public class WebViewActivity extends SwipeBackActivity
+        implements Handler.Callback, MyBroadcastReceiver.BroadcastListener {
     private Resources  resources;
     private Handler  mHandler;
     @Bind(R.id.main_webview)
@@ -590,7 +590,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 msgModel.setUrl(sLink);
                 //msgModel.setImageData(BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ));
                 share.initShareParams(msgModel);
-                WindowUtils.backgroundAlpha( WebViewActivity.this , 0.4f);
+                //WindowUtils.backgroundAlpha( WebViewActivity.this , 0.4f);
                 share.showAtLocation( WebViewActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
             }
@@ -637,7 +637,7 @@ public class WebViewActivity extends BaseActivity implements Handler.Callback, M
                 msgModel.setUrl(sLink);
                 //msgModel.setImageData(BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ));
                 share.initShareParams(msgModel);
-                WindowUtils.backgroundAlpha( WebViewActivity.this , 0.4f);
+                //WindowUtils.backgroundAlpha( WebViewActivity.this , 0.4f);
                 share.showAtLocation( WebViewActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
             }

@@ -1,8 +1,11 @@
 package com.huotu.partnermall.widgets;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import android.widget.TextView;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.model.ShareModel;
+import com.huotu.partnermall.utils.WindowUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import cn.sharesdk.framework.Platform;
@@ -44,6 +49,7 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
 
     public void showShareWindow ( ) {
         View view = LayoutInflater.from ( context ).inflate (  R.layout.share_layout, null  );
+        RelativeLayout bgView = (RelativeLayout) view.findViewById(R.id.pop_rootview);
         Button btn_cancel = ( Button ) view.findViewById ( R.id.btn_cancel );
         LinearLayout sharewechat = (LinearLayout) view.findViewById(R.id.sharewechat);
         LinearLayout sharewechatmoments = (LinearLayout) view.findViewById(R.id.sharewechatmoments);
@@ -56,23 +62,28 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
         sharesinaweibo.setOnClickListener(this);
         sharewechatfavorite.setOnClickListener(this);
         btn_cancel.setOnClickListener(this);
+        bgView.setOnClickListener(this);
 
         // 设置SelectPicPopupWindow的View
         this.setContentView ( view);
         // 设置SelectPicPopupWindow弹出窗体的宽
         this.setWidth( LinearLayout.LayoutParams.MATCH_PARENT);
         // 设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight( LinearLayout.LayoutParams.WRAP_CONTENT);
+        this.setHeight( LinearLayout.LayoutParams.MATCH_PARENT);
         // 设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         // 设置SelectPicPopupWindow弹出窗体动画效果
-        this.setAnimationStyle(R.style.AnimationPop);
-        //WindowUtils.backgroundAlpha ( aty, 0.4f );
+        //this.setAnimationStyle(R.style.AnimationPop);
+
+        //WindowUtils.backgroundAlpha (  (Activity) context , 0.4f );
         // 实例化一个ColorDrawable颜色为半透明
         //ColorDrawable dw = new ColorDrawable(0xb0000000);
         // 设置SelectPicPopupWindow弹出窗体的背景
         //this.setBackgroundDrawable(dw);
-        this.setBackgroundDrawable(ContextCompat.getDrawable(context , R.drawable.share_window_bg));
+
+        //this.setBackgroundDrawable(ContextCompat.getDrawable(context , R.drawable.share_window_bg));
+
+        this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
     @Override
@@ -94,6 +105,9 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
                 wechatShare(WechatFavorite.NAME);
                 break;
             case R.id.btn_cancel://取消
+                dismiss();
+                break;
+            case R.id.pop_rootview://
                 dismiss();
                 break;
             default:

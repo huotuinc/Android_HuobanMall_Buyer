@@ -55,14 +55,14 @@ public abstract class BaseActivity extends Activity {
         }
     }
 
-    public int getStatusBarHeight(Context context){
-        int result = 0;
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
+//    public int getStatusBarHeight(Context context){
+//        int result = 0;
+//        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+//        if (resourceId > 0) {
+//            result = context.getResources().getDimensionPixelSize(resourceId);
+//        }
+//        return result;
+//    }
 
     @Override
     protected void onDestroy() {
@@ -97,14 +97,15 @@ public abstract class BaseActivity extends Activity {
     protected void onStop() {
         super.onStop();
     }
-    protected boolean canConnect(){
-        //网络访问前先检测网络是否可用
-        if(!Util.isConnect(BaseActivity.this)){
-            ToastUtils.showLongToast(this, NULL_NETWORK);
-            return false;
-        }
-        return true;
-    }
+
+//    protected boolean canConnect(){
+//        //网络访问前先检测网络是否可用
+//        if(!Util.isConnect(BaseActivity.this)){
+//            ToastUtils.showLongToast(this, NULL_NETWORK);
+//            return false;
+//        }
+//        return true;
+//    }
 
     /**
      * 初始化控件

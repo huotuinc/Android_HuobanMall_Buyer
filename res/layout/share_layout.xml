@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/pop_rootview"
+                android:background="@color/translucent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    android:layout_alignParentBottom="true"
               android:id="@+id/pop_layout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -136,3 +144,6 @@
         android:layout_marginRight="20dp"
         android:background="@color/mintcream"/>
 </LinearLayout>
+
+
+</RelativeLayout>

@@ -1307,7 +1307,7 @@ public class HomeActivity extends BaseActivity
         //msgModel.setImageData( BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ) );
         share.initShareParams(msgModel);
         //share.showShareWindow();
-        WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f);
+        //WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f);
         share.showAtLocation( HomeActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
             }
