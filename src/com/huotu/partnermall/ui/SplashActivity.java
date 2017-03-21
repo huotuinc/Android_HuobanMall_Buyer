@@ -148,6 +148,8 @@ public class SplashActivity extends BaseActivity {
                             //获取商户支付信息
                             //String targetUrl = Constants.getINTERFACE_PREFIX() + "PayConfig?customerid=";
                             String targetUrl = Constants.getINTERFACE_PREFIX() + "payconfig/IndexMall?customerid=";
+                            //String targetUrl = Constants.getINTERFACE_PREFIX() + "mall/InitMall?customerid=";
+
                             targetUrl += application.readMerchantId();
                             AuthParamUtils paramUtils = new AuthParamUtils(application, System.currentTimeMillis(), targetUrl);
                             final String url = paramUtils.obtainUrls();

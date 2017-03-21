@@ -129,7 +129,8 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
             noticePop.showAtLocation(aty.findViewById(R.id.titleText), Gravity.CENTER, 0, 0);
         }else{
             payModel.setAttach(payModel.getCustomId() + "_0");
-            payModel.setNotifyurl(application.obtainMerchantUrl() + application.readAlipayNotify());
+            //payModel.setNotifyurl(application.obtainMerchantUrl() + application.readAlipayNotify());
+            payModel.setNotifyurl( getNotifyUrl( application.readAlipayDomain() , application.readAlipayNotify() , application.obtainMerchantUrl() ) );
             AliPayInfoV2 aliPayInfoV2 = new AliPayInfoV2();
             aliPayInfoV2.setAppId( application.readAlipayAppId() );
             aliPayInfoV2.setpId(application.readAlipayParentId());
@@ -148,7 +149,7 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         }
     }
 
-    protected void aliPay() {
+    public void aliPay() {
         Message msg = new Message();
         msg.what = Constants.PAY_NET;
         payModel.setPaymentType("1");
@@ -157,7 +158,7 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         dismissView();
     }
 
-    protected void wxPay(){
+    public void wxPay(){
         dismissView();
         if (!application.scanWx()) {//缺少支付信息
             NoticePopWindow noticePop = new NoticePopWindow(aty, "缺少支付信息");
@@ -168,7 +169,8 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
             //progress.showAtLocation( aty.findViewById(R.id.titleText), Gravity.CENTER, 0, 0 );
             payModel.setAttach(payModel.getCustomId() + "_0");
             //添加微信回调路径
-            payModel.setNotifyurl(application.obtainMerchantUrl() + application.readWeixinNotify());
+            //payModel.setNotifyurl(application.obtainMerchantUrl() + application.readWeixinNotify());
+            payModel.setNotifyurl( getNotifyUrl( application.readWeixinDomain() , application.readWeixinNotify() , application.obtainMerchantUrl() ) );
 //            PayFunc payFunc = new PayFunc(aty, payModel, application, mHandler, aty, progress);
 //            payFunc.wxPay();
 
@@ -198,13 +200,13 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
         String appid = application.readAlipayAppId();
         String key = application.readAlipayAppKey();
         String partnerid = application.readAlipayParentId();
+        String notifyurl = application.readAlipayNotify();
+
         boolean isWebAliPay = application.readIsWebAliPay();
-//        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(partnerid)) {
-//            alipayBtn.setVisibility(View.GONE);
-//        }
+
         if( isWebAliPay ){
             alipayBtn.setVisibility(View.VISIBLE);
-            alipayMobileBtn.setVisibility(View.GONE);
+            //alipayMobileBtn.setVisibility(View.GONE);
         }else {
             alipayBtn.setVisibility(View.GONE);
             if( TextUtils.isEmpty(appid) || TextUtils.isEmpty( key ) || TextUtils.isEmpty( partnerid ) ) {
@@ -214,10 +216,20 @@ public class PayPopWindow extends PopupWindow implements View.OnClickListener{
             }
         }
 
+        //key = application.rea
+
         key = application.readWxpayAppKey();
         partnerid = application.readWxpayParentId();
         if(TextUtils.isEmpty(key) || TextUtils.isEmpty( partnerid ) ){
             wxPayBtn.setVisibility(View.GONE);
+        }
+    }
+
+    protected String getNotifyUrl( String domain , String notifyUrl , String mallUrl){
+        if( domain == null || domain.trim().isEmpty() ){
+            return mallUrl + notifyUrl;
+        }else{
+            return domain+notifyUrl;
         }
     }
 }

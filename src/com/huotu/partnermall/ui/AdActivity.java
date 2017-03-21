@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,6 +31,8 @@ import butterknife.OnClick;
  * 广告页面
  */
 public class AdActivity extends BaseActivity implements Handler.Callback ,AdBannerWidget.AdOnClickListener {
+    @Bind(R.id.activity_ad)
+    FrameLayout rootView;
     @Bind(R.id.adBanner)
     AdBannerWidget adBannerWidget;
     @Bind(R.id.tvSkip)
@@ -58,6 +61,9 @@ public class AdActivity extends BaseActivity implements Handler.Callback ,AdBann
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ad);
         ButterKnife.bind(this);
+
+        setImmerseLayout(rootView);
+
         initView();
     }
 
@@ -99,8 +105,8 @@ public class AdActivity extends BaseActivity implements Handler.Callback ,AdBann
 
         adBannerConfig.setImages(list);
 
-        adBannerConfig.setInterval(9000);
-        skipTimeSecond = adBannerConfig.getImages().size() * 9;
+        adBannerConfig.setInterval(4000);
+        skipTimeSecond = adBannerConfig.getImages().size() * 4;
 
         adBannerWidget.setCanLoop(false);
         adBannerWidget.setAdBannerConfig(adBannerConfig, R.drawable.login_bg );

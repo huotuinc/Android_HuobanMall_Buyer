@@ -23,11 +23,9 @@ public class UrlConfig {
 
     public static String getFooterConfigUrl() {
         String id = BaseApplication.single.readMerchantId();
-        //String subId = BaseApplication.single.readMerchantSubId();
         String url = BuildConfig.SMART_Url;
         url += "merchantWidgetSettings/search/findByMerchantIdAndScopeDependsScopeOrDefault/nativeCode/" + id + "/global";
         return url;
     }
-
 
 }

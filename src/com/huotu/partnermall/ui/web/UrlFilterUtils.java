@@ -26,6 +26,7 @@ import com.huotu.partnermall.ui.WebViewActivity;
 import com.huotu.partnermall.ui.login.PhoneLoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
+import com.huotu.partnermall.utils.BuyerPayUtil;
 import com.huotu.partnermall.utils.HttpUtil;
 import com.huotu.partnermall.utils.JSONUtil;
 import com.huotu.partnermall.utils.SignUtil;
@@ -259,8 +260,16 @@ public class UrlFilterUtils {
                         payModel.setAmount(HttpUtil.formatToDecimal(data.get("finalamount")));
                         payModel.setAliAmount( data.get("finalamount") );
                         payModel.setDetail( name );
-                        PayPopWindow payPopWindow = new PayPopWindow(aty, mHandler, payModel);
-                        payPopWindow.showAtLocation(aty.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+                        //PayPopWindow payPopWindow = new PayPopWindow(aty, mHandler, payModel);
+                        //payPopWindow.showAtLocation(aty.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+                        if(payModel.getPaymentType().equals("11")){
+                            BuyerPayUtil buyerPayUtil = new BuyerPayUtil();
+                            buyerPayUtil.aliNativePay( aty , mHandler , payModel );
+                        }else if(payModel.getPaymentType().equals("300")){
+                            BuyerPayUtil buyerPayUtil = new BuyerPayUtil();
+                            buyerPayUtil.wxPay( aty , mHandler , payModel );
+                        }
+
                     }
                 } else{
                     ToastUtils.showLongToast("获取订单信息失败。");

@@ -33,8 +33,7 @@ public class ObtainParamsMap {
 //        timestamp = String.valueOf(System.currentTimeMillis());
 //    }
 
-    public
-    ObtainParamsMap ( Context context ) {
+    public ObtainParamsMap(Context context) {
         // TODO Auto-generated constructor stub
         this.context = context;
 
@@ -42,115 +41,92 @@ public class ObtainParamsMap {
     }
 
 
-
     /**
-     *
+     * @throws
      * @方法描述：获取post数据
      * @方法名：obtainMap
      * @参数：@return
      * @返回：Map<String,String>
-     * @exception
-     * @since
      */
-    public
-    Map<String, String> obtainMap()
-    {
-        Map<String, String> paramsMap = new HashMap<String, String> ();
+    public Map<String, String> obtainMap() {
+        Map<String, String> paramsMap = new HashMap<String, String>();
         paramsMap.put("appKey", Constants.APPKEY);
         if (null != PreferenceHelper.readString(context, Constants.LOCATION_INFO,
-                                                Constants.LATITUDE))
-        {
+                Constants.LATITUDE)) {
             paramsMap.put("lat", PreferenceHelper.readString(context,
-                                                             Constants.LOCATION_INFO, Constants.LATITUDE));
-        } else
-        {
+                    Constants.LOCATION_INFO, Constants.LATITUDE));
+        } else {
             paramsMap.put("lat", "");
         }
         if (null != PreferenceHelper.readString(context, Constants.LOCATION_INFO,
-                                                Constants.LONGITUDE))
-        {
+                Constants.LONGITUDE)) {
             paramsMap.put("lng", PreferenceHelper.readString(context,
-                                                             Constants.LOCATION_INFO, Constants.LONGITUDE));
-        } else
-        {
+                    Constants.LOCATION_INFO, Constants.LONGITUDE));
+        } else {
             paramsMap.put("lng", "");
         }
         if (null != PreferenceHelper.readString(context, Constants.LOCATION_INFO,
-                                                Constants.CITY))
-        {
+                Constants.CITY)) {
             paramsMap.put("cityCode", PreferenceHelper.readString(context,
-                                                                  Constants.LOCATION_INFO, Constants.CITY));
-        } else
-        {
+                    Constants.LOCATION_INFO, Constants.CITY));
+        } else {
             paramsMap.put("cityCode", "");
         }
         paramsMap.put("timestamp", timestamp);
         paramsMap.put("operation", Constants.OPERATION_CODE);
         paramsMap.put("version",
-                      BaseApplication.getAppVersion ());
+                BaseApplication.getAppVersion());
         if (null != PreferenceHelper.readString(
                 context.getApplicationContext(), Constants.MEMBER_INFO,
-                Constants.MEMBER_TOKEN))
-        {
+                Constants.MEMBER_TOKEN)) {
             paramsMap.put("token", PreferenceHelper.readString(
-                                  context.getApplicationContext(), Constants.MEMBER_INFO,
-                                  Constants.MEMBER_TOKEN));
-        } else
-        {
+                    context.getApplicationContext(), Constants.MEMBER_INFO,
+                    Constants.MEMBER_TOKEN));
+        } else {
             paramsMap.put("token", "");
         }
         paramsMap.put("imei",
-                      BaseApplication.getPhoneIMEI());
+                BaseApplication.getPhoneIMEI());
         paramsMap.put("cpaCode", Constants.CAP_CODE);
         return paramsMap;
     }
 
     /**
-     *
+     * @throws
      * @方法描述：获取get数据
      * @方法名：getMap
      * @参数：@return
      * @返回：String
-     * @exception
-     * @since
      */
-    public String getMap()
-    {
+    public String getMap() {
         StringBuffer buffer = new StringBuffer();
-        try
-        {
+        try {
             buffer.append("&appKey=");
-            buffer.append( URLEncoder.encode ( Constants.APPKEY, "UTF-8" ));
+            buffer.append(URLEncoder.encode(Constants.APPKEY, "UTF-8"));
             if (null != PreferenceHelper.readString(context, Constants.LOCATION_INFO,
-                                                    Constants.LATITUDE))
-            {
+                    Constants.LATITUDE)) {
                 buffer.append("&lat=");
                 buffer.append(URLEncoder.encode(PreferenceHelper.readString(
-                                                        context, Constants.LOCATION_INFO, Constants.LATITUDE), "UTF-8"));
-            } else
-            {
+                        context, Constants.LOCATION_INFO, Constants.LATITUDE), "UTF-8"));
+            } else {
                 buffer.append("&lat=");
                 buffer.append("");
             }
             if (null != PreferenceHelper.readString(context, Constants.LOCATION_INFO,
-                                                    Constants.LONGITUDE))
-            {
+                    Constants.LONGITUDE)) {
                 buffer.append("&lng=");
                 buffer.append(URLEncoder.encode(PreferenceHelper.readString(
-                                                        context, Constants.LOCATION_INFO, Constants.LONGITUDE), "UTF-8"));
-            } else
-            {
+                        context, Constants.LOCATION_INFO, Constants.LONGITUDE), "UTF-8"));
+            } else {
                 buffer.append("&lng=");
                 buffer.append("");
             }
             if (null != PreferenceHelper.readString(context, Constants.LOCATION_INFO,
-                                                    Constants.CITY))
-            {
+                    Constants.CITY)) {
                 buffer.append("&cityCode=");
                 buffer.append(URLEncoder.encode(PreferenceHelper.readString(
-                                                        context, Constants.LOCATION_INFO, Constants.CITY), "UTF-8"));
-            } else
-            {
+                        context, Constants.LOCATION_INFO, Constants.CITY), "UTF-8"));
+            } else {
                 buffer.append("&cityCode=");
                 buffer.append("");
             }
@@ -162,60 +138,51 @@ public class ObtainParamsMap {
             buffer.append(URLEncoder.encode(BaseApplication.getAppVersion(), "UTF-8"));
             if (null != PreferenceHelper.readString(
                     context.getApplicationContext(), Constants.MEMBER_INFO,
-                    Constants.MEMBER_TOKEN))
-            {
+                    Constants.MEMBER_TOKEN)) {
                 buffer.append("&token=");
                 buffer.append(URLEncoder.encode(PreferenceHelper.readString(
-                                                        context.getApplicationContext(), Constants.MEMBER_INFO,
-                                                        Constants.MEMBER_TOKEN), "UTF-8"));
-            } else
-            {
+                        context.getApplicationContext(), Constants.MEMBER_INFO,
+                        Constants.MEMBER_TOKEN), "UTF-8"));
+            } else {
                 buffer.append("&token=");
                 buffer.append("");
             }
 
             buffer.append("&imei=");
             buffer.append(URLEncoder.encode(
-                                  BaseApplication.getPhoneIMEI(),
-                                  "UTF-8"));
+                    BaseApplication.getPhoneIMEI(),
+                    "UTF-8"));
             buffer.append("&cpaCode=");
             buffer.append(URLEncoder.encode(Constants.CAP_CODE, "UTF-8"));
             return buffer.toString();
-        } catch (UnsupportedEncodingException e)
-        {
-            Log.e (TAG , e.getMessage ( ) );
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, e.getMessage());
             return null;
         }
 
     }
 
     /**
-     *
+     * @throws
      * @方法描述：分装sign码第一步：获取所有参数的map对象
      * @方法名：packMap
      * @参数：@return
      * @返回：Map<String,String>
-     * @exception
-     * @since
      */
-    public Map<String, String> packMap(Map<String, String> exceptionParams)
-    {
+    public Map<String, String> packMap(Map<String, String> exceptionParams) {
         Map<String, String> mapResult;
-        if (null == exceptionParams)
-        {
+        if (null == exceptionParams) {
             mapResult = obtainMap();
 
             return mapResult;
-        } else
-        {
+        } else {
             mapResult = obtainMap();
 
             Iterator iMap = exceptionParams.entrySet().iterator();
-            while (iMap.hasNext())
-            {
+            while (iMap.hasNext()) {
                 Map.Entry entry = (Map.Entry) iMap.next();
                 mapResult.put((String) entry.getKey(),
-                              (String) entry.getValue());
+                        (String) entry.getValue());
             }
 
             return mapResult;
@@ -224,17 +191,14 @@ public class ObtainParamsMap {
     }
 
     /**
-     *
+     * @throws
      * @方法描述：获取sign码第三步：加密
      * @方法名：getSign
      * @参数：@param map
      * @参数：@return
      * @返回：String
-     * @exception
-     * @since
      */
-    public String getSign(Map<String, String> map)
-    {
+    public String getSign(Map<String, String> map) {
 
         /*
          * try {
@@ -253,21 +217,18 @@ public class ObtainParamsMap {
     }
 
     /**
-     *
+     * @throws
      * @方法描述：获取sign码第二步：参数排序
      * @方法名：doSort
      * @参数：@param map
      * @参数：@return
      * @返回：String
-     * @exception
-     * @since
      */
-    private String doSort(Map<String, String> map)
-    {
+    private String doSort(Map<String, String> map) {
         Map<String, String> resultMap = packMap(map);
         resultMap.put("appSecret", Constants.getAPP_SECRET());
         StringBuffer buffer = new StringBuffer();
-        List arrayList = new ArrayList (resultMap.entrySet());
+        List arrayList = new ArrayList(resultMap.entrySet());
 
         Collections.sort(
                 arrayList, new Comparator() {
@@ -282,8 +243,7 @@ public class ObtainParamsMap {
         );
 
         //
-        for (Iterator iter = arrayList.iterator(); iter.hasNext();)
-        {
+        for (Iterator iter = arrayList.iterator(); iter.hasNext(); ) {
             Map.Entry entry = (Map.Entry) iter.next();
             String key = (String) entry.getKey();
             // Log.i("key", key);
@@ -295,15 +255,14 @@ public class ObtainParamsMap {
     }
 
     /**
-     *
      * @param userid
      * @param unionid
      * @return
      */
-    public static String SignHeaderString(String userid , String unionid , String openId){
+    public static String SignHeaderString(String userid, String unionid, String openId) {
         String temp = userid + unionid + openId + BuildConfig.Header_Secret;
-        String sign =  EncryptUtil.getInstance().encryptMd532(temp);
-        String str= "hottec:"+sign+":"+ userid+":"+unionid+ ":" + openId + ";";
+        String sign = EncryptUtil.getInstance().encryptMd532(temp);
+        String str = "hottec:" + sign + ":" + userid + ":" + unionid + ":" + openId + ";";
         return str;
     }
 }

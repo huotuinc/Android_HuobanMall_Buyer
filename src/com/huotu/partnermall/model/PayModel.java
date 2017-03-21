@@ -3,9 +3,7 @@ package com.huotu.partnermall.model;
 /**
  * Created by Administrator on 2015/10/13.
  */
-public
-class PayModel extends BaseBean {
-
+public class PayModel extends BaseBean {
     private String customId;
     private String tradeNo;
     private String paymentType;
@@ -21,73 +19,59 @@ class PayModel extends BaseBean {
      */
     private String aliAmount;
 
-    public
-    String getAttach ( ) {
+    public String getAttach() {
         return attach;
     }
 
-    public
-    void setAttach ( String attach ) {
+    public void setAttach(String attach) {
         this.attach = attach;
     }
 
-    public
-    String getDetail ( ) {
+    public String getDetail() {
         return detail;
     }
 
-    public
-    String getNotifyurl ( ) {
+    public String getNotifyurl() {
         return notifyurl;
     }
 
-    public
-    void setNotifyurl ( String notifyurl ) {
+    public void setNotifyurl(String notifyurl) {
         this.notifyurl = notifyurl;
     }
 
-    public
-    void setDetail ( String detail ) {
+    public void setDetail(String detail) {
         this.detail = detail;
     }
 
-    public
-    int getAmount ( ) {
+    public int getAmount() {
         return amount;
     }
 
-    public
-    void setAmount ( int amount ) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
-    public
-    String getPaymentType ( ) {
+    public String getPaymentType() {
         return paymentType;
     }
 
-    public
-    void setPaymentType ( String paymentType ) {
+    public void setPaymentType(String paymentType) {
         this.paymentType = paymentType;
     }
 
-    public
-    String getTradeNo ( ) {
+    public String getTradeNo() {
         return tradeNo;
     }
 
-    public
-    void setTradeNo ( String tradeNo ) {
+    public void setTradeNo(String tradeNo) {
         this.tradeNo = tradeNo;
     }
 
-    public
-    String getCustomId ( ) {
+    public String getCustomId() {
         return customId;
     }
 
-    public
-    void setCustomId ( String customId ) {
+    public void setCustomId(String customId) {
         this.customId = customId;
     }
 

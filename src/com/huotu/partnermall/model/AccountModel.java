@@ -6,7 +6,6 @@ import java.io.Serializable;
  * 绑定微信账户信息
  */
 public class AccountModel implements Serializable {
-
     //微信用户ID
     private String accountId;
     //微信用户名称
@@ -23,67 +22,54 @@ public class AccountModel implements Serializable {
     private String nickname;
     //openId
     private String openid;
-
     //
     private String redirecturl;
 
-    public
-    int getSex ( ) {
+    public int getSex() {
         return sex;
     }
 
-    public
-    void setSex ( int sex ) {
+    public void setSex(int sex) {
         this.sex = sex;
     }
 
-    public
-    String getNickname ( ) {
+    public String getNickname() {
         return nickname;
     }
 
-    public
-    void setNickname ( String nickname ) {
+    public void setNickname(String nickname) {
         this.nickname = nickname;
     }
 
-    public
-    String getOpenid ( ) {
+    public String getOpenid() {
         return openid;
     }
 
-    public
-    void setOpenid ( String openid ) {
+    public void setOpenid(String openid) {
         this.openid = openid;
     }
 
-    public
-    String getCity ( ) {
+    public String getCity() {
         return city;
     }
 
-    public
-    void setCity ( String city ) {
+    public void setCity(String city) {
         this.city = city;
     }
 
-    public
-    String getCountry ( ) {
+    public String getCountry() {
         return country;
     }
 
-    public
-    void setCountry ( String country ) {
+    public void setCountry(String country) {
         this.country = country;
     }
 
-    public
-    String getProvince ( ) {
+    public String getProvince() {
         return province;
     }
 
-    public
-    void setProvince ( String province ) {
+    public void setProvince(String province) {
         this.province = province;
     }
 
@@ -94,53 +80,43 @@ public class AccountModel implements Serializable {
     //省
     private String province;
 
-    public
-    String getAccountUnionId ( ) {
+    public String getAccountUnionId() {
         return accountUnionId;
     }
 
-    public
-    void setAccountUnionId ( String accountUnionId ) {
+    public void setAccountUnionId(String accountUnionId) {
         this.accountUnionId = accountUnionId;
     }
 
-    public
-    String getAccountToken ( ) {
+    public String getAccountToken() {
         return accountToken;
     }
 
-    public
-    void setAccountToken ( String accountToken ) {
+    public void setAccountToken(String accountToken) {
         this.accountToken = accountToken;
     }
 
-    public
-    String getAccountId ( ) {
+    public String getAccountId() {
         return accountId;
     }
 
-    public
-    void setAccountId ( String accountId ) {
+    public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 
-    public
-    String getAccountName ( ) {
+    public String getAccountName() {
         return accountName;
     }
 
-    public
-    void setAccountName ( String accountName ) {
+    public void setAccountName(String accountName) {
         this.accountName = accountName;
     }
 
-    public
-    String getAccountIcon ( ) {
+    public String getAccountIcon() {
         return accountIcon;
     }
 
-    public
-    void setAccountIcon ( String accountIcon ) {
+    public void setAccountIcon(String accountIcon) {
         this.accountIcon = accountIcon;
     }
 
@@ -151,4 +127,5 @@ public class AccountModel implements Serializable {
     public void setRedirecturl(String redirecturl) {
         this.redirecturl = redirecturl;
     }
+
 }

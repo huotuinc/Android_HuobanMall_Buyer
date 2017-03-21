@@ -1,6 +1,11 @@
 package com.huotu.partnermall.utils;
 
+import android.text.TextUtils;
+import android.webkit.WebView;
+
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.inner.BuildConfig;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -76,7 +81,33 @@ public class SignUtil {
 
         Map<String,String> header= new HashMap<>();
         header.put("Hot", hotString);
+
+        header.put("appversion","2.0.0");
+
         return header;
+    }
+
+    public static String signHeader( String userAgentString ){
+        String userid= BaseApplication.single.readMemberId();
+        String unionid = BaseApplication.single.readUserUnionId();
+        String openId = BaseApplication.single.readOpenId();
+        String sign = ObtainParamsMap.SignHeaderString(userid, unionid , openId);
+        String userAgent =userAgentString;
+        if( TextUtils.isEmpty(userAgent) ) {
+            userAgent = "mobile;"+sign;
+        }else{
+            int idx = userAgent.lastIndexOf(";mobile;hottec:");
+            if(idx>=0){
+                userAgent = userAgent.substring(0,idx);
+            }
+            userAgent +=";mobile;"+sign;
+        }
+        //webView.getSettings().setUserAgentString(userAgent);
+
+        String appversion = BuildConfig.WEBAPPVERSION;
+        userAgent +="hotappver="+appversion+";";
+
+        return userAgent;
     }
 
 

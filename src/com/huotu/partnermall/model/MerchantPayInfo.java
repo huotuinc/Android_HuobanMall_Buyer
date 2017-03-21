@@ -9,8 +9,7 @@ public class MerchantPayInfo {
 
     private int code;//返回码
     private String msg;
-    private
-    List<MerchantPayModel> data;
+    private List<MerchantPayModel> data;
 
     public int getCode() {
         return code;
@@ -44,6 +43,8 @@ public class MerchantPayInfo {
         private String appKey;
         private String notify;
         private boolean webPagePay;
+        //支付方式增加了 payCenterDomain  这个字段 为空：按原有方式自己拼上商城域名 不为空：以该字段拼接
+        private String payCenterDomain;
 
         public boolean isWebPagePay() {
             return webPagePay;
@@ -99,6 +100,14 @@ public class MerchantPayInfo {
 
         public void setAppKey(String appKey) {
             this.appKey = appKey;
+        }
+
+        public String getPayCenterDomain() {
+            return payCenterDomain;
+        }
+
+        public void setPayCenterDomain(String payCenterDomain) {
+            this.payCenterDomain = payCenterDomain;
         }
     }
 }

@@ -105,8 +105,8 @@ public class SwipeBackLayout extends FrameLayout {
                     int moveX = (int) ev.getRawX();
                     // 满足此条件屏蔽SildingFinishLayout里面子类的touch事件
                     if ( downX <= LeftStartSwipeX
-                            &&  moveX - downX > mTouchSlop
-                            && Math.abs((int) ev.getRawY() - downY) < mTouchSlop) {
+                            &&  moveX - downX > mTouchSlop){
+                            //&& Math.abs((int) ev.getRawY() - downY) < mTouchSlop) {
                         return true;
                     }
                     break;
@@ -122,8 +122,8 @@ public class SwipeBackLayout extends FrameLayout {
                     int moveX = (int) event.getRawX();
                     int deltaX = tempX - moveX;
                     tempX = moveX;
-                    if (moveX - downX > mTouchSlop
-                            && Math.abs((int) event.getRawY() - downY) < mTouchSlop) {
+                    if (moveX - downX > mTouchSlop ){
+                            //&& Math.abs((int) event.getRawY() - downY) < mTouchSlop) {
                         isSilding = true;
                     }
 

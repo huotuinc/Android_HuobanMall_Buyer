@@ -38,6 +38,7 @@ import com.huotu.partnermall.widgets.custom.WidgetConfig;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.security.DomainCombiner;
 import java.util.ArrayList;
 import java.util.List;
 import cn.sharesdk.framework.Platform;
@@ -45,6 +46,7 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 
 import static com.huotu.partnermall.config.Constants.MERCHANT_INFO;
+import static com.huotu.partnermall.config.Constants.MERCHANT_NAME;
 import static com.huotu.partnermall.config.Constants.MERCHANT_WEIXIN_ID;
 import static com.huotu.partnermall.config.Constants.WEIXIN_KEY;
 import static com.huotu.partnermall.utils.PreferenceHelper.readString;
@@ -555,12 +557,22 @@ public class BaseApplication extends Application {
         return readString(getApplicationContext(), MERCHANT_INFO, Constants.MERCHANT_ALIPAY_ID);
     }
 
-    public void writeAlipay( String appId , String parentId, String appKey, String notify, boolean isWebPay) {
+    public void writeAlipay( String appId , String parentId, String appKey, String notify, boolean isWebPay , String domain) {
         PreferenceHelper.writeString(getApplicationContext() , MERCHANT_INFO, Constants.ALIPAY_APP_ID , appId );
         PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID, parentId);
         PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_KEY, appKey);
         PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_NOTIFY, notify);
         PreferenceHelper.writeBoolean(getApplicationContext(), MERCHANT_INFO, Constants.IS_WEB_ALIPAY, isWebPay);
+        PreferenceHelper.writeString(getApplicationContext(),MERCHANT_INFO , Constants.ALIPAY_DOMAIN , domain);
+    }
+
+    public void writeWebAlipay( String appId , String parentId, String appKey, String notify, boolean isWebPay , String domain) {
+        PreferenceHelper.writeString(getApplicationContext() , MERCHANT_INFO, Constants.WEB_ALIPAY_APP_ID , appId );
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.WEB_ALIPAY_MERCHANT_ID, parentId);
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.WEB_ALIPAY_KEY, appKey);
+        PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.WEB_ALIPAY_NOTIFY, notify);
+        PreferenceHelper.writeBoolean(getApplicationContext(), MERCHANT_INFO, Constants.WEB_ALIPAY_ISWEBPAY, isWebPay);
+        PreferenceHelper.writeString(getApplicationContext(),MERCHANT_INFO , Constants.WEB_ALIPAY_DOMAIN , domain);
     }
 
     public boolean readIsWebAliPay(){
@@ -582,20 +594,30 @@ public class BaseApplication extends Application {
         return readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_MERCHANT_ID);
     }
 
-    public void writeWx(String parentId, String appId, String appKey, String notify, boolean isWebPay) {
+    public void writeWx(String parentId, String appId, String appKey, String notify, boolean isWebPay , String domain ) {
         PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_MERCHANT_ID, parentId);
         PreferenceHelper.writeString(getApplicationContext(), MERCHANT_INFO, MERCHANT_WEIXIN_ID, appId);
         PreferenceHelper.writeString( getApplicationContext(), MERCHANT_INFO, WEIXIN_KEY, appKey );
         PreferenceHelper.writeString( getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_NOTIFY, notify );
         PreferenceHelper.writeBoolean( getApplicationContext(), MERCHANT_INFO, Constants.IS_WEB_WEIXINPAY, isWebPay );
+        PreferenceHelper.writeString(getApplicationContext() , MERCHANT_NAME , Constants.WEIXIN_DOMAIN , domain );
     }
 
     public String readAlipayNotify() {
         return readString(getApplicationContext(), MERCHANT_INFO, Constants.ALIPAY_NOTIFY);
     }
 
+    public String readAlipayDomain(){
+        return readString(getApplicationContext(),MERCHANT_INFO,Constants.ALIPAY_DOMAIN);
+    }
+
+
     public String readWeixinNotify() {
         return readString(getApplicationContext(), MERCHANT_INFO, Constants.WEIXIN_NOTIFY);
+    }
+
+    public String readWeixinDomain(){
+        return readString(getApplicationContext(),MERCHANT_INFO,Constants.WEIXIN_DOMAIN);
     }
 
     //
@@ -717,6 +739,17 @@ public class BaseApplication extends Application {
         PreferenceHelper.remove(single,Constants.MERCHANT_INFO , Constants.ALIPAY_NOTIFY);
         PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.ALIPAY_MERCHANT_ID);
         PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.IS_WEB_ALIPAY);
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.ALIPAY_DOMAIN);
+
+    }
+
+    public static void cleanWebAliPayInfo(){
+        PreferenceHelper.remove( single ,  Constants.MERCHANT_INFO , Constants.WEB_ALIPAY_APP_ID);
+        PreferenceHelper.remove( single , Constants.MERCHANT_INFO , Constants.WEB_ALIPAY_KEY );
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO , Constants.WEB_ALIPAY_NOTIFY);
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.WEB_ALIPAY_MERCHANT_ID);
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.WEB_ALIPAY_ISWEBPAY);
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.WEB_ALIPAY_DOMAIN);
 
     }
 
@@ -726,6 +759,8 @@ public class BaseApplication extends Application {
         PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.WEIXIN_KEY);
         PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.WEIXIN_NOTIFY);
         PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.IS_WEB_WEIXINPAY);
+        PreferenceHelper.remove(single,Constants.MERCHANT_INFO,Constants.WEIXIN_DOMAIN);
+
     }
 
     public static void writeBottomMenuConfig(String pageConfig ){

@@ -213,21 +213,25 @@ public class WebViewActivity extends SwipeBackActivity
     }
 
     private void signHeader( WebView webView ){
-        String userid= application.readMemberId();
-        String unionid = application.readUserUnionId();
-        String openId = BaseApplication.single.readOpenId();
-        String sign = ObtainParamsMap.SignHeaderString(userid, unionid , openId);
-        String userAgent = webView.getSettings().getUserAgentString();
-        if( TextUtils.isEmpty(userAgent) ) {
-            userAgent = "mobile;"+sign;
-        }else{
-            int idx = userAgent.lastIndexOf(";mobile;hottec:");
-            if(idx>=0){
-                userAgent = userAgent.substring(0,idx);
-            }
-            userAgent +=";mobile;"+sign;
-        }
-        webView.getSettings().setUserAgentString(userAgent);
+//        String userid= application.readMemberId();
+//        String unionid = application.readUserUnionId();
+//        String openId = BaseApplication.single.readOpenId();
+//        String sign = ObtainParamsMap.SignHeaderString(userid, unionid , openId);
+//        String userAgent = webView.getSettings().getUserAgentString();
+//        if( TextUtils.isEmpty(userAgent) ) {
+//            userAgent = "mobile;"+sign;
+//        }else{
+//            int idx = userAgent.lastIndexOf(";mobile;hottec:");
+//            if(idx>=0){
+//                userAgent = userAgent.substring(0,idx);
+//            }
+//            userAgent +=";mobile;"+sign;
+//        }
+//        webView.getSettings().setUserAgentString(userAgent);
+
+        String userAgent = SignUtil.signHeader( webView.getSettings().getUserAgentString() );
+        webView.getSettings().setUserAgentString( userAgent );
+
     }
 
     private void loadPage(){
@@ -509,7 +513,7 @@ public class WebViewActivity extends SwipeBackActivity
     protected void gotoOrderList(){
         if(viewPage!=null){
             String urlstr = String.format( Constants.URL_WaitPayOrderList, application.obtainMerchantUrl(), application.readMerchantId());
-            viewPage.loadUrl( urlstr );
+            viewPage.loadUrl( urlstr , SignUtil.signHeader() );
         }
     }
 
@@ -543,7 +547,7 @@ public class WebViewActivity extends SwipeBackActivity
 
             if(viewPage !=null) {
                 String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );
-                viewPage.loadUrl(urlString);
+                viewPage.loadUrl(urlString , SignUtil.signHeader() );
             }
         }else if( type == MyBroadcastReceiver.ReceiverType.wxPayCancel || type == MyBroadcastReceiver.ReceiverType.wxPayError){
             if(mHandler==null)return;
@@ -702,7 +706,7 @@ public class WebViewActivity extends SwipeBackActivity
             Toast.makeText(WebViewActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
             String orderNo = result.getAliOrderInfo().getOrderNo();
             String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );
-            viewPage.loadUrl(urlString);
+            viewPage.loadUrl(urlString , SignUtil.signHeader() );
         } else {
             // 判断resultStatus 为非"9000"则代表可能支付失败
             // "8000"代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，最终交易是否成功以服务端异步通知为准（小概率状态）

@@ -321,26 +321,6 @@ public class Constants {
 	public static final int SWITCH_USER_NOTIFY = 9988;
 
 	/**
-	 * 首页Url
-	 */
-	//public static final String HOME_PAGE_URL = "http://www.baidu.com";
-
-	/**
-	 * 基本信息
-	 */
-	//public static final String BASE_INFO   = "base_ifo";
-	/**
-	 * 当前加载的页面
-	 */
-	//public static final String CURRENT_URL = "current_url";
-
-	//页面的类型
-	/**
-	 * 设置界面
-	 */
-	//public static final String PAGE_TYPE_SETTING = "setting";
-
-	/**
 	 * 微信支付appID
 	 */
 	public static final String WXPAY_ID    = "wx2f2604e380cf6be1";
@@ -404,6 +384,9 @@ public class Constants {
 	public static final String IS_WEB_WEIXINPAY = "is_web_weixinpay";
 	public static final String IS_WEB_ALIPAY = "is_web_alipay";
 
+	public static final String ALIPAY_DOMAIN="alipay_domain";
+	public static final String WEIXIN_DOMAIN="weixin_domain";
+
 	public static final String COMMON_SHARE_LOGO = "http://1804.img.pp.sohu.com.cn/images/2013/1/14/16/2/6205e011f029437o_13cfbf362e6g85.jpg";
 
 	//数据包版本号
@@ -461,4 +444,12 @@ public class Constants {
 	public static final int MESSAGE_DOWNLOADIMAGE_SUCCESS= 30312;
 	//下载图片失败消息
 	public static final int MESSAGE_DOWNLOADIMAGE_FAIL=30313;
+
+
+	public static String WEB_ALIPAY_APP_ID="web_alipay_appid";
+	public static String WEB_ALIPAY_MERCHANT_ID = "web_alipay_merchant_id";
+	public static String WEB_ALIPAY_KEY="web_alipay_key";
+	public static String WEB_ALIPAY_NOTIFY ="web_alipay_notify";
+	public static String WEB_ALIPAY_DOMAIN="web_alipay_domain";
+	public static String WEB_ALIPAY_ISWEBPAY="web_alipay_iswebpay";
 }

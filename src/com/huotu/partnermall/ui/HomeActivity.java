@@ -572,22 +572,27 @@ public class HomeActivity extends BaseActivity
     }
 
     private void signHeader( WebView webView ){
-        String userid= application.readMemberId();
-        String unionid = application.readUserUnionId();
-        String openId = BaseApplication.single.readOpenId();
+//        String userid= application.readMemberId();
+//        String unionid = application.readUserUnionId();
+//        String openId = BaseApplication.single.readOpenId();
+//
+//        String sign = ObtainParamsMap.SignHeaderString(userid, unionid , openId );
+//        String userAgent = webView.getSettings().getUserAgentString();
+//        if( TextUtils.isEmpty(userAgent) ) {
+//            userAgent = "mobile;"+sign;
+//        }else{
+//            int idx = userAgent.lastIndexOf(";mobile;hottec:");
+//            if(idx>=0){
+//                userAgent = userAgent.substring(0,idx);
+//            }
+//            userAgent +=";mobile;"+sign;
+//        }
+//
+//        webView.getSettings().setUserAgentString( userAgent );
 
-        String sign = ObtainParamsMap.SignHeaderString(userid, unionid , openId );
-        String userAgent = webView.getSettings().getUserAgentString();
-        if( TextUtils.isEmpty(userAgent) ) {
-            userAgent = "mobile;"+sign;
-        }else{
-            int idx = userAgent.lastIndexOf(";mobile;hottec:");
-            if(idx>=0){
-                userAgent = userAgent.substring(0,idx);
-            }
-            userAgent +=";mobile;"+sign;
-        }
+        String userAgent = SignUtil.signHeader( webView.getSettings().getUserAgentString() );
         webView.getSettings().setUserAgentString( userAgent );
+
     }
 
     private void loadPage(){
@@ -906,7 +911,7 @@ public class HomeActivity extends BaseActivity
                 else if( url.toLowerCase().contains("http://www.dzd.com") ){
                     //openSis();
                 }else {
-                    pageWeb.loadUrl(url);
+                    pageWeb.loadUrl(url , SignUtil.signHeader() );
                 }
             }
             break;
@@ -914,7 +919,7 @@ public class HomeActivity extends BaseActivity
             {
                 //刷新界面
                 String url = msg.obj.toString ();
-                pageWeb.loadUrl(url);
+                pageWeb.loadUrl(url , SignUtil.signHeader() );
             }
             break;
             //分享
@@ -1116,7 +1121,7 @@ public class HomeActivity extends BaseActivity
     protected void gotoOrderList(){
         if(pageWeb!=null){
             String urlstr = String.format( Constants.URL_WaitPayOrderList, application.obtainMerchantUrl(), application.readMerchantId());
-            pageWeb.loadUrl( urlstr );
+            pageWeb.loadUrl( urlstr , SignUtil.signHeader() );
         }
     }
 
@@ -1702,7 +1707,7 @@ public class HomeActivity extends BaseActivity
             String orderNo = data.getOrderNo();
             if( pageWeb !=null) {
                 String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );
-                pageWeb.loadUrl(urlString);
+                pageWeb.loadUrl(urlString , SignUtil.signHeader() );
             }
         }else if( type == MyBroadcastReceiver.ReceiverType.wxPayCancel || type == MyBroadcastReceiver.ReceiverType.wxPayError ){
             if(mHandler==null)return;

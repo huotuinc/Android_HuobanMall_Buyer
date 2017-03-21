@@ -29,8 +29,6 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.listener.PoponDismissListener;
 import com.huotu.partnermall.model.AccountModel;
 import com.huotu.partnermall.model.AuthMallModel;
-import com.huotu.partnermall.model.MSiteModel;
-import com.huotu.partnermall.model.MemberModel;
 import com.huotu.partnermall.model.MenuBean;
 import com.huotu.partnermall.model.MerchantInfoModel;
 import com.huotu.partnermall.model.MerchantPayInfo;
@@ -39,6 +37,7 @@ import com.huotu.partnermall.model.OrderModel;
 import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.SwitchUserModel;
 import com.huotu.partnermall.ui.HomeActivity;
+import com.huotu.partnermall.ui.base.BaseActivity;
 import com.huotu.partnermall.widgets.NoticePopWindow;
 import com.huotu.partnermall.widgets.PayPopWindow;
 import com.huotu.partnermall.widgets.ProgressPopupWindow;
@@ -150,12 +149,14 @@ public class HttpUtil{
                     if (merchantPayInfo.getCode() != 200) {
                         BaseApplication.cleanAliPayInfo();
                         BaseApplication.cleanWeixinPayInfo();
+                        BaseApplication.cleanWebAliPayInfo();
                         //ToastUtils.showLongToast(merchantPayInfo.getMsg());
                         return;
                     }
 
                     BaseApplication.cleanAliPayInfo();
                     BaseApplication.cleanWeixinPayInfo();
+                    BaseApplication.cleanWebAliPayInfo();
 
                     List<MerchantPayInfo.MerchantPayModel> merchantPays = merchantPayInfo.getData();
                     if (merchantPays != null && !merchantPays.isEmpty()) {
@@ -163,13 +164,13 @@ public class HttpUtil{
                             //if (400 == merchantPay.getPayType()) {
                             if(1 == merchantPay.getPayType()){
                                 //支付宝网页支付信息
-                                application.writeAlipay( merchantPay.getAppId() , merchantPay.getPartnerId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay());
+                                application.writeWebAlipay( merchantPay.getAppId() , merchantPay.getPartnerId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay() , merchantPay.getPayCenterDomain() );
                             } else if (300 == merchantPay.getPayType()) {
                                 //微信支付
-                                application.writeWx(merchantPay.getPartnerId(), merchantPay.getAppId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay());
+                                application.writeWx(merchantPay.getPartnerId(), merchantPay.getAppId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay() , merchantPay.getPayCenterDomain());
                             } else if( 11 == merchantPay.getPayType()){
                                 //支付宝原生支付信息
-                                application.writeAlipay( merchantPay.getAppId(), merchantPay.getPartnerId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay());
+                                application.writeAlipay( merchantPay.getAppId(), merchantPay.getPartnerId(), merchantPay.getAppKey(), merchantPay.getNotify(), merchantPay.isWebPagePay() , merchantPay.getPayCenterDomain());
                             }
                         }
                     }
@@ -181,7 +182,6 @@ public class HttpUtil{
 //                BaseApplication.cleanAliPayInfo();
 //                BaseApplication.cleanWeixinPayInfo();
             }
-
 
         });
         VolleyUtil.getRequestQueue().add(re);
