@@ -255,12 +255,12 @@ public class HomeActivity extends BaseActivity
 
         resources = HomeActivity.this.getResources();
         mHandler = new Handler ( this );
-        share = new SharePopupWindow ( HomeActivity.this );
         wManager = this.getWindowManager();
         am = this.getAssets();
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
+        share = new SharePopupWindow ( HomeActivity.this );
         myBroadcastReceiver = new MyBroadcastReceiver(this,this,
                 MyBroadcastReceiver.ACTION_PAY_SUCCESS , MyBroadcastReceiver.ACTION_WX_PAY_CANCEL_CALLBACK , MyBroadcastReceiver.ACTION_WX_PAY_ERROR_CALLBACK);
 
@@ -475,33 +475,7 @@ public class HomeActivity extends BaseActivity
             }
         });
 
-        share.setPlatformActionListener(platformActionListener
-//                new PlatformActionListener() {
-//                    @Override
-//                    public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-//                        Message msg = Message.obtain();
-//                        msg.what = Constants.SHARE_SUCCESS;
-//                        msg.obj = platform;
-//                        mHandler.sendMessage(msg);
-//                    }
-//
-//                    @Override
-//                    public void onError(Platform platform, int i, Throwable throwable) {
-//                        Message msg = Message.obtain();
-//                        msg.what = Constants.SHARE_ERROR;
-//                        msg.obj = platform;
-//                        mHandler.sendMessage(msg);
-//                    }
-//
-//                    @Override
-//                    public void onCancel(Platform platform, int i) {
-//                        Message msg = Message.obtain();
-//                        msg.what = Constants.SHARE_CANCEL;
-//                        msg.obj = platform;
-//                        mHandler.sendMessage(msg);
-//                    }
-//                }
-        );
+        share.setPlatformActionListener(platformActionListener );
         share.showShareWindow();
         share.setOnDismissListener(new PoponDismissListener(this));
 
