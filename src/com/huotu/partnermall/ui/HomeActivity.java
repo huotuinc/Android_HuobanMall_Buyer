@@ -722,6 +722,8 @@ public class HomeActivity extends BaseActivity
             @Override
             public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
                 //return super.onJsConfirm(view, url, message, result);
+                if(view ==null || view.getContext() ==null) return true;
+
                 final TipAlertDialog tipAlertDialog = new TipAlertDialog(view.getContext(),false);
                 tipAlertDialog.show("询问", message, new View.OnClickListener() {
                     @Override

@@ -172,6 +172,7 @@ public class WebViewActivity extends SwipeBackActivity
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
+                if(viewPage==null)return;
                 viewPage.reload();
             }
         });
@@ -363,6 +364,8 @@ public class WebViewActivity extends SwipeBackActivity
             @Override
             public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
                 //return super.onJsConfirm(view, url, message, result);
+                if(view ==null || view.getContext() ==null) return true;
+
                 final TipAlertDialog tipAlertDialog = new TipAlertDialog(view.getContext() , false );
                 tipAlertDialog.show("询问", message, new View.OnClickListener() {
                     @Override
