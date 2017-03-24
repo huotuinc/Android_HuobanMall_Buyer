@@ -18,6 +18,7 @@ import com.huotu.partnermall.utils.DensityUtils;
 import com.huotu.partnermall.utils.SystemTools;
 import com.huotu.partnermall.utils.WindowUtils;
 
+
 /**
  * 延时加载时的进度条
  */
@@ -46,7 +47,7 @@ public class ProgressPopupWindow extends PopupWindow {
         // 设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         this.setOutsideTouchable(true);
-        WindowUtils.backgroundAlpha ( aty, 0.4f );
+        //WindowUtils.backgroundAlpha ( aty, 0.4f );
     }
 
     public void dismissView(){

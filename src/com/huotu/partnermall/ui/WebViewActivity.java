@@ -533,6 +533,9 @@ public class WebViewActivity extends SwipeBackActivity
         if( progress !=null){
             progress.dismissView();
         }
+        if(share !=null){
+            share.dismiss();
+        }
 
         EventBus.getDefault().unregister(this);
     }
