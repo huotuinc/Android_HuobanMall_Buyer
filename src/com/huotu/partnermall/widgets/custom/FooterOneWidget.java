@@ -39,8 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static u.aly.au.I;
-
 /**
  * 底部导航组件
  * Created by jinxiangdong on 2016/1/22.

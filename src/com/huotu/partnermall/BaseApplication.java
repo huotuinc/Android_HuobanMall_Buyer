@@ -50,7 +50,6 @@ import static com.huotu.partnermall.config.Constants.MERCHANT_NAME;
 import static com.huotu.partnermall.config.Constants.MERCHANT_WEIXIN_ID;
 import static com.huotu.partnermall.config.Constants.WEIXIN_KEY;
 import static com.huotu.partnermall.utils.PreferenceHelper.readString;
-import static u.aly.au.W;
 
 /**
  * 系统级别的变量、方法

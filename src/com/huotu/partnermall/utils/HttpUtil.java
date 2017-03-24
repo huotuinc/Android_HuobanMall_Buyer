@@ -54,9 +54,6 @@ import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
 
-import static android.R.attr.order;
-import static u.aly.au.O;
-
 public class HttpUtil{
 
     private static class Holder{

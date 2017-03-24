@@ -67,8 +67,6 @@ import cn.sharesdk.wechat.friends.Wechat;
 
 import static android.R.attr.data;
 import static com.huotu.partnermall.ui.HomeActivity.BINDPHONE_REQUESTCODE;
-import static u.aly.au.V;
-import static u.aly.au.au;
 
 /*
  * 手机注册并登录
