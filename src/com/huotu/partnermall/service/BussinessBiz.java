@@ -14,8 +14,6 @@ import com.huotu.partnermall.widgets.custom.PageConfig;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.R.attr.id;
-import static android.R.attr.key;
 
 /**
  * Created by Administrator on 2017/1/17.

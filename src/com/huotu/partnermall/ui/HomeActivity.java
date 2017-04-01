@@ -1247,49 +1247,49 @@ public class HomeActivity extends BaseActivity
     }
 
     @JavascriptInterface
-    public void sendShare(final String title, final String desc, final String link,final String img_url){
-        if(  this==null ) return;
-        if( this.share ==null ) return;
+    public void sendShare(final String title, final String desc, final String link,final String img_url) {
+        if (this == null) return;
+        if (this.share == null) return;
 
         //ToastUtils.showShortToast( ref.get() , title+desc+link+img_url);
         mHandler.post(new Runnable() {
             @Override
             public void run() {
 
-                if( HomeActivity.this ==null ) return;
+                if (HomeActivity.this == null) return;
 
-            if( HomeActivity.this.progress !=null ){
-                HomeActivity.this.progress.dismissView();
-            }
+                if (HomeActivity.this.progress != null) {
+                    HomeActivity.this.progress.dismissView();
+                }
 
-        String sTitle = title;
-        if( TextUtils.isEmpty( sTitle ) ){
-            sTitle = application.obtainMerchantName ()+"分享";
-        }
-        String sDesc = desc;
-        if( TextUtils.isEmpty( sDesc ) ){
-            sDesc = sTitle;
-        }
-        String imageUrl = img_url; //application.obtainMerchantLogo ();
-        if(TextUtils.isEmpty ( imageUrl )) {
-            imageUrl = Constants.COMMON_SHARE_LOGO;
-        }
+                String sTitle = title;
+                if (TextUtils.isEmpty(sTitle)) {
+                    sTitle = application.obtainMerchantName() + "分享";
+                }
+                String sDesc = desc;
+                if (TextUtils.isEmpty(sDesc)) {
+                    sDesc = sTitle;
+                }
+                String imageUrl = img_url; //application.obtainMerchantLogo ();
+                if (TextUtils.isEmpty(imageUrl)) {
+                    imageUrl = Constants.COMMON_SHARE_LOGO;
+                }
 
-        String sLink = link;
-        if( TextUtils.isEmpty( sLink ) ){
-            sLink = application.obtainMerchantUrl();
-        }
-        sLink = SystemTools.shareUrl(application, sLink);
-        ShareModel msgModel = new ShareModel ();
-        msgModel.setImageUrl(imageUrl);
-        msgModel.setText(sDesc);
-        msgModel.setTitle(sTitle);
-        msgModel.setUrl(sLink);
-        //msgModel.setImageData( BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ) );
-        share.initShareParams(msgModel);
-        //share.showShareWindow();
-        //WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f);
-        share.showAtLocation( HomeActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                String sLink = link;
+                if (TextUtils.isEmpty(sLink)) {
+                    sLink = application.obtainMerchantUrl();
+                }
+                sLink = SystemTools.shareUrl(application, sLink);
+                ShareModel msgModel = new ShareModel();
+                msgModel.setImageUrl(imageUrl);
+                msgModel.setText(sDesc);
+                msgModel.setTitle(sTitle);
+                msgModel.setUrl(sLink);
+                //msgModel.setImageData( BitmapFactory.decodeResource( resources , R.drawable.ic_launcher ) );
+                share.initShareParams(msgModel);
+                //share.showShareWindow();
+                //WindowUtils.backgroundAlpha( HomeActivity.this , 0.4f);
+                share.showAtLocation(HomeActivity.this.titleRightImage, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
             }
         });
