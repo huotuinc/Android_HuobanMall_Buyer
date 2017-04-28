@@ -354,6 +354,10 @@ public class WebViewActivity extends SwipeBackActivity
                 openFileChooser(uploadMsg);
             }
 
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
+            }
 
             @Override
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
