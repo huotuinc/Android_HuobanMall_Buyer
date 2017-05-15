@@ -79,12 +79,15 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateVisible|adjustResize"/>
+            android:windowSoftInputMode="stateVisible|adjustResize">
+            </activity>
+
         <activity
             android:name="com.huotu.partnermall.ui.WebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/WebViewTheme"
-            android:windowSoftInputMode="stateVisible|adjustResize"/>
+            android:windowSoftInputMode="stateVisible|adjustResize">
+            </activity>
 
         <service android:name="com.huotu.partnermall.service.LocationService"/>
 

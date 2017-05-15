@@ -76,6 +76,20 @@ public class UrlFilterUtils {
     public boolean shouldOverrideUrlBySFriend ( WebView view, String url ) {
         if( ref.get() ==null) return false;
 
+        if(url.startsWith("alipays://")){//处理支付宝
+            try {
+                // 以下固定写法
+                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                ref.get().startActivity(intent);
+            } catch (Exception e) {
+                // 防止没有安装的情况
+                e.printStackTrace();
+                //ToastUtils.showLongToast("您所打开的支付宝App未安装！");
+            }
+            return true;
+        }
+
         if ( url.contains ( Constants.WEB_TAG_NEWFRAME ) ) {
             String urlStr = url.substring ( 0, url.indexOf ( Constants.WEB_TAG_NEWFRAME ) );
             Bundle bundle = new Bundle ( );
