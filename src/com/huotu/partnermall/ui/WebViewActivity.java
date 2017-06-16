@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -264,6 +266,10 @@ public class WebViewActivity extends SwipeBackActivity
         if(BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ){
             WebView.setWebContentsDebuggingEnabled(true);
         }
+        // android 5.0以上默认不支持Mixed Content
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ){
+            viewPage.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        }
 
         signHeader( viewPage );
 
@@ -305,6 +311,13 @@ public class WebViewActivity extends SwipeBackActivity
 
                         if (progress == null) return;
                         progress.dismissView();
+                    }
+
+                    @Override
+                    public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                        //super.onReceivedSslError(view, handler, error);
+                        //当访问https网页，发生错误时，继续浏览网页
+                        handler.proceed();
                     }
                 }
         );
