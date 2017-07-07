@@ -1143,7 +1143,8 @@ public class HomeActivity extends BaseActivity
         progress.showAtLocation( titleLeftImage , Gravity.CENTER, 0, 0);
         //微信授权登录
         autnLogin = new AutnLogin( mHandler , redirectUrl );
-        autnLogin.authorize(new Wechat(HomeActivity.this));
+//        autnLogin.authorize(new Wechat(HomeActivity.this));
+        autnLogin.authorize(new Wechat());
     }
 
     /*

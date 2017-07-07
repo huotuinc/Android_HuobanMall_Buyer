@@ -31,6 +31,8 @@ import cn.sharesdk.wechat.favorite.WechatFavorite;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
 
+import static com.huotu.partnermall.inner.R.string.qzone;
+
 /**
  * 分享弹出框
  */
@@ -118,7 +120,8 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
 
     public void wechatShare(String platformName ){
         Platform platform;
-        platform = ShareSDK.getPlatform ( context, platformName );
+//        platform = ShareSDK.getPlatform ( context, platformName );
+        platform = ShareSDK.getPlatform (  platformName );
         if (platformActionListener != null) {
             platform.setPlatformActionListener ( platformActionListener );
         }
@@ -156,7 +159,8 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
         sp.setTitleUrl ( shareParams.getUrl ( ) ); // 标题的超链接
         sp.setText ( shareParams.getText ( ) );
         sp.setImageUrl ( shareParams.getImageUrl ( ) );
-        Platform qzone = ShareSDK.getPlatform(context, QZone.NAME);
+//        Platform qzone = ShareSDK.getPlatform(context, QZone.NAME);
+        Platform qzone = ShareSDK.getPlatform( QZone.NAME);
         qzone.setPlatformActionListener(platformActionListener); // 设置分享事件回调 //
         // 执行图文分享
         qzone.share(sp);
@@ -171,7 +175,8 @@ public class SharePopupWindow extends PopupWindow implements View.OnClickListene
         sp.setText(shareParams.getText() + shareParams.getUrl());
         sp.setImageUrl(shareParams.getImageUrl());
 
-        Platform sinaWeibo = ShareSDK.getPlatform ( context, SinaWeibo.NAME );
+//        Platform sinaWeibo = ShareSDK.getPlatform ( context, SinaWeibo.NAME );
+        Platform sinaWeibo = ShareSDK.getPlatform (  SinaWeibo.NAME );
         sinaWeibo.setPlatformActionListener ( platformActionListener );
         //执行分享
         sinaWeibo.share ( sp );

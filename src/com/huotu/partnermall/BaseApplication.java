@@ -34,6 +34,7 @@ import com.huotu.partnermall.utils.PreferenceHelper;
 import com.huotu.partnermall.widgets.custom.FooterOneConfig;
 import com.huotu.partnermall.widgets.custom.PageConfig;
 import com.huotu.partnermall.widgets.custom.WidgetConfig;
+import com.mob.MobSDK;
 //import com.squareup.leakcanary.LeakCanary;
 
 import org.greenrobot.eventbus.EventBus;
@@ -112,7 +113,10 @@ public class BaseApplication extends Application {
         // JPushInterface.setDebugMode(true);// 日志，生产环境关闭
         //JPushInterface.init ( this );
         //初始化shareSDK参数
-        ShareSDK.initSDK(getApplicationContext());
+        //ShareSDK.initSDK(getApplicationContext());
+        // 通过代码注册你的AppKey和AppSecret
+        MobSDK.init( getApplicationContext() );
+
         solveAsyncTaskOnPostExecuteBug();
 
         // 极光初始化
@@ -419,7 +423,7 @@ public class BaseApplication extends Application {
         Platform platform = ShareSDK.getPlatform(Wechat.NAME);
         //取消授权
         if (null != platform) {
-            platform.removeAccount();
+            platform.removeAccount( true );
         }
 
         PreferenceHelper.clean(getApplicationContext(), Constants.MEMBER_INFO);

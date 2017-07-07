@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="app_name">居康</string>
+
+    <!--引导界面图片-->
+    <string-array name="guide_icon">
+    </string-array>
+</resources>

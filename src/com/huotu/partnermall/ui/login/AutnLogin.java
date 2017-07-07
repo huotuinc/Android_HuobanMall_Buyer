@@ -25,7 +25,8 @@ public class AutnLogin {
     }
 
     public void authorize ( Platform plat ) {
-        if (plat.isValid()) {
+        //if (plat.isValid()) {
+        if(plat.isAuthValid()){
             //application.plat = plat;
             String userId = plat.getDb().getUserId();
             if (!TextUtils.isEmpty(userId)) {
@@ -33,7 +34,7 @@ public class AutnLogin {
                 login(plat);
                 return;
             } else {
-                plat.removeAccount();
+                plat.removeAccount(true);
                 mHandler.sendEmptyMessage(Constants.MSG_USERID_NO_FOUND);
                 return;
             }
