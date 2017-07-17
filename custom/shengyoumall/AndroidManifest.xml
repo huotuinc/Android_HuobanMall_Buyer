@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.huotu.partnermall.inner"
+          android:installLocation="auto">
+
+    <application android:name="com.huotu.partnermall.BaseApplication"
+                 android:allowBackup="true"
+                 android:icon="@drawable/ic_launcher"
+                 android:label="@string/app_name"
+                 android:theme="@style/AppTheme"
+                 tools:replace="icon,label">
+
+    <!-- ShareSDK分享 -->
+    <activity
+        android:name="com.mob.tools.MobUIShell"
+        android:configChanges="keyboardHidden|orientation|screenSize"
+        android:screenOrientation="portrait"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar"
+        android:windowSoftInputMode="stateHidden|adjustResize">
+        <intent-filter>
+            <data android:scheme="tencent0000000000"/>
+            <action android:name="android.intent.action.VIEW"/>
+            <category android:name="android.intent.category.BROWSABLE"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+        </intent-filter>
+        <!-- 调用新浪原生SDK，需要注册的回调activity -->
+        <intent-filter>
+            <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+
+    </activity>
+
+    <!--微信分享回调-->
+    <activity android:name="com.huotu.mall.shengyoumall.wxapi.WXEntryActivity"
+              android:theme="@android:style/Theme.Translucent.NoTitleBar"
+              android:configChanges="keyboardHidden|orientation|screenSize"
+              android:exported="true"
+              android:screenOrientation="portrait" />
+    <!--微信支付回调-->
+    <activity
+            android:name="com.huotu.mall.shengyoumall.wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"/>
+
+    <!-- meta-data需要写在application中
+        粉猫app对应 的百度定位服务的 key 包名需和注册的一致
+    -->
+    <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value=""/>
+
+    <!-- 友盟统计参数 -->
+    <meta-data android:name="UMENG_APPKEY" android:value="59685c0d6e27a47273000f40" />
+    <meta-data android:name="UMENG_CHANNEL" android:value="huotu_shengyoumall" />
+
+    <!-- 极光推送 Required  . Enable it you can get statistics data with channel -->
+    <meta-data android:name="JPUSH_CHANNEL" android:value="huotu_shengyoumall"/>
+    <meta-data android:name="JPUSH_APPKEY" android:value="dce2c0793db2757559ce534a" />
+
+        <!-- ShareSDK -->
+        <meta-data android:name="Mob-AppKey"  android:value="1f6c6b147e1b8"/>
+        <meta-data android:name="Mob-AppSecret" android:value="5b8671b2599afe64b7d7da28d940cbfc"/>
+
+    </application>
+
+</manifest>
