@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">伙伴家</string>
+    <string name="app_name">伙伴VIP</string>
     <!--引导界面图片-->
     <string-array name="guide_icon">
     </string-array>

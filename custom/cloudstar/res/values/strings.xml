@@ -6,4 +6,8 @@
     <!--引导界面图片-->
     <string-array name="guide_icon">
     </string-array>
+
+    <!-- 标题栏是否渐变-->
+    <string name="header_gradient">true</string>
+
 </resources>

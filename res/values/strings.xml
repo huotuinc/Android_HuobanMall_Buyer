@@ -8,6 +8,9 @@
     <string name="tryUse">立即体验</string>
     <string name="skipText">跳过</string>
 
+    <!-- 标题栏是否渐变-->
+    <string name="header_gradient">false</string>
+
     <!-- 菜单 -->
     <string name="menu_setting">设置</string>
     <string name="menu_history">浏览历史</string>

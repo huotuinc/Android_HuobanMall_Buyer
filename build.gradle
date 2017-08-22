@@ -75,12 +75,12 @@ android {
 //            assets.srcDirs = ['custom/olquan_test/assets']
 //        }
 
-        huobanjia{
-            manifest.srcFile 'custom/huobanjia/AndroidManifest.xml'
-            java.srcDirs = ['custom/huobanjia/src']
-            res.srcDirs = ['custom/huobanjia/res']
-            assets.srcDirs = ['custom/huobanjia/assets']
-        }
+//        huobanjia{
+//            manifest.srcFile 'custom/huobanjia/AndroidManifest.xml'
+//            java.srcDirs = ['custom/huobanjia/src']
+//            res.srcDirs = ['custom/huobanjia/res']
+//            assets.srcDirs = ['custom/huobanjia/assets']
+//        }
 
         yifutang {//艺福堂
             manifest.srcFile 'custom/yifutang/AndroidManifest.xml'
@@ -224,8 +224,8 @@ android {
             versionCode BUYER_VERSIONCODE.toInteger()
             versionName "${BUYER_VERSIONNAME}"
             buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.championstar.cn/"'
-            buildConfigField 'String', 'APP_ID', '"huotu686ad1fe2bd8a02ok"'
-            buildConfigField 'String', 'APP_SECRET', '"0ad8abe201631aacf89c9231999c9f49"'
+            buildConfigField 'String', 'APP_ID', '"hotfangsho62b82w1g16gu17tbz"'
+            buildConfigField 'String', 'APP_SECRET', '"5e29e83hc22e3a31wz220nt0fb8iewq"'
             buildConfigField 'String', 'Push_Url', '"http://api.open.championstar.cn/"'
             buildConfigField 'String', 'SMART_KEY', '"app"'
             buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'

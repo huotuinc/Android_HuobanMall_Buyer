@@ -49,7 +49,7 @@
         <!-- meta-data需要写在application中
             粉猫app对应 的百度定位服务的 key 包名需和注册的一致
         -->
-        <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="1111111111"/>
+        <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value=""/>
 
         <!-- 友盟统计参数 -->
         <meta-data android:name="UMENG_APPKEY" android:value="5790adcc67e58e6cf0000570" />
@@ -59,7 +59,9 @@
         <meta-data android:name="JPUSH_CHANNEL" android:value="huotu_huobanjia"/>
         <meta-data android:name="JPUSH_APPKEY" android:value="10723ae623dba20b2f313245" />
 
-
+        <!-- ShareSDK -->
+        <meta-data android:name="Mob-AppKey"  android:value="153a835245200"/>
+        <meta-data android:name="Mob-AppSecret" android:value="5880a06033e090f06054d1fbbdacca2a"/>
 
     </application>
 

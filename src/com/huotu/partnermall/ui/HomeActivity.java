@@ -424,7 +424,12 @@ public class HomeActivity extends BaseActivity
     protected void initView ( ) {
         urlFilterUtils = new UrlFilterUtils( this, mHandler, application  );
         //设置title背景
-        homeTitle.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+
+        String isGradient = getString(R.string.header_gradient);
+        if(!Boolean.parseBoolean(isGradient)){
+            homeTitle.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
+        }
+
         ff1.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         //设置左侧图标
         Drawable leftDraw = ContextCompat.getDrawable( this , R.drawable.main_title_left_sideslip);
