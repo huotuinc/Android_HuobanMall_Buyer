@@ -41,6 +41,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 
+import static android.R.attr.constantSize;
 import static android.R.attr.order;
 
 /**
@@ -146,7 +147,7 @@ public class UrlFilterUtils {
         }else if(url.contains ( Constants.WEB_PAY ) ){
             getPayInfo(url , ref.get() );
             return true;
-        }else if(url.contains ( Constants.AUTH_FAILURE ) || url.contains( Constants.AUTH_FAILURE_PHONE) || url.contains( Constants.AUTH_FAILURE2 ) || url.toLowerCase().contains( Constants.AUTH_FAILURE3.toLowerCase() ) ){
+        }else if(url.contains ( Constants.AUTH_FAILURE ) || url.contains( Constants.AUTH_FAILURE_PHONE) || url.contains( Constants.AUTH_FAILURE2 ) || url.toLowerCase().contains( Constants.AUTH_FAILURE3.toLowerCase() ) || url.toLowerCase().contains( Constants.AUTH_FAILURE4.toLowerCase() ) ){
             //鉴权失效
             //清除登录信息
             application.logout ();

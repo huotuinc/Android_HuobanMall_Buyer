@@ -223,13 +223,16 @@ android {
             applicationId 'com.huotu.mall.cloudstar'
             versionCode BUYER_VERSIONCODE.toInteger()
             versionName "${BUYER_VERSIONNAME}"
-            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.championstar.cn/"'
+            //buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.championstar.cn/"'
+            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.zhaohuotu.com/"'
             buildConfigField 'String', 'APP_ID', '"hotfangsho62b82w1g16gu17tbz"'
             buildConfigField 'String', 'APP_SECRET', '"5e29e83hc22e3a31wz220nt0fb8iewq"'
-            buildConfigField 'String', 'Push_Url', '"http://api.open.championstar.cn/"'
+            //buildConfigField 'String', 'Push_Url', '"http://api.open.championstar.cn/"'
+            buildConfigField 'String', 'Push_Url', '"http://api.open.zhaohuotu.com/"'
             buildConfigField 'String', 'SMART_KEY', '"app"'
             buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-            buildConfigField 'String', 'SMART_Url', '"http://api.open.championstar.cn/"'
+            //buildConfigField 'String', 'SMART_Url', '"http://api.open.championstar.cn/"'
+            buildConfigField 'String', 'SMART_Url', '"http://api.open.zhaohuotu.com/"'
             signingConfig signingConfigs.cloudstar
         }
 

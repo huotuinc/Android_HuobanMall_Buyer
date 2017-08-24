@@ -209,6 +209,8 @@ public class Constants {
 	public static final String AUTH_FAILURE2 ="/UserCenter/LoginForPC.aspx";
 	//鉴权失效3
 	public static final String AUTH_FAILURE3 = "/UserCenter/VerifyMobile.aspx";
+	//鉴权失败4
+	public static final String AUTH_FAILURE4="/UserCenter/OAlogin.aspx";
 
 	public static final String AUTH_FAILURE_PHONE = "/invite/MobileLogin.aspx";
 
