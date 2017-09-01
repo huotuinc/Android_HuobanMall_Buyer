@@ -184,11 +184,11 @@ public class Constants {
 	//new view
 	public static final String WEB_TAG_NEWFRAME     = "__newframe";
 	//上传图片
-	public static final String WEB_TAG_COMMITIMG    = "partnermall520://pickimage";
+	//public static final String WEB_TAG_COMMITIMG    = "partnermall520://pickimage";
 	//登出
-	public static final String WEB_TAG_LOGOUT       = "partnermall520://logout";
+	//public static final String WEB_TAG_LOGOUT       = "partnermall520://logout";
 	//信息保护
-	public static final String WEB_TAG_INFO         = "partnermall520://togglepb";
+	//public static final String WEB_TAG_INFO         = "partnermall520://togglepb";
 	//关闭当前页
 	public static final String WEB_TAG_FINISH       = "partnermall520://closepage";
 	//share
@@ -198,7 +198,7 @@ public class Constants {
 	//支付
 	//public static final String WEB_TAG_PAYMENT      = "partnermall520://payment";
 	//用户信息修改
-	public static final String WEB_TAG_USERINFO     = "partnermall520://userinfo?";
+	//public static final String WEB_TAG_USERINFO     = "partnermall520://userinfo?";
 	//联系客服
 	public static final String WEB_CONTACT          = "mqqwpa://im/chat";
 	//支付

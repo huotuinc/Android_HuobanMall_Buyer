@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -127,6 +129,7 @@ import in.srain.cube.views.ptr.PtrHandler;
 
 import static com.huotu.partnermall.inner.R.id.homeAsUp;
 import static com.huotu.partnermall.inner.R.id.viewPage;
+import static com.umeng.analytics.pro.x.S;
 
 public class HomeActivity extends BaseActivity
         implements Handler.Callback , ViewTreeObserver.OnGlobalLayoutListener ,
@@ -188,6 +191,8 @@ public class HomeActivity extends BaseActivity
     LinearLayout accountTypeList;
     @Bind(R.id.loadMenuView)
     RelativeLayout loadMenuView;
+    @Bind(R.id.lay_menu)
+    RelativeLayout layMenu;
 
     UrlFilterUtils urlFilterUtils;
     //未读消息数量
@@ -430,10 +435,13 @@ public class HomeActivity extends BaseActivity
             homeTitle.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         }
 
+        initDrawerLayout();
+
         ff1.setBackgroundColor(SystemTools.obtainColor(application.obtainMainColor()));
         //设置左侧图标
-        Drawable leftDraw = ContextCompat.getDrawable( this , R.drawable.main_title_left_sideslip);
-        SystemTools.loadBackground(titleLeftImage, leftDraw);
+        showOrhideLeftMenu();
+//        Drawable leftDraw = ContextCompat.getDrawable( this , R.drawable.main_title_left_sideslip);
+//        SystemTools.loadBackground(titleLeftImage, leftDraw);
         //设置右侧图标
         Drawable rightDraw = ContextCompat.getDrawable( this, R.drawable.home_title_right_share);
         SystemTools.loadBackground(titleRightImage, rightDraw);
@@ -490,6 +498,30 @@ public class HomeActivity extends BaseActivity
         loadMainMenu();
 
         initSoftKeyboard();
+    }
+
+    /***
+     *
+     */
+    protected void initDrawerLayout(){
+        boolean isShow = Boolean.parseBoolean( this.getString(R.string.show_left_menu));
+        if(isShow){
+            layDrag.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED ,Gravity.LEFT );//打开手势滑动
+        }else{
+            layDrag.removeView( layMenu );
+            layDrag.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN , Gravity.LEFT );//关闭手势滑动
+            layDrag.addView(layMenu);
+        }
+    }
+
+    protected void showOrhideLeftMenu(){
+        boolean isShow = Boolean.parseBoolean( this.getString(R.string.show_left_menu));
+        if(isShow){
+            Drawable leftDraw = ContextCompat.getDrawable( this , R.drawable.main_title_left_sideslip);
+            SystemTools.loadBackground(titleLeftImage, leftDraw);
+        }else{
+            SystemTools.loadBackground(titleLeftImage , null);
+        }
     }
 
     protected void initSoftKeyboard(){
@@ -831,7 +863,8 @@ public class HomeActivity extends BaseActivity
     @OnClick(R.id.titleLeftImage)
     void doBackOrMenuClick(){
         if(application.isLeftImg){
-            layDrag.openDrawer(Gravity.LEFT);
+            //layDrag.openDrawer(Gravity.LEFT);
+            checkOpenLeftMenu();
         } else {
             if( pageWeb.canGoBack() ) {
                 titleRightImage.setVisibility(View.GONE);
@@ -840,11 +873,30 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    /**
+     * 检测是否显示左侧菜单，然后在显示左侧菜单
+     */
+    private void checkOpenLeftMenu(){
+        boolean isShowLeftMenu = Boolean.parseBoolean( this.getString(R.string.show_left_menu));
+        if(isShowLeftMenu){
+            layDrag.openDrawer(Gravity.LEFT);
+        }
+    }
+
     @OnClick(R.id.getAuth)
     void doLogin(){
         if(!BaseApplication.single.isLogin()){
             layDrag.closeDrawer(Gravity.LEFT);
-            Intent intent=new Intent(this, PhoneLoginActivity.class);
+
+            //通过配置文件获取登录界面的类名，进行相应的登录操作
+            String loginActivityClassName = this.getString(R.string.login_activity_classname);
+            Intent intent = new Intent();
+            if( TextUtils.isEmpty(loginActivityClassName)) {
+                intent.setClassName(this.getPackageName(), PhoneLoginActivity.class.getName());
+                //Intent intent=new Intent(this, PhoneLoginActivity.class);
+            }else{
+                intent.setClassName( this.getPackageName() , loginActivityClassName );
+            }
             startActivity(intent);
         }
     }
@@ -864,7 +916,7 @@ public class HomeActivity extends BaseActivity
         layDrag.closeDrawer(Gravity.LEFT);
         //切换进度条
         progress.showProgress("正在获取用户数据");
-        progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
+        progress.showAtLocation(this.getWindow().getDecorView() , Gravity.CENTER, 0, 0);
     }
 
     /**
@@ -877,7 +929,6 @@ public class HomeActivity extends BaseActivity
     @OnClick(R.id.titleRightImage)
     void doShare(){
         //progress.showProgress("请稍等...");
-        //progress.showAtLocation(titleLeftImage, Gravity.CENTER, 0, 0);
         getShareContentByJS();
     }
 
@@ -982,8 +1033,9 @@ public class HomeActivity extends BaseActivity
             case Constants.LEFT_IMG_SIDE:
             {
                 //设置左侧图标
-                Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
-                SystemTools.loadBackground ( titleLeftImage, leftDraw );
+                showOrhideLeftMenu();
+//                Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
+//                SystemTools.loadBackground ( titleLeftImage, leftDraw );
                 application.isLeftImg = true;
             }
             break;
@@ -1048,11 +1100,10 @@ public class HomeActivity extends BaseActivity
                 titleLeftImage.setClickable ( true );
                 progress.dismissView ();
                 Throwable throwable = ( Throwable ) msg.obj;
-                //if("cn.sharesdk.wechat.utils.WechatClientNotExistException".equals ( throwable.toString () ))
                 if( throwable instanceof cn.sharesdk.wechat.utils.WechatClientNotExistException ){
-                    ToastUtils.showShortToast(this,"请安装微信客户端，在进行绑定操作");
+                    ToastUtils.showShortToast("请安装微信客户端，在进行绑定操作");
                 }else{
-                    ToastUtils.showShortToast(this,"微信绑定失败");
+                    ToastUtils.showShortToast("微信绑定失败");
                 }
             }
             break;
@@ -1061,7 +1112,7 @@ public class HomeActivity extends BaseActivity
                 if( progress!=null ){
                     progress.dismissView();
                 }
-                ToastUtils.showShortToast(this,"你已经取消微信授权，绑定操作失败");
+                ToastUtils.showShortToast("你已经取消微信授权，绑定操作失败");
             }
             break;
             case Constants.MSG_USERID_FOUND:
@@ -1134,10 +1185,9 @@ public class HomeActivity extends BaseActivity
         pageWeb.loadUrl(url , SignUtil.signHeader() );
 
         //设置左侧图标
-        Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
-        SystemTools.loadBackground ( titleLeftImage, leftDraw );
-
-        return;
+//        Drawable leftDraw = resources.getDrawable ( R.drawable.main_title_left_sideslip );
+//        SystemTools.loadBackground ( titleLeftImage, leftDraw );
+        showOrhideLeftMenu();
     }
 
     /*
@@ -1145,10 +1195,9 @@ public class HomeActivity extends BaseActivity
      */
     private void callWeixin( String redirectUrl ) {
         progress.showProgress("正在调用微信授权,请稍等");
-        progress.showAtLocation( titleLeftImage , Gravity.CENTER, 0, 0);
+        progress.showAtLocation(  this.getWindow().getDecorView()  , Gravity.CENTER, 0, 0);
         //微信授权登录
         autnLogin = new AutnLogin( mHandler , redirectUrl );
-//        autnLogin.authorize(new Wechat(HomeActivity.this));
         autnLogin.authorize(new Wechat());
     }
 

@@ -9,7 +9,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 
@@ -38,7 +38,7 @@ android {
         versionCode BUYER_VERSIONCODE.toInteger()
         versionName "${BUYER_VERSIONNAME}"
 
-        buildConfigField 'String', 'WEBAPPVERSION','"'+"${WEBAPPVERSION}"+'"'
+        buildConfigField 'String', 'WEBAPPVERSION', '"' + "${WEBAPPVERSION}" + '"'
         //signingConfig signingConfigs.huotu
     }
 
@@ -61,12 +61,12 @@ android {
             assets.srcDirs = ['custom/morefan/assets']
         }
 
-        yingyan{
-            manifest.srcFile 'custom/yingyan/AndroidManifest.xml'
-            java.srcDirs = ['custom/yingyan/src']
-            res.srcDirs = ['custom/yingyan/res']
-            assets.srcDirs = ['custom/yingyan/assets']
-        }
+//        yingyan {
+//            manifest.srcFile 'custom/yingyan/AndroidManifest.xml'
+//            java.srcDirs = ['custom/yingyan/src']
+//            res.srcDirs = ['custom/yingyan/res']
+//            assets.srcDirs = ['custom/yingyan/assets']
+//        }
 
 //        olquan_test {
 //            manifest.srcFile 'custom/olquan_test/AndroidManifest.xml'
@@ -89,12 +89,12 @@ android {
             assets.srcDirs = ['custom/yifutang/assets']
         }
 
-        wenslimall{//万事利商城
-            manifest.srcFile 'custom/wenslimall/AndroidManifest.xml'
-            java.srcDirs = ['custom/wenslimall/src']
-            res.srcDirs = ['custom/wenslimall/res']
-            assets.srcDirs = ['custom/wenslimall/assets']
-        }
+//        wenslimall {//万事利商城
+//            manifest.srcFile 'custom/wenslimall/AndroidManifest.xml'
+//            java.srcDirs = ['custom/wenslimall/src']
+//            res.srcDirs = ['custom/wenslimall/res']
+//            assets.srcDirs = ['custom/wenslimall/assets']
+//        }
 
         cloudstar {//云品星球
             manifest.srcFile 'custom/cloudstar/AndroidManifest.xml'
@@ -190,7 +190,6 @@ android {
 //            signingConfig signingConfigs.huobanjia
 //        }
 
-
 //        yifutang {//艺福堂
 //            applicationId 'com.huotu.mall.yifutang'
 //            versionCode YIFUTANG_VERSIONCODE.toInteger()
@@ -221,18 +220,18 @@ android {
 
         cloudstar {//云品星球
             applicationId 'com.huotu.mall.cloudstar'
-            versionCode BUYER_VERSIONCODE.toInteger()
-            versionName "${BUYER_VERSIONNAME}"
-            //buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.championstar.cn/"'
-            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.zhaohuotu.com/"'
+            versionCode CLOUDSTART_VERSIONCODE.toInteger()
+            versionName "${CLOUDSTART_VERSIONNAME}"
+            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.championstar.cn/"'
+            //buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.zhaohuotu.com/"'
             buildConfigField 'String', 'APP_ID', '"hotfangsho62b82w1g16gu17tbz"'
             buildConfigField 'String', 'APP_SECRET', '"5e29e83hc22e3a31wz220nt0fb8iewq"'
-            //buildConfigField 'String', 'Push_Url', '"http://api.open.championstar.cn/"'
-            buildConfigField 'String', 'Push_Url', '"http://api.open.zhaohuotu.com/"'
+            buildConfigField 'String', 'Push_Url', '"http://api.open.championstar.cn/"'
+            //buildConfigField 'String', 'Push_Url', '"http://api.open.zhaohuotu.com/"'
             buildConfigField 'String', 'SMART_KEY', '"app"'
             buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-            //buildConfigField 'String', 'SMART_Url', '"http://api.open.championstar.cn/"'
-            buildConfigField 'String', 'SMART_Url', '"http://api.open.zhaohuotu.com/"'
+            buildConfigField 'String', 'SMART_Url', '"http://api.open.championstar.cn/"'
+            //buildConfigField 'String', 'SMART_Url', '"http://api.open.zhaohuotu.com/"'
             signingConfig signingConfigs.cloudstar
         }
 
@@ -241,7 +240,7 @@ android {
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.shengyoumall
+            signingConfig signingConfigs.cloudstar
             buildConfigField 'String', 'Header_Secret', '\"' + "${HEADER_SECRET}" + '\"'
         }
 
@@ -267,8 +266,11 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 
-    compile 'com.huotu.android.library:libcropper:1.0'
-    compile 'com.android.support:support-v4:22.2.1'
+    //debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+    //releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+    //compile 'com.huotu.android.library:pulltorefresh:1.0.8'
+    //compile 'com.huotu.android.library:libcropper:1.0'
+    compile 'com.android.support:support-v4:25.3.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.huotu.android.library:libPush:1.2.5'
@@ -277,12 +279,10 @@ dependencies {
     compile 'com.facebook.fresco:fresco:1.2.0'
     compile 'com.facebook.fresco:animated-gif:1.2.0'
     compile 'com.huotu.android.library:libPay:1.0.4'
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.bigkoo:convenientbanner:2.0.5'
-
-    //debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
-    //releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
-    //compile 'com.huotu.android.library:pulltorefresh:1.0.8'
+    //compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
+
 
 

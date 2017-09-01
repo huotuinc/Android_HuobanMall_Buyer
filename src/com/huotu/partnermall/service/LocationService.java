@@ -6,6 +6,7 @@ import android.os.IBinder;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.huotu.partnermall.BaseApplication;
+import com.huotu.partnermall.listener.LocationListener;
 
 /**
  * 基于百度的定位服务
@@ -23,12 +24,12 @@ public class LocationService extends Service {
     /**
      * 高精度模式
      */
-    private LocationClientOption.LocationMode mode = LocationClientOption
-            .LocationMode.Hight_Accuracy;
+    private LocationClientOption.LocationMode mode = LocationClientOption.LocationMode.Hight_Accuracy;
     /**
      * 定位客户端
      */
     private LocationClient mLocationClient = null;
+    private LocationListener locationListener=null;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -38,12 +39,14 @@ public class LocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        mLocationClient = new LocationClient(this.getApplicationContext());
+        locationListener =new LocationListener();
+        mLocationClient.registerLocationListener(locationListener);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        mLocationClient = ((BaseApplication) getApplication()).mLocationClient;
+        //mLocationClient = ((BaseApplication) getApplication()).mLocationClient;
 
         //设置定位参数
         LocationClientOption option = new LocationClientOption();

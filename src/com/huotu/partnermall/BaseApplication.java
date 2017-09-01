@@ -58,19 +58,18 @@ import static com.huotu.partnermall.utils.PreferenceHelper.readString;
  */
 public class BaseApplication extends Application {
     //定位类型
-    public int localType;
+    //public int localType;
     //地址
-    public String address;
+    //public String address;
     //纬度
-    public double latitude;
+    //public double latitude;
     //经度
-    public double Longitude;
-    //是否有网络连接
-    //public boolean isConn = false;
+    //public double Longitude;
     //城市
-    public String city;
-    public LocationClient mLocationClient;
-    public MyLocationListener mMyLocationListener;
+    //public String city;
+
+    //public LocationClient mLocationClient;
+    //public MyLocationListener mMyLocationListener;
 
     /**
      * 是否是左划或者返回
@@ -103,9 +102,9 @@ public class BaseApplication extends Application {
             //LeakCanary.install(this);//内存检测工具
         }
 
-        mLocationClient = new LocationClient(this.getApplicationContext());
-        mMyLocationListener = new MyLocationListener();
-        mLocationClient.registerLocationListener(mMyLocationListener);
+        //mLocationClient = new LocationClient(this.getApplicationContext());
+        //mMyLocationListener = new MyLocationListener();
+        //mLocationClient.registerLocationListener(mMyLocationListener);
 
         // 初始化Volley实例
         VolleyUtil.init(this);
@@ -308,9 +307,9 @@ public class BaseApplication extends Application {
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_UNIONID, unionid);
     }
 
-    public void writeUserToken(String token) {
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN, token);
-    }
+//    public void writeUserToken(String token) {
+//        PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_TOKEN, token);
+//    }
 
     public void writeUserName(String userName) {
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_NAME, userName);
@@ -364,45 +363,45 @@ public class BaseApplication extends Application {
     /**
      * 实现定位回调监听
      */
-    public class MyLocationListener implements BDLocationListener {
-        @Override
-        public void onReceiveLocation(BDLocation location) {
-            if (null == location) {
-                return;
-            } else {
-                localType = location.getLocType();
-
-                if (BDLocation.TypeGpsLocation == localType) {
-                    latitude = location.getLatitude();
-                    Longitude = location.getLongitude();
-                    city = location.getCity();
-                    address = location.getAddrStr();
-                } else if (BDLocation.TypeNetWorkLocation == localType) {
-                    latitude = location.getLatitude();
-                    Longitude = location.getLongitude();
-                    city = location.getCity();
-                    address = location.getAddrStr();
-                }
-            }
-
-            // 将定位信息写入配置文件
-            if (null != city) {
-                PreferenceHelper.writeString(getApplicationContext(),
-                        Constants.LOCATION_INFO, Constants.CITY, city);
-            }
-            if (null != address) {
-                PreferenceHelper.writeString(getApplicationContext(),
-                        Constants.LOCATION_INFO, Constants.ADDRESS, address);
-            }
-            PreferenceHelper.writeString(getApplicationContext(),
-                    Constants.LOCATION_INFO, Constants.LATITUDE,
-                    String.valueOf(latitude));
-            PreferenceHelper.writeString(getApplicationContext(),
-                    Constants.LOCATION_INFO, Constants.LONGITUDE,
-                    String.valueOf(Longitude));
-        }
-
-    }
+//    public class MyLocationListener implements BDLocationListener {
+//        @Override
+//        public void onReceiveLocation(BDLocation location) {
+//            if (null == location) {
+//                return;
+//            } else {
+//                localType = location.getLocType();
+//
+//                if (BDLocation.TypeGpsLocation == localType) {
+//                    latitude = location.getLatitude();
+//                    Longitude = location.getLongitude();
+//                    city = location.getCity();
+//                    address = location.getAddrStr();
+//                } else if (BDLocation.TypeNetWorkLocation == localType) {
+//                    latitude = location.getLatitude();
+//                    Longitude = location.getLongitude();
+//                    city = location.getCity();
+//                    address = location.getAddrStr();
+//                }
+//            }
+//
+//            // 将定位信息写入配置文件
+//            if (null != city) {
+//                PreferenceHelper.writeString(getApplicationContext(),
+//                        Constants.LOCATION_INFO, Constants.CITY, city);
+//            }
+//            if (null != address) {
+//                PreferenceHelper.writeString(getApplicationContext(),
+//                        Constants.LOCATION_INFO, Constants.ADDRESS, address);
+//            }
+//            PreferenceHelper.writeString(getApplicationContext(),
+//                    Constants.LOCATION_INFO, Constants.LATITUDE,
+//                    String.valueOf(latitude));
+//            PreferenceHelper.writeString(getApplicationContext(),
+//                    Constants.LOCATION_INFO, Constants.LONGITUDE,
+//                    String.valueOf(Longitude));
+//        }
+//
+//    }
 
     //判断是否登录
     public boolean isLogin() {
@@ -655,12 +654,12 @@ public class BaseApplication extends Application {
         return PreferenceHelper.readInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_USERTYPE);
     }
 
-    public void writePhoneLogin(String loginName, String realName, int relatedType, String authorizeCode, String secure) {
+    public void writePhoneLogin(String loginName, String realName, int relatedType, String authorizeCode) {
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_LOGINNAME, loginName);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_REALNAME, realName);
         PreferenceHelper.writeInt(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_RELATEDTYPE, relatedType);
         PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_AUTHORIZECODE, authorizeCode);
-        PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_SECURE, secure);
+        //PreferenceHelper.writeString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_SECURE, secure);
     }
 
     public void writeMemberRelatedType(int relatedType) {
@@ -673,9 +672,9 @@ public class BaseApplication extends Application {
 //    }
 
     //读取 手机登录 的安全码
-    public String readMemberSecure() {
-        return readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_SECURE, "");
-    }
+//    public String readMemberSecure() {
+//        return readString(getApplicationContext(), Constants.MEMBER_INFO, Constants.MEMBER_SECURE, "");
+//    }
 
     //写入 用户登录类型 （1：微信授权登录，2:手机登录）
     public void writeMemberLoginType(int loginType) {

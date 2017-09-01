@@ -393,64 +393,64 @@ public class AuthParamUtils {
         return paramMap;
     }
 
-    public String getEncodeUrl(Map<String, String> map) {
-        StringBuilder builder = new StringBuilder();
-        try {
-            Map<String, String> paramMap = new HashMap<String, String>();
-//            //获取url中的参数
-//            String params = url.substring ( url.indexOf ( "?" ) + 1, url.length ( ) );
-//            String[] str = params.split ( "&" );
-//            if ( str.length > 0 ) {
-//                for ( String map : str ) {
-//                    //获取参数
-//                    String[] values = map.split ( "=" );
-//                    if ( 2 == values.length ) {
-//                        paramMap.put(values[0], values[1]);
-//                    }
-//                    else if ( 1 == values.length ) {
-//                        paramMap.put ( values[ 0 ], "" );
-//                    }
+//    public String getEncodeUrl(Map<String, String> map) {
+//        StringBuilder builder = new StringBuilder();
+//        try {
+//            Map<String, String> paramMap = new HashMap<String, String>();
+////            //获取url中的参数
+////            String params = url.substring ( url.indexOf ( "?" ) + 1, url.length ( ) );
+////            String[] str = params.split ( "&" );
+////            if ( str.length > 0 ) {
+////                for ( String map : str ) {
+////                    //获取参数
+////                    String[] values = map.split ( "=" );
+////                    if ( 2 == values.length ) {
+////                        paramMap.put(values[0], values[1]);
+////                    }
+////                    else if ( 1 == values.length ) {
+////                        paramMap.put ( values[ 0 ], "" );
+////                    }
+////                }
+////            }
+//
+//            if (map != null) {
+//                paramMap.putAll(map);
+//            }
+//            //添加额外固定参数
+//            paramMap.put("version", application.getAppVersion());
+//            paramMap.put("operation", Constants.OPERATION_CODE);
+//            //1、timestamp
+//            paramMap.put("timestamp", URLEncoder.encode(String.valueOf(timestamp), "UTF-8"));
+//            //appid
+//            paramMap.put("appid", URLEncoder.encode(Constants.getAPP_ID(), "UTF-8"));
+//            //生成sigin
+//            paramMap.put("sign", getSign(paramMap));
+//
+//            builder.append(url);
+//            builder.append("?timestamp=" + paramMap.get("timestamp"));
+//            builder.append("&appid=" + paramMap.get("appid"));
+//            builder.append("&sign=" + paramMap.get("sign"));
+//            builder.append("&version=" + application.getAppVersion());
+//            builder.append("&operation=" + Constants.OPERATION_CODE);
+//
+//            for (Map.Entry<String, String> entry : map.entrySet()) {
+//                String key = entry.getKey().toString();
+//                String value = entry.getValue() == null ? "" : entry.getValue().toString();
+//
+//                try {
+//                    String valueEncode = URLEncoder.encode(value, "utf-8");
+//                    builder.append("&" + key + "=" + valueEncode);
+//
+//                } catch (UnsupportedEncodingException ex) {
+//                    Log.e(TAG, ex.getMessage());
 //                }
 //            }
-
-            if (map != null) {
-                paramMap.putAll(map);
-            }
-            //添加额外固定参数
-            paramMap.put("version", application.getAppVersion());
-            paramMap.put("operation", Constants.OPERATION_CODE);
-            //1、timestamp
-            paramMap.put("timestamp", URLEncoder.encode(String.valueOf(timestamp), "UTF-8"));
-            //appid
-            paramMap.put("appid", URLEncoder.encode(Constants.getAPP_ID(), "UTF-8"));
-            //生成sigin
-            paramMap.put("sign", getSign(paramMap));
-
-            builder.append(url);
-            builder.append("?timestamp=" + paramMap.get("timestamp"));
-            builder.append("&appid=" + paramMap.get("appid"));
-            builder.append("&sign=" + paramMap.get("sign"));
-            builder.append("&version=" + application.getAppVersion());
-            builder.append("&operation=" + Constants.OPERATION_CODE);
-
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                String key = entry.getKey().toString();
-                String value = entry.getValue() == null ? "" : entry.getValue().toString();
-
-                try {
-                    String valueEncode = URLEncoder.encode(value, "utf-8");
-                    builder.append("&" + key + "=" + valueEncode);
-
-                } catch (UnsupportedEncodingException ex) {
-                    Log.e(TAG, ex.getMessage());
-                }
-            }
-
-            return builder.toString();
-        } catch (UnsupportedEncodingException e) {
-            Log.e(TAG, e.getMessage());
-            return null;
-        }
-    }
+//
+//            return builder.toString();
+//        } catch (UnsupportedEncodingException e) {
+//            Log.e(TAG, e.getMessage());
+//            return null;
+//        }
+//    }
 
 }

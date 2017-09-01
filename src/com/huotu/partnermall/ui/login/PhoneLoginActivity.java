@@ -453,14 +453,16 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
      * 获得左侧菜单数据
      */
     protected void getLeftMenuData(){
-        String url = Constants.getINTERFACE_PREFIX() + "/weixin/UpdateLeftInfo";
+        String url = Constants.getINTERFACE_PREFIX();
+        url += url.endsWith("/") ? "weixin/UpdateLeftInfo" : "/weixin/UpdateLeftInfo";
         String customerId = BaseApplication.single.readMerchantId();
         String userId= BaseApplication.single.readMemberId();
         String userType = String.valueOf( BaseApplication.single.readMemberType());
-        url +="?customerId="+customerId+"&userId="+userId +"&userType="+userType;
+        url +="?customerId="+customerId+"&userId="+userId +"&clientUserType="+userType;
 
         AuthParamUtils authParamUtils = new AuthParamUtils(BaseApplication.single ,System.currentTimeMillis() , url );
-        url = authParamUtils.obtainUrl();
+        //url = authParamUtils.obtainUrl();
+        url = authParamUtils.obtainUrlName();
         GsonRequest<UpdateLeftInfoModel> request = new GsonRequest<UpdateLeftInfoModel>(Request.Method.GET
                 , url, UpdateLeftInfoModel.class, null, new Response.Listener<UpdateLeftInfoModel>() {
             @Override
@@ -658,7 +660,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
             //设置 用户的登级Id
             //Jlibrary.initUserLevelId( model.getLevelId() );
 
-            ref.get().application.writePhoneLogin(model.getLoginName(), model.getRealName(), model.getRelatedType(), model.getAuthorizeCode() , String.valueOf( ref.get().secure ) );
+            ref.get().application.writePhoneLogin(model.getLoginName(), model.getRealName(), model.getRelatedType(), model.getAuthorizeCode() );
             //记录登录类型（1:微信登录，2：手机登录）
             ref.get().application.writeMemberLoginType( 2 );
 

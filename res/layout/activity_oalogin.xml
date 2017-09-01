@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:id="@+id/layRoot"
+    tools:context="com.huotu.partnermall.ui.login.OALoginActivity">
+
+
+    <!-- 页头界面 -->
+    <RelativeLayout
+        android:background="@drawable/app_header_bg_style"
+        android:id="@+id/activity_oalogin_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/title_index"/>
+    </RelativeLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/layUser"
+        android:layout_below="@id/activity_oalogin_header"
+        android:paddingTop="20dp"
+        android:orientation="vertical"
+        android:background="#FBFBFB"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <!-- 头像布局-->
+        <RelativeLayout
+            android:id="@+id/layImage"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/imagelogo"
+                android:src="@drawable/oa_tx"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/imagelogo"
+                android:layout_centerHorizontal="true"
+                android:text="用户 登录"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+    <!-- 手机号或用户名 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/white" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/gray" />
+
+        <TextView
+            android:id="@+id/txtPhoneOrUserName"
+            android:background="@drawable/oa_username"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            />
+
+        <com.huotu.android.library.libedittext.EditText
+            android:id="@+id/edtPhoneOrUserName"
+            app:style="transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="13dp"
+            android:layout_toRightOf="@+id/txtPhoneOrUserName"
+            android:layout_weight="1"
+            android:hint="请输入手机号或登录名"
+            android:imeOptions="actionNext"
+            android:maxLength="30"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/imgPhoneLine"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/edtPhoneOrUserName"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/gray" />
+
+    </RelativeLayout>
+
+    <!-- 密码 -->
+    <RelativeLayout
+        android:id="@+id/layPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white" >
+
+        <TextView
+            android:id="@+id/txtPassword"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/oa_pwd" />
+
+        <com.huotu.android.library.libedittext.EditText
+            android:id="@+id/editPassword"
+            app:style="transparent"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="13dp"
+            android:layout_toRightOf="@+id/txtPassword"
+            android:hint="请输入密码"
+            android:inputType="textPassword"
+            android:imeOptions="actionNext"
+            android:maxLength="30"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/editPassword"
+            android:background="@color/gray" />
+
+    </RelativeLayout>
+    <!-- 密码end -->
+
+    <!-- 注册/密码布局-->
+    <RelativeLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/layRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_alignParentLeft="true"
+                android:text="立即注册"
+                android:textColor="@color/gray"
+                android:id="@+id/tvRegister"
+                android:padding="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_toRightOf="@id/tvRegister"
+                android:padding="5dp"
+                android:layout_marginRight="10dp"
+                android:text="找回密码?"
+                android:gravity="right"
+                android:textColor="@color/gray"
+                android:id="@+id/tvForgetPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <!-- 登录按钮-->
+        <RelativeLayout
+            android:id="@+id/layLogin"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:text="登录"
+                android:textSize="20sp"
+                android:background="#04BE02"
+                android:textColor="@color/theme_color"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:layout_below="@id/btnLogin"
+                android:layout_marginTop="20dp"
+                android:id="@+id/btnOALogin"
+                android:text="已有OA会员登录"
+                android:textSize="20sp"
+                android:textColor="@color/gray"
+                android:gravity="center"
+                android:background="@drawable/btn_common"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

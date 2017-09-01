@@ -23,6 +23,7 @@ import com.huotu.partnermall.model.SwitchUserByUserIDEvent;
 import com.huotu.partnermall.ui.HomeActivity;
 import com.huotu.partnermall.ui.WebViewActivity;
 
+import com.huotu.partnermall.ui.login.OALoginActivity;
 import com.huotu.partnermall.ui.login.PhoneLoginActivity;
 import com.huotu.partnermall.utils.ActivityUtils;
 import com.huotu.partnermall.utils.AuthParamUtils;
@@ -112,42 +113,46 @@ public class UrlFilterUtils {
                 }
             }
             return true;
-        }else if(url.contains(Constants.WEB_TAG_USERINFO)){
-            //修改用户信息
-            //判断修改信息的类型
-            return true;
-        }else if(url.contains(Constants.WEB_TAG_LOGOUT)){
-            //处理登出操作
-            //鉴权失效
-            //清除登录信息
-            application.logout ();
-
-            Uri uri = Uri.parse(url.toLowerCase());
-            String redirectURL = uri.getQueryParameter("redirecturl");
-
-            if(!TextUtils.isEmpty( redirectURL )){
-                redirectURL = Uri.decode( redirectURL );
-            }
-
-            if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.toLowerCase().startsWith("http://") ){
-                if( !redirectURL.startsWith("/") ) redirectURL = "/"+ redirectURL;
-                redirectURL = uri.getHost() + redirectURL;
-            }
-            //跳转到登录界面
-            Bundle bd = new Bundle();
-            bd.putString("redirecturl", redirectURL);
-            //跳转到登录界面
-            ActivityUtils.getInstance ().showActivity( ref.get() , PhoneLoginActivity.class , bd );
-        }else if(url.contains(Constants.WEB_TAG_INFO)){
-            //处理信息保护
-            return true;
-        }else if(url.contains(Constants.WEB_TAG_FINISH)){
+        }
+//        else if(url.contains(Constants.WEB_TAG_USERINFO)){
+//            //修改用户信息
+//            //判断修改信息的类型
+//            return true;
+//        }
+//        else if(url.contains(Constants.WEB_TAG_LOGOUT)){
+//            //处理登出操作
+//            //鉴权失效
+//            //清除登录信息
+//            application.logout ();
+//
+//            Uri uri = Uri.parse(url.toLowerCase());
+//            String redirectURL = uri.getQueryParameter("redirecturl");
+//
+//            if(!TextUtils.isEmpty( redirectURL )){
+//                redirectURL = Uri.decode( redirectURL );
+//            }
+//
+//            if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.toLowerCase().startsWith("http://") ){
+//                if( !redirectURL.startsWith("/") ) redirectURL = "/"+ redirectURL;
+//                redirectURL = uri.getHost() + redirectURL;
+//            }
+//            //跳转到登录界面
+//            Bundle bd = new Bundle();
+//            bd.putString("redirecturl", redirectURL);
+//            //跳转到登录界面
+//            ActivityUtils.getInstance ().showActivity( ref.get() , PhoneLoginActivity.class , bd );
+//        }
+//        else if(url.contains(Constants.WEB_TAG_INFO)){
+//            //处理信息保护
+//            return true;
+//        }
+        else if(url.contains(Constants.WEB_TAG_FINISH)){
             if(view.canGoBack())
                 view.goBack();
         }else if(url.contains ( Constants.WEB_PAY ) ){
             getPayInfo(url , ref.get() );
             return true;
-        }else if(url.contains ( Constants.AUTH_FAILURE ) || url.contains( Constants.AUTH_FAILURE_PHONE) || url.contains( Constants.AUTH_FAILURE2 ) || url.toLowerCase().contains( Constants.AUTH_FAILURE3.toLowerCase() ) || url.toLowerCase().contains( Constants.AUTH_FAILURE4.toLowerCase() ) ){
+        }else if(url.contains ( Constants.AUTH_FAILURE ) || url.contains( Constants.AUTH_FAILURE_PHONE) || url.contains( Constants.AUTH_FAILURE2 ) || url.toLowerCase().contains( Constants.AUTH_FAILURE3.toLowerCase() )  ){
             //鉴权失效
             //清除登录信息
             application.logout ();
@@ -174,7 +179,11 @@ public class UrlFilterUtils {
 
             ActivityUtils.getInstance ().showActivity ( ref.get() , PhoneLoginActivity.class , bd);
             return true;
-        }else if( url.toLowerCase().contains( Constants.URL_BINDINGWEIXING.toLowerCase() )){//拦截绑定微信url
+        }else if( url.toLowerCase().contains( Constants.AUTH_FAILURE4.toLowerCase() ) ) {
+            //当拦截到 oalogin.aspx页面地址时，显示相应的登录界面
+          return OALogin( url );
+
+        } else if( url.toLowerCase().contains( Constants.URL_BINDINGWEIXING.toLowerCase() )){//拦截绑定微信url
 
             Uri uri = Uri.parse(url.toLowerCase());
             String redirectURL = uri.getQueryParameter("redirecturl");
@@ -298,5 +307,31 @@ public class UrlFilterUtils {
                 payProgress.dismissView();
             }
         });
+    }
+
+    /**
+     *
+     * @param url
+     */
+    protected boolean OALogin(String url ){
+        application.logout ();
+        Uri uri = Uri.parse(url.toLowerCase());
+        String redirectURL = uri.getQueryParameter("redirecturl");
+        if(!TextUtils.isEmpty( redirectURL )){
+            redirectURL = Uri.decode( redirectURL );
+        }
+        if( !TextUtils.isEmpty( redirectURL ) && !redirectURL.toLowerCase().startsWith("http://") ){
+            if( !redirectURL.startsWith("/") ) redirectURL = "/"+ redirectURL;
+            redirectURL = uri.getHost() + redirectURL;
+
+            if( !redirectURL.toLowerCase().startsWith("http://") ){
+                redirectURL = "http://"+ redirectURL;
+            }
+        }
+        //跳转到登录界面
+        Bundle bd = new Bundle();
+        bd.putString("redirecturl", redirectURL);
+        ActivityUtils.getInstance ().showActivity ( ref.get() , OALoginActivity.class , bd);
+        return true;
     }
 }

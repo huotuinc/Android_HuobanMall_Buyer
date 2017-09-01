@@ -10,4 +10,10 @@
     <!-- 标题栏是否渐变-->
     <string name="header_gradient">true</string>
 
+    <!-- 标记是否显示左侧菜单按钮 -->
+    <string name="show_left_menu">false</string>
+
+    <!-- 登录界面的类名 -->
+    <string name="login_activity_classname">com.huotu.partnermall.ui.login.OALoginActivity</string>
+
 </resources>
