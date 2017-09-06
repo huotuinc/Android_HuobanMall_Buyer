@@ -225,7 +225,7 @@ public class OALoginActivity extends BaseActivity implements Handler.Callback {
 
     @OnClick(R.id.btnOALogin)
     public void oaLogin(View v) {
-        String url = "UserCenter/OAlogin-s.aspx?customerid" + application.readMerchantId();
+        String url = "UserCenter/OAlogin-s.aspx?customerid=" + application.readMerchantId();
         gotoWeb(url);
     }
 
