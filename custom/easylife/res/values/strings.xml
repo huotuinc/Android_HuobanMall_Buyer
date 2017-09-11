@@ -1,0 +1,16 @@
+<resources>
+
+    <string name="app_name">尤易生活</string>
+    <!-- 是否显示版本号-->
+    <string name="appVersion_show">true</string>
+    <!--引导界面图片-->
+    <string-array name="guide_icon">
+    </string-array>
+
+    <!-- 标题栏是否渐变-->
+    <string name="header_gradient">false</string>
+
+    <!-- 标记是否显示左侧菜单按钮 -->
+    <string name="show_left_menu">true</string>
+
+</resources>

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 apply from: 'E:/myjob/keystore/keystore.gradle'
 
-apply from: 'E:/myjob/keystore/customer.gradle'
+//apply from: 'E:/myjob/keystore/customer.gradle'
 
 buildscript {
     repositories {
@@ -96,11 +96,18 @@ android {
 //            assets.srcDirs = ['custom/wenslimall/assets']
 //        }
 
-        cloudstar {//云品星球
-            manifest.srcFile 'custom/cloudstar/AndroidManifest.xml'
-            java.srcDirs = ['custom/cloudstar/src']
-            res.srcDirs = ['custom/cloudstar/res']
-            assets.srcDirs = ['custom/cloudstar/assets']
+//        cloudstar {//云品星球
+//            manifest.srcFile 'custom/cloudstar/AndroidManifest.xml'
+//            java.srcDirs = ['custom/cloudstar/src']
+//            res.srcDirs = ['custom/cloudstar/res']
+//            assets.srcDirs = ['custom/cloudstar/assets']
+//        }
+
+        easylife {//尤易生活
+            manifest.srcFile 'custom/easylife/AndroidManifest.xml'
+            java.srcDirs = ['custom/easylife/src']
+            res.srcDirs = ['custom/easylife/res']
+            assets.srcDirs = ['custom/easylife/assets']
         }
 
         // Move the tests to tests/java, tests/res, etc...
@@ -218,21 +225,32 @@ android {
 //            signingConfig signingConfigs.wenslimall
 //        }
 
-        cloudstar {//云品星球
-            applicationId 'com.huotu.mall.cloudstar'
-            versionCode CLOUDSTART_VERSIONCODE.toInteger()
-            versionName "${CLOUDSTART_VERSIONNAME}"
-            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.championstar.cn/"'
-            //buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.zhaohuotu.com/"'
-            buildConfigField 'String', 'APP_ID', '"hotfangsho62b82w1g16gu17tbz"'
-            buildConfigField 'String', 'APP_SECRET', '"5e29e83hc22e3a31wz220nt0fb8iewq"'
-            buildConfigField 'String', 'Push_Url', '"http://api.open.championstar.cn/"'
-            //buildConfigField 'String', 'Push_Url', '"http://api.open.zhaohuotu.com/"'
+//        cloudstar {//云品星球
+//            applicationId 'com.huotu.mall.cloudstar'
+//            versionCode CLOUDSTART_VERSIONCODE.toInteger()
+//            versionName "${CLOUDSTART_VERSIONNAME}"
+//            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.championstar.cn/"'
+//            buildConfigField 'String', 'APP_ID', '"hotfangsho62b82w1g16gu17tbz"'
+//            buildConfigField 'String', 'APP_SECRET', '"5e29e83hc22e3a31wz220nt0fb8iewq"'
+//            buildConfigField 'String', 'Push_Url', '"http://api.open.championstar.cn/"'
+//            buildConfigField 'String', 'SMART_KEY', '"app"'
+//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
+//            buildConfigField 'String', 'SMART_Url', '"http://api.open.championstar.cn/"'
+//            signingConfig signingConfigs.cloudstar
+//        }
+
+        easylife {//尤易生活
+            applicationId 'com.huotu.mall.easylife'
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
+            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.uyase.com/"'
+            buildConfigField 'String', 'APP_ID', '"huitm686ad1fe2bd8a02ac"'
+            buildConfigField 'String', 'APP_SECRET', '"21ff3104eb7a7bf3f2b663b8ab18eeyu"'
+            buildConfigField 'String', 'Push_Url', '"http://api.open.uyase.com/"'
             buildConfigField 'String', 'SMART_KEY', '"app"'
             buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-            buildConfigField 'String', 'SMART_Url', '"http://api.open.championstar.cn/"'
-            //buildConfigField 'String', 'SMART_Url', '"http://api.open.zhaohuotu.com/"'
-            signingConfig signingConfigs.cloudstar
+            buildConfigField 'String', 'SMART_Url', '"http://api.open.uyase.com/"'
+            signingConfig signingConfigs.easylife
         }
 
 
@@ -240,7 +258,7 @@ android {
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.cloudstar
+            signingConfig signingConfigs.easylife
             buildConfigField 'String', 'Header_Secret', '\"' + "${HEADER_SECRET}" + '\"'
         }
 
