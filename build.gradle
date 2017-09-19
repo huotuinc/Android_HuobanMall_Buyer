@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 apply from: 'E:/myjob/keystore/keystore.gradle'
 
-//apply from: 'E:/myjob/keystore/customer.gradle'
+apply from: 'E:/myjob/keystore/customer.gradle'
 
 buildscript {
     repositories {
