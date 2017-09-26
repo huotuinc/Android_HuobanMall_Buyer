@@ -25,6 +25,7 @@ import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelpay.PayResp;
 
 import java.math.BigDecimal;
+import java.util.Random;
 
 /**
  * Created by Administrator on 2017/1/11.
@@ -108,7 +109,8 @@ public class BuyerPayUtil {
 
             WeiXinOrderInfo weiXinOrderInfo = new WeiXinOrderInfo();
             weiXinOrderInfo.setBody(payModel.getDetail());
-            weiXinOrderInfo.setOrderNo(payModel.getTradeNo());
+            //weiXinOrderInfo.setOrderNo(payModel.getTradeNo());
+            weiXinOrderInfo.setOrderNo( payModel.getTradeNo() +"_"+ payModel.getCustomId() + "_" + new Random().nextInt(999));
             weiXinOrderInfo.setTotal_fee(payModel.getAmount());
             weiXinOrderInfo.setAttach(payModel.getAttach());
 

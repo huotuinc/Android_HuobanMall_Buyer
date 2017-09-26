@@ -567,6 +567,7 @@ public class WebViewActivity extends SwipeBackActivity
             WxPaySuccessCallbackModel data = (WxPaySuccessCallbackModel) bundle.getSerializable( Constants.HUOTU_PAY_CALLBACK_KEY);
             if( data ==null)  return;
             String orderNo = data.getOrderNo();
+            orderNo = orderNo ==null ? "" : orderNo.split("_")[0];
 
             if(viewPage !=null) {
                 String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );

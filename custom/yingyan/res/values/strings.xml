@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">行装</string>
+
+    <!-- 标记是否修改状态栏字体样式为黑色(android 6.0系统)-->
+    <bool name="flag_statusbar_text_color_black">true</bool>
+
     <!--引导界面图片-->
     <string-array name="guide_icon">
         <item>guide01</item>

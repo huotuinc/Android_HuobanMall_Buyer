@@ -862,6 +862,8 @@ public class HomeActivity extends BaseActivity
 
     @OnClick(R.id.titleLeftImage)
     void doBackOrMenuClick(){
+//        Intent intent = new Intent(this, ScanActivity.class);
+//        this.startActivityForResult(intent,10001);
         if(application.isLeftImg){
             //layDrag.openDrawer(Gravity.LEFT);
             checkOpenLeftMenu();
@@ -1749,6 +1751,8 @@ public class HomeActivity extends BaseActivity
             WxPaySuccessCallbackModel data = (WxPaySuccessCallbackModel) bundle.getSerializable( Constants.HUOTU_PAY_CALLBACK_KEY);
             if( data ==null)  return;
             String orderNo = data.getOrderNo();
+            orderNo = orderNo ==null ? "" : orderNo.split("_")[0];
+
             if( pageWeb !=null) {
                 String urlString = String.format( Constants.URL_PaySuccess , application.obtainMerchantUrl(), application.readMerchantId() , orderNo );
                 pageWeb.loadUrl(urlString , SignUtil.signHeader() );

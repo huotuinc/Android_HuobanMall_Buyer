@@ -14,6 +14,8 @@
     <string name="login_activity_classname"></string>
     <!-- 标记是否显示左侧菜单按钮 -->
     <string name="show_left_menu">true</string>
+    <!-- 标记是否修改状态栏字体样式为黑色(android 6.0系统)-->
+    <bool name="flag_statusbar_text_color_black">false</bool>
 
     <!-- 菜单 -->
     <string name="menu_setting">设置</string>

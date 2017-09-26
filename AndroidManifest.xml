@@ -36,6 +36,7 @@
     <!-- 蓝牙权限 -->
     <!-- <uses-permission android:name="android.permission.BLUETOOTH"/> -->
     <!-- <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/> -->
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <supports-screens
         android:anyDensity="true"
@@ -121,7 +122,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
         </activity>
-        <activity android:name="com.huotu.partnermall.ui.login.OALoginActivity" android:screenOrientation="portrait">
+        <activity
+            android:name="com.huotu.partnermall.ui.login.OALoginActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name="com.huotu.partnermall.ui.ScanActivity" android:screenOrientation="portrait">
         </activity>
     </application>
 
