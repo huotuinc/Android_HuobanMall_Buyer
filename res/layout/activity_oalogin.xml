@@ -188,7 +188,7 @@
                 android:layout_below="@id/btnLogin"
                 android:layout_marginTop="20dp"
                 android:id="@+id/btnOALogin"
-                android:text="已有OA会员登录"
+                android:text="已有OA会员编号注册"
                 android:textSize="20sp"
                 android:textColor="@color/gray"
                 android:gravity="center"
