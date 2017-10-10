@@ -472,7 +472,7 @@ public class HomeActivity extends BaseActivity
                 //return false;
 
                 String url = pageWeb.getUrl();
-                if(url!=null && !url.isEmpty() && ( url.toLowerCase().contains(Constants.URL_KEFU_2) || url.toLowerCase().contains( Constants.URL_KEFU_3 ) )){
+                if(url!=null && !url.isEmpty() && ( url.toLowerCase().contains( Constants.URL_KEFU_1.toLowerCase() ) ||  url.toLowerCase().contains(Constants.URL_KEFU_2) || url.toLowerCase().contains( Constants.URL_KEFU_3 ) )){
                     //解决客服页面滚动事件与下拉刷新冲突问题
                     return false;
                 }
