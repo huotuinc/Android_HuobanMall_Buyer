@@ -156,19 +156,19 @@ android {
             signingConfig signingConfigs.yifutang
         }
 
-//        xidiancity{//西点城
-//            applicationId 'com.huotu.mall.xidiancity'
-//            versionCode BUYER_VERSIONCODE.toInteger()
-//            versionName "${BUYER_VERSIONNAME}"
-//            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.xidiancheng.com/"'
-//            buildConfigField 'String', 'APP_ID', '"hotfangsho62b82w1g16gu17tbz"'
-//            buildConfigField 'String', 'APP_SECRET', '"5e29e83hc22e3a31wz220nt0fb8iewq"'
-//            buildConfigField 'String', 'Push_Url', '"http://api.open.xidiancheng.com/"'
-//            buildConfigField 'String', 'SMART_KEY', '"app"'
-//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//            buildConfigField 'String', 'SMART_Url', '"http://api.open.xidiancheng.com/"'
-//            signingConfig signingConfigs.xidiancity
-//        }
+        xidiancity{//西点城
+            applicationId 'com.huotu.mall.xidiancity'
+            versionCode BUYER_VERSIONCODE.toInteger()
+            versionName "${BUYER_VERSIONNAME}"
+            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.xidiancheng.com/"'
+            buildConfigField 'String', 'APP_ID', '"huotu686ad1fe2bd8a02bx"'
+            buildConfigField 'String', 'APP_SECRET', '"2017e8a5c32eefa3134340640fb4ceaa"'
+            buildConfigField 'String', 'Push_Url', '"http://api.open.xidiancheng.com/"'
+            buildConfigField 'String', 'SMART_KEY', '"app"'
+            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
+            buildConfigField 'String', 'SMART_Url', '"http://api.open.xidiancheng.com/"'
+            signingConfig signingConfigs.xidiancity
+        }
 
 //        cloudstar {//云品星球
 //            applicationId 'com.huotu.mall.cloudstar'
