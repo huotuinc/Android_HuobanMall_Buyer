@@ -28,7 +28,8 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.huotu.partnermall.inner.R.id.ivGif;
@@ -39,7 +40,7 @@ import static com.huotu.partnermall.inner.R.id.ivGif;
 public class GuideActivity extends BaseActivity
         implements View.OnClickListener, ViewPager.OnPageChangeListener, Handler.Callback , View.OnTouchListener{
     static String TAG = GuideActivity.class.getName();
-    @Bind(R.id.vp_activity)
+    @BindView(R.id.vp_activity)
     ViewPager mVPActivity;
     private ViewPagerAdapter vpAdapter;
     private List<View> views;
@@ -56,7 +57,7 @@ public class GuideActivity extends BaseActivity
         super.onCreate ( arg0 );
         resources = this.getResources ();
         setContentView(R.layout.guide_ui);
-        ButterKnife.bind(this);
+        unbinder= ButterKnife.bind(this);
         views = new ArrayList<> ( );
 
         //initImage();
@@ -241,7 +242,7 @@ public class GuideActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+       // ButterKnife.unbind(this);
 
 //        if(bitmapList!=null){
 //            for(Bitmap item : bitmapList){

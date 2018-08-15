@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.convenientbanner.holder.Holder;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.huotu.partnermall.config.Constants;
 import com.huotu.partnermall.inner.R;
@@ -45,11 +47,8 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
     }
 
     public AdBannerWidget(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
+        super(context, attrs);
 
-    public AdBannerWidget(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
 
         sizeList = new ArrayList<>();
 
@@ -58,9 +57,25 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
         iHeight = DensityUtils.dip2px( getContext(), iHeight);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( iwidth , iHeight );
         this.setLayoutParams(layoutParams);
-
-        this.setOnPageChangeListener(this);
     }
+
+
+
+//    public AdBannerWidget(Context context, AttributeSet attrs, int defStyle) {
+//        super(context, attrs, defStyle);
+//
+//        sizeList = new ArrayList<>();
+//
+//        final int iwidth = DensityUtils.getScreenW(getContext());
+//        int iHeight = 0;
+//        iHeight = DensityUtils.dip2px( getContext(), iHeight);
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( iwidth , iHeight );
+//        this.setLayoutParams(layoutParams);
+//
+//        //this.setOnPageChangeListener(this);
+//
+//
+//    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -167,9 +182,20 @@ public class AdBannerWidget extends com.bigkoo.convenientbanner.ConvenientBanner
         this.config = config;
         final int iwidth = DensityUtils.getScreenW(getContext());
         this.setPages(new CBViewHolderCreator() {
+
+//            @Override
+//            public Object createHolder() {
+//                return new FrescoHolderView( iwidth , AdBannerWidget.this , defaultImageId );
+//            }
+
             @Override
-            public Object createHolder() {
-                return new FrescoHolderView( iwidth , AdBannerWidget.this , defaultImageId );
+            public Holder createHolder(View itemView) {
+                return new FrescoHolderView( itemView , iwidth , AdBannerWidget.this , defaultImageId );
+            }
+
+            @Override
+            public int getLayoutId() {
+                return R.layout.layout_ad_item;
             }
         }, config.getImages())
                 .setPageIndicator(new int[]{R.drawable.ic_page_indicator, R.drawable.ic_page_indicator_focused})

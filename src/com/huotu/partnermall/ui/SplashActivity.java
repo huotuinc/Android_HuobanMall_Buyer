@@ -1,12 +1,14 @@
 package com.huotu.partnermall.ui;
 
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -58,18 +60,22 @@ import java.lang.ref.WeakReference;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.RuntimePermissions;
 
-import static com.huotu.partnermall.widgets.custom.FooterOneWidget.convertMap;
 
+@RuntimePermissions
 public class SplashActivity extends BaseActivity {
     public static final String TAG = SplashActivity.class.getSimpleName();
-    @Bind(R.id.welcomeTips)
+    @BindView(R.id.welcomeTips)
     RelativeLayout rlSplashItem;
-    @Bind(R.id.splash_version)
+    @BindView(R.id.splash_version)
     TextView tvVersion;
-    @Bind(R.id.ivGif)
+    @BindView(R.id.ivGif)
     SimpleDraweeView ivGif;
 
     private boolean isConnection = false;
@@ -81,13 +87,45 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        ButterKnife.bind(this);
-        mHandler = new Handler(getMainLooper());
+        unbinder= ButterKnife.bind(this);
+
+        //initView();
+
+        SplashActivityPermissionsDispatcher.checkPermissionWithPermissionCheck(this);
+
+    }
+
+    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE ,
+            Manifest.permission.READ_PHONE_STATE,Manifest.permission.CAMERA,
+            Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION
+            })
+    public void checkPermission(){
         initView();
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        SplashActivityPermissionsDispatcher.onRequestPermissionsResult(this , requestCode , grantResults);
+    }
+
+    @OnNeverAskAgain({Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.CAMERA,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION})
+    void showNeverAskForWriteExternalStorage(){
+        initView();
+    }
+
+    @OnPermissionDenied({Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.CAMERA,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION})
+    void showDeniedForWriteExternalStorage(){
+
+        initView();
+    }
+
+
+    @Override
     protected void initView() {
+        mHandler = new Handler(getMainLooper());
         //获得推送信息
         if (null != getIntent() && getIntent().hasExtra(Constants.HUOTU_PUSH_KEY)) {
             bundlePush = getIntent().getBundleExtra(Constants.HUOTU_PUSH_KEY);
@@ -184,7 +222,7 @@ public class SplashActivity extends BaseActivity {
 
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+
         if (bitmap != null) {
             bitmap.recycle();
         }
@@ -474,6 +512,8 @@ public class SplashActivity extends BaseActivity {
                             gotoHome();
                             return;
                         }
+
+
                         gotoAdvertise(merchantInfoModel.getAppad());
                     }
                 },
@@ -486,6 +526,19 @@ public class SplashActivity extends BaseActivity {
         );
 
         VolleyUtil.getRequestQueue().add(request);
+    }
+
+    private void testsssssss(){
+        ArrayList<Advertise> te= new ArrayList<>();
+        Advertise i = new Advertise();
+        i.setCustomerId("1");
+        i.setId(1);
+        i.setImages("http://pp.myapp.com/ma_pic2/0/shot_12196890_1_1505879137/550");
+        i.setLinkUrl("http://www.baidu.com");
+        i.setName("sss");
+        te.add(i);
+
+        gotoAdvertise(te);
     }
 
     /***

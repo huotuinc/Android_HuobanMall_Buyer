@@ -242,6 +242,10 @@ public class Constants {
 	 * 	 *  环信 客户页面
 	 */
 	public final static String URL_KEFU_3="webim/im.html";
+	/**
+	 * 客服页面4
+	 */
+	public final static String URL_KEFU_4 ="/html/personalCenter/callCenterHt";
 
 	/**
 	 * 待支付订单列表 页面

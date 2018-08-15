@@ -33,24 +33,24 @@ import com.huotu.partnermall.widgets.CountDownTimerButton;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class BindPhoneActivity extends BaseActivity implements CountDownTimerButton.CountDownFinishListener{
 
-    @Bind(R.id.edtPhone) EditText edtPhone;
-    @Bind(R.id.edtCode)  EditText edtCode;
-    @Bind(R.id.tvGetCode) TextView tvGetCode;
-    @Bind(R.id.btnBind) Button btnBind;
-    @Bind(R.id.titleText) TextView tvTitle;
-    @Bind(R.id.bindPhoneActivity_header) RelativeLayout rlHeader;
-    @Bind(R.id.titleLeftImage) ImageView ivLeft;
-    @Bind(R.id.tvNoCode) TextView tvNoCode;
-    @Bind(R.id.titleRightText) TextView titleRightText;
-    @Bind(R.id.titleRightImage) ImageView titleRightImage;
-    @Bind(R.id.titleRightLeftImage) ImageView titleRightLeftImage;
-    @Bind(R.id.rlroot) RelativeLayout rlRoot;
+    @BindView(R.id.edtPhone) EditText edtPhone;
+    @BindView(R.id.edtCode)  EditText edtCode;
+    @BindView(R.id.tvGetCode) TextView tvGetCode;
+    @BindView(R.id.btnBind) Button btnBind;
+    @BindView(R.id.titleText) TextView tvTitle;
+    @BindView(R.id.bindPhoneActivity_header) RelativeLayout rlHeader;
+    @BindView(R.id.titleLeftImage) ImageView ivLeft;
+    @BindView(R.id.tvNoCode) TextView tvNoCode;
+    @BindView(R.id.titleRightText) TextView titleRightText;
+    @BindView(R.id.titleRightImage) ImageView titleRightImage;
+    @BindView(R.id.titleRightLeftImage) ImageView titleRightLeftImage;
+    @BindView(R.id.rlroot) RelativeLayout rlRoot;
 
     ProgressDialog progressDialog;
     CountDownTimerButton countDownBtn;
@@ -62,7 +62,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bind_phone);
-        ButterKnife.bind(this);
+        unbinder=ButterKnife.bind(this);
 
         if( getIntent() !=null && getIntent().hasExtra("ForceBindPhone")){
             forceBindPhone = getIntent().getBooleanExtra("ForceBindPhone",false);
@@ -281,7 +281,7 @@ public class BindPhoneActivity extends BaseActivity implements CountDownTimerBut
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        //ButterKnife.unbind(this);
         if(null != countDownBtn){
             countDownBtn.Stop();
             countDownBtn=null;

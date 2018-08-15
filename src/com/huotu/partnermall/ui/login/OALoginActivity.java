@@ -52,8 +52,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -64,25 +63,25 @@ import butterknife.OnClick;
  *  http://mallapi.championstar.cn/User/OAlogin
  */
 public class OALoginActivity extends BaseActivity implements Handler.Callback {
-    @Bind(R.id.edtPhoneOrUserName)
+    @BindView(R.id.edtPhoneOrUserName)
     EditText etPhoneOrUser;
-    @Bind(R.id.editPassword)
+    @BindView(R.id.editPassword)
     com.huotu.android.library.libedittext.EditText etPassword;
-    @Bind(R.id.btnLogin)
+    @BindView(R.id.btnLogin)
     Button btnLogin;
-    @Bind(R.id.btnOALogin)
+    @BindView(R.id.btnOALogin)
     Button btnOALogin;
-    @Bind(R.id.tvRegister)
+    @BindView(R.id.tvRegister)
     TextView tvRegister;
-    @Bind(R.id.tvForgetPassword)
+    @BindView(R.id.tvForgetPassword)
     TextView tvForget;
-    @Bind(R.id.titleLeftImage)
+    @BindView(R.id.titleLeftImage)
     ImageView ivLeft;
-    @Bind(R.id.activity_oalogin_header)
+    @BindView(R.id.activity_oalogin_header)
     RelativeLayout rlHeader;
-    @Bind(R.id.titleText)
+    @BindView(R.id.titleText)
     TextView tvTitle;
-    @Bind(R.id.layRoot)
+    @BindView(R.id.layRoot)
     RelativeLayout layRoot;
 
     Bundle bundlePush;
@@ -94,7 +93,7 @@ public class OALoginActivity extends BaseActivity implements Handler.Callback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_oalogin);
-        ButterKnife.bind(this);
+        unbinder=ButterKnife.bind(this);
 
         initPush();
         initView();
@@ -188,7 +187,7 @@ public class OALoginActivity extends BaseActivity implements Handler.Callback {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        //ButterKnife.unbind(this);
 
         if (null != progressPopupWindow) {
             progressPopupWindow.dismissView();

@@ -12,8 +12,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.huotu.partnermall.config.Constants;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

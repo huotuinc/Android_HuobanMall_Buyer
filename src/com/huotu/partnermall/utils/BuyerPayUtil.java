@@ -21,8 +21,10 @@ import com.huotu.partnermall.model.PayModel;
 import com.huotu.partnermall.model.WxPaySuccessCallbackModel;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.widgets.NoticePopWindow;
-import com.tencent.mm.sdk.modelbase.BaseResp;
-import com.tencent.mm.sdk.modelpay.PayResp;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelpay.PayResp;
+//import com.tencent.mm.opensdk.modelbase.BaseResp;
+//import com.tencent.mm.opensdk.modelpay.PayResp;
 
 import java.math.BigDecimal;
 import java.util.Random;

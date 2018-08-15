@@ -12,8 +12,7 @@ import com.huotu.partnermall.model.GoIndexEvent;
 import com.huotu.partnermall.ui.base.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
-
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bingoogolapple.qrcode.core.QRCodeView;
@@ -21,9 +20,9 @@ import cn.bingoogolapple.qrcode.zxing.ZXingView;
 
 public class ScanActivity extends BaseActivity implements QRCodeView.Delegate {
     static  String TAG = ScanActivity.class.getSimpleName();
-    @Bind(R.id.zxingview)
+    @BindView(R.id.zxingview)
     ZXingView zXingView;
-    @Bind(R.id.titleLeftImage)
+    @BindView(R.id.titleLeftImage)
     ImageView titleLeftImage;
 
     @Override
@@ -37,7 +36,7 @@ public class ScanActivity extends BaseActivity implements QRCodeView.Delegate {
 
     @Override
     protected void initView() {
-        ButterKnife.bind(this);
+        unbinder= ButterKnife.bind(this);
 
         titleLeftImage.setBackgroundResource(R.drawable.main_title_left_back);
 

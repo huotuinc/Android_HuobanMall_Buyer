@@ -58,7 +58,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
@@ -72,20 +72,20 @@ import static com.huotu.partnermall.ui.HomeActivity.BINDPHONE_REQUESTCODE;
  * 手机注册并登录
  */
 public class PhoneLoginActivity extends BaseActivity implements Handler.Callback , CountDownTimerButton.CountDownFinishListener{
-    @Bind(R.id.edtPhone) EditText edtPhone;
-    @Bind(R.id.edtCode) EditText edtCode;
-    @Bind(R.id.tvGetCode) TextView tvGetCode;
-    @Bind(R.id.btnLogin) Button btnLogin;
-    @Bind(R.id.llWechat) LinearLayout llWechat;
-    @Bind(R.id.titleLeftImage) ImageView ivLeft;
-    @Bind(R.id.titleText) TextView tvTitle;
-    @Bind(R.id.activity_phone_header) RelativeLayout rlHeader;
-    @Bind(R.id.PhoneLoginActivity_phone_weixin) RelativeLayout rlPhoneWeixin;
-    @Bind(R.id.PhoneLoginActivity_weixin)  LinearLayout rlWeixin;
-    @Bind(R.id.llSpace)  FrameLayout llSpace;
-    @Bind(R.id.tvNoCode) TextView tvNoCode;
-    @Bind(R.id.rlLogin) RelativeLayout rlLogin;
-    @Bind(R.id.rl_phone_login_root) RelativeLayout rlRoot;
+    @BindView(R.id.edtPhone) EditText edtPhone;
+    @BindView(R.id.edtCode) EditText edtCode;
+    @BindView(R.id.tvGetCode) TextView tvGetCode;
+    @BindView(R.id.btnLogin) Button btnLogin;
+    @BindView(R.id.llWechat) LinearLayout llWechat;
+    @BindView(R.id.titleLeftImage) ImageView ivLeft;
+    @BindView(R.id.titleText) TextView tvTitle;
+    @BindView(R.id.activity_phone_header) RelativeLayout rlHeader;
+    @BindView(R.id.PhoneLoginActivity_phone_weixin) RelativeLayout rlPhoneWeixin;
+    @BindView(R.id.PhoneLoginActivity_weixin)  LinearLayout rlWeixin;
+    @BindView(R.id.llSpace)  FrameLayout llSpace;
+    @BindView(R.id.tvNoCode) TextView tvNoCode;
+    @BindView(R.id.rlLogin) RelativeLayout rlLogin;
+    @BindView(R.id.rl_phone_login_root) RelativeLayout rlRoot;
     public static int WEIXIN_BINDPHONE_REQUESTCODE=1100;
 
     ProgressPopupWindow progressPopupWindow;
@@ -101,7 +101,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_login);
-        ButterKnife.bind(this);
+        unbinder= ButterKnife.bind(this);
 
         initPush();
 
@@ -436,7 +436,7 @@ public class PhoneLoginActivity extends BaseActivity implements Handler.Callback
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        //ButterKnife.unbind(this);
 
         if (null != countDownBtn) {
             countDownBtn.Stop();

@@ -51,7 +51,7 @@ public class FooterOneWidget extends BaseLinearLayout
     /**
      * 底部导航栏图标的宽度
      */
-    public final static int FOOTER_ICON_WIDTH = 25;
+    public final static int FOOTER_ICON_WIDTH = 22;
     /**
      * url地址中的参数 占位符
      */

@@ -16,12 +16,15 @@ import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.utils.SystemTools;
 import com.umeng.analytics.MobclickAgent;
 import org.greenrobot.eventbus.EventBus;
+
+import butterknife.Unbinder;
 import cn.jpush.android.api.JPushInterface;
 
 public abstract class BaseActivity extends Activity {
     public BaseApplication application;
     protected Handler mHandler = null;
     protected static final String NULL_NETWORK = "无网络或当前网络不可用!";
+    protected Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,11 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy ( );
+
+        if(unbinder!=null){
+            unbinder.unbind();
+            unbinder=null;
+        }
     }
 
     @Override

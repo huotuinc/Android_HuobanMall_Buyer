@@ -113,12 +113,11 @@ import java.io.FileNotFoundException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.wechat.favorite.WechatFavorite;
 import cn.sharesdk.wechat.friends.Wechat;
@@ -127,9 +126,6 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
-import static com.huotu.partnermall.inner.R.id.homeAsUp;
-import static com.huotu.partnermall.inner.R.id.viewPage;
-import static com.umeng.analytics.pro.x.S;
 
 public class HomeActivity extends BaseActivity
         implements Handler.Callback , ViewTreeObserver.OnGlobalLayoutListener ,
@@ -150,48 +146,48 @@ public class HomeActivity extends BaseActivity
     private AutnLogin autnLogin;
     private MyBroadcastReceiver myBroadcastReceiver;
     //标题栏布局对象
-    @Bind(R.id.titleLayout)
+    @BindView(R.id.titleLayout)
     RelativeLayout homeTitle;
     //标题栏左侧图标
-    @Bind(R.id.titleLeftImage)
+    @BindView(R.id.titleLeftImage)
     ImageView titleLeftImage;
     //标题栏标题文字
-    @Bind(R.id.titleText)
+    @BindView(R.id.titleText)
     TextView titleText;
     //标题栏右侧图标
-    @Bind(R.id.titleRightImage)
+    @BindView(R.id.titleRightImage)
     ImageView titleRightImage;
     //web视图
-    @Bind(R.id.main_webview)
+    @BindView(R.id.main_webview)
     public WebView pageWeb;
     //侧滑登录
-    @Bind(R.id.loginLayout)
+    @BindView(R.id.loginLayout)
     RelativeLayout loginLayout;
     //主菜单容器
-    @Bind(R.id.mainMenuLayout)
+    @BindView(R.id.mainMenuLayout)
     LinearLayout mainMenuLayout;
     //已授权界面
-    @Bind(R.id.getAuth)
+    @BindView(R.id.getAuth)
     RelativeLayout getAuthLayout;
     //用户头像
-    @Bind(R.id.accountIcon)
+    @BindView(R.id.accountIcon)
     SimpleDraweeView userLogo;
     //用户名称
-    @Bind(R.id.accountName)
+    @BindView(R.id.accountName)
     TextView userName;
-    @Bind(viewPage)
+    @BindView(R.id.viewPage)
     PtrClassicFrameLayout ptrClassicFrameLayout;
-    @Bind(R.id.layDrag)
+    @BindView(R.id.layDrag)
     DrawerLayout layDrag;
-    @Bind(R.id.main_pgbar)
+    @BindView(R.id.main_pgbar)
     ProgressBar pgBar;
-    @Bind(R.id.ff1)
+    @BindView(R.id.ff1)
     FrameLayout ff1;
-    @Bind(R.id.accountTypeList)
+    @BindView(R.id.accountTypeList)
     LinearLayout accountTypeList;
-    @Bind(R.id.loadMenuView)
+    @BindView(R.id.loadMenuView)
     RelativeLayout loadMenuView;
-    @Bind(R.id.lay_menu)
+    @BindView(R.id.lay_menu)
     RelativeLayout layMenu;
 
     UrlFilterUtils urlFilterUtils;
@@ -265,7 +261,7 @@ public class HomeActivity extends BaseActivity
         wManager = this.getWindowManager();
         am = this.getAssets();
         setContentView(R.layout.activity_home);
-        ButterKnife.bind(this);
+        unbinder=  ButterKnife.bind(this);
 
         share = new SharePopupWindow ( HomeActivity.this );
         myBroadcastReceiver = new MyBroadcastReceiver(this,this,
@@ -399,7 +395,7 @@ public class HomeActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        //ButterKnife.unbind(this);
         if( progress !=null ){
             progress.dismissView();
             progress=null;
@@ -472,7 +468,11 @@ public class HomeActivity extends BaseActivity
                 //return false;
 
                 String url = pageWeb.getUrl();
-                if(url!=null && !url.isEmpty() && ( url.toLowerCase().contains( Constants.URL_KEFU_1.toLowerCase() ) ||  url.toLowerCase().contains(Constants.URL_KEFU_2) || url.toLowerCase().contains( Constants.URL_KEFU_3 ) )){
+                if(url!=null && !url.isEmpty()
+                        && ( url.toLowerCase().contains( Constants.URL_KEFU_1.toLowerCase() )
+                        ||  url.toLowerCase().contains(Constants.URL_KEFU_2)
+                        || url.toLowerCase().contains( Constants.URL_KEFU_3)
+                        || url.toLowerCase().contains( Constants.URL_KEFU_4.toLowerCase() ) )){
                     //解决客服页面滚动事件与下拉刷新冲突问题
                     return false;
                 }

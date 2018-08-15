@@ -23,7 +23,7 @@ import com.huotu.partnermall.widgets.custom.AdBannerWidget;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -31,11 +31,11 @@ import butterknife.OnClick;
  * 广告页面
  */
 public class AdActivity extends BaseActivity implements Handler.Callback ,AdBannerWidget.AdOnClickListener {
-    @Bind(R.id.activity_ad)
+    @BindView(R.id.activity_ad)
     FrameLayout rootView;
-    @Bind(R.id.adBanner)
+    @BindView(R.id.adBanner)
     AdBannerWidget adBannerWidget;
-    @Bind(R.id.tvSkip)
+    @BindView(R.id.tvSkip)
     TextView tvSkip;
     AdBannerConfig adBannerConfig;
     //多少秒后跳过广告
@@ -60,7 +60,7 @@ public class AdActivity extends BaseActivity implements Handler.Callback ,AdBann
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ad);
-        ButterKnife.bind(this);
+        unbinder= ButterKnife.bind(this);
 
         setImmerseLayout(rootView);
 
@@ -71,7 +71,7 @@ public class AdActivity extends BaseActivity implements Handler.Callback ,AdBann
     protected void onDestroy() {
         super.onDestroy();
 
-        ButterKnife.unbind(this);
+
 
         if (skipRunnable != null) {
             mHandler.removeCallbacks(skipRunnable);
@@ -108,11 +108,11 @@ public class AdActivity extends BaseActivity implements Handler.Callback ,AdBann
         adBannerConfig.setInterval(4000);
         skipTimeSecond = adBannerConfig.getImages().size() * 4;
 
-        adBannerWidget.setCanLoop(false);
+
         adBannerWidget.setAdBannerConfig(adBannerConfig, R.drawable.login_bg );
         adBannerWidget.setPointViewVisible(false);
         adBannerWidget.setAdOnClickListener(this);
-
+        adBannerWidget.setCanLoop(false);
 
         setSkipText();
 

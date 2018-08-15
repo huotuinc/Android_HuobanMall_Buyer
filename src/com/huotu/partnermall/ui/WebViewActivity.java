@@ -68,9 +68,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
-
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
@@ -88,30 +86,30 @@ public class WebViewActivity extends SwipeBackActivity
         implements Handler.Callback, MyBroadcastReceiver.BroadcastListener {
     private Resources  resources;
     private Handler  mHandler;
-    @Bind(R.id.main_webview)
+    @BindView(R.id.main_webview)
     WebView viewPage;
     private String url;
     private SharePopupWindow share;
     private MyBroadcastReceiver myBroadcastReceiver;
-    @Bind(R.id.newtitleLayout)
+    @BindView(R.id.newtitleLayout)
     RelativeLayout newtitleLayout;
     //标题栏左侧图标
-    @Bind(R.id.titleLeftImage)
+    @BindView(R.id.titleLeftImage)
     ImageView titleLeftImage;
     //标题栏标题文字
-    @Bind(R.id.titleText)
+    @BindView(R.id.titleText)
     TextView  titleText;
     //标题栏右侧图标
-    @Bind(R.id.titleRightImage)
+    @BindView(R.id.titleRightImage)
     ImageView titleRightImage;
-    @Bind(R.id.viewPage)
+    @BindView(R.id.viewPage)
     PtrClassicFrameLayout ptrClassicFrameLayout;
 
     ProgressPopupWindow progress;
 
-    @Bind(R.id.main_pgbar)
+    @BindView(R.id.main_pgbar)
     ProgressBar pgBar;
-    @Bind(R.id.statuslayout)
+    @BindView(R.id.statuslayout)
     RelativeLayout statuslayout;
 
     UrlFilterUtils urlFilterUtils;
@@ -125,7 +123,7 @@ public class WebViewActivity extends SwipeBackActivity
 
         resources = this.getResources ( );
         this.setContentView(R.layout.new_load_page);
-        ButterKnife.bind(this);
+        unbinder= ButterKnife.bind(this);
         setImmerseLayout(newtitleLayout);
         mHandler = new Handler ( this );
         progress = new ProgressPopupWindow ( WebViewActivity.this );
@@ -540,7 +538,7 @@ public class WebViewActivity extends SwipeBackActivity
     @Override
     protected void onDestroy() {
         super.onDestroy ( );
-        ButterKnife.unbind(this);
+        //ButterKnife.unbind(this);
         if( null != myBroadcastReceiver){
             myBroadcastReceiver.unregisterReceiver();
         }
