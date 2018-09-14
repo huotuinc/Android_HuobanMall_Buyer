@@ -35,8 +35,7 @@
         <activity android:name="com.xem.xmbcustomerapp.wxapi.WXEntryActivity"
                   android:theme="@android:style/Theme.Translucent.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize"
-                  android:exported="true"
-                  android:screenOrientation="portrait">
+                  android:exported="true">
         </activity>
         <!--微信支付回调-->
         <activity

@@ -31,7 +31,7 @@ public abstract class BaseActivity extends Activity {
         super.onCreate ( savedInstanceState );
         application = ( BaseApplication ) this.getApplication ();
         //禁止横屏
-        BaseActivity.this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT );
+        //BaseActivity.this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT );
     }
 
     public void setImmerseLayout(View view){

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 apply from: 'F:/myjob/keystore/keystore.gradle'
 
-//apply from: 'G:/myjob/keystore/customer.gradle'
+apply from: 'F:/myjob/keystore/customer.gradle'
 
 buildscript {
     repositories {
@@ -10,7 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.4'
     }
 }
 
@@ -30,7 +30,7 @@ allprojects {
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION.toInteger()
-    buildToolsVersion "${BUILD_TOOLS_VERSION}"
+    //buildToolsVersion "${BUILD_TOOLS_VERSION}"
 
     lintOptions {
         abortOnError false
@@ -65,12 +65,12 @@ android {
             jniLibs.srcDirs = ['libs']
         }
 
-        morefan_test {
-            manifest.srcFile 'custom/morefan/AndroidManifest.xml'
-            java.srcDirs = ['custom/morefan/src']
-            res.srcDirs = ['custom/morefan/res']
-            assets.srcDirs = ['custom/morefan/assets']
-        }
+//        morefan_test {
+//            manifest.srcFile 'custom/morefan/AndroidManifest.xml'
+//            java.srcDirs = ['custom/morefan/src']
+//            res.srcDirs = ['custom/morefan/res']
+//            assets.srcDirs = ['custom/morefan/assets']
+//        }
 
         yingyan {
             manifest.srcFile 'custom/yingyan/AndroidManifest.xml'
@@ -79,12 +79,12 @@ android {
             assets.srcDirs = ['custom/yingyan/assets']
         }
 
-        yifutang {//艺福堂
-            manifest.srcFile 'custom/yifutang/AndroidManifest.xml'
-            java.srcDirs = ['custom/yifutang/src']
-            res.srcDirs = ['custom/yifutang/res']
-            assets.srcDirs = ['custom/yifutang/assets']
-        }
+//        yifutang {//艺福堂
+//            manifest.srcFile 'custom/yifutang/AndroidManifest.xml'
+//            java.srcDirs = ['custom/yifutang/src']
+//            res.srcDirs = ['custom/yifutang/res']
+//            assets.srcDirs = ['custom/yifutang/assets']
+//        }
 
 
 //        xidiancity{//西点城
@@ -111,7 +111,7 @@ android {
         }
 
         // Move the tests to tests/java, tests/res, etc...
-        instrumentTest.setRoot('tests')
+        //instrumentTest.setRoot('tests')
 
         // Move the build types to build-types/<type>
         // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
@@ -199,19 +199,19 @@ android {
 //            signingConfig signingConfigs.cloudstar
 //        }
 
-//        nton {//农加侬
-//            applicationId 'com.huotu.mall.nton'
-//            versionCode NTON_VERSIONCODE.toInteger()
-//            versionName "${NTON_VERSIONNAME}"
-//            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.nonjnon.com/"'
-//            buildConfigField 'String', 'APP_ID', '"7986d22352bf5acf37981b8e991edd7d"'
-//            buildConfigField 'String', 'APP_SECRET', '"3b93c810053508f445e3e1be675dfa6b"'
-//            buildConfigField 'String', 'Push_Url', '"http://api.open.nonjnon.com/"'
-//            buildConfigField 'String', 'SMART_KEY', '"app"'
-//            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
-//            buildConfigField 'String', 'SMART_Url', '"http://api.open.nonjnon.com/"'
-//            signingConfig signingConfigs.nton
-//        }
+        nton {//农加侬
+            applicationId 'com.huotu.mall.nton'
+            versionCode NTON_VERSIONCODE.toInteger()
+            versionName "${NTON_VERSIONNAME}"
+            buildConfigField 'String', 'INTERFACE_URL', '"http://mallapi.nonjnon.com/"'
+            buildConfigField 'String', 'APP_ID', '"7986d22352bf5acf37981b8e991edd7d"'
+            buildConfigField 'String', 'APP_SECRET', '"3b93c810053508f445e3e1be675dfa6b"'
+            buildConfigField 'String', 'Push_Url', '"http://api.open.nonjnon.com/"'
+            buildConfigField 'String', 'SMART_KEY', '"app"'
+            buildConfigField 'String', 'SMART_SECURITY', '"21ff3104eb7a7bf3f2b663b8ab18eebe"'
+            buildConfigField 'String', 'SMART_Url', '"http://api.open.nonjnon.com/"'
+            signingConfig signingConfigs.nton
+        }
 
     }
 
@@ -240,37 +240,42 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
+    implementation fileTree(dir: 'libs', include: '*.jar')
 
     //debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
     //releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
     //compile 'com.huotu.android.library:pulltorefresh:1.0.8'
     //compile 'com.huotu.android.library:libcropper:1.0'
     //compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:support-v4:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    compile 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    compile 'com.umeng.analytics:analytics:latest.integration'
-    compile (name:'libPush-1.3.0', ext:'aar')
-    compile (name: 'libedittext-1.6', ext:'aar')
-    compile 'in.srain.cube:ultra-ptr:1.0.11'
-    compile 'com.facebook.fresco:fresco:1.9.0'
-    compile 'com.facebook.fresco:animated-gif:1.9.0'
-    compile (name:'libpay-1.0.5',ext:'aar')
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.bigkoo:ConvenientBanner:2.1.4'
+    implementation 'com.umeng.analytics:analytics:latest.integration'
+    implementation (name:'libPush-1.3.0', ext:'aar')
+    implementation (name: 'libedittext-1.6', ext:'aar')
+    implementation 'in.srain.cube:ultra-ptr:1.0.11'
+    implementation 'com.facebook.fresco:fresco:1.9.0'
+    implementation 'com.facebook.fresco:animated-gif:1.9.0'
+    implementation (name:'libpay-1.0.5',ext:'aar')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.bigkoo:ConvenientBanner:2.1.4'
 
-    compile 'com.google.zxing:core:3.3.3'
-    compile 'cn.bingoogolapple:bga-qrcodecore:1.1.8@aar'
-    compile 'cn.bingoogolapple:bga-zxing:1.1.8@aar'
+//    implementation 'com.google.zxing:core:3.3.3'
+//    implementation 'cn.bingoogolapple:bga-qrcodecore:1.1.8@aar'
+//    implementation 'cn.bingoogolapple:bga-zxing:1.1.8@aar'
 
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:3.2.0'
-    compile 'com.github.hotchemi:permissionsdispatcher:3.2.0'
+    implementation 'com.github.hotchemi:permissionsdispatcher:3.2.0'
 
     implementation 'org.greenrobot:eventbus:3.0.0'
+
+
+    configurations {
+        all*.exclude group: 'com.android.support', module: 'support-v13'
+    }
 
 }
 

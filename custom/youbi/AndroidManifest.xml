@@ -36,8 +36,7 @@
     <activity android:name="com.huotu.mall.youbi.wxapi.WXEntryActivity"
               android:theme="@android:style/Theme.Translucent.NoTitleBar"
               android:configChanges="keyboardHidden|orientation|screenSize"
-              android:exported="true"
-              android:screenOrientation="portrait" />
+              android:exported="true" />
     <!--微信支付回调-->
     <activity
             android:name="com.huotu.mall.youbi.wxapi.WXPayEntryActivity"
