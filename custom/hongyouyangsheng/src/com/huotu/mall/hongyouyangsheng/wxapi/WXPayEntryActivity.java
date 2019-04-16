@@ -10,13 +10,13 @@ import com.huotu.partnermall.BaseApplication;
 import com.huotu.partnermall.inner.R;
 import com.huotu.partnermall.receiver.MyBroadcastReceiver;
 import com.huotu.partnermall.utils.ToastUtils;
-import com.tencent.mm.sdk.constants.ConstantsAPI;
+import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
-import com.tencent.mm.sdk.modelpay.PayResp;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.mm.opensdk.modelpay.PayResp;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.huotu.partnermall.utils.BuyerPayUtil;
 /**
  * 微信支付回调类
