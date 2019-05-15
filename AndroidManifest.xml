@@ -54,6 +54,9 @@
         android:theme="@style/AppTheme"
         tools:replace="icon,label">
 
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
         <!--<service-->
             <!--android:name="com.baidu.location.f"-->
             <!--android:enabled="true"-->
