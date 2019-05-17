@@ -59,6 +59,7 @@ import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,6 +89,16 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         unbinder= ButterKnife.bind(this);
+
+//        HashMap<String,String> maps=new HashMap<>();
+//        maps.put("timestamp" ,"11111");
+//        maps.put("version","1.0.0");
+//        maps.put("operation","BUYER_ANDROID_2015DC");
+//        maps.put("customerid","3454");
+//        maps.put("appid","73d29a4c9a6d389a0b7288ec27b4c4c4");
+//
+//        String sing = new AuthParamUtils("").getSign(maps,"9389e8a5c32eefa3134340640fb4ceaa");
+//
 
         //initView();
 
